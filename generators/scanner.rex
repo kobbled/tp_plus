@@ -1,13 +1,14 @@
 class TPPlus::Scanner
 
+option
+  ignorecase
+
 macro
   BLANK         [\ \t]+
 
 rule
          BLANK
 
-         ON             { [:ON_OFF, text] }
-         OFF            { [:ON_OFF, text] }
          TRUE           { [:TRUE_FALSE, text] }
          FALSE          { [:TRUE_FALSE, text] }
 
@@ -15,6 +16,7 @@ rule
          P(?=\[)        { [:POSITION, text] }
          PR(?=\[)       { [:POSREG, text] }
          VR(?=\[)       { [:VREG, text] }
+         SR(?=\[)       { [:SREG, text] }
 
          F(?=\[)        { [:OUTPUT, text] }
          DI(?=\[)       { [:INPUT, text] }
@@ -22,9 +24,14 @@ rule
          RI(?=\[)       { [:INPUT, text] }
          RO(?=\[)       { [:OUTPUT, text] }
          UI(?=\[)       { [:INPUT, text] }
+         UO(?=\[)       { [:OUTPUT, text] }
+         SI(?=\[)       { [:INPUT, text] }
+         SO(?=\[)       { [:OUTPUT, text] }
 
+         \=\=           { [:EEQUAL, text] }
          \=             { [:EQUAL, text] }
          \<\>           { [:NOTEQUAL, text] }
+         \!\=           { [:NOTEQUAL, text] }
          \>\=           { [:GTE, text] }
          \<\=           { [:LTE, text] }
          \<             { [:LT, text] }
@@ -34,12 +41,9 @@ rule
          \*             { [:STAR, text] }
          \/             { [:SLASH, text] }
          DIV            { [:DIV, text] }
-         AND            { [:AND, text] }
-         OR             { [:OR, text] }
-
-
-         # has to be below modified
-         MOD            { [:MOD, text] }
+         &&             { [:AND, text] }
+         \|\|           { [:OR, text] }
+         \%             { [:MOD, text] }
 
          #\n             { [:NEWLINE, text] }
          ;              { [:SEMICOLON, text] }

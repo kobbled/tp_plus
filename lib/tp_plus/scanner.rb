@@ -57,112 +57,124 @@ class TPPlus::Scanner < Racc::Parser
     token = case @state
     when nil
       case
-      when (text = @ss.scan(/BLANK/))
+      when (text = @ss.scan(/BLANK/i))
         ;
 
-      when (text = @ss.scan(/ON/))
-         action { [:ON_OFF, text] }
-
-      when (text = @ss.scan(/OFF/))
-         action { [:ON_OFF, text] }
-
-      when (text = @ss.scan(/TRUE/))
+      when (text = @ss.scan(/TRUE/i))
          action { [:TRUE_FALSE, text] }
 
-      when (text = @ss.scan(/FALSE/))
+      when (text = @ss.scan(/FALSE/i))
          action { [:TRUE_FALSE, text] }
 
-      when (text = @ss.scan(/R(?=\[)/))
+      when (text = @ss.scan(/R(?=\[)/i))
          action { [:NUMREG, text] }
 
-      when (text = @ss.scan(/P(?=\[)/))
+      when (text = @ss.scan(/P(?=\[)/i))
          action { [:POSITION, text] }
 
-      when (text = @ss.scan(/PR(?=\[)/))
+      when (text = @ss.scan(/PR(?=\[)/i))
          action { [:POSREG, text] }
 
-      when (text = @ss.scan(/VR(?=\[)/))
+      when (text = @ss.scan(/VR(?=\[)/i))
          action { [:VREG, text] }
 
-      when (text = @ss.scan(/F(?=\[)/))
+      when (text = @ss.scan(/SR(?=\[)/i))
+         action { [:SREG, text] }
+
+      when (text = @ss.scan(/F(?=\[)/i))
          action { [:OUTPUT, text] }
 
-      when (text = @ss.scan(/DI(?=\[)/))
+      when (text = @ss.scan(/DI(?=\[)/i))
          action { [:INPUT, text] }
 
-      when (text = @ss.scan(/DO(?=\[)/))
+      when (text = @ss.scan(/DO(?=\[)/i))
          action { [:OUTPUT, text] }
 
-      when (text = @ss.scan(/RI(?=\[)/))
+      when (text = @ss.scan(/RI(?=\[)/i))
          action { [:INPUT, text] }
 
-      when (text = @ss.scan(/RO(?=\[)/))
+      when (text = @ss.scan(/RO(?=\[)/i))
          action { [:OUTPUT, text] }
 
-      when (text = @ss.scan(/UI(?=\[)/))
+      when (text = @ss.scan(/UI(?=\[)/i))
          action { [:INPUT, text] }
 
-      when (text = @ss.scan(/\=/))
+      when (text = @ss.scan(/UO(?=\[)/i))
+         action { [:OUTPUT, text] }
+
+      when (text = @ss.scan(/SI(?=\[)/i))
+         action { [:INPUT, text] }
+
+      when (text = @ss.scan(/SO(?=\[)/i))
+         action { [:OUTPUT, text] }
+
+      when (text = @ss.scan(/\=\=/i))
+         action { [:EEQUAL, text] }
+
+      when (text = @ss.scan(/\=/i))
          action { [:EQUAL, text] }
 
-      when (text = @ss.scan(/\<\>/))
+      when (text = @ss.scan(/\<\>/i))
          action { [:NOTEQUAL, text] }
 
-      when (text = @ss.scan(/\>\=/))
+      when (text = @ss.scan(/\!\=/i))
+         action { [:NOTEQUAL, text] }
+
+      when (text = @ss.scan(/\>\=/i))
          action { [:GTE, text] }
 
-      when (text = @ss.scan(/\<\=/))
+      when (text = @ss.scan(/\<\=/i))
          action { [:LTE, text] }
 
-      when (text = @ss.scan(/\</))
+      when (text = @ss.scan(/\</i))
          action { [:LT, text] }
 
-      when (text = @ss.scan(/\>/))
+      when (text = @ss.scan(/\>/i))
          action { [:GT, text] }
 
-      when (text = @ss.scan(/\+/))
+      when (text = @ss.scan(/\+/i))
          action { [:PLUS, text] }
 
-      when (text = @ss.scan(/\-/))
+      when (text = @ss.scan(/\-/i))
          action { [:MINUS, text] }
 
-      when (text = @ss.scan(/\*/))
+      when (text = @ss.scan(/\*/i))
          action { [:STAR, text] }
 
-      when (text = @ss.scan(/\//))
+      when (text = @ss.scan(/\//i))
          action { [:SLASH, text] }
 
-      when (text = @ss.scan(/DIV/))
+      when (text = @ss.scan(/DIV/i))
          action { [:DIV, text] }
 
-      when (text = @ss.scan(/AND/))
+      when (text = @ss.scan(/&&/i))
          action { [:AND, text] }
 
-      when (text = @ss.scan(/OR/))
+      when (text = @ss.scan(/\|\|/i))
          action { [:OR, text] }
 
-      when (text = @ss.scan(/MOD/))
+      when (text = @ss.scan(/\%/i))
          action { [:MOD, text] }
 
-      when (text = @ss.scan(/;/))
+      when (text = @ss.scan(/;/i))
          action { [:SEMICOLON, text] }
 
-      when (text = @ss.scan(/\d+\.\d+/))
+      when (text = @ss.scan(/\d+\.\d+/i))
          action { [:REAL, text.to_f] }
 
-      when (text = @ss.scan(/\.\d+/))
+      when (text = @ss.scan(/\.\d+/i))
          action { [:REAL, text.to_f] }
 
-      when (text = @ss.scan(/\d+/))
+      when (text = @ss.scan(/\d+/i))
          action { [:DIGIT, text.to_i] }
 
-      when (text = @ss.scan(/\s+/))
+      when (text = @ss.scan(/\s+/i))
         ;
 
-      when (text = @ss.scan(/[\w\!\?_]+/))
+      when (text = @ss.scan(/[\w\!\?_]+/i))
          action { [:WORD, text] }
 
-      when (text = @ss.scan(/./))
+      when (text = @ss.scan(/./i))
          action { [text, text] }
 
       
