@@ -19,9 +19,14 @@ class TestScanner < Test::Unit::TestCase
     assert_nil @scanner.next_token
   end
 
-  def test_ignore_newlines
+  def test_newline
     @scanner.scan_setup "\n"
-    assert_nil @scanner.next_token
+    assert_token :NEWLINE, "\n"
+  end
+
+  def test_combine_newlines
+    @scanner.scan_setup "\n\n"
+    assert_token :NEWLINE, "\n\n"
   end
 
   def test_semicolon
@@ -195,4 +200,74 @@ class TestScanner < Test::Unit::TestCase
     @scanner.scan_setup "%"
     assert_token :MOD, "%"
   end
+
+  def test_comment
+    @scanner.scan_setup "# foo"
+    assert_token :COMMENT, "# foo"
+  end
+
+  def test_assign
+    @scanner.scan_setup ":="
+    assert_token :ASSIGN, ":="
+  end
+
+  def test_at_sym
+    @scanner.scan_setup "@"
+    assert_token :AT_SYM, "@"
+  end
+
+  def test_jump_to
+    @scanner.scan_setup "jump_to"
+    assert_token :JUMP, "jump_to"
+  end
+
+  def test_turn_on
+    @scanner.scan_setup "turn_on"
+    assert_token :IO_METHOD, "turn_on"
+  end
+
+  def test_turn_off
+    @scanner.scan_setup "turn_off"
+    assert_token :IO_METHOD, "turn_off"
+  end
+
+  def test_toggle
+    @scanner.scan_setup "toggle"
+    assert_token :IO_METHOD, "toggle"
+  end
+
+  def test_linear_move
+    @scanner.scan_setup "linear_move"
+    assert_token :MOVE, "linear_move"
+  end
+
+  def test_joint_move
+    @scanner.scan_setup "joint_move"
+    assert_token :MOVE, "joint_move"
+  end
+
+  def test_circular_move
+    @scanner.scan_setup "circular_move"
+    assert_token :MOVE, "circular_move"
+  end
+
+  def test_dot
+    @scanner.scan_setup "."
+    assert_token :DOT, "."
+  end
+
+  def test_to
+    @scanner.scan_setup "to"
+    assert_token :TO, "to"
+  end
+
+  def test_at
+    @scanner.scan_setup "at"
+    assert_token :AT, "at"
+  end
+
+   def test_term
+     @scanner.scan_setup "term"
+     assert_token :TERM, "term"
+   end
 end

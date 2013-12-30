@@ -60,10 +60,10 @@ class TPPlus::Scanner < Racc::Parser
       when (text = @ss.scan(/BLANK/i))
         ;
 
-      when (text = @ss.scan(/TRUE/i))
-         action { [:TRUE_FALSE, text] }
+      when (text = @ss.scan(/\#.*(?=\n?$)/i))
+         action { [:COMMENT, text] }
 
-      when (text = @ss.scan(/FALSE/i))
+      when (text = @ss.scan(/true|false/i))
          action { [:TRUE_FALSE, text] }
 
       when (text = @ss.scan(/R(?=\[)/i))
@@ -81,32 +81,11 @@ class TPPlus::Scanner < Racc::Parser
       when (text = @ss.scan(/SR(?=\[)/i))
          action { [:SREG, text] }
 
-      when (text = @ss.scan(/F(?=\[)/i))
+      when (text = @ss.scan(/F|DO|RO|UO|SO(?=\[)/i))
          action { [:OUTPUT, text] }
 
-      when (text = @ss.scan(/DI(?=\[)/i))
+      when (text = @ss.scan(/DI|RI|UI|SI(?=\[)/i))
          action { [:INPUT, text] }
-
-      when (text = @ss.scan(/DO(?=\[)/i))
-         action { [:OUTPUT, text] }
-
-      when (text = @ss.scan(/RI(?=\[)/i))
-         action { [:INPUT, text] }
-
-      when (text = @ss.scan(/RO(?=\[)/i))
-         action { [:OUTPUT, text] }
-
-      when (text = @ss.scan(/UI(?=\[)/i))
-         action { [:INPUT, text] }
-
-      when (text = @ss.scan(/UO(?=\[)/i))
-         action { [:OUTPUT, text] }
-
-      when (text = @ss.scan(/SI(?=\[)/i))
-         action { [:INPUT, text] }
-
-      when (text = @ss.scan(/SO(?=\[)/i))
-         action { [:OUTPUT, text] }
 
       when (text = @ss.scan(/\=\=/i))
          action { [:EEQUAL, text] }
@@ -114,10 +93,10 @@ class TPPlus::Scanner < Racc::Parser
       when (text = @ss.scan(/\=/i))
          action { [:EQUAL, text] }
 
-      when (text = @ss.scan(/\<\>/i))
-         action { [:NOTEQUAL, text] }
+      when (text = @ss.scan(/\:\=/i))
+         action { [:ASSIGN, text] }
 
-      when (text = @ss.scan(/\!\=/i))
+      when (text = @ss.scan(/\<\>|\!\=/i))
          action { [:NOTEQUAL, text] }
 
       when (text = @ss.scan(/\>\=/i))
@@ -156,14 +135,38 @@ class TPPlus::Scanner < Racc::Parser
       when (text = @ss.scan(/\%/i))
          action { [:MOD, text] }
 
+      when (text = @ss.scan(/\@/i))
+         action { [:AT_SYM, text] }
+
+      when (text = @ss.scan(/at/i))
+         action { [:AT, text] }
+
+      when (text = @ss.scan(/jump_to/i))
+         action { [:JUMP, text] }
+
+      when (text = @ss.scan(/linear_move|joint_move|circular_move/i))
+         action { [:MOVE, text] }
+
+      when (text = @ss.scan(/term/i))
+         action { [:TERM, text] }
+
+      when (text = @ss.scan(/turn_on|turn_off|toggle/i))
+         action { [:IO_METHOD, text] }
+
+      when (text = @ss.scan(/to/i))
+         action { [:TO, text] }
+
+      when (text = @ss.scan(/\n+/i))
+         action { [:NEWLINE, text] }
+
       when (text = @ss.scan(/;/i))
          action { [:SEMICOLON, text] }
 
-      when (text = @ss.scan(/\d+\.\d+/i))
+      when (text = @ss.scan(/\d+\.\d+|\.\d+/i))
          action { [:REAL, text.to_f] }
 
-      when (text = @ss.scan(/\.\d+/i))
-         action { [:REAL, text.to_f] }
+      when (text = @ss.scan(/\./i))
+         action { [:DOT, text] }
 
       when (text = @ss.scan(/\d+/i))
          action { [:DIGIT, text.to_i] }
