@@ -19,8 +19,16 @@ rule
          VR(?=\[)       { [:VREG, text] }
          SR(?=\[)       { [:SREG, text] }
 
-         F|DO|RO|UO|SO(?=\[) { [:OUTPUT, text] }
-         DI|RI|UI|SI(?=\[)   { [:INPUT, text] }
+         F(?=\[)        { [:OUTPUT, text] }
+         DO(?=\[)       { [:OUTPUT, text] }
+         RO(?=\[)       { [:OUTPUT, text] }
+         UO(?=\[)       { [:OUTPUT, text] }
+         SO(?=\[)       { [:OUTPUT, text] }
+
+         DI(?=\[)       { [:INPUT, text] }
+         RI(?=\[)       { [:INPUT, text] }
+         UI(?=\[)       { [:INPUT, text] }
+         SI(?=\[)       { [:INPUT, text] }
 
          \=\=           { [:EEQUAL, text] }
          \=             { [:EQUAL, text] }
@@ -48,7 +56,7 @@ rule
          turn_on|turn_off|toggle { [:IO_METHOD, text] }
          to             { [:TO, text] }
 
-         \n+            { [:NEWLINE, text] }
+         \n             { [:NEWLINE, text] }
          ;              { [:SEMICOLON, text] }
          \d+\.\d+|\.\d+ { [:REAL, text.to_f] }
          \.             { [:DOT, text] }

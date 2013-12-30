@@ -81,10 +81,31 @@ class TPPlus::Scanner < Racc::Parser
       when (text = @ss.scan(/SR(?=\[)/i))
          action { [:SREG, text] }
 
-      when (text = @ss.scan(/F|DO|RO|UO|SO(?=\[)/i))
+      when (text = @ss.scan(/F(?=\[)/i))
          action { [:OUTPUT, text] }
 
-      when (text = @ss.scan(/DI|RI|UI|SI(?=\[)/i))
+      when (text = @ss.scan(/DO(?=\[)/i))
+         action { [:OUTPUT, text] }
+
+      when (text = @ss.scan(/RO(?=\[)/i))
+         action { [:OUTPUT, text] }
+
+      when (text = @ss.scan(/UO(?=\[)/i))
+         action { [:OUTPUT, text] }
+
+      when (text = @ss.scan(/SO(?=\[)/i))
+         action { [:OUTPUT, text] }
+
+      when (text = @ss.scan(/DI(?=\[)/i))
+         action { [:INPUT, text] }
+
+      when (text = @ss.scan(/RI(?=\[)/i))
+         action { [:INPUT, text] }
+
+      when (text = @ss.scan(/UI(?=\[)/i))
+         action { [:INPUT, text] }
+
+      when (text = @ss.scan(/SI(?=\[)/i))
          action { [:INPUT, text] }
 
       when (text = @ss.scan(/\=\=/i))
@@ -156,7 +177,7 @@ class TPPlus::Scanner < Racc::Parser
       when (text = @ss.scan(/to/i))
          action { [:TO, text] }
 
-      when (text = @ss.scan(/\n+/i))
+      when (text = @ss.scan(/\n/i))
          action { [:NEWLINE, text] }
 
       when (text = @ss.scan(/;/i))

@@ -24,9 +24,10 @@ class TestScanner < Test::Unit::TestCase
     assert_token :NEWLINE, "\n"
   end
 
-  def test_combine_newlines
+  def test_no_combine_newlines
     @scanner.scan_setup "\n\n"
-    assert_token :NEWLINE, "\n\n"
+    assert_token :NEWLINE, "\n"
+    assert_token :NEWLINE, "\n"
   end
 
   def test_semicolon

@@ -9,6 +9,8 @@ module TPPlus
   class Parser < Racc::Parser
 
 
+  include TPPlus::Nodes
+
   attr_reader :interpreter
   def initialize(scanner, interpreter = TPPlus::Interpreter.new)
     @scanner       = scanner
@@ -18,7 +20,9 @@ module TPPlus
 
   def next_token
     t = @scanner.next_token
-    #puts t.inspect
+    @interpreter.line_count += 1 if t == [:NEWLINE,"\n"]
+
+    puts t.inspect
     t
   end
 
@@ -26,50 +30,80 @@ module TPPlus
     do_parse
     @interpreter
   rescue Racc::ParseError => e
-    raise "Parse error on line #{@interpreter.lines.length+1}: #{e}"
+    raise "Parse error on line #{@interpreter.line_count}: #{e}"
   end
 ##### State transition tables begin ###
 
 racc_action_table = [
-     2,     3 ]
+    12,     5,     9,     5,     9,    14,    10,    18,     8,    13,
+     8,    20,    21,    22,    23 ]
 
 racc_action_check = [
-     1,     2 ]
+     8,     0,     4,    11,     0,    10,     1,    12,     0,     8,
+    11,    13,    18,    21,    22 ]
 
 racc_action_pointer = [
-   nil,     0,     1,   nil ]
+    -2,     6,   nil,   nil,    -4,   nil,   nil,   nil,    -2,   nil,
+     5,     0,     3,     2,   nil,   nil,   nil,   nil,     0,   nil,
+   nil,     4,     1,   nil ]
 
 racc_action_default = [
-    -1,    -2,    -2,     4 ]
+   -14,   -15,    -1,    -2,   -14,    -5,    -6,    -7,   -15,   -13,
+   -15,    -4,   -15,   -15,    24,    -3,    -8,   -11,   -15,    -9,
+   -10,   -15,   -15,   -12 ]
 
 racc_goto_table = [
-     1 ]
+     2,     3,    16,     1,    19,    11,    17,   nil,   nil,   nil,
+   nil,    15 ]
 
 racc_goto_check = [
-     1 ]
+     2,     3,     7,     1,     8,     3,     9,   nil,   nil,   nil,
+   nil,     2 ]
 
 racc_goto_pointer = [
-   nil,     0 ]
+   nil,     3,     0,     1,   nil,   nil,   nil,   -10,    -9,    -6 ]
 
 racc_goto_default = [
-   nil,   nil ]
+   nil,   nil,   nil,   nil,     4,     6,     7,   nil,   nil,   nil ]
 
 racc_reduce_table = [
   0, 0, :racc_error,
-  0, 6, :_reduce_none ]
+  1, 15, :_reduce_none,
+  1, 15, :_reduce_none,
+  3, 16, :_reduce_3,
+  2, 16, :_reduce_4,
+  1, 18, :_reduce_5,
+  1, 18, :_reduce_6,
+  1, 18, :_reduce_7,
+  3, 19, :_reduce_8,
+  3, 20, :_reduce_9,
+  1, 22, :_reduce_none,
+  1, 21, :_reduce_none,
+  4, 23, :_reduce_none,
+  1, 17, :_reduce_none,
+  0, 17, :_reduce_none ]
 
-racc_reduce_n = 2
+racc_reduce_n = 15
 
-racc_shift_n = 4
+racc_shift_n = 24
 
 racc_token_table = {
   false => 0,
   :error => 1,
-  :SEMICOLON => 2,
-  :DIGIT => 3,
-  :WORD => 4 }
+  :ASSIGN => 2,
+  :COMMENT => 3,
+  :NUMREG => 4,
+  :SEMICOLON => 5,
+  :NEWLINE => 6,
+  :nil => 7,
+  :REAL => 8,
+  :DIGIT => 9,
+  :WORD => 10,
+  :EQUAL => 11,
+  "[" => 12,
+  "]" => 13 }
 
-racc_nt_base = 5
+racc_nt_base = 14
 
 racc_use_result_var = true
 
@@ -92,11 +126,28 @@ Racc_arg = [
 Racc_token_to_s_table = [
   "$end",
   "error",
+  "ASSIGN",
+  "COMMENT",
+  "NUMREG",
   "SEMICOLON",
+  "NEWLINE",
+  "nil",
+  "REAL",
   "DIGIT",
   "WORD",
+  "EQUAL",
+  "\"[\"",
+  "\"]\"",
   "$start",
-  "program" ]
+  "program",
+  "statements",
+  "terminator",
+  "statement",
+  "definition",
+  "assignment",
+  "definable",
+  "expression",
+  "numreg" ]
 
 Racc_debug_parser = false
 
@@ -105,6 +156,53 @@ Racc_debug_parser = false
 # reduce 0 omitted
 
 # reduce 1 omitted
+
+# reduce 2 omitted
+
+def _reduce_3(val, _values, result)
+ @interpreter.nodes << val[0] 
+    result
+end
+
+def _reduce_4(val, _values, result)
+ @interpreter.nodes << val[0] 
+    result
+end
+
+def _reduce_5(val, _values, result)
+ result = CommentNode.new(val[0]) 
+    result
+end
+
+def _reduce_6(val, _values, result)
+ result = val[0] 
+    result
+end
+
+def _reduce_7(val, _values, result)
+ result = val[0] 
+    result
+end
+
+def _reduce_8(val, _values, result)
+ result = DefinitionNode.new(val[0],val[1]) 
+    result
+end
+
+def _reduce_9(val, _values, result)
+ result = AssignmentNode.new(val[0],val[2]) 
+    result
+end
+
+# reduce 10 omitted
+
+# reduce 11 omitted
+
+# reduce 12 omitted
+
+# reduce 13 omitted
+
+# reduce 14 omitted
 
 def _reduce_none(val, _values, result)
   val[0]
