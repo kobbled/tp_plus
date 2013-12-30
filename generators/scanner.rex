@@ -61,6 +61,7 @@ rule
          \d+\.\d+|\.\d+ { [:REAL, text.to_f] }
          \.             { [:DOT, text] }
          \d+            { [:DIGIT, text.to_i] }
+         mm\/s          { [:UNITS, text] }
 
          \s+            # ignore whitespace
          [\w\!\?_]+     { [:WORD, text] }

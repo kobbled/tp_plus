@@ -38,7 +38,7 @@ example_1.tpp
     turn_on bar
     toggle baz
 
-    linear_move.to(home).at(2000mm/sec).term(0)
+    linear_move.to(home).at(2000mm/s).term(0)
 
 
 example_1.ls

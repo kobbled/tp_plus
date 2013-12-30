@@ -271,4 +271,9 @@ class TestScanner < Test::Unit::TestCase
      @scanner.scan_setup "term"
      assert_token :TERM, "term"
    end
+
+   def test_mm_s
+     @scanner.scan_setup "mm/s"
+     assert_token :UNITS, "mm/s"
+   end
 end

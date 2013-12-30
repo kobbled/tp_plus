@@ -30,80 +30,120 @@ module TPPlus
     do_parse
     @interpreter
   rescue Racc::ParseError => e
-    raise "Parse error on line #{@interpreter.line_count}: #{e}"
+    raise "Parse error on line #{@interpreter.line_count+1}: #{e}"
   end
 ##### State transition tables begin ###
 
 racc_action_table = [
-    12,     5,     9,     5,     9,    14,    10,    18,     8,    13,
-     8,    20,    21,    22,    23 ]
+    22,    13,     5,    10,    39,     9,    12,    20,    13,     5,
+    10,    21,     9,    12,    18,    14,    23,    24,    25,    15,
+    49,    50,    14,    26,    15,    28,    29,    32,    35,    36,
+    37,    38,    19,    35,    35,    42,    43,    44,    45,    47,
+    16,    47,    52,    53,    35,    35,    57,    58,    59 ]
 
 racc_action_check = [
-     8,     0,     4,    11,     0,    10,     1,    12,     0,     8,
-    11,    13,    18,    21,    22 ]
+    14,    17,    17,    17,    32,    17,    17,    12,     0,     0,
+     0,    13,     0,     0,     9,    17,    14,    14,    14,     0,
+    47,    47,     0,    16,     4,    19,    20,    22,    23,    24,
+    25,    29,    10,    36,    37,    38,    39,    42,    43,    44,
+     1,    48,    49,    50,    52,    53,    54,    55,    56 ]
 
 racc_action_pointer = [
-    -2,     6,   nil,   nil,    -4,   nil,   nil,   nil,    -2,   nil,
-     5,     0,     3,     2,   nil,   nil,   nil,   nil,     0,   nil,
-   nil,     4,     1,   nil ]
+     5,    40,   nil,   nil,    10,   nil,   nil,   nil,   nil,    -3,
+    29,   nil,    -2,    -6,    -2,   nil,    23,    -2,   nil,     8,
+    16,   nil,    21,    12,    11,    12,   nil,   nil,   nil,     9,
+   nil,   nil,   -20,   nil,   nil,   nil,    17,    18,    18,    20,
+   nil,   nil,    14,    13,    30,   nil,   nil,     9,    32,    20,
+    21,   nil,    28,    29,    23,    26,    25,   nil,   nil,   nil ]
 
 racc_action_default = [
-   -14,   -15,    -1,    -2,   -14,    -5,    -6,    -7,   -15,   -13,
-   -15,    -4,   -15,   -15,    24,    -3,    -8,   -11,   -15,    -9,
-   -10,   -15,   -15,   -12 ]
+   -28,   -29,    -1,    -2,   -28,    -5,    -6,    -7,    -8,   -29,
+   -29,   -11,   -29,   -29,   -29,   -27,   -29,    -4,    -9,   -29,
+   -29,   -18,   -29,   -29,   -29,   -29,    60,    -3,   -10,   -29,
+   -19,   -25,   -29,   -20,   -23,   -24,   -29,   -29,   -29,   -29,
+   -21,   -22,   -29,   -29,   -29,   -26,   -12,   -29,   -14,   -29,
+   -29,   -13,   -29,   -29,   -29,   -29,   -29,   -15,   -17,   -16 ]
 
 racc_goto_table = [
-     2,     3,    16,     1,    19,    11,    17,   nil,   nil,   nil,
-   nil,    15 ]
+     2,    33,    46,     3,    55,    56,    51,    17,    54,    48,
+    30,     1,    31,   nil,    40,    41,   nil,    27 ]
 
 racc_goto_check = [
-     2,     3,     7,     1,     8,     3,     9,   nil,   nil,   nil,
-   nil,     2 ]
+     2,    14,     9,     3,    12,    12,     9,     3,    11,    10,
+    13,     1,    15,   nil,    14,    14,   nil,     2 ]
 
 racc_goto_pointer = [
-   nil,     3,     0,     1,   nil,   nil,   nil,   -10,    -9,    -6 ]
+   nil,    11,     0,     3,   nil,   nil,   nil,   nil,   nil,   -42,
+   -38,   -44,   -48,   -12,   -22,   -10 ]
 
 racc_goto_default = [
-   nil,   nil,   nil,   nil,     4,     6,     7,   nil,   nil,   nil ]
+   nil,   nil,   nil,   nil,     4,     6,     7,     8,    11,   nil,
+   nil,   nil,    34,   nil,   nil,   nil ]
 
 racc_reduce_table = [
   0, 0, :racc_error,
-  1, 15, :_reduce_none,
-  1, 15, :_reduce_none,
-  3, 16, :_reduce_3,
-  2, 16, :_reduce_4,
-  1, 18, :_reduce_5,
-  1, 18, :_reduce_6,
-  1, 18, :_reduce_7,
-  3, 19, :_reduce_8,
-  3, 20, :_reduce_9,
-  1, 22, :_reduce_none,
-  1, 21, :_reduce_none,
-  4, 23, :_reduce_none,
-  1, 17, :_reduce_none,
-  0, 17, :_reduce_none ]
+  1, 27, :_reduce_none,
+  1, 27, :_reduce_none,
+  3, 28, :_reduce_3,
+  2, 28, :_reduce_4,
+  1, 30, :_reduce_5,
+  1, 30, :_reduce_6,
+  1, 30, :_reduce_7,
+  1, 30, :_reduce_8,
+  2, 30, :_reduce_9,
+  3, 30, :_reduce_10,
+  1, 30, :_reduce_none,
+  7, 33, :_reduce_12,
+  3, 35, :_reduce_none,
+  2, 35, :_reduce_none,
+  4, 36, :_reduce_none,
+  4, 36, :_reduce_none,
+  2, 37, :_reduce_none,
+  2, 34, :_reduce_18,
+  3, 31, :_reduce_19,
+  3, 32, :_reduce_20,
+  4, 32, :_reduce_21,
+  4, 32, :_reduce_22,
+  1, 40, :_reduce_none,
+  1, 38, :_reduce_24,
+  1, 39, :_reduce_none,
+  4, 41, :_reduce_none,
+  1, 29, :_reduce_none,
+  0, 29, :_reduce_none ]
 
-racc_reduce_n = 15
+racc_reduce_n = 29
 
-racc_shift_n = 24
+racc_shift_n = 60
 
 racc_token_table = {
   false => 0,
   :error => 1,
   :ASSIGN => 2,
-  :COMMENT => 3,
-  :NUMREG => 4,
-  :SEMICOLON => 5,
-  :NEWLINE => 6,
-  :nil => 7,
-  :REAL => 8,
-  :DIGIT => 9,
-  :WORD => 10,
-  :EQUAL => 11,
-  "[" => 12,
-  "]" => 13 }
+  :AT_SYM => 3,
+  :COMMENT => 4,
+  :JUMP => 5,
+  :NUMREG => 6,
+  :IO_METHOD => 7,
+  :MOVE => 8,
+  :DOT => 9,
+  :TO => 10,
+  :AT => 11,
+  :TERM => 12,
+  :SEMICOLON => 13,
+  :NEWLINE => 14,
+  :REAL => 15,
+  :DIGIT => 16,
+  :WORD => 17,
+  :EQUAL => 18,
+  :PLUS => 19,
+  :MINUS => 20,
+  :UNITS => 21,
+  "(" => 22,
+  ")" => 23,
+  "[" => 24,
+  "]" => 25 }
 
-racc_nt_base = 14
+racc_nt_base = 26
 
 racc_use_result_var = true
 
@@ -127,15 +167,27 @@ Racc_token_to_s_table = [
   "$end",
   "error",
   "ASSIGN",
+  "AT_SYM",
   "COMMENT",
+  "JUMP",
   "NUMREG",
+  "IO_METHOD",
+  "MOVE",
+  "DOT",
+  "TO",
+  "AT",
+  "TERM",
   "SEMICOLON",
   "NEWLINE",
-  "nil",
   "REAL",
   "DIGIT",
   "WORD",
   "EQUAL",
+  "PLUS",
+  "MINUS",
+  "UNITS",
+  "\"(\"",
+  "\")\"",
   "\"[\"",
   "\"]\"",
   "$start",
@@ -145,6 +197,12 @@ Racc_token_to_s_table = [
   "statement",
   "definition",
   "assignment",
+  "motion_statement",
+  "label_definition",
+  "motion_modifiers",
+  "motion_modifier",
+  "speed",
+  "number",
   "definable",
   "expression",
   "numreg" ]
@@ -160,7 +218,7 @@ Racc_debug_parser = false
 # reduce 2 omitted
 
 def _reduce_3(val, _values, result)
- @interpreter.nodes << val[0] 
+ 
     result
 end
 
@@ -185,24 +243,84 @@ def _reduce_7(val, _values, result)
 end
 
 def _reduce_8(val, _values, result)
- result = DefinitionNode.new(val[0],val[1]) 
+ result = val[0] 
     result
 end
 
 def _reduce_9(val, _values, result)
- result = AssignmentNode.new(val[0],val[2]) 
+ result = IOMethodNode.new(val[0],val[1]) 
     result
 end
 
-# reduce 10 omitted
+def _reduce_10(val, _values, result)
+ result = JumpNode.new(val[2]) 
+    result
+end
 
 # reduce 11 omitted
 
-# reduce 12 omitted
+def _reduce_12(val, _values, result)
+ result = MotionNode.new(val[0],val[4],val[6]) 
+    result
+end
 
 # reduce 13 omitted
 
 # reduce 14 omitted
+
+# reduce 15 omitted
+
+# reduce 16 omitted
+
+# reduce 17 omitted
+
+def _reduce_18(val, _values, result)
+ @interpreter.add_label(val[1]) 
+    result
+end
+
+def _reduce_19(val, _values, result)
+ result = DefinitionNode.new(val[0],val[1]) 
+    result
+end
+
+def _reduce_20(val, _values, result)
+ result = AssignmentNode.new(val[0],val[2]) 
+    result
+end
+
+def _reduce_21(val, _values, result)
+ result = AssignmentNode.new(
+                                           val[0],
+                                           ExpressionNode.new(val[0],val[1],val[3])
+                                         )
+                                       
+    result
+end
+
+def _reduce_22(val, _values, result)
+ result = AssignmentNode.new(
+                                           val[0],
+                                           ExpressionNode.new(val[0],val[1],val[3])
+                                         )
+                                       
+    result
+end
+
+# reduce 23 omitted
+
+def _reduce_24(val, _values, result)
+ result = DigitNode.new(val[0]) 
+    result
+end
+
+# reduce 25 omitted
+
+# reduce 26 omitted
+
+# reduce 27 omitted
+
+# reduce 28 omitted
 
 def _reduce_none(val, _values, result)
   val[0]

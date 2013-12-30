@@ -41,4 +41,57 @@ class TestParser < Test::Unit::TestCase
     assert_node_type AssignmentNode, last_node
   end
 
+  def test_label_definition
+    parse("@foo")
+    assert_not_nil @interpreter.labels[:foo]
+  end
+
+  def test_duplicate_label_error
+    assert_raise(RuntimeError) do
+      parse("@foo\n@foo")
+    end
+  end
+
+  def test_jump_to
+    parse("@foo\njump_to @foo")
+    assert_node_type JumpNode, last_node
+  end
+
+  def test_plus_equal
+    parse("foo += 1")
+    l = last_node
+    assert_node_type AssignmentNode, l
+    assert_equal "foo", l.identifier
+    assert_node_type ExpressionNode, l.assignable
+    assert_equal "foo", l.assignable.left_op
+  end
+
+  def test_minus_equal
+    parse("foo -= 1")
+    l = last_node
+    assert_node_type AssignmentNode, l
+    assert_equal "foo", l.identifier
+    assert_node_type ExpressionNode, l.assignable
+    assert_equal "foo", l.assignable.left_op
+  end
+
+  def test_turn_on
+    parse("turn_on foo")
+    assert_node_type IOMethodNode, last_node
+  end
+
+  def test_turn_off
+    parse("turn_off foo")
+    assert_node_type IOMethodNode, last_node
+  end
+
+  def test_toggle
+    parse("toggle foo")
+    assert_node_type IOMethodNode, last_node
+  end
+
+  def test_motion
+    parse("linear_move.to(home).at(2000mm/s).term(0)")
+    assert_node_type MotionNode, last_node
+  end
 end

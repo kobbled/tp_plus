@@ -192,6 +192,9 @@ class TPPlus::Scanner < Racc::Parser
       when (text = @ss.scan(/\d+/i))
          action { [:DIGIT, text.to_i] }
 
+      when (text = @ss.scan(/mm\/s/i))
+         action { [:UNITS, text] }
+
       when (text = @ss.scan(/\s+/i))
         ;
 
