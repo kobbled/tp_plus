@@ -46,7 +46,7 @@ example_1.ls
     /MN
       1:  R[1:foo] = 1 ;
       1:   ;
-      1:  LBL[1:loop]
+      1:  LBL[1:loop] ;
       1:  R[1:foo]=R[1:foo]+1 ;
       1:  IF R[1:foo]<10,JMP LBL[1] ;
       1:   ;
