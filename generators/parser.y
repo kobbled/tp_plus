@@ -1,5 +1,5 @@
 class TPPlus::Parser
-token ASSIGN AT_SYM COMMENT JUMP NUMREG IO_METHOD
+token ASSIGN AT_SYM COMMENT JUMP NUMREG IO_METHOD INPUT OUTPUT
 token MOVE DOT TO AT TERM
 token SEMICOLON NEWLINE
 token REAL DIGIT WORD EQUAL UNITS
@@ -31,7 +31,7 @@ rule
     | definition                       { result = val[0] }
     | assignment                       { result = val[0] }
     | motion_statement                 { result = val[0] }
-    | IO_METHOD WORD                   { result = IOMethodNode.new(val[0],val[1]) }
+    | IO_METHOD var                    { result = IOMethodNode.new(val[0],val[1]) }
     | JUMP AT_SYM WORD                 { result = JumpNode.new(val[2]) }
     | label_definition
     | conditional
@@ -144,10 +144,15 @@ rule
 
   definable
     : numreg
+    | output
     ;
 
   numreg
     : NUMREG '[' DIGIT ']'             { result = NumregNode.new(val[2].to_i) }
+    ;
+
+  output
+    : OUTPUT '[' DIGIT ']'             { result = IONode.new(val[0], val[2].to_i) }
     ;
 
   terminator

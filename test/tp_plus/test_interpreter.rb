@@ -82,4 +82,19 @@ class TestInterpreter < Test::Unit::TestCase
     end
   end
 
+  def test_turn_on
+    parse("foo := DO[1]\nturn_on foo")
+    assert_prog "DO[1:foo]=ON ;\n"
+  end
+
+  def test_turn_off
+    parse("foo := DO[1]\nturn_off foo")
+    assert_prog "DO[1:foo]=OFF ;\n"
+  end
+
+  def test_toggle
+    parse("foo := DO[1]\ntoggle foo")
+    assert_prog "DO[1:foo]=(!DO[1:foo]) ;\n"
+  end
+
 end
