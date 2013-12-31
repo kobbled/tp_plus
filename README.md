@@ -20,6 +20,7 @@ Examples
 --------
 
 example_1.tpp
+
     foo  := R[1]
 
     bar  := DO[1]
@@ -42,6 +43,7 @@ example_1.tpp
 
 
 example_1.ls
+
     /PROG example_1
     /MN
       1:  R[1:foo] = 1 ;
