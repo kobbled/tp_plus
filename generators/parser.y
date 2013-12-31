@@ -70,7 +70,7 @@ rule
 
 
   label_definition
-    : AT_SYM WORD                      { @interpreter.add_label(val[1]) }
+    : AT_SYM WORD                      { result = LabelDefinitionNode.new(val[1]) }#@interpreter.add_label(val[1]) }
     ;
 
   definition

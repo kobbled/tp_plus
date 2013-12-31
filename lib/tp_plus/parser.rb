@@ -429,7 +429,7 @@ end
 # reduce 27 omitted
 
 def _reduce_28(val, _values, result)
- @interpreter.add_label(val[1]) 
+ result = LabelDefinitionNode.new(val[1]) 
     result
 end
 

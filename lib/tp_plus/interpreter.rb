@@ -9,7 +9,7 @@ module TPPlus
       @nodes         = []
       @labels        = {}
       @variables     = {}
-      @current_label = 100
+      @current_label = 99
     end
 
     def next_label

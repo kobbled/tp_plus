@@ -47,13 +47,7 @@ class TestParser < Test::Unit::TestCase
 
   def test_label_definition
     parse("@foo")
-    assert_not_nil @interpreter.labels[:foo]
-  end
-
-  def test_duplicate_label_error
-    assert_raise(RuntimeError) do
-      parse("@foo\n@foo")
-    end
+    assert_node_type LabelDefinitionNode, last_node
   end
 
   def test_jump_to
