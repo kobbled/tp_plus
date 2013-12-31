@@ -122,7 +122,14 @@ class TestInterpreter < Test::Unit::TestCase
     assert_prog "IF R[1:foo]=1,JMP LBL[100] ;\nR[1:foo]=2 ;\nJMP LBL[101] ;\nLBL[100] ;\nR[1:foo]=1 ;\nLBL[101] ;\n"
   end
 
+  def test_comment
+    parse("# this is a comment")
+    assert_prog "! this is a comment ;\n"
+  end
 
-
+  def test_inline_comment
+    parse("foo := R[1] # comment\nfoo = 1 # another comment")
+    assert_prog "! comment ;\nR[1:foo]=1 ;\n! another comment ;\n"
+  end
 
 end

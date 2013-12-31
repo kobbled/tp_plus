@@ -15,12 +15,12 @@ rule
 
   statements
     : statement                        { result = val }
-    | statements terminator statement  { result = val[0] << val[2] }
+    | statements terminator statement  { result = val[0] << val[1] << val[2] }
       # to ignore trailing line breaks
-    | statements terminator            { result = val[0] }
+    | statements terminator            { result = val[0] << val[1] }
     # this adds a couple conflicts
-    | terminator statements            { result = [TerminatorNode.new] << val[1] }
-    | terminator                       { result = [TerminatorNode.new] }
+    | terminator statements            { result = [val[0]] << val[1] }
+    | terminator                       { result = [val[0]] }
     ;
 
   block
@@ -28,8 +28,8 @@ rule
     ;
 
   statement
-    : COMMENT                          { result = CommentNode.new(val[0]) }
-    | definition                       { result = val[0] }
+    #: comment                          { result = val[0] }
+    : definition                       { result = val[0] }
     | assignment                       { result = val[0] }
     | motion_statement                 { result = val[0] }
     | IO_METHOD var                    { result = IOMethodNode.new(val[0],val[1]) }
@@ -166,8 +166,13 @@ rule
     : OUTPUT '[' DIGIT ']'             { result = IONode.new(val[0], val[2].to_i) }
     ;
 
+  comment
+    : COMMENT                          { result = CommentNode.new(val[0]) }
+    ;
+
   terminator
-    : NEWLINE
+    : NEWLINE                          { result = TerminatorNode.new }
+    | comment                          { result = val[0] }
     ;
 
 end

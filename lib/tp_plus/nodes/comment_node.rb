@@ -4,6 +4,10 @@ module TPPlus
       def initialize(text)
         @text = text
       end
+
+      def eval(context)
+        "!#{@text[1,@text.length]}"
+      end
     end
   end
 end
