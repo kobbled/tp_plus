@@ -19,7 +19,7 @@ rule
       # to ignore trailing line breaks
     | statements terminator            { result = val[0] }
     # this adds a couple conflicts
-    | terminator statements
+    | terminator statements            { result = [TerminatorNode.new] << val[1] }
     | terminator                       { result = [TerminatorNode.new] }
     ;
 

@@ -133,7 +133,7 @@ racc_reduce_table = [
   1, 49, :_reduce_3,
   3, 49, :_reduce_4,
   2, 49, :_reduce_5,
-  2, 49, :_reduce_none,
+  2, 49, :_reduce_6,
   1, 49, :_reduce_7,
   0, 52, :_reduce_none,
   1, 52, :_reduce_9,
@@ -370,7 +370,10 @@ def _reduce_5(val, _values, result)
     result
 end
 
-# reduce 6 omitted
+def _reduce_6(val, _values, result)
+ result = [TerminatorNode.new] << val[1] 
+    result
+end
 
 def _reduce_7(val, _values, result)
  result = [TerminatorNode.new] 

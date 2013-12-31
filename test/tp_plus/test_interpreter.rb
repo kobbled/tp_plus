@@ -102,4 +102,14 @@ class TestInterpreter < Test::Unit::TestCase
     assert_prog "L PR[1:foo] 2000mm/sec CNT0 ;\n"
   end
 
+  def test_simple_if
+    parse("foo := R[1]\nif foo==1\nfoo=2\nend")
+    assert_prog "IF R[1:foo]<>1,JMP LBL[100] ;\nR[1:foo]=2 ;\nLBL[100] ;\n"
+  end
+
+  def test_simple_if_else
+    parse("foo := R[1]\nif foo==1\nfoo=2\nelse\nfoo=1end")
+    assert_prog "IF R[1:foo]<>1,JMP LBL[100] ;\nR[1:foo]=2 ;\nJMP LBL[101] ;\nLBL[100] ;\nR[1:foo]=1 ;\nLBL[101] ;\n"
+  end
+
 end
