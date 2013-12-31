@@ -422,12 +422,12 @@ end
 # reduce 17 omitted
 
 def _reduce_18(val, _values, result)
- result = ConditionalNode.new(val[1],val[2],val[3]) 
+ result = ConditionalNode.new("if",val[1],val[2],val[3]) 
     result
 end
 
 def _reduce_19(val, _values, result)
- result = ConditionalNode.new(val[1],val[3],val[2]) 
+ result = ConditionalNode.new("unless",val[1],val[2],val[3]) 
     result
 end
 

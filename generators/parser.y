@@ -40,9 +40,9 @@ rule
 
   conditional
     : IF expression block else_block END
-                                       { result = ConditionalNode.new(val[1],val[2],val[3]) }
+                                       { result = ConditionalNode.new("if",val[1],val[2],val[3]) }
     | UNLESS expression block else_block END
-                                       { result = ConditionalNode.new(val[1],val[3],val[2]) }
+                                       { result = ConditionalNode.new("unless",val[1],val[2],val[3]) }
     ;
 
   else_block

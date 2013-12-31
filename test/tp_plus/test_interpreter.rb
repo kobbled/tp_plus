@@ -108,8 +108,21 @@ class TestInterpreter < Test::Unit::TestCase
   end
 
   def test_simple_if_else
-    parse("foo := R[1]\nif foo==1\nfoo=2\nelse\nfoo=1end")
+    parse("foo := R[1]\nif foo==1\nfoo=2\nelse\nfoo=1\nend")
     assert_prog "IF R[1:foo]<>1,JMP LBL[100] ;\nR[1:foo]=2 ;\nJMP LBL[101] ;\nLBL[100] ;\nR[1:foo]=1 ;\nLBL[101] ;\n"
   end
+
+  def test_simple_unless
+    parse("foo := R[1]\nunless foo==1\nfoo=2\nend")
+    assert_prog "IF R[1:foo]=1,JMP LBL[100] ;\nR[1:foo]=2 ;\nLBL[100] ;\n"
+  end
+
+  def test_simple_unless_else
+    parse("foo := R[1]\nunless foo==1\nfoo=2\nelse\nfoo=1\nend")
+    assert_prog "IF R[1:foo]=1,JMP LBL[100] ;\nR[1:foo]=2 ;\nJMP LBL[101] ;\nLBL[100] ;\nR[1:foo]=1 ;\nLBL[101] ;\n"
+  end
+
+
+
 
 end
