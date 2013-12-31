@@ -50,11 +50,15 @@ rule
 
 
          at             { [:AT, text] }
+         else           { [:ELSE, text] }
+         end            { [:END, text] }
+         if             { [:IF, text] }
          jump_to        { [:JUMP, text] }
          linear_move|joint_move|circular_move { [:MOVE, text] }
          term           { [:TERM, text] }
          turn_on|turn_off|toggle { [:IO_METHOD, text] }
          to             { [:TO, text] }
+         unless         { [:UNLESS, text] }
 
          \n             { [:NEWLINE, text] }
          ;              { [:SEMICOLON, text] }

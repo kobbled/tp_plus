@@ -2,16 +2,28 @@ class TPPlus::Parser
 token ASSIGN AT_SYM COMMENT JUMP NUMREG IO_METHOD
 token MOVE DOT TO AT TERM
 token SEMICOLON NEWLINE
-token REAL DIGIT WORD EQUAL PLUS MINUS UNITS
+token REAL DIGIT WORD EQUAL UNITS
+token EEQUAL NOTEQUAL GTE LTE LT GT
+token PLUS MINUS STAR SLASH DIV AND OR MOD
+token IF ELSE END UNLESS
 rule
   program
-    : statements
-    | terminator
+    : /* nothing */
+    | statements                       { @interpreter.nodes = val[0] }
     ;
 
   statements
-    : statement terminator statements  { }
-    | statement terminator             { @interpreter.nodes << val[0] }
+    : statement                        { result = val }
+    | statements terminator statement  { result = val[0] << val[2] }
+      # to ignore trailing line breaks
+    | statements terminator            { result = val[0] }
+    # this adds a couple conflicts
+    | terminator statements
+    | terminator                       { result = [TerminatorNode.new] }
+    ;
+
+  block
+    | statements                       { result = val[0] }
     ;
 
   statement
@@ -22,6 +34,19 @@ rule
     | IO_METHOD WORD                   { result = IOMethodNode.new(val[0],val[1]) }
     | JUMP AT_SYM WORD                 { result = JumpNode.new(val[2]) }
     | label_definition
+    | conditional
+    ;
+
+  conditional
+    : IF expression block else_block END
+                                       { result = ConditionalNode.new(val[1],val[2],val[3]) }
+    | UNLESS expression block else_block END
+                                       { result = ConditionalNode.new(val[1],val[3],val[2]) }
+    ;
+
+  else_block
+    : ELSE block                       { result = val[1] }
+    |
     ;
 
   motion_statement
@@ -67,6 +92,44 @@ rule
     ;
 
   expression
+    : simple_expression
+    | simple_expression relop simple_expression { result = ExpressionNode.new(val[0],val[1],val[2]) }
+    ;
+
+  simple_expression
+    : term
+    | simple_expression addop term
+    ;
+
+  term
+    : factor
+    | term mulop factor
+    ;
+
+  relop
+    : EEQUAL
+    | NOTEQUAL
+    | LT
+    | GT
+    | GTE
+    | LTE
+    ;
+
+  addop
+    : PLUS
+    | MINUS
+    | OR
+    ;
+
+  mulop
+    : STAR
+    | SLASH
+    | DIV
+    | MOD
+    | AND
+    ;
+
+  factor
     : number
     ;
 
@@ -84,7 +147,6 @@ rule
 
   terminator
     : NEWLINE
-    |
     ;
 
 end

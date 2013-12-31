@@ -26,6 +26,10 @@ class TestParser < Test::Unit::TestCase
     parse("")
   end
 
+  def blank_prog
+    parse("\n\n\n\n\n")
+  end
+
   def test_comment
     parse("# foo")
     assert_node_type CommentNode, last_node
@@ -93,5 +97,20 @@ class TestParser < Test::Unit::TestCase
   def test_motion
     parse("linear_move.to(home).at(2000mm/s).term(0)")
     assert_node_type MotionNode, last_node
+  end
+
+  def test_simple_if
+    parse("if 1==1 \n\n\njump_to @foo\nend")
+    assert_node_type ConditionalNode, last_node
+  end
+
+  def test_if_with_else
+    parse("if 1==1 \n\n\njump_to @foo\n else \n# something\nend")
+    assert_node_type ConditionalNode, last_node
+  end
+
+  def test_simple_unless
+    parse("unless 1==1\njump_to @foo\nend")
+    assert_node_type ConditionalNode, last_node
   end
 end

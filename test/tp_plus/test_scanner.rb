@@ -276,4 +276,24 @@ class TestScanner < Test::Unit::TestCase
      @scanner.scan_setup "mm/s"
      assert_token :UNITS, "mm/s"
    end
+
+   def test_if
+     @scanner.scan_setup "if"
+     assert_token :IF, "if"
+   end
+
+   def test_else
+     @scanner.scan_setup "else"
+     assert_token :ELSE, "else"
+   end
+
+   def test_end
+     @scanner.scan_setup "end"
+     assert_token :END, "end"
+   end
+
+   def test_unless
+     @scanner.scan_setup "unless"
+     assert_token :UNLESS, "unless"
+   end
 end

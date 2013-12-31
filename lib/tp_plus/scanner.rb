@@ -162,6 +162,15 @@ class TPPlus::Scanner < Racc::Parser
       when (text = @ss.scan(/at/i))
          action { [:AT, text] }
 
+      when (text = @ss.scan(/else/i))
+         action { [:ELSE, text] }
+
+      when (text = @ss.scan(/end/i))
+         action { [:END, text] }
+
+      when (text = @ss.scan(/if/i))
+         action { [:IF, text] }
+
       when (text = @ss.scan(/jump_to/i))
          action { [:JUMP, text] }
 
@@ -176,6 +185,9 @@ class TPPlus::Scanner < Racc::Parser
 
       when (text = @ss.scan(/to/i))
          action { [:TO, text] }
+
+      when (text = @ss.scan(/unless/i))
+         action { [:UNLESS, text] }
 
       when (text = @ss.scan(/\n/i))
          action { [:NEWLINE, text] }
