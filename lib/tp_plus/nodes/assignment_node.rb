@@ -6,6 +6,10 @@ module TPPlus
         @identifier = identifier
         @assignable = assignable
       end
+
+      def eval(context)
+        "#{@identifier.eval(context)}=#{@assignable.eval(context)}"
+      end
     end
   end
 end

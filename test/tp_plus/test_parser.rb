@@ -65,18 +65,18 @@ class TestParser < Test::Unit::TestCase
     parse("foo += 1")
     l = last_node
     assert_node_type AssignmentNode, l
-    assert_equal "foo", l.identifier
+    assert_node_type VarNode, l.identifier
     assert_node_type ExpressionNode, l.assignable
-    assert_equal "foo", l.assignable.left_op
+    assert_node_type VarNode, l.assignable.left_op
   end
 
   def test_minus_equal
     parse("foo -= 1")
     l = last_node
     assert_node_type AssignmentNode, l
-    assert_equal "foo", l.identifier
+    assert_node_type VarNode, l.identifier
     assert_node_type ExpressionNode, l.assignable
-    assert_equal "foo", l.assignable.left_op
+    assert_node_type VarNode, l.assignable.left_op
   end
 
   def test_turn_on

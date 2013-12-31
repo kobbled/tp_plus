@@ -74,36 +74,40 @@ rule
     ;
 
   definition
-    : WORD ASSIGN definable            { result = DefinitionNode.new(val[0],val[1]) }
+    : WORD ASSIGN definable            { result = DefinitionNode.new(val[0],val[2]) }
     ;
 
   assignment
-    : WORD EQUAL expression            { result = AssignmentNode.new(val[0],val[2]) }
-    | WORD PLUS EQUAL expression       { result = AssignmentNode.new(
+    : var EQUAL expression            { result = AssignmentNode.new(val[0],val[2]) }
+    | var PLUS EQUAL expression       { result = AssignmentNode.new(
                                            val[0],
                                            ExpressionNode.new(val[0],val[1],val[3])
                                          )
                                        }
-    | WORD MINUS EQUAL expression       { result = AssignmentNode.new(
+    | var MINUS EQUAL expression       { result = AssignmentNode.new(
                                            val[0],
                                            ExpressionNode.new(val[0],val[1],val[3])
                                          )
                                        }
     ;
 
+  var
+    : WORD                             { result = VarNode.new(val[0]) }
+    ;
+
   expression
-    : simple_expression
+    : simple_expression                         { result = val[0] }
     | simple_expression relop simple_expression { result = ExpressionNode.new(val[0],val[1],val[2]) }
     ;
 
   simple_expression
-    : term
-    | simple_expression addop term
+    : term                                      { result = val[0] }
+    | simple_expression addop term              { result = ExpressionNode.new(val[0],val[1],val[2]) }
     ;
 
   term
     : factor
-    | term mulop factor
+    | term mulop factor                         { result = ExpressionNode.new(val[0],val[1],val[2]) }
     ;
 
   relop
@@ -131,6 +135,7 @@ rule
 
   factor
     : number
+    | var
     ;
 
   number
@@ -142,7 +147,7 @@ rule
     ;
 
   numreg
-    : NUMREG '[' DIGIT ']'
+    : NUMREG '[' DIGIT ']'             { result = NumregNode.new(val[2].to_i) }
     ;
 
   terminator

@@ -4,6 +4,10 @@ module TPPlus
       def initialize(value)
         @value = value
       end
+
+      def eval(context)
+        @value
+      end
     end
   end
 end
