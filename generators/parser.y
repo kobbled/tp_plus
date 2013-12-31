@@ -1,5 +1,6 @@
 class TPPlus::Parser
-token ASSIGN AT_SYM COMMENT JUMP NUMREG IO_METHOD INPUT OUTPUT
+token ASSIGN AT_SYM COMMENT JUMP IO_METHOD INPUT OUTPUT
+token NUMREG POSREG VREG SREG
 token MOVE DOT TO AT TERM
 token SEMICOLON NEWLINE
 token REAL DIGIT WORD EQUAL UNITS
@@ -50,22 +51,27 @@ rule
     ;
 
   motion_statement
-    : MOVE DOT TO '(' WORD ')' motion_modifiers
+    : MOVE DOT TO '(' var ')' motion_modifiers
                                        { result = MotionNode.new(val[0],val[4],val[6]) }
     ;
 
   motion_modifiers
-    : DOT motion_modifier motion_modifiers
-    | DOT motion_modifier
+    : motion_modifier                  { result = val }
+    | motion_modifiers motion_modifier
+                                       { result = val[0] << val[1] }
     ;
+    #: DOT motion_modifier motion_modifiers
+    #                                  { result = val[1] }
+    #| DOT motion_modifier             { result = val[1] }
+    #;
 
   motion_modifier
-    : AT '(' speed ')'
-    | TERM '(' number ')'
+    : DOT AT '(' speed ')'                 { result = SpeedNode.new(val[3]) }
+    | DOT TERM '(' number ')'              { result = TerminationNode.new(val[3]) }
     ;
 
   speed
-    : number UNITS
+    : number UNITS                     { result = [val[0],UnitsNode.new(val[1])] }
     ;
 
 
@@ -145,10 +151,15 @@ rule
   definable
     : numreg
     | output
+    | posreg
     ;
 
   numreg
     : NUMREG '[' DIGIT ']'             { result = NumregNode.new(val[2].to_i) }
+    ;
+
+  posreg
+    : POSREG '[' DIGIT ']'             { result = PosregNode.new(val[2].to_i) }
     ;
 
   output

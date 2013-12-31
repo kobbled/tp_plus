@@ -97,4 +97,9 @@ class TestInterpreter < Test::Unit::TestCase
     assert_prog "DO[1:foo]=(!DO[1:foo]) ;\n"
   end
 
+  def test_simple_linear_motion
+    parse("foo := PR[1]\nlinear_move.to(foo).at(2000mm/s).term(0)")
+    assert_prog "L PR[1:foo] 2000mm/sec CNT0 ;\n"
+  end
+
 end
