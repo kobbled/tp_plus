@@ -60,7 +60,7 @@ rule
          to             { [:TO, text] }
          unless         { [:UNLESS, text] }
 
-         \n             { [:NEWLINE, text] }
+         [\n\r]         { [:NEWLINE, text] }
          ;              { [:SEMICOLON, text] }
          \d+\.\d+|\.\d+ { [:REAL, text.to_f] }
          \.             { [:DOT, text] }
