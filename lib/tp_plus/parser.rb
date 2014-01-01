@@ -353,7 +353,7 @@ Racc_debug_parser = false
 # reduce 1 omitted
 
 def _reduce_2(val, _values, result)
- @interpreter.nodes = val[0] 
+ @interpreter.nodes = val[0].flatten 
     result
 end
 

@@ -127,6 +127,11 @@ class TestInterpreter < Test::Unit::TestCase
     assert_prog "! this is a comment ;\n"
   end
 
+  def test_two_comments
+    parse("# comment one\n# comment two")
+    assert_prog "! comment one ;\n! comment two ;\n"
+  end
+
   def test_inline_comment
     parse("foo := R[1] # comment\nfoo = 1 # another comment")
     assert_prog "! comment ;\nR[1:foo]=1 ;\n! another comment ;\n"

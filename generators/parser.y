@@ -10,7 +10,7 @@ token IF ELSE END UNLESS
 rule
   program
     : /* nothing */
-    | statements                       { @interpreter.nodes = val[0] }
+    | statements                       { @interpreter.nodes = val[0].flatten }
     ;
 
   statements
