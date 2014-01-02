@@ -291,4 +291,9 @@ class TestInterpreter < Test::Unit::TestCase
     parse("jump_to @foo\n@foo")
     assert_prog "JMP LBL[100:foo] ;\nLBL[100:foo] ;\n"
   end
+
+  def test_multiple_motion_modifiers
+    parse("p := P[1]\no := PR[1]\nlinear_move.to(p).at(max_speed).term(0).offset(o).time_before(0.5,foo())")
+    assert_prog "L P[1:p] max_speed CNT0 Offset,PR[1:o] TB .50sec,CALL FOO ;\n"
+  end
 end

@@ -35,7 +35,8 @@ module TPPlus
       def modifiers_string(context)
         return "" unless actual_modifiers.any?
 
-        @modifiers_string = actual_modifiers.inject(" ") {|s,m| s += m.eval(context) }
+        strings_array = [""] << actual_modifiers.map { |m| m.eval(context) }
+        @modifiers_string = strings_array.join(" ")
       end
 
       def eval(context)
