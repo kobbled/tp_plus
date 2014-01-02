@@ -175,4 +175,34 @@ class TestParser < Test::Unit::TestCase
     parse("p := P[1]\nlinear_move.to(p).at(2000mm/s).term(0).time_before(0.1, foo())")
     assert_node_type MotionNode, last_node
   end
+
+  def test_use_uframe
+    parse("use_uframe 5")
+    assert_node_type UseNode, last_node
+  end
+
+  def test_indirect_uframe
+    parse("foo := R[1]\nuse_uframe foo")
+    assert_node_type UseNode, last_node
+  end
+
+  def test_use_utool
+    parse("use_utool 5")
+    assert_node_type UseNode, last_node
+  end
+
+  def test_indirect_utool
+    parse("foo := R[1]\nuse_utool foo")
+    assert_node_type UseNode, last_node
+  end
+
+  def test_use_payload
+    parse("use_payload 1")
+    assert_node_type UseNode, last_node
+  end
+
+  def test_indirect_payload
+    parse("foo := R[1]\nuse_payload foo")
+    assert_node_type UseNode, last_node
+  end
 end

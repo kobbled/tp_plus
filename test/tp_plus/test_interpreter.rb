@@ -197,16 +197,6 @@ class TestInterpreter < Test::Unit::TestCase
     assert_prog "L P[1:foo] 2000mm/sec CNT0 ;\n"
   end
 
-  def test_fanuc_assignable_uframe
-    parse("uframe_num = 5")
-    assert_prog "UFRAME_NUM=5 ;\n"
-  end
-
-  def test_fanuc_assignable_utool
-    parse("foo := R[1]\nutool_num = foo")
-    assert_prog "UTOOL_NUM=R[1:foo] ;\n"
-  end
-
   def test_pr_offset
     parse("home := P[1]\nmy_offset := PR[1]\nlinear_move.to(home).at(2000mm/s).term(0).offset(my_offset)")
     assert_prog "L P[1:home] 2000mm/sec CNT0 Offset,PR[1:my_offset] ;\n"
@@ -252,4 +242,33 @@ class TestInterpreter < Test::Unit::TestCase
     assert_prog "L P[1:p] max_speed CNT0 ;\n"
   end
 
+  def test_use_uframe
+    parse("use_uframe 5")
+    assert_prog "UFRAME_NUM=5 ;\n"
+  end
+
+  def test_indirect_uframe
+    parse("foo := R[1]\nuse_uframe foo")
+    assert_prog "UFRAME_NUM=R[1:foo] ;\n"
+  end
+
+  def test_use_utool
+    parse("use_utool 5")
+    assert_prog "UTOOL_NUM=5 ;\n"
+  end
+
+  def test_indirect_utool
+    parse("foo := R[1]\nuse_utool foo")
+    assert_prog "UTOOL_NUM=R[1:foo] ;\n"
+  end
+
+  def test_payload
+    parse("use_payload 1")
+    assert_prog "PAYLOAD[1] ;\n"
+  end
+
+  def test_indirect_payload
+    parse("foo := R[1]\nuse_payload foo")
+    assert_prog "PAYLOAD[R[1:foo]] ;\n"
+  end
 end

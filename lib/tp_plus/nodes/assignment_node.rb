@@ -16,12 +16,7 @@ module TPPlus
       end
 
       def identifier_string(context)
-        @identifier_string ||= if @identifier.respond_to?(:eval)
-                                 @identifier.eval(context)
-                               else
-                                 # FANUC methods
-                                 @identifier.upcase
-                               end
+        @identifier.eval(context)
       end
 
       def eval(context,options={})

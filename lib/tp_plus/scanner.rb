@@ -159,11 +159,14 @@ class TPPlus::Scanner < Racc::Parser
       when (text = @ss.scan(/\@/i))
          action { [:AT_SYM, text] }
 
-      when (text = @ss.scan(/uframe_num/i))
-         action { [:FANUC_ASSIGNABLE, text] }
+      when (text = @ss.scan(/use_payload/i))
+         action { [:FANUC_USE, text] }
 
-      when (text = @ss.scan(/utool_num/i))
-         action { [:FANUC_ASSIGNABLE, text] }
+      when (text = @ss.scan(/use_uframe/i))
+         action { [:FANUC_USE, text] }
+
+      when (text = @ss.scan(/use_utool/i))
+         action { [:FANUC_USE, text] }
 
       when (text = @ss.scan(/at/i))
          action { [:AT, text] }

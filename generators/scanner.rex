@@ -48,8 +48,9 @@ rule
          \%             { [:MOD, text] }
          \@             { [:AT_SYM, text] }
 
-         uframe_num     { [:FANUC_ASSIGNABLE, text] }
-         utool_num      { [:FANUC_ASSIGNABLE, text] }
+         use_payload    { [:FANUC_USE, text] }
+         use_uframe     { [:FANUC_USE, text] }
+         use_utool      { [:FANUC_USE, text] }
 
 
          at             { [:AT, text] }

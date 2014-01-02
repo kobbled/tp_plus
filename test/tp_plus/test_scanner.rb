@@ -302,14 +302,19 @@ class TestScanner < Test::Unit::TestCase
      assert_token :NEWLINE, "\r\n"
    end
 
-   def test_uframe_num
-     @scanner.scan_setup "uframe_num"
-     assert_token :FANUC_ASSIGNABLE, "uframe_num"
+   def test_use_uframe
+     @scanner.scan_setup "use_uframe"
+     assert_token :FANUC_USE, "use_uframe"
    end
 
-   def test_utool_num
-     @scanner.scan_setup "utool_num"
-     assert_token :FANUC_ASSIGNABLE, "utool_num"
+   def test_use_utool
+     @scanner.scan_setup "use_utool"
+     assert_token :FANUC_USE, "use_utool"
+   end
+
+   def test_use_payload
+     @scanner.scan_setup "use_payload"
+     assert_token :FANUC_USE, "use_payload"
    end
 
    def test_offset
