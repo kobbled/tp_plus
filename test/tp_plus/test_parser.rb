@@ -170,4 +170,9 @@ class TestParser < Test::Unit::TestCase
     parse("foo := P[1]\nbar := VR[1]\nlinear_move.to(foo).at(2000mm/s).term(0).offset(bar)")
     assert_node_type MotionNode, last_node
   end
+
+  def test_time_before
+    parse("p := P[1]\nlinear_move.to(p).at(2000mm/s).term(0).time_before(0.1, foo())")
+    assert_node_type MotionNode, last_node
+  end
 end

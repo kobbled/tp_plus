@@ -60,6 +60,7 @@ rule
          linear_move|joint_move|circular_move { [:MOVE, text] }
          offset         { [:OFFSET, text] }
          term           { [:TERM, text] }
+         time_before|time_after  { [:TIME_SEGMENT, text] }
          turn_on|turn_off|toggle { [:IO_METHOD, text] }
          to             { [:TO, text] }
          unless         { [:UNLESS, text] }

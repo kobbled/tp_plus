@@ -217,4 +217,15 @@ class TestInterpreter < Test::Unit::TestCase
     assert_prog "L P[1:home] 2000mm/sec CNT0 VOFFSET,VR[1:vision_offset] ;\n"
   end
 
+  def test_time_before
+    parse("p := P[1]\nlinear_move.to(p).at(2000mm/s).term(0).time_before(0.5, foo())")
+    assert_prog "L P[1:p] 2000mm/sec CNT0 TB .50sec,CALL FOO ;\n"
+  end
+
+  def test_time_after
+    parse("p := P[1]\nlinear_move.to(p).at(2000mm/s).term(0).time_after(0.5, foo())")
+    assert_prog "L P[1:p] 2000mm/sec CNT0 TA .50sec,CALL FOO ;\n"
+  end
+
+
 end

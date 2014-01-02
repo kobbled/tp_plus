@@ -189,6 +189,9 @@ class TPPlus::Scanner < Racc::Parser
       when (text = @ss.scan(/term/i))
          action { [:TERM, text] }
 
+      when (text = @ss.scan(/time_before|time_after/i))
+         action { [:TIME_SEGMENT, text] }
+
       when (text = @ss.scan(/turn_on|turn_off|toggle/i))
          action { [:IO_METHOD, text] }
 

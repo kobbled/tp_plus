@@ -316,4 +316,14 @@ class TestScanner < Test::Unit::TestCase
      @scanner.scan_setup "offset"
      assert_token :OFFSET, "offset"
    end
+
+   def test_time_before
+     @scanner.scan_setup "time_before"
+     assert_token :TIME_SEGMENT, "time_before"
+   end
+
+   def test_time_after
+     @scanner.scan_setup "time_after"
+     assert_token :TIME_SEGMENT, "time_after"
+   end
 end

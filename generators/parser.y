@@ -1,6 +1,6 @@
 class TPPlus::Parser
 token ASSIGN AT_SYM COMMENT JUMP IO_METHOD INPUT OUTPUT
-token NUMREG POSREG VREG SREG POSITION
+token NUMREG POSREG VREG SREG POSITION TIME_SEGMENT
 token MOVE DOT TO AT TERM OFFSET
 token SEMICOLON NEWLINE
 token REAL DIGIT WORD EQUAL UNITS
@@ -102,6 +102,13 @@ rule
     : DOT AT '(' speed ')'             { result = SpeedNode.new(val[3]) }
     | DOT TERM '(' number ')'          { result = TerminationNode.new(val[3]) }
     | DOT OFFSET '(' var ')'           { result = OffsetNode.new(val[3]) }
+    | DOT TIME_SEGMENT '(' time ',' program_call ')'
+                                       { result = TimeNode.new(val[1],val[3],val[5]) }
+    ;
+
+  time
+    : var
+    | number
     ;
 
   speed
@@ -182,6 +189,7 @@ rule
 
   number
     : DIGIT                            { result = DigitNode.new(val[0]) }
+    | REAL                             { result = RealNode.new(val[0]) }
     ;
 
   definable
