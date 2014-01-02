@@ -197,4 +197,9 @@ class TestInterpreter < Test::Unit::TestCase
     assert_prog "L P[1:foo] 2000mm/sec CNT0 ;\n"
   end
 
+  def test_fanuc_assignable_uframe
+    parse("uframe_num = 5")
+    assert_prog "UFRAME_NUM=5 ;\n"
+  end
+
 end

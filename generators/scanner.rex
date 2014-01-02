@@ -48,6 +48,8 @@ rule
          \%             { [:MOD, text] }
          \@             { [:AT_SYM, text] }
 
+         uframe_num     { [:FANUC_ASSIGNABLE, text] }
+
 
          at             { [:AT, text] }
          else           { [:ELSE, text] }

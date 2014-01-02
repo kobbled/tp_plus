@@ -159,6 +159,9 @@ class TPPlus::Scanner < Racc::Parser
       when (text = @ss.scan(/\@/i))
          action { [:AT_SYM, text] }
 
+      when (text = @ss.scan(/uframe_num/i))
+         action { [:FANUC_ASSIGNABLE, text] }
+
       when (text = @ss.scan(/at/i))
          action { [:AT, text] }
 

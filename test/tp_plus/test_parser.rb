@@ -150,4 +150,9 @@ class TestParser < Test::Unit::TestCase
     parse("foo := P[1]")
     assert_node_type DefinitionNode, last_node
   end
+
+  def test_uframe_definition
+    parse("uframe_num = 5")
+    assert_node_type AssignmentNode, last_node
+  end
 end
