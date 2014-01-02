@@ -29,13 +29,37 @@ rule
 
   statement
     #: comment                          { result = val[0] }
-    : definition                       { result = val[0] }
-    | assignment                       { result = val[0] }
-    | motion_statement                 { result = val[0] }
-    | IO_METHOD var                    { result = IOMethodNode.new(val[0],val[1]) }
-    | JUMP AT_SYM WORD                 { result = JumpNode.new(val[2]) }
+    : definition
+    | assignment
+    | motion_statement
+    | jump
+    | io_method
     | label_definition
     | conditional
+    | inline_conditional
+    | program_call
+    ;
+
+  program_call
+    : WORD '(' args ')'                { result = CallNode.new(val[0],val[2]) }
+    ;
+
+  args
+    : arg                              { result = [val[0]] }
+    | args ',' arg                     { result = val[0] << val[2] }
+    |                                  { result = [] }
+    ;
+
+  arg
+    : number
+    ;
+
+  io_method
+    : IO_METHOD var                    { result = IOMethodNode.new(val[0],val[1]) }
+    ;
+
+  jump
+    : JUMP AT_SYM WORD                 { result = JumpNode.new(val[2]) }
     ;
 
   conditional
@@ -43,6 +67,17 @@ rule
                                        { result = ConditionalNode.new("if",val[1],val[2],val[3]) }
     | UNLESS expression block else_block END
                                        { result = ConditionalNode.new("unless",val[1],val[2],val[3]) }
+    ;
+
+  inline_conditional
+    : inlineable IF expression          { result = InlineConditionalNode.new("if",val[2],val[0]) }
+    | inlineable UNLESS expression      { result = InlineConditionalNode.new("unless",val[2],val[0]) }
+    ;
+
+  inlineable
+    : jump
+    | assignment
+    | io_method
     ;
 
   else_block

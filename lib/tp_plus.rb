@@ -3,11 +3,13 @@ end
 
 
 require 'tp_plus/nodes/assignment_node'
+require 'tp_plus/nodes/call_node'
 require 'tp_plus/nodes/comment_node'
 require 'tp_plus/nodes/conditional_node'
 require 'tp_plus/nodes/definition_node'
 require 'tp_plus/nodes/digit_node'
 require 'tp_plus/nodes/expression_node'
+require 'tp_plus/nodes/inline_conditional_node'
 require 'tp_plus/nodes/io_node'
 require 'tp_plus/nodes/io_method_node'
 require 'tp_plus/nodes/jump_node'

@@ -137,4 +137,39 @@ class TestInterpreter < Test::Unit::TestCase
     assert_prog "! comment ;\nR[1:foo]=1 ;\n! another comment ;\n"
   end
 
+  def test_inline_conditional_if_on_jump
+    parse("foo := R[1]\n@bar\njump_to @bar if foo==1\n")
+    assert_prog "LBL[100:bar] ;\nIF R[1:foo]=1,JMP LBL[100:bar] ;\n"
+  end
+
+  def test_inline_conditional_unless_on_jump
+    parse("foo := R[1]\n@bar\njump_to @bar unless foo==1\n")
+    assert_prog "LBL[100:bar] ;\nIF R[1:foo]<>1,JMP LBL[100:bar] ;\n"
+  end
+
+  def test_inline_assignment
+    parse("foo := R[1]\nfoo=2 if foo==1\n")
+    assert_prog "IF (R[1:foo]=1),R[1:foo]=2 ;\n"
+  end
+
+  def test_inline_io_method
+    parse("foo := DO[1]\nbar := R[1]\nturn_on foo if bar < 10\n")
+   assert_prog "IF (R[1:bar]<10),DO[1:foo]=ON ;\n" 
+  end
+
+  def test_program_call
+    parse("foo()")
+    assert_prog "CALL FOO ;\n"
+  end
+
+  def test_program_call_with_simple_arg
+    parse("foo(1)")
+    assert_prog "CALL FOO(1) ;\n"
+  end
+
+  def test_program_call_with_multiple_simple_args
+    parse("foo(1,2,3)")
+    assert_prog "CALL FOO(1,2,3) ;\n"
+  end
+
 end

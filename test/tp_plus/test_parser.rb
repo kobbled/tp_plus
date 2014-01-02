@@ -107,4 +107,37 @@ class TestParser < Test::Unit::TestCase
     parse("unless 1==1\njump_to @foo\nend")
     assert_node_type ConditionalNode, last_node
   end
+
+  def test_inline_if
+    parse("jump_to @foo if foo < 10")
+    assert_node_type InlineConditionalNode, last_node
+  end
+
+  def test_inline_if_assignment
+    parse("foo = 1 if foo < 10")
+    assert_node_type InlineConditionalNode, last_node
+  end
+
+  def test_inline_io_method
+    parse("turn_on foo if bar < 10")
+    assert_node_type InlineConditionalNode, last_node
+  end
+
+  def test_prog_call
+    parse("foo()")
+    assert_node_type CallNode, last_node
+  end
+
+  def test_prog_call_with_an_arg
+    parse("foo(1)")
+    l = last_node
+    assert_node_type CallNode, l
+    assert_equal 1, l.args.length
+  end
+
+  def test_prog_call_with_multiple_args
+    parse("foo(1,2,3)")
+    l = last_node
+    assert_equal 3, l.args.length
+  end
 end
