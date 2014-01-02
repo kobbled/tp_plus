@@ -336,4 +336,9 @@ class TestScanner < Test::Unit::TestCase
      @scanner.scan_setup "max_speed"
      assert_token :MAX_SPEED, "max_speed"
    end
+
+   def test_word_with_end_in_it
+     @scanner.scan_setup "end_zone"
+     assert_token :WORD, "end_zone"
+   end
 end

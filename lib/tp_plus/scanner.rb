@@ -57,13 +57,10 @@ class TPPlus::Scanner < Racc::Parser
     token = case @state
     when nil
       case
-      when (text = @ss.scan(/BLANK/i))
-        ;
-
       when (text = @ss.scan(/\#.*(?=\n?$)/i))
          action { [:COMMENT, text] }
 
-      when (text = @ss.scan(/true|false/i))
+      when (text = @ss.scan(/(?=[\W]+|\A|\z)(true|false)(?=[\W]+|\A|\z)/i))
          action { [:TRUE_FALSE, text] }
 
       when (text = @ss.scan(/R(?=\[)/i))
@@ -159,52 +156,52 @@ class TPPlus::Scanner < Racc::Parser
       when (text = @ss.scan(/\@/i))
          action { [:AT_SYM, text] }
 
-      when (text = @ss.scan(/use_payload/i))
+      when (text = @ss.scan(/(?=[\W]+|\A|\z)use_payload(?=[\W]+|\A|\z)/i))
          action { [:FANUC_USE, text] }
 
-      when (text = @ss.scan(/use_uframe/i))
+      when (text = @ss.scan(/(?=[\W]+|\A|\z)use_uframe(?=[\W]+|\A|\z)/i))
          action { [:FANUC_USE, text] }
 
-      when (text = @ss.scan(/use_utool/i))
+      when (text = @ss.scan(/(?=[\W]+|\A|\z)use_utool(?=[\W]+|\A|\z)/i))
          action { [:FANUC_USE, text] }
 
-      when (text = @ss.scan(/at/i))
+      when (text = @ss.scan(/(?=[\W]+|\A|\z)at(?=[\W]+|\A|\z)/i))
          action { [:AT, text] }
 
-      when (text = @ss.scan(/else/i))
+      when (text = @ss.scan(/(?=[\W]+|\A|\z)else(?=[\W]+|\A|\z)/i))
          action { [:ELSE, text] }
 
-      when (text = @ss.scan(/end/i))
+      when (text = @ss.scan(/(?=[\W]+|\A|\z)end(?=[\W]+|\A|\z)/i))
          action { [:END, text] }
 
-      when (text = @ss.scan(/if/i))
+      when (text = @ss.scan(/(?=[\W]+|\A|\z)if(?=[\W]+|\A|\z)/i))
          action { [:IF, text] }
 
-      when (text = @ss.scan(/jump_to/i))
+      when (text = @ss.scan(/(?=[\W]+|\A|\z)jump_to(?=[\W]+|\A|\z)/i))
          action { [:JUMP, text] }
 
-      when (text = @ss.scan(/linear_move|joint_move|circular_move/i))
+      when (text = @ss.scan(/(?=[\W]+|\A|\z)linear_move|joint_move|circular_move(?=[\W]+|\A|\z)/i))
          action { [:MOVE, text] }
 
-      when (text = @ss.scan(/max_speed/i))
+      when (text = @ss.scan(/(?=[\W]+|\A|\z)max_speed(?=[\W]+|\A|\z)/i))
          action { [:MAX_SPEED, text] }
 
-      when (text = @ss.scan(/offset/i))
+      when (text = @ss.scan(/(?=[\W]+|\A|\z)offset(?=[\W]+|\A|\z)/i))
          action { [:OFFSET, text] }
 
-      when (text = @ss.scan(/term/i))
+      when (text = @ss.scan(/(?=[\W]+|\A|\z)term(?=[\W]+|\A|\z)/i))
          action { [:TERM, text] }
 
-      when (text = @ss.scan(/time_before|time_after/i))
+      when (text = @ss.scan(/(?=[\W]+|\A|\z)time_before|time_after(?=[\W]+|\A|\z)/i))
          action { [:TIME_SEGMENT, text] }
 
-      when (text = @ss.scan(/turn_on|turn_off|toggle/i))
+      when (text = @ss.scan(/(?=[\W]+|\A|\z)turn_on|turn_off|toggle(?=[\W]+|\A|\z)/i))
          action { [:IO_METHOD, text] }
 
-      when (text = @ss.scan(/to/i))
+      when (text = @ss.scan(/(?=[\W]+|\A|\z)to(?=[\W]+|\A|\z)/i))
          action { [:TO, text] }
 
-      when (text = @ss.scan(/unless/i))
+      when (text = @ss.scan(/(?=[\W]+|\A|\z)unless(?=[\W]+|\A|\z)/i))
          action { [:UNLESS, text] }
 
       when (text = @ss.scan(/\r?\n/i))
