@@ -237,4 +237,9 @@ class TestInterpreter < Test::Unit::TestCase
     assert_prog "L P[1:p] 2000mm/sec CNT0 TB .50sec,DO[1:bar]=ON ;\n"
   end
 
+  def test_motion_with_indirect_termination
+    parse("p := P[1]\ncnt := R[1]\nlinear_move.to(p).at(2000mm/s).term(cnt)")
+    assert_prog "L P[1:p] 2000mm/sec CNT R[1:cnt] ;\n"
+  end
+
 end
