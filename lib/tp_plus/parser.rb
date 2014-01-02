@@ -20,7 +20,7 @@ module TPPlus
 
   def next_token
     t = @scanner.next_token
-    @interpreter.line_count += 1 if t == [:NEWLINE,"\n"]
+    @interpreter.line_count += 1 if t && t[0] == :NEWLINE
 
     puts t.inspect
     t
