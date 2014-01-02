@@ -149,12 +149,12 @@ class TestInterpreter < Test::Unit::TestCase
 
   def test_inline_assignment
     parse("foo := R[1]\nfoo=2 if foo==1\n")
-    assert_prog "IF (R[1:foo]=1),R[1:foo]=2 ;\n"
+    assert_prog "IF (R[1:foo]=1),R[1:foo]=(2) ;\n"
   end
 
   def test_inline_io_method
     parse("foo := DO[1]\nbar := R[1]\nturn_on foo if bar < 10\n")
-   assert_prog "IF (R[1:bar]<10),DO[1:foo]=ON ;\n" 
+   assert_prog "IF (R[1:bar]<10),DO[1:foo]=(ON) ;\n" 
   end
 
   def test_program_call

@@ -6,12 +6,16 @@ module TPPlus
         @target = target
       end
 
-      def eval(context)
+      def on_off(value,options={})
+        options[:mixed_logic] ? "(#{value})" : value
+      end
+
+      def eval(context,options={})
         case @method
         when "turn_on"
-          "#{@target.eval(context)}=ON"
+          "#{@target.eval(context)}=#{on_off("ON",options)}"
         when "turn_off"
-          "#{@target.eval(context)}=OFF"
+          "#{@target.eval(context)}=#{on_off("OFF",options)}"
         when "toggle"
           "#{@target.eval(context)}=(!#{@target.eval(context)})"
         end

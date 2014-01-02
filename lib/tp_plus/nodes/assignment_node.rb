@@ -7,8 +7,16 @@ module TPPlus
         @assignable = assignable
       end
 
-      def eval(context)
-        "#{@identifier.eval(context)}=#{@assignable.eval(context)}"
+      def assignable_string(context,options={})
+        @assignable_string ||= if options[:mixed_logic]
+          "(#{@assignable.eval(context)})"
+        else
+          @assignable.eval(context)
+        end
+      end
+
+      def eval(context,options={})
+        "#{@identifier.eval(context)}=#{assignable_string(context,options)}"
       end
     end
   end

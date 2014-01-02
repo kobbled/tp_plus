@@ -23,7 +23,7 @@ module TPPlus
         if simple?
           "IF #{condition(context)},#{@block.eval(context)}"
         else
-          "IF (#{condition(context)}),#{@block.eval(context)}"
+          "IF (#{condition(context)}),#{@block.eval(context,mixed_logic:true)}"
         end
       end
     end
