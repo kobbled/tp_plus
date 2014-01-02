@@ -1,7 +1,7 @@
 class TPPlus::Parser
 token ASSIGN AT_SYM COMMENT JUMP IO_METHOD INPUT OUTPUT
 token NUMREG POSREG VREG SREG POSITION
-token MOVE DOT TO AT TERM
+token MOVE DOT TO AT TERM OFFSET
 token SEMICOLON NEWLINE
 token REAL DIGIT WORD EQUAL UNITS
 token EEQUAL NOTEQUAL GTE LTE LT GT
@@ -97,14 +97,11 @@ rule
     | motion_modifiers motion_modifier
                                        { result = val[0] << val[1] }
     ;
-    #: DOT motion_modifier motion_modifiers
-    #                                  { result = val[1] }
-    #| DOT motion_modifier             { result = val[1] }
-    #;
 
   motion_modifier
-    : DOT AT '(' speed ')'                 { result = SpeedNode.new(val[3]) }
-    | DOT TERM '(' number ')'              { result = TerminationNode.new(val[3]) }
+    : DOT AT '(' speed ')'             { result = SpeedNode.new(val[3]) }
+    | DOT TERM '(' number ')'          { result = TerminationNode.new(val[3]) }
+    | DOT OFFSET '(' var ')'           { result = OffsetNode.new(val[3]) }
     ;
 
   speed
@@ -192,6 +189,11 @@ rule
     | output
     | posreg
     | position
+    | vreg
+    ;
+
+  vreg
+    : VREG '[' DIGIT ']'               { result = VisionRegisterNode.new(val[2].to_i) }
     ;
 
   position

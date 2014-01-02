@@ -58,6 +58,7 @@ rule
          if             { [:IF, text] }
          jump_to        { [:JUMP, text] }
          linear_move|joint_move|circular_move { [:MOVE, text] }
+         offset         { [:OFFSET, text] }
          term           { [:TERM, text] }
          turn_on|turn_off|toggle { [:IO_METHOD, text] }
          to             { [:TO, text] }

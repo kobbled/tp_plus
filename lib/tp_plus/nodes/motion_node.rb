@@ -28,8 +28,18 @@ module TPPlus
         @termination_node ||= @modifiers.select {|m| m.is_a? TerminationNode }.first
       end
 
+      def actual_modifiers
+        @actual_modifiers ||= @modifiers.reject {|m| m.is_a? SpeedNode}.reject {|m| m.is_a? TerminationNode }
+      end
+
+      def modifiers_string(context)
+        return "" unless actual_modifiers.any?
+
+        @modifiers_string = actual_modifiers.inject(" ") {|s,m| s += m.eval(context) }
+      end
+
       def eval(context)
-        "#{prefix} #{@destination.eval(context)} #{speed_node.eval(context)} #{termination_node.eval(context)}"
+        "#{prefix} #{@destination.eval(context)} #{speed_node.eval(context)} #{termination_node.eval(context)}#{modifiers_string(context)}"
       end
     end
   end

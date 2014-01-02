@@ -206,4 +206,15 @@ class TestInterpreter < Test::Unit::TestCase
     parse("foo := R[1]\nutool_num = foo")
     assert_prog "UTOOL_NUM=R[1:foo] ;\n"
   end
+
+  def test_pr_offset
+    parse("home := P[1]\nmy_offset := PR[1]\nlinear_move.to(home).at(2000mm/s).term(0).offset(my_offset)")
+    assert_prog "L P[1:home] 2000mm/sec CNT0 Offset,PR[1:my_offset] ;\n"
+  end
+
+  def test_vr_offset
+    parse("home := P[1]\nvision_offset := VR[1]\nlinear_move.to(home).at(2000mm/s).term(0).offset(vision_offset)")
+    assert_prog "L P[1:home] 2000mm/sec CNT0 VOFFSET,VR[1:vision_offset] ;\n"
+  end
+
 end

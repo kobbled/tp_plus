@@ -160,4 +160,14 @@ class TestParser < Test::Unit::TestCase
     parse("utool_num = 5")
     assert_node_type AssignmentNode, last_node
   end
+
+  def test_offset
+    parse("foo := P[1]\nbar := PR[1]\nlinear_move.to(foo).at(2000mm/s).term(0).offset(bar)")
+    assert_node_type MotionNode, last_node
+  end
+
+  def test_vr_offset
+    parse("foo := P[1]\nbar := VR[1]\nlinear_move.to(foo).at(2000mm/s).term(0).offset(bar)")
+    assert_node_type MotionNode, last_node
+  end
 end

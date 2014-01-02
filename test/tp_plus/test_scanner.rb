@@ -311,4 +311,9 @@ class TestScanner < Test::Unit::TestCase
      @scanner.scan_setup "utool_num"
      assert_token :FANUC_ASSIGNABLE, "utool_num"
    end
+
+   def test_offset
+     @scanner.scan_setup "offset"
+     assert_token :OFFSET, "offset"
+   end
 end
