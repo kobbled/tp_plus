@@ -140,4 +140,9 @@ class TestParser < Test::Unit::TestCase
     l = last_node
     assert_equal 3, l.args.length
   end
+
+  def test_prog_call_with_variable_arg
+    parse("foo(bar)")
+    assert_node_type CallNode, last_node
+  end
 end

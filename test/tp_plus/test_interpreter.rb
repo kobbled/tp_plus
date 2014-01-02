@@ -172,4 +172,9 @@ class TestInterpreter < Test::Unit::TestCase
     assert_prog "CALL FOO(1,2,3) ;\n"
   end
 
+  def test_program_call_with_variable_argument
+    parse("foo := R[1]\nbar(foo)")
+    assert_prog "CALL BAR(R[1:foo]) ;\n"
+  end
+
 end

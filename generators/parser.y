@@ -52,6 +52,7 @@ rule
 
   arg
     : number
+    | var
     ;
 
   io_method
