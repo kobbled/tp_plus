@@ -123,6 +123,7 @@ rule
 
   speed
     : number UNITS                     { result = [val[0],UnitsNode.new(val[1])] }
+    | var ',' UNITS                    { result = [val[0],UnitsNode.new(val[2])] }
     ;
 
 
