@@ -281,4 +281,14 @@ class TestInterpreter < Test::Unit::TestCase
     parse("foo := R[1]\n@bar\njump_to @bar unless foo > 1")
     assert_prog "LBL[100:bar] ;\nIF R[1:foo]<=1,JMP LBL[100:bar] ;\n"
   end
+
+  def test_inline_unless_with_two_vars
+    parse("foo := R[1]\nbar := R[2]\n@baz\njump_to @baz unless foo > bar")
+    assert_prog "LBL[100:baz] ;\nIF R[1:foo]<=R[2:bar],JMP LBL[100:baz] ;\n"
+  end
+
+  def test_labels_can_be_defined_after_jumps_to_them
+    parse("jump_to @foo\n@foo")
+    assert_prog "JMP LBL[100:foo] ;\nLBL[100:foo] ;\n"
+  end
 end

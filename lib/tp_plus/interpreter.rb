@@ -34,9 +34,18 @@ module TPPlus
       @variables[identifier.to_sym]
     end
 
+    def define_labels
+      @nodes.select {|n| n.is_a? Nodes::LabelDefinitionNode}.each do |n|
+        add_label(n.identifier)
+      end
+    end
+
     def eval
       s = ""
       last_node = nil
+
+      define_labels
+
       @nodes.each do |n|
         res = n.eval(self)
 
