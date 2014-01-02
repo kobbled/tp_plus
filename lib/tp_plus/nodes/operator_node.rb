@@ -13,7 +13,7 @@ module TPPlus
           when "!=", "<>"
             "="
           when ">"
-            "=<"
+            "<="
           when "<"
             ">="
           when ">="
