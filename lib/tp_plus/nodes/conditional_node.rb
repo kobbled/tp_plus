@@ -35,7 +35,15 @@ module TPPlus
         s
       end
 
+      def can_be_inlined?
+        return false unless @false_block.nil?
+
+        @true_block.flatten.reject {|n| n.is_a? TerminatorNode}.length == 1
+      end
+
       def eval(context)
+        return InlineConditionalNode.new(@type,@condition,@true_block.flatten.reject {|n| n.is_a? TerminatorNode }.first).eval(context) if can_be_inlined?
+
         if !@false_block
           if @type == "if"
           # simple if
