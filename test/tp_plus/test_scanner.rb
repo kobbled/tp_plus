@@ -326,4 +326,9 @@ class TestScanner < Test::Unit::TestCase
      @scanner.scan_setup "time_after"
      assert_token :TIME_SEGMENT, "time_after"
    end
+
+   def test_max_speed
+     @scanner.scan_setup "max_speed"
+     assert_token :MAX_SPEED, "max_speed"
+   end
 end

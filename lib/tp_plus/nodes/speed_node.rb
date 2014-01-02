@@ -19,6 +19,8 @@ module TPPlus
       end
 
       def eval(context)
+        return "max_speed" if @speed[0] == :max_speed
+
         "#{speed(context)}#{optional_space(context)}#{units(context)}"
       end
     end

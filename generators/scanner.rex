@@ -58,6 +58,7 @@ rule
          if             { [:IF, text] }
          jump_to        { [:JUMP, text] }
          linear_move|joint_move|circular_move { [:MOVE, text] }
+         max_speed      { [:MAX_SPEED, text] }
          offset         { [:OFFSET, text] }
          term           { [:TERM, text] }
          time_before|time_after  { [:TIME_SEGMENT, text] }

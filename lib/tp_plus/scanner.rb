@@ -183,6 +183,9 @@ class TPPlus::Scanner < Racc::Parser
       when (text = @ss.scan(/linear_move|joint_move|circular_move/i))
          action { [:MOVE, text] }
 
+      when (text = @ss.scan(/max_speed/i))
+         action { [:MAX_SPEED, text] }
+
       when (text = @ss.scan(/offset/i))
          action { [:OFFSET, text] }
 

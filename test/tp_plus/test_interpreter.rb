@@ -246,4 +246,10 @@ class TestInterpreter < Test::Unit::TestCase
     parse("p := P[1]\nspeed := R[1]\nlinear_move.to(p).at(speed, mm/s).term(0)")
     assert_prog "L P[1:p] R[1:speed] mm/sec CNT0 ;\n"
   end
+
+  def test_motion_with_max_speed
+    parse("p := P[1]\nlinear_move.to(p).at(max_speed).term(0)")
+    assert_prog "L P[1:p] max_speed CNT0 ;\n"
+  end
+
 end

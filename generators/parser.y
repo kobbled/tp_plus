@@ -7,7 +7,7 @@ token REAL DIGIT WORD EQUAL UNITS
 token EEQUAL NOTEQUAL GTE LTE LT GT
 token PLUS MINUS STAR SLASH DIV AND OR MOD
 token IF ELSE END UNLESS
-token FANUC_ASSIGNABLE
+token FANUC_ASSIGNABLE MAX_SPEED
 rule
   program
     : /* nothing */
@@ -123,6 +123,7 @@ rule
 
   speed
     : number UNITS                     { result = [val[0],UnitsNode.new(val[1])] }
+    | MAX_SPEED                        { result = [:max_speed,:max_speed] }
     | var ',' UNITS                    { result = [val[0],UnitsNode.new(val[2])] }
     ;
 
