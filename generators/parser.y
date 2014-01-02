@@ -102,8 +102,13 @@ rule
     : DOT AT '(' speed ')'             { result = SpeedNode.new(val[3]) }
     | DOT TERM '(' number ')'          { result = TerminationNode.new(val[3]) }
     | DOT OFFSET '(' var ')'           { result = OffsetNode.new(val[3]) }
-    | DOT TIME_SEGMENT '(' time ',' program_call ')'
+    | DOT TIME_SEGMENT '(' time ',' time_seg_actions ')'
                                        { result = TimeNode.new(val[1],val[3],val[5]) }
+    ;
+
+  time_seg_actions
+    : program_call
+    | io_method
     ;
 
   time

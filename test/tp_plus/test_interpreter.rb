@@ -227,5 +227,14 @@ class TestInterpreter < Test::Unit::TestCase
     assert_prog "L P[1:p] 2000mm/sec CNT0 TA .50sec,CALL FOO ;\n"
   end
 
+  def test_time_before_with_register_time
+    parse("p := P[1]\nt := R[1]\nlinear_move.to(p).at(2000mm/s).term(0).time_before(t, foo())")
+    assert_prog "L P[1:p] 2000mm/sec CNT0 TB R[1:t]sec,CALL FOO ;\n"
+  end
+
+  def test_time_before_with_io_method
+    parse("p := P[1]\nbar := DO[1]\nlinear_move.to(p).at(2000mm/s).term(0).time_before(0.5, turn_on bar)")
+    assert_prog "L P[1:p] 2000mm/sec CNT0 TB .50sec,DO[1:bar]=ON ;\n"
+  end
 
 end
