@@ -36,7 +36,7 @@ example_1.tpp
 
       jump_to @foo if foo < 10
 
-    turn_on bar
+    turn_on bar if foo == 5
     toggle baz
 
     linear_move.to(home).at(2000mm/s).term(0)
@@ -52,7 +52,7 @@ example_1.ls
       1:  R[1:foo]=R[1:foo]+1 ;
       1:  IF R[1:foo]<10,JMP LBL[1] ;
       1:   ;
-      1:  DO[1:bar]=ON ;
+      1:  IF (R[1:foo]=5),DO[1:bar]=(ON) ;
       1:  DO[2:baz]=(!DO[2:baz]) ;
       1:   ;
       1:  L PR[1:home] 2000mm/sec CNT0 ;
