@@ -182,4 +182,14 @@ class TestInterpreter < Test::Unit::TestCase
     assert_prog " ;\n"
   end
 
+  def test_plus_equals
+    parse("foo := R[1]\nfoo += 1\n")
+    assert_prog "R[1:foo]=R[1:foo]+1 ;\n"
+  end
+
+  def test_minus_equals
+    parse("foo := R[1]\nfoo -= 1\n")
+    assert_prog "R[1:foo]=R[1:foo]-1 ;\n"
+  end
+
 end
