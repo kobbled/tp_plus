@@ -189,7 +189,7 @@ class TPPlus::Scanner < Racc::Parser
       when (text = @ss.scan(/unless/i))
          action { [:UNLESS, text] }
 
-      when (text = @ss.scan(/[\n\r]/i))
+      when (text = @ss.scan(/\r?\n/i))
          action { [:NEWLINE, text] }
 
       when (text = @ss.scan(/;/i))

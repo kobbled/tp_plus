@@ -296,4 +296,9 @@ class TestScanner < Test::Unit::TestCase
      @scanner.scan_setup "unless"
      assert_token :UNLESS, "unless"
    end
+
+   def test_carriage_return_newline_as_one
+     @scanner.scan_setup "\r\n"
+     assert_token :NEWLINE, "\r\n"
+   end
 end
