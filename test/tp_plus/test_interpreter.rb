@@ -192,4 +192,9 @@ class TestInterpreter < Test::Unit::TestCase
     assert_prog "R[1:foo]=R[1:foo]-1 ;\n"
   end
 
+  def test_motion_to_a_position
+    parse("foo := P[1]\nlinear_move.to(foo).at(2000mm/s).term(0)")
+    assert_prog "L P[1:foo] 2000mm/sec CNT0 ;\n"
+  end
+
 end

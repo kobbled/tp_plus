@@ -1,6 +1,6 @@
 class TPPlus::Parser
 token ASSIGN AT_SYM COMMENT JUMP IO_METHOD INPUT OUTPUT
-token NUMREG POSREG VREG SREG
+token NUMREG POSREG VREG SREG POSITION
 token MOVE DOT TO AT TERM
 token SEMICOLON NEWLINE
 token REAL DIGIT WORD EQUAL UNITS
@@ -188,6 +188,11 @@ rule
     : numreg
     | output
     | posreg
+    | position
+    ;
+
+  position
+    : POSITION '[' DIGIT ']'           { result = PositionNode.new(val[2].to_i) }
     ;
 
   numreg

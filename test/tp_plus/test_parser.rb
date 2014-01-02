@@ -145,4 +145,9 @@ class TestParser < Test::Unit::TestCase
     parse("foo(bar)")
     assert_node_type CallNode, last_node
   end
+
+  def test_position_definition
+    parse("foo := P[1]")
+    assert_node_type DefinitionNode, last_node
+  end
 end
