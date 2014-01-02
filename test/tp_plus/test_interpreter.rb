@@ -271,4 +271,9 @@ class TestInterpreter < Test::Unit::TestCase
     parse("foo := R[1]\nuse_payload foo")
     assert_prog "PAYLOAD[R[1:foo]] ;\n"
   end
+
+  def test_nested_conditionals
+    parse("foo := R[1]\nif foo==1\nif foo==2\nfoo=3\nelse\nfoo=4\nend\nend")
+    assert_prog "IF R[1:foo]<>1,JMP LBL[100] ;\nIF R[1:foo]<>2,JMP LBL[101] ;\nR[1:foo]=3 ;\nJMP LBL[102] ;\nLBL[101] ;\nR[1:foo]=4 ;\nLBL[102] ;\nLBL[100] ;\n"
+  end
 end

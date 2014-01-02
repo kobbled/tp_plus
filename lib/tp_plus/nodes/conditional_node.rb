@@ -38,7 +38,15 @@ module TPPlus
       def can_be_inlined?
         return false unless @false_block.nil?
 
-        @true_block.flatten.reject {|n| n.is_a? TerminatorNode}.length == 1
+        if @true_block.flatten.reject {|n| n.is_a? TerminatorNode}.length == 1
+          n = @true_block.flatten.reject {|n| n.is_a? TerminatorNode }.first
+
+          if [AssignmentNode,IOMethodNode].include? n.class
+            true
+          else
+            false
+          end
+        end
       end
 
       def eval(context)
