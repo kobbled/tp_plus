@@ -202,4 +202,8 @@ class TestInterpreter < Test::Unit::TestCase
     assert_prog "UFRAME_NUM=5 ;\n"
   end
 
+  def test_fanuc_assignable_utool
+    parse("foo := R[1]\nutool_num = foo")
+    assert_prog "UTOOL_NUM=R[1:foo] ;\n"
+  end
 end

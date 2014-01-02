@@ -151,8 +151,13 @@ class TestParser < Test::Unit::TestCase
     assert_node_type DefinitionNode, last_node
   end
 
-  def test_uframe_definition
+  def test_uframe_assignment
     parse("uframe_num = 5")
+    assert_node_type AssignmentNode, last_node
+  end
+
+  def test_utool_assignment
+    parse("utool_num = 5")
     assert_node_type AssignmentNode, last_node
   end
 end

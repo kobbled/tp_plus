@@ -306,4 +306,9 @@ class TestScanner < Test::Unit::TestCase
      @scanner.scan_setup "uframe_num"
      assert_token :FANUC_ASSIGNABLE, "uframe_num"
    end
+
+   def test_utool_num
+     @scanner.scan_setup "utool_num"
+     assert_token :FANUC_ASSIGNABLE, "utool_num"
+   end
 end

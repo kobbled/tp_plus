@@ -49,6 +49,7 @@ rule
          \@             { [:AT_SYM, text] }
 
          uframe_num     { [:FANUC_ASSIGNABLE, text] }
+         utool_num      { [:FANUC_ASSIGNABLE, text] }
 
 
          at             { [:AT, text] }
