@@ -177,4 +177,9 @@ class TestInterpreter < Test::Unit::TestCase
     assert_prog "CALL BAR(R[1:foo]) ;\n"
   end
 
+  def test_preserve_whitespace
+    parse("\n\n")
+    assert_prog " ;\n"
+  end
+
 end

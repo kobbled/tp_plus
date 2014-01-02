@@ -36,8 +36,17 @@ module TPPlus
 
     def eval
       s = ""
+      last_node = nil
       @nodes.each do |n|
         res = n.eval(self)
+
+        # preserve whitespace
+        if n.is_a?(Nodes::TerminatorNode) && last_node.is_a?(Nodes::TerminatorNode)
+          s += " ;\n"
+        end
+        last_node = n
+        # end preserve whitespace
+
         next if res.nil?
 
         s += "#{res} ;\n"
