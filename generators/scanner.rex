@@ -7,7 +7,7 @@ macro
   blank     [\ \t]+
   nl        \n|\r\n|\r|\f
   w         [\s]*
-  nw        (?=[\W]+|\A|\z)
+  nw        (?=[\W]+|\A|\z|@)
   nonascii  [^\0-\177]
   num       -?([0-9]+|[0-9]*\.[0-9]+)
   unicode   \\[0-9A-Fa-f]{1,6}(\r\n|[\s])?
@@ -60,7 +60,10 @@ rule
          &&             { [:AND, text] }
          \|\|           { [:OR, text] }
          \%             { [:MOD, text] }
-         \@             { [:AT_SYM, text] }
+
+         \@             { @state = :label; [:AT_SYM, text] }
+  :label [\w_0-9]+{nw}      { @state = nil; [:WORD, text] }
+
 
          {nw}use_payload{nw}    { [:FANUC_USE, text] }
          {nw}use_uframe{nw}     { [:FANUC_USE, text] }

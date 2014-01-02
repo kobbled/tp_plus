@@ -205,4 +205,9 @@ class TestParser < Test::Unit::TestCase
     parse("foo := R[1]\nuse_payload foo")
     assert_node_type UseNode, last_node
   end
+
+  def test_can_name_a_label_end
+    parse("@end")
+    assert_node_type LabelDefinitionNode, last_node
+  end
 end
