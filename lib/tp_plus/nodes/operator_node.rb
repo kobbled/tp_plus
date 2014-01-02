@@ -10,8 +10,16 @@ module TPPlus
           case @string
           when "=="
             "<>"
-          when "!="
+          when "!=", "<>"
             "="
+          when ">"
+            "=<"
+          when "<"
+            ">="
+          when ">="
+            "<"
+          when "<="
+            ">"
           end
         else
           case @string
