@@ -61,6 +61,8 @@ module TPPlus
         s += "#{res} ;\n"
       end
       s
+    rescue RuntimeError => e
+      raise "Runtime error on line #{@line_count}:\n#{e}"
     end
   end
 end
