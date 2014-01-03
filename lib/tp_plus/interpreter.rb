@@ -46,7 +46,10 @@ module TPPlus
 
       define_labels
 
+      @source_line_count = 0
+
       @nodes.each do |n|
+        @source_line_count += 1
         res = n.eval(self)
 
         # preserve whitespace
@@ -62,7 +65,7 @@ module TPPlus
       end
       s
     rescue RuntimeError => e
-      raise "Runtime error on line #{@line_count}:\n#{e}"
+      raise "Runtime error on line #{@source_line_count}:\n#{e}"
     end
   end
 end
