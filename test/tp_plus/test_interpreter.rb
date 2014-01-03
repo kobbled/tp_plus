@@ -296,4 +296,9 @@ class TestInterpreter < Test::Unit::TestCase
     parse("p := P[1]\no := PR[1]\nlinear_move.to(p).at(max_speed).term(0).offset(o).time_before(0.5,foo())")
     assert_prog "L P[1:p] max_speed CNT0 Offset,PR[1:o] TB .50sec,CALL FOO ;\n"
   end
+
+  def test_motion_modifiers_swallow_terminators_after_dots
+    parse("p := P[1]\no := PR[1]\nlinear_move.\nto(p).\nat(max_speed).\nterm(0).\noffset(o).\ntime_before(0.5,foo())")
+    assert_prog "L P[1:p] max_speed CNT0 Offset,PR[1:o] TB .50sec,CALL FOO ;\n"
+  end
 end

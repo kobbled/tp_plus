@@ -93,8 +93,8 @@ rule
     ;
 
   motion_statement
-    : MOVE DOT TO '(' var ')' motion_modifiers
-                                       { result = MotionNode.new(val[0],val[4],val[6]) }
+    : MOVE DOT swallow_newlines TO '(' var ')' motion_modifiers
+                                       { result = MotionNode.new(val[0],val[5],val[7]) }
     ;
 
   motion_modifiers
@@ -104,11 +104,14 @@ rule
     ;
 
   motion_modifier
-    : DOT AT '(' speed ')'             { result = SpeedNode.new(val[3]) }
-    | DOT TERM '(' indirectable ')'    { result = TerminationNode.new(val[3]) }
-    | DOT OFFSET '(' var ')'           { result = OffsetNode.new(val[3]) }
-    | DOT TIME_SEGMENT '(' time ',' time_seg_actions ')'
-                                       { result = TimeNode.new(val[1],val[3],val[5]) }
+    : DOT swallow_newlines AT '(' speed ')'
+                                       { result = SpeedNode.new(val[4]) }
+    | DOT swallow_newlines TERM '(' indirectable ')'
+                                       { result = TerminationNode.new(val[4]) }
+    | DOT swallow_newlines OFFSET '(' var ')'
+                                       { result = OffsetNode.new(val[4]) }
+    | DOT swallow_newlines TIME_SEGMENT '(' time ',' time_seg_actions ')'
+                                       { result = TimeNode.new(val[2],val[4],val[6]) }
     ;
 
   indirectable
@@ -242,6 +245,11 @@ rule
   terminator
     : NEWLINE                          { result = TerminatorNode.new }
     | comment                          { result = val[0] }
+    ;
+
+  swallow_newlines
+    : NEWLINE                          { result = TerminatorNode.new }
+    |
     ;
 
 end
