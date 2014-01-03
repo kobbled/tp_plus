@@ -49,7 +49,7 @@ module TPPlus
       @source_line_count = 0
 
       @nodes.each do |n|
-        @source_line_count += 1
+        @source_line_count += 1 unless n.is_a?(Nodes::TerminatorNode) && !last_node.is_a?(Nodes::TerminatorNode)
         res = n.eval(self)
 
         # preserve whitespace
