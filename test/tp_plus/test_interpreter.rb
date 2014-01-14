@@ -197,6 +197,26 @@ class TestInterpreter < Test::Unit::TestCase
     assert_prog "L P[1:foo] 2000mm/sec CNT0 ;\n"
   end
 
+  def test_joint_move
+    parse("foo := P[1]\njoint_move.to(foo).at(100%).term(0)")
+    assert_prog "J P[1:foo] 100% CNT0 ;\n"
+  end
+
+  def test_joint_move_throws_error_with_bad_units
+    parse("foo := P[1]\njoint_move.to(foo).at(2000mm/s).term(0)")
+    assert_raise(RuntimeError) do
+      assert_prog "J P[1:foo] 100% CNT0 ;\n"
+    end
+  end
+
+  def test_linear_move_throws_error_with_bad_units
+    parse("foo := P[1]\nlinear_move.to(foo).at(100%).term(0)")
+    assert_raise(RuntimeError) do
+      assert_prog "L P[1:foo] 100% CNT0 ;\n"
+    end
+  end
+
+
   def test_pr_offset
     parse("home := P[1]\nmy_offset := PR[1]\nlinear_move.to(home).at(2000mm/s).term(0).offset(my_offset)")
     assert_prog "L P[1:home] 2000mm/sec CNT0 Offset,PR[1:my_offset] ;\n"

@@ -9,6 +9,10 @@ module TPPlus
         case @s
         when "mm/s"
           "mm/sec"
+        when "%"
+          "%"
+        else
+          raise "Unknown unit: #{@s}"
         end
       end
     end

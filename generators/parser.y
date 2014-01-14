@@ -130,11 +130,15 @@ rule
     ;
 
   speed
-    : number UNITS                     { result = [val[0],UnitsNode.new(val[1])] }
+    : number units                     { result = [val[0],val[1]] }
     | MAX_SPEED                        { result = [:max_speed,:max_speed] }
-    | var ',' UNITS                    { result = [val[0],UnitsNode.new(val[2])] }
+    | var ',' units                    { result = [val[0],val[2]] }
     ;
 
+  units
+    : UNITS                            { result = UnitsNode.new(val[0]) }
+    | MOD                              { result = UnitsNode.new(val[0]) }
+    ;
 
   label_definition
     : AT_SYM WORD                      { result = LabelDefinitionNode.new(val[1]) }#@interpreter.add_label(val[1]) }
