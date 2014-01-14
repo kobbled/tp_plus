@@ -210,4 +210,9 @@ class TestParser < Test::Unit::TestCase
     parse("@end")
     assert_node_type LabelDefinitionNode, last_node
   end
+
+  def test_wait_for_with_units
+    parse("wait_for 5s")
+    assert_node_type WaitForNode, last_node
+  end
 end

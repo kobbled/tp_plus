@@ -321,4 +321,21 @@ class TestInterpreter < Test::Unit::TestCase
     parse("p := P[1]\no := PR[1]\nlinear_move.\nto(p).\nat(max_speed).\nterm(0).\noffset(o).\ntime_before(0.5,foo())")
     assert_prog "L P[1:p] max_speed CNT0 Offset,PR[1:o] TB .50sec,CALL FOO ;\n"
   end
+
+  def test_wait_for_with_seconds
+    parse("wait_for 5s")
+    assert_prog "WAIT 5.00(sec) ;\n"
+  end
+
+  def test_wait_for_with_invalid_units_throws_error
+    parse("wait_for 5ns")
+    assert_raise(RuntimeError) do
+      assert_prog ""
+    end
+  end
+
+  def test_wait_for_with_milliseconds
+    parse("wait_for 100ms")
+    assert_prog "WAIT .10(sec) ;\n"
+  end
 end

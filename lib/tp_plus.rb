@@ -29,6 +29,7 @@ require 'tp_plus/nodes/units_node'
 require 'tp_plus/nodes/use_node'
 require 'tp_plus/nodes/var_node'
 require 'tp_plus/nodes/vision_register_node'
+require 'tp_plus/nodes/wait_for_node'
 
 require 'tp_plus/interpreter'
 require 'tp_plus/parser'

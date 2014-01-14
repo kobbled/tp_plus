@@ -83,6 +83,7 @@ rule
          {nw}turn_on|turn_off|toggle{nw} { [:IO_METHOD, text] }
          {nw}to{nw}     { [:TO, text] }
          {nw}unless{nw} { [:UNLESS, text] }
+         {nw}wait_for{nw} { [:WAIT_FOR, text] }
 
          \r?\n          { [:NEWLINE, text] }
          ;              { [:SEMICOLON, text] }
