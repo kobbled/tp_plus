@@ -220,4 +220,9 @@ class TestParser < Test::Unit::TestCase
     parse("wait_until 1==0")
     assert_node_type WaitUntilNode, last_node
   end
+
+  def test_scans_assignment_with_negative_number
+    parse("foo := R[1]\nfoo = -1")
+    assert_node_type AssignmentNode, last_node
+  end
 end
