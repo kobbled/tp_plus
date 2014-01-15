@@ -8,8 +8,23 @@ module TPPlus
         @right_op = right_op
       end
 
+      def left_paren(options={})
+        return "" unless options[:force_parens]
+
+        "("
+      end
+
+      def right_paren(options={})
+        return "" unless options[:force_parens]
+
+        ")"
+      end
+
+      # TODO: I don't like this
       def eval(context,options={})
-        "#{@left_op.eval(context)}#{@op.eval(context,options)}#{@right_op.eval(context)}"
+        options[:force_parens] ||= false
+
+        "#{left_paren(options)}#{@left_op.eval(context)}#{@op.eval(context,options)}#{@right_op.eval(context)}#{right_paren(options)}"
       end
     end
   end

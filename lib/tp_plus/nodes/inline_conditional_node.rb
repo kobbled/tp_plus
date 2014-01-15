@@ -11,19 +11,17 @@ module TPPlus
         @block.is_a? JumpNode
       end
 
-      def mixed_logicable?
-        @block.is_a? AssignmentNode
-      end
+      def condition(context,options={})
+        options[:opposite] ||= @type == "unless"
 
-      def condition(context)
-        @c ||= @condition.eval(context, opposite: @type == "unless")
+        @c ||= @condition.eval(context, options)
       end
 
       def eval(context)
         if simple?
           "IF #{condition(context)},#{@block.eval(context)}"
         else
-          "IF (#{condition(context)}),#{@block.eval(context,mixed_logic:true)}"
+          "IF #{condition(context,force_parens: true)},#{@block.eval(context,mixed_logic:true)}"
         end
       end
     end
