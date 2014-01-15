@@ -343,4 +343,16 @@ class TestInterpreter < Test::Unit::TestCase
     parse("wait_until 1==0")
     assert_prog "WAIT (1=0) ;\n"
   end
+
+  def test_pr_components
+    parse("foo := PR[1]\nfoo.x=5\nfoo.y=6\nfoo.z=7\nfoo.w=8\nfoo.p=9\nfoo.r=10\n")
+    assert_prog "PR[1,1:foo]=5 ;\nPR[1,2:foo]=6 ;\nPR[1,3:foo]=7 ;\nPR[1,4:foo]=8 ;\nPR[1,5:foo]=9 ;\nPR[1,6:foo]=10 ;\n"
+  end
+
+  def test_pr_with_invalid_component_raises_error
+    parse("foo := PR[1]\nfoo.bar=5\n")
+    assert_raise(RuntimeError) do
+      assert_prog ""
+    end
+  end
 end

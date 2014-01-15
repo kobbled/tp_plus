@@ -170,7 +170,8 @@ rule
     ;
 
   var
-    : WORD                             { result = VarNode.new(val[0]) }
+    : WORD DOT WORD                    { result = VarMethodNode.new(val[0],val[2]) }
+    | WORD                             { result = VarNode.new(val[0]) }
     ;
 
   expression
