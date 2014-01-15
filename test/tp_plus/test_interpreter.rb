@@ -338,4 +338,9 @@ class TestInterpreter < Test::Unit::TestCase
     parse("wait_for 100ms")
     assert_prog "WAIT .10(sec) ;\n"
   end
+
+  def test_wait_until_with_exp
+    parse("wait_until 1==0")
+    assert_prog "WAIT (1=0) ;\n"
+  end
 end

@@ -84,6 +84,7 @@ rule
          {nw}to{nw}     { [:TO, text] }
          {nw}unless{nw} { [:UNLESS, text] }
          {nw}wait_for{nw} { [:WAIT_FOR, text] }
+         {nw}wait_until{nw} { [:WAIT_UNTIL, text] }
 
          \r?\n          { [:NEWLINE, text] }
          ;              { [:SEMICOLON, text] }

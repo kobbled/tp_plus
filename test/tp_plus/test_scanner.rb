@@ -342,8 +342,13 @@ class TestScanner < Test::Unit::TestCase
      assert_token :WORD, "end_zone"
    end
 
-   def test_scan_wait
+   def test_scan_wait_for
      @scanner.scan_setup "wait_for"
      assert_token :WAIT_FOR, "wait_for"
+   end
+
+   def test_scan_wait_until
+     @scanner.scan_setup "wait_until"
+     assert_token :WAIT_UNTIL, "wait_until"
    end
 end

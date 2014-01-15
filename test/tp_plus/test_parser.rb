@@ -215,4 +215,9 @@ class TestParser < Test::Unit::TestCase
     parse("wait_for 5s")
     assert_node_type WaitForNode, last_node
   end
+
+  def test_scan_wait_until
+    parse("wait_until 1==0")
+    assert_node_type WaitUntilNode, last_node
+  end
 end

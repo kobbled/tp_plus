@@ -7,7 +7,7 @@ token REAL DIGIT WORD EQUAL UNITS
 token EEQUAL NOTEQUAL GTE LTE LT GT
 token PLUS MINUS STAR SLASH DIV AND OR MOD
 token IF ELSE END UNLESS
-token WAIT_FOR
+token WAIT_FOR WAIT_UNTIL
 token MAX_SPEED FANUC_USE
 rule
   program
@@ -46,6 +46,7 @@ rule
 
   wait_statement
     : WAIT_FOR number WORD             { result = WaitForNode.new(val[1], val[2]) }
+    | WAIT_UNTIL expression            { result = WaitUntilNode.new(val[1]) }
     ;
 
   use_statement
