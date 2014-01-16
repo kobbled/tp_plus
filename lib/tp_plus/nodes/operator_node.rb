@@ -5,6 +5,17 @@ module TPPlus
         @string = string
       end
 
+      def requires_mixed_logic?
+        case @string
+        when "&&"
+          true
+        when "||"
+          true
+        else
+          false
+        end
+      end
+
       def eval(context,options={})
         if options[:opposite]
           case @string
@@ -27,6 +38,10 @@ module TPPlus
             "="
           when "!="
             "<>"
+          when "&&"
+            " AND "
+          when "||"
+            " OR "
           else
             "#{@string}"
           end

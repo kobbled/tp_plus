@@ -470,4 +470,10 @@ LBL[101:ghjk] ;\n)
     parse("foo := F[1]\nturn_on foo")
     assert_prog "F[1:foo]=(ON) ;\n"
   end
+
+  def test_boolean_assignment
+    parse("foo := F[1]\nfoo = 1 && 1")
+    assert_prog "F[1:foo]=(1 AND 1) ;\n"
+  end
+
 end

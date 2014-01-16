@@ -24,6 +24,8 @@ module TPPlus
       def eval(context,options={})
         options[:force_parens] ||= false
 
+        options[:force_parens] = true if @op.requires_mixed_logic?
+
         "#{left_paren(options)}#{@left_op.eval(context)}#{@op.eval(context,options)}#{@right_op.eval(context)}#{right_paren(options)}"
       end
     end
