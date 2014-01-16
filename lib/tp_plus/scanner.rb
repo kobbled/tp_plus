@@ -162,6 +162,9 @@ class TPPlus::Scanner < Racc::Parser
       when((state == :label) and (text = @ss.scan(/[\w_0-9]+(?=[\W]+|\A|\z|@)/i)))
          action { @state = nil; [:WORD, text] }
 
+      when (text = @ss.scan(/(?=[\W]+|\A|\z|@)set_uframe(?=[\W]+|\A|\z|@)/i))
+         action { [:FANUC_SET, text] }
+
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)use_payload(?=[\W]+|\A|\z|@)/i))
          action { [:FANUC_USE, text] }
 

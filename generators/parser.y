@@ -8,7 +8,7 @@ token EEQUAL NOTEQUAL GTE LTE LT GT
 token PLUS MINUS STAR SLASH DIV AND OR MOD
 token IF ELSE END UNLESS
 token WAIT_FOR WAIT_UNTIL
-token MAX_SPEED FANUC_USE
+token MAX_SPEED FANUC_USE FANUC_SET
 token CASE WHEN
 rule
   program
@@ -42,6 +42,7 @@ rule
     | inline_conditional
     | program_call
     | use_statement
+    | set_statement
     | wait_statement
     | case_statement
     ;
@@ -53,6 +54,11 @@ rule
 
   use_statement
     : FANUC_USE indirectable           { result = UseNode.new(val[0],val[1]) }
+    ;
+
+  set_statement
+    : FANUC_SET indirectable ',' var
+                                       { result = SetNode.new(val[0],val[1],val[3]) }
     ;
 
   program_call

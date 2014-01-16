@@ -366,4 +366,9 @@ class TestScanner < Test::Unit::TestCase
      @scanner.scan_setup "AR[1]"
      assert_token :ARG, "AR"
    end
+
+   def test_scan_set_uframe
+     @scanner.scan_setup "set_uframe"
+     assert_token :FANUC_SET, "set_uframe"
+   end
 end

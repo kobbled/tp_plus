@@ -425,4 +425,22 @@ LBL[101:ghjk] ;\n)
     parse("FOO := 1\nuse_uframe FOO")
     assert_prog "UFRAME_NUM=1 ;\n"
   end
+
+  def test_fanuc_set_uframe_with_pr
+    parse("foo := PR[1]\nset_uframe 5, foo")
+    assert_prog "UFRAME[5]=PR[1:foo] ;\n"
+  end
+
+  def test_fanuc_set_uframe_with_constant
+    parse("foo := PR[1]\nBAR := 5\nset_uframe BAR, foo")
+    assert_prog "UFRAME[5]=PR[1:foo] ;\n"
+  end
+
+  def test_fanuc_set_uframe_with_reg
+    parse("foo := PR[1]\nbar := R[1]\nset_uframe bar, foo")
+    assert_prog "UFRAME[R[1:bar]]=PR[1:foo] ;\n"
+  end
+
+
+
 end

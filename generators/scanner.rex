@@ -66,6 +66,7 @@ rule
   :label [\w_0-9]+{nw}      { @state = nil; [:WORD, text] }
 
 
+         {nw}set_uframe{nw}     { [:FANUC_SET, text] }
          {nw}use_payload{nw}    { [:FANUC_USE, text] }
          {nw}use_uframe{nw}     { [:FANUC_USE, text] }
          {nw}use_utool{nw}      { [:FANUC_USE, text] }
