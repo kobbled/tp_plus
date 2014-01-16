@@ -460,4 +460,9 @@ LBL[101:ghjk] ;\n)
     parse("@foo_bar_foo_bar_foo")
     assert_prog "LBL[100:foo_bar_foo_bar_] ;\n! foo_bar_foo_bar_foo ;\n"
   end
+
+  def test_automatic_long_comment_wrapping
+    parse("# this is a really long comment so it should wrap")
+    assert_prog "! this is a really long comment ;\n! so it should wrap ;\n"
+  end
 end
