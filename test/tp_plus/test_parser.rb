@@ -261,4 +261,9 @@ class TestParser < Test::Unit::TestCase
     assert_node_type InlineConditionalNode, last_node
   end
 
+  def test_inline_program_call
+    parse("foo := UI[5]\nbar() unless foo")
+    assert_node_type InlineConditionalNode, last_node
+  end
+
 end

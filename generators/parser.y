@@ -128,6 +128,7 @@ rule
     : jump
     | assignment
     | io_method
+    | program_call
     ;
 
   else_block
