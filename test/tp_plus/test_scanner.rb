@@ -351,4 +351,14 @@ class TestScanner < Test::Unit::TestCase
      @scanner.scan_setup "wait_until"
      assert_token :WAIT_UNTIL, "wait_until"
    end
+
+   def test_scan_case
+     @scanner.scan_setup "case"
+     assert_token :CASE, "case"
+   end
+
+   def test_scan_when
+     @scanner.scan_setup "when"
+     assert_token :WHEN, "when"
+   end
 end

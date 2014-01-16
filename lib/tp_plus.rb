@@ -4,6 +4,8 @@ end
 
 require 'tp_plus/nodes/assignment_node'
 require 'tp_plus/nodes/call_node'
+require 'tp_plus/nodes/case_node'
+require 'tp_plus/nodes/case_condition_node'
 require 'tp_plus/nodes/comment_node'
 require 'tp_plus/nodes/conditional_node'
 require 'tp_plus/nodes/definition_node'

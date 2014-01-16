@@ -71,6 +71,7 @@ rule
 
 
          {nw}at{nw}     { [:AT, text] }
+         {nw}case{nw}   { [:CASE, text] }
          {nw}else{nw}   { [:ELSE, text] }
          {nw}end{nw}    { [:END, text] }
          {nw}if{nw}     { [:IF, text] }
@@ -85,6 +86,7 @@ rule
          {nw}unless{nw} { [:UNLESS, text] }
          {nw}wait_for{nw} { [:WAIT_FOR, text] }
          {nw}wait_until{nw} { [:WAIT_UNTIL, text] }
+         {nw}when{nw}   { [:WHEN, text] }
 
          \r?\n          { [:NEWLINE, text] }
          ;              { [:SEMICOLON, text] }

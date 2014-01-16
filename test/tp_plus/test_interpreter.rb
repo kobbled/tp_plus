@@ -355,4 +355,25 @@ class TestInterpreter < Test::Unit::TestCase
       assert_prog ""
     end
   end
+
+  def test_simple_case_statement
+    parse("foo := R[1]\ncase foo\nwhen 1\njump_to @asdf\nend\n@asdf")
+    assert_prog %(SELECT R[1:foo]=1,JMP LBL[100:asdf] ;\nLBL[100:asdf] ;\n)
+  end
+
+  def test_simple_case_with_else_statement
+    parse("foo := R[1]\ncase foo\nwhen 1\njump_to @asdf\nelse\njump_to @ghjk\nend\n@asdf\n@ghjk")
+    assert_prog %(SELECT R[1:foo]=1,JMP LBL[100:asdf] ;
+       ELSE,JMP LBL[101:ghjk] ;
+LBL[100:asdf] ;
+LBL[101:ghjk] ;\n)
+  end
+
+  def test_case_statement_with_two_whens
+    parse("foo := R[1]\ncase foo\nwhen 1\njump_to @asdf\nwhen 2\njump_to @ghjk\nend\n@asdf\n@ghjk")
+    assert_prog %(SELECT R[1:foo]=1,JMP LBL[100:asdf] ;
+       =2,JMP LBL[101:ghjk] ;
+LBL[100:asdf] ;
+LBL[101:ghjk] ;\n)
+  end
 end

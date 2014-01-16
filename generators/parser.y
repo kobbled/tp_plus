@@ -9,6 +9,7 @@ token PLUS MINUS STAR SLASH DIV AND OR MOD
 token IF ELSE END UNLESS
 token WAIT_FOR WAIT_UNTIL
 token MAX_SPEED FANUC_USE
+token CASE WHEN
 rule
   program
     : /* nothing */
@@ -42,6 +43,7 @@ rule
     | program_call
     | use_statement
     | wait_statement
+    | case_statement
     ;
 
   wait_statement
@@ -81,6 +83,40 @@ rule
                                        { result = ConditionalNode.new("if",val[1],val[2],val[3]) }
     | UNLESS expression block else_block END
                                        { result = ConditionalNode.new("unless",val[1],val[2],val[3]) }
+    ;
+
+  case_statement
+    : CASE var swallow_newlines
+        case_conditions
+        case_else
+      END                               { result = CaseNode.new(val[1],val[3],val[4]) }
+    ;
+
+  case_conditions
+    : case_condition                    { result = val }
+    | case_conditions case_condition
+                                        { result = val[0] << val[1] << val[2] }
+    ;
+
+  case_condition
+    : WHEN case_allowed_condition swallow_newlines case_allowed_statement
+        terminator                      { result = CaseConditionNode.new(val[1],val[3]) }
+    ;
+
+  case_allowed_condition
+    : number
+    | var
+    ;
+
+  case_else
+    : ELSE swallow_newlines case_allowed_statement terminator
+                                        { result = CaseConditionNode.new(nil,val[2]) }
+    |
+    ;
+
+  case_allowed_statement
+    : program_call
+    | jump
     ;
 
   inline_conditional
@@ -283,7 +319,7 @@ end
     t = @scanner.next_token
     @interpreter.line_count += 1 if t && t[0] == :NEWLINE
 
-    puts t.inspect
+    #puts t.inspect
     t
   end
 
