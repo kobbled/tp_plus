@@ -72,7 +72,7 @@ class TestInterpreter < Test::Unit::TestCase
 
   def test_jump_to_label
     parse("@foo\njump_to @foo")
-    assert_prog "LBL[100:foo] ;\nJMP LBL[100:foo] ;\n"
+    assert_prog "LBL[100:foo] ;\nJMP LBL[100] ;\n"
   end
 
   def test_nonexistent_label_error
@@ -139,12 +139,12 @@ class TestInterpreter < Test::Unit::TestCase
 
   def test_inline_conditional_if_on_jump
     parse("foo := R[1]\n@bar\njump_to @bar if foo==1\n")
-    assert_prog "LBL[100:bar] ;\nIF R[1:foo]=1,JMP LBL[100:bar] ;\n"
+    assert_prog "LBL[100:bar] ;\nIF R[1:foo]=1,JMP LBL[100] ;\n"
   end
 
   def test_inline_conditional_unless_on_jump
     parse("foo := R[1]\n@bar\njump_to @bar unless foo==1\n")
-    assert_prog "LBL[100:bar] ;\nIF R[1:foo]<>1,JMP LBL[100:bar] ;\n"
+    assert_prog "LBL[100:bar] ;\nIF R[1:foo]<>1,JMP LBL[100] ;\n"
   end
 
   def test_inline_assignment
@@ -299,17 +299,17 @@ class TestInterpreter < Test::Unit::TestCase
 
   def test_inline_unless
     parse("foo := R[1]\n@bar\njump_to @bar unless foo > 1")
-    assert_prog "LBL[100:bar] ;\nIF R[1:foo]<=1,JMP LBL[100:bar] ;\n"
+    assert_prog "LBL[100:bar] ;\nIF R[1:foo]<=1,JMP LBL[100] ;\n"
   end
 
   def test_inline_unless_with_two_vars
     parse("foo := R[1]\nbar := R[2]\n@baz\njump_to @baz unless foo > bar")
-    assert_prog "LBL[100:baz] ;\nIF R[1:foo]<=R[2:bar],JMP LBL[100:baz] ;\n"
+    assert_prog "LBL[100:baz] ;\nIF R[1:foo]<=R[2:bar],JMP LBL[100] ;\n"
   end
 
   def test_labels_can_be_defined_after_jumps_to_them
     parse("jump_to @foo\n@foo")
-    assert_prog "JMP LBL[100:foo] ;\nLBL[100:foo] ;\n"
+    assert_prog "JMP LBL[100] ;\nLBL[100:foo] ;\n"
   end
 
   def test_multiple_motion_modifiers
@@ -358,33 +358,33 @@ class TestInterpreter < Test::Unit::TestCase
 
   def test_simple_case_statement
     parse("foo := R[1]\ncase foo\nwhen 1\njump_to @asdf\nend\n@asdf")
-    assert_prog %(SELECT R[1:foo]=1,JMP LBL[100:asdf] ;\nLBL[100:asdf] ;\n)
+    assert_prog %(SELECT R[1:foo]=1,JMP LBL[100] ;\nLBL[100:asdf] ;\n)
   end
 
   def test_simple_case_with_else_statement
     parse("foo := R[1]\ncase foo\nwhen 1\njump_to @asdf\nelse\njump_to @ghjk\nend\n@asdf\n@ghjk")
-    assert_prog %(SELECT R[1:foo]=1,JMP LBL[100:asdf] ;
-       ELSE,JMP LBL[101:ghjk] ;
+    assert_prog %(SELECT R[1:foo]=1,JMP LBL[100] ;
+       ELSE,JMP LBL[101] ;
 LBL[100:asdf] ;
 LBL[101:ghjk] ;\n)
   end
 
   def test_case_statement_with_two_whens
     parse("foo := R[1]\ncase foo\nwhen 1\njump_to @asdf\nwhen 2\njump_to @ghjk\nend\n@asdf\n@ghjk")
-    assert_prog %(SELECT R[1:foo]=1,JMP LBL[100:asdf] ;
-       =2,JMP LBL[101:ghjk] ;
+    assert_prog %(SELECT R[1:foo]=1,JMP LBL[100] ;
+       =2,JMP LBL[101] ;
 LBL[100:asdf] ;
 LBL[101:ghjk] ;\n)
   end
 
   def test_can_use_simple_io_value_as_condition
     parse("foo := UI[5]\n@top\njump_to @top if foo")
-    assert_prog "LBL[100:top] ;\nIF (UI[5:foo]),JMP LBL[100:top] ;\n"
+    assert_prog "LBL[100:top] ;\nIF (UI[5:foo]),JMP LBL[100] ;\n"
   end
 
   def test_can_use_simple_io_value_as_condition_with_unless
     parse("foo := UI[5]\n@top\njump_to @top unless foo")
-    assert_prog "LBL[100:top] ;\nIF (!UI[5:foo]),JMP LBL[100:top] ;\n"
+    assert_prog "LBL[100:top] ;\nIF (!UI[5:foo]),JMP LBL[100] ;\n"
   end
 
   def test_inline_program_call
@@ -418,7 +418,7 @@ LBL[101:ghjk] ;\n)
 
   def test_using_argument_var
     parse("foo := AR[1]\n@top\njump_to @top if foo==1")
-    assert_prog "LBL[100:top] ;\nIF (AR[1:foo]=1),JMP LBL[100:top] ;\n"
+    assert_prog "LBL[100:top] ;\nIF (AR[1:foo]=1),JMP LBL[100] ;\n"
   end
 
   def test_use_uframe_with_constant

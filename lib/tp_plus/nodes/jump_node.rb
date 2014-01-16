@@ -8,7 +8,7 @@ module TPPlus
       def eval(context,options={})
         raise "Label (#{@identifier}) not found" if context.labels[@identifier.to_sym].nil?
 
-        "JMP LBL[#{context.labels[@identifier.to_sym]}:#{@identifier}]"
+        "JMP LBL[#{context.labels[@identifier.to_sym]}]"
       end
     end
   end
