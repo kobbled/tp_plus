@@ -8,8 +8,12 @@ module TPPlus
         @comment = ""
       end
 
-      def eval(context)
-        "#{@type}[#{@id}:#{@comment}]"
+      def eval(context, options={})
+        s = "#{@type}[#{@id}:#{@comment}]"
+        if options[:method] == "on?"
+          s += "=ON"
+        end
+        s
       end
     end
   end

@@ -67,6 +67,7 @@ rule
 
 
          {nw}set_uframe{nw}     { [:FANUC_SET, text] }
+         {nw}set_skip_condition{nw} { [:FANUC_SET, text] }
          {nw}use_payload{nw}    { [:FANUC_USE, text] }
          {nw}use_uframe{nw}     { [:FANUC_USE, text] }
          {nw}use_utool{nw}      { [:FANUC_USE, text] }
@@ -81,6 +82,7 @@ rule
          {nw}linear_move|joint_move|circular_move{nw} { [:MOVE, text] }
          {nw}max_speed{nw}      { [:MAX_SPEED, text] }
          {nw}offset{nw} { [:OFFSET, text] }
+         {nw}skip_to{nw} { [:SKIP, text] } 
          {nw}term{nw}   { [:TERM, text] }
          {nw}time_before|time_after{nw}  { [:TIME_SEGMENT, text] }
          {nw}turn_on|turn_off|toggle{nw} { [:IO_METHOD, text] }

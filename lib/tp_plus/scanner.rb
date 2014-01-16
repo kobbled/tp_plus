@@ -165,6 +165,9 @@ class TPPlus::Scanner < Racc::Parser
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)set_uframe(?=[\W]+|\A|\z|@)/i))
          action { [:FANUC_SET, text] }
 
+      when (text = @ss.scan(/(?=[\W]+|\A|\z|@)set_skip_condition(?=[\W]+|\A|\z|@)/i))
+         action { [:FANUC_SET, text] }
+
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)use_payload(?=[\W]+|\A|\z|@)/i))
          action { [:FANUC_USE, text] }
 
@@ -200,6 +203,9 @@ class TPPlus::Scanner < Racc::Parser
 
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)offset(?=[\W]+|\A|\z|@)/i))
          action { [:OFFSET, text] }
+
+      when (text = @ss.scan(/(?=[\W]+|\A|\z|@)skip_to(?=[\W]+|\A|\z|@)/i))
+         action { [:SKIP, text] }
 
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)term(?=[\W]+|\A|\z|@)/i))
          action { [:TERM, text] }

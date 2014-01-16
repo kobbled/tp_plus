@@ -371,4 +371,14 @@ class TestScanner < Test::Unit::TestCase
      @scanner.scan_setup "set_uframe"
      assert_token :FANUC_SET, "set_uframe"
    end
+
+   def test_scan_set_skip_condition
+     @scanner.scan_setup "set_skip_condition"
+     assert_token :FANUC_SET, "set_skip_condition"
+   end
+
+   def test_scan_skip_to
+     @scanner.scan_setup "skip_to"
+     assert_token :SKIP, "skip_to"
+   end
 end

@@ -441,6 +441,18 @@ LBL[101:ghjk] ;\n)
     assert_prog "UFRAME[R[1:bar]]=PR[1:foo] ;\n"
   end
 
+  def test_set_skip_condition
+    parse("foo := RI[1]\nset_skip_condition foo.on?")
+    assert_prog "SKIP CONDITION RI[1:foo]=ON ;\n"
+  end
 
+  def test_skip_to
+    parse("p := P[1]\n@somewhere\nlinear_move.to(p).at(2000mm/s).term(0).skip_to(@somewhere)")
+    assert_prog "LBL[100:somewhere] ;\nL P[1:p] 2000mm/sec CNT0 Skip,LBL[100:somewhere] ;\n"
+  end
 
+  def test_skip_to_with_pr
+    parse("p := P[1]\nlpos := PR[1]\n@somewhere\nlinear_move.to(p).at(2000mm/s).term(0).skip_to(@somewhere, lpos)")
+    assert_prog "LBL[100:somewhere] ;\nL P[1:p] 2000mm/sec CNT0 Skip,LBL[100:somewhere],PR[1:lpos]=LPOS ;\n"
+  end
 end

@@ -1,7 +1,7 @@
 class TPPlus::Parser
 token ASSIGN AT_SYM COMMENT JUMP IO_METHOD INPUT OUTPUT
 token NUMREG POSREG VREG SREG POSITION TIME_SEGMENT ARG
-token MOVE DOT TO AT TERM OFFSET
+token MOVE DOT TO AT TERM OFFSET SKIP
 token SEMICOLON NEWLINE
 token REAL DIGIT WORD EQUAL UNITS
 token EEQUAL NOTEQUAL GTE LTE LT GT
@@ -59,6 +59,8 @@ rule
   set_statement
     : FANUC_SET indirectable ',' var
                                        { result = SetNode.new(val[0],val[1],val[3]) }
+    # this introduces 2 conflicts somehow
+    | FANUC_SET expression             { result = SetNode.new(val[0],nil,val[1]) }
     ;
 
   program_call
@@ -162,6 +164,13 @@ rule
                                        { result = OffsetNode.new(val[4]) }
     | DOT swallow_newlines TIME_SEGMENT '(' time ',' time_seg_actions ')'
                                        { result = TimeNode.new(val[2],val[4],val[6]) }
+    | DOT swallow_newlines SKIP '(' AT_SYM WORD optional_lpos_arg ')'
+                                       { result = SkipNode.new(val[5],val[6]) }
+    ;
+
+  optional_lpos_arg
+    : ',' var                          { result = val[1] }
+    |
     ;
 
   indirectable

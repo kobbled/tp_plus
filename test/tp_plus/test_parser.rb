@@ -281,4 +281,18 @@ class TestParser < Test::Unit::TestCase
     assert_node_type SetNode, last_node
   end
 
+  def test_set_skip_condition
+    parse("foo := RI[1]\nset_skip_condition foo.on?")
+    assert_node_type SetNode, last_node
+  end
+
+  def test_skip_to
+    parse("p := P[1]\n@somewhere\nlinear_move.to(p).at(2000mm/s).term(0).skip_to(@somewhere)")
+    assert_node_type MotionNode, last_node
+  end
+
+  def test_skip_to_with_pr
+    parse("p := P[1]\nlpos := PR[1]\n@somewhere\nlinear_move.to(p).at(2000mm/s).term(0).skip_to(@somewhere, lpos)")
+    assert_node_type MotionNode, last_node
+  end
 end
