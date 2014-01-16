@@ -15,7 +15,7 @@ module TPPlus
       def eval(context)
         raise "Label (#{@target}) not found" if context.labels[@target.to_sym].nil?
 
-        "Skip,LBL[#{context.labels[@target.to_sym]}:#{@target}]#{lpos_pr(context)}"
+        "Skip,LBL[#{context.labels[@target.to_sym]}]#{lpos_pr(context)}"
       end
     end
   end
