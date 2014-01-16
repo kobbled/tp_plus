@@ -251,4 +251,9 @@ class TestParser < Test::Unit::TestCase
     assert_node_type CaseNode, @interpreter.nodes[@interpreter.nodes.length-3]
   end
 
+  def test_can_define_input
+    parse("foo := UI[1]")
+    assert_node_type DefinitionNode, last_node
+  end
+
 end

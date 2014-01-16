@@ -263,6 +263,7 @@ rule
   definable
     : numreg
     | output
+    | input
     | posreg
     | position
     | vreg
@@ -286,6 +287,10 @@ rule
 
   output
     : OUTPUT '[' DIGIT ']'             { result = IONode.new(val[0], val[2].to_i) }
+    ;
+
+  input
+    : INPUT '[' DIGIT ']'              { result = IONode.new(val[0], val[2].to_i) }
     ;
 
   comment
