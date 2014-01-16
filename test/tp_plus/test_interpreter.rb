@@ -415,4 +415,9 @@ LBL[101:ghjk] ;\n)
       assert_prog ""
     end
   end
+
+  def test_using_argument_var
+    parse("foo := AR[1]\n@top\njump_to @top if foo==1")
+    assert_prog "LBL[100:top] ;\nIF (AR[1:foo]=1),JMP LBL[100:top] ;\n"
+  end
 end

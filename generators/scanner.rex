@@ -32,6 +32,7 @@ rule
          PR(?=\[)       { [:POSREG, text] }
          VR(?=\[)       { [:VREG, text] }
          SR(?=\[)       { [:SREG, text] }
+         AR(?=\[)       { [:ARG, text] }
 
          F(?=\[)        { [:OUTPUT, text] }
          DO(?=\[)       { [:OUTPUT, text] }

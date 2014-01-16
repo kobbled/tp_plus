@@ -361,4 +361,9 @@ class TestScanner < Test::Unit::TestCase
      @scanner.scan_setup "when"
      assert_token :WHEN, "when"
    end
+
+   def test_scan_argument
+     @scanner.scan_setup "AR[1]"
+     assert_token :ARG, "AR"
+   end
 end

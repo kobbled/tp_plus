@@ -271,4 +271,9 @@ class TestParser < Test::Unit::TestCase
     assert_node_type DefinitionNode, @interpreter.nodes.first
   end
 
+  def test_defining_arg_as_var
+    parse("arg_1 := AR[1]")
+    assert_node_type DefinitionNode, last_node
+  end
+
 end

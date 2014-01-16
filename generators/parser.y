@@ -1,6 +1,6 @@
 class TPPlus::Parser
 token ASSIGN AT_SYM COMMENT JUMP IO_METHOD INPUT OUTPUT
-token NUMREG POSREG VREG SREG POSITION TIME_SEGMENT
+token NUMREG POSREG VREG SREG POSITION TIME_SEGMENT ARG
 token MOVE DOT TO AT TERM OFFSET
 token SEMICOLON NEWLINE
 token REAL DIGIT WORD EQUAL UNITS
@@ -277,6 +277,11 @@ rule
     | position
     | vreg
     | number
+    | argument
+    ;
+
+  argument
+    : ARG '[' DIGIT ']'                { result = ArgumentNode.new(val[2].to_i) }
     ;
 
   vreg

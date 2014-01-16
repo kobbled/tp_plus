@@ -78,6 +78,9 @@ class TPPlus::Scanner < Racc::Parser
       when (text = @ss.scan(/SR(?=\[)/i))
          action { [:SREG, text] }
 
+      when (text = @ss.scan(/AR(?=\[)/i))
+         action { [:ARG, text] }
+
       when (text = @ss.scan(/F(?=\[)/i))
          action { [:OUTPUT, text] }
 

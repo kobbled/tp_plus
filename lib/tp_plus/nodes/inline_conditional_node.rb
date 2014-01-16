@@ -7,7 +7,17 @@ module TPPlus
         @block = block
       end
 
-      def simple?
+      # TODO: refactor.. this is super ugly
+      def simple?(context)
+        if @condition.is_a? ExpressionNode
+          if @condition.left_op.is_a? VarNode
+            return false if context.get_var(@condition.left_op.identifier).is_a? ArgumentNode
+          end
+          if @condition.right_op.is_a? VarNode
+            return false if context.get_var(@condition.right_op.identifier).is_a? ArgumentNode
+          end
+        end
+
         @block.is_a? JumpNode
       end
 
@@ -22,7 +32,7 @@ module TPPlus
       end
 
       def eval(context)
-        if simple?
+        if simple?(context)
           "IF #{condition(context)},#{@block.eval(context)}"
         else
           "IF #{condition(context,force_parens: true)},#{@block.eval(context,mixed_logic:true)}"

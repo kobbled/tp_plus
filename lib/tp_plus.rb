@@ -2,6 +2,7 @@ module TPPlus
 end
 
 
+require 'tp_plus/nodes/argument_node'
 require 'tp_plus/nodes/assignment_node'
 require 'tp_plus/nodes/call_node'
 require 'tp_plus/nodes/case_node'
