@@ -6,7 +6,7 @@ module TPPlus
       end
 
       def eval(context)
-        ("%.2f" % @value).sub!(/^0/,'')
+        ("%.2f" % @value).sub(/^0/,'')
       end
     end
   end

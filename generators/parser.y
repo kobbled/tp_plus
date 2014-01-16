@@ -250,10 +250,18 @@ rule
     ;
 
   factor
-    : number
-    | MINUS DIGIT                      { result = DigitNode.new(val[0].to_i * -1) }
-    | MINUS REAL                       { result = RealNode.new(val[0].to_f * -1) }
+    : signed_number
     | var
+    ;
+
+  signed_number
+    : sign DIGIT                      { val[1] = val[1].to_i * -1 if val[0] == "-"; result = DigitNode.new(val[1]) }
+    | sign REAL                       { val[1] = val[1].to_f * -1 if val[0] == "-"; result = RealNode.new(val[1]) }
+    ;
+
+  sign
+    : MINUS
+    |
     ;
 
   number
@@ -268,6 +276,7 @@ rule
     | posreg
     | position
     | vreg
+    | number
     ;
 
   vreg

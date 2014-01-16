@@ -7,6 +7,8 @@ module TPPlus
       end
 
       def eval(context,options={})
+        return context.get_constant(@identifier).eval(context) if @identifier.upcase == @identifier
+
         s = ""
         if options[:opposite]
           s += "!"

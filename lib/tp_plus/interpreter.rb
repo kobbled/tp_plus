@@ -9,6 +9,7 @@ module TPPlus
       @nodes         = []
       @labels        = {}
       @variables     = {}
+      @constants     = {}
       @current_label = 99
     end
 
@@ -28,10 +29,22 @@ module TPPlus
       node.comment = identifier
     end
 
+    def add_constant(identifier, node)
+      raise "Constant #{identifier} already defined" if @constants[identifier.to_sym]
+
+      @constants[identifier.to_sym] = node
+    end
+
     def get_var(identifier)
       raise "Variable (#{identifier}) not defined" if @variables[identifier.to_sym].nil?
 
       @variables[identifier.to_sym]
+    end
+
+    def get_constant(identifier)
+      raise "Constant (#{identifier}) not defined" if @constants[identifier.to_sym].nil?
+
+      @constants[identifier.to_sym]
     end
 
     def define_labels

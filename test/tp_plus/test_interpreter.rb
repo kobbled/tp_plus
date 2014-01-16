@@ -391,4 +391,28 @@ LBL[101:ghjk] ;\n)
     parse("foo := UI[5]\nbar() unless foo")
     assert_prog "IF (!UI[5:foo]),CALL BAR ;\n"
   end
+
+  def test_constant_definition
+    parse("FOO := 5\nfoo := R[1]\nfoo = FOO")
+    assert_prog "R[1:foo]=5 ;\n"
+  end
+
+  def test_constant_definition_real
+    parse("PI := 3.14159\nfoo:= R[1]\nfoo = PI")
+    assert_prog "R[1:foo]=3.14 ;\n"
+  end
+
+  def test_redefining_const_throws_error
+    assert_raise(RuntimeError) do
+      parse("PI := 3.14\nPI := 5")
+      assert_prog ""
+    end
+  end
+
+  def test_defining_const_without_caps_raises_error
+    parse("pi := 3.14")
+    assert_raise(RuntimeError) do
+      assert_prog ""
+    end
+  end
 end

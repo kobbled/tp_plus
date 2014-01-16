@@ -266,4 +266,9 @@ class TestParser < Test::Unit::TestCase
     assert_node_type InlineConditionalNode, last_node
   end
 
+  def test_constant_definition
+    parse("FOO := 5\nfoo := R[1]\nfoo = FOO")
+    assert_node_type DefinitionNode, @interpreter.nodes.first
+  end
+
 end
