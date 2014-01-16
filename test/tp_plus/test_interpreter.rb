@@ -455,4 +455,9 @@ LBL[101:ghjk] ;\n)
     parse("p := P[1]\nlpos := PR[1]\n@somewhere\nlinear_move.to(p).at(2000mm/s).term(0).skip_to(@somewhere, lpos)")
     assert_prog "LBL[100:somewhere] ;\nL P[1:p] 2000mm/sec CNT0 Skip,LBL[100:somewhere],PR[1:lpos]=LPOS ;\n"
   end
+
+  def test_label_comment_automatically_adds_a_comment_if_over_16_chars
+    parse("@foo_bar_foo_bar_foo")
+    assert_prog "LBL[100:foo_bar_foo_bar_] ;\n! foo_bar_foo_bar_foo ;\n"
+  end
 end
