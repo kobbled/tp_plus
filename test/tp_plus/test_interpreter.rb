@@ -420,4 +420,9 @@ LBL[101:ghjk] ;\n)
     parse("foo := AR[1]\n@top\njump_to @top if foo==1")
     assert_prog "LBL[100:top] ;\nIF (AR[1:foo]=1),JMP LBL[100:top] ;\n"
   end
+
+  def test_use_uframe_with_constant
+    parse("FOO := 1\nuse_uframe FOO")
+    assert_prog "UFRAME_NUM=1 ;\n"
+  end
 end
