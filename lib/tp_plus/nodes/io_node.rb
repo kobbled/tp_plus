@@ -8,6 +8,10 @@ module TPPlus
         @comment = ""
       end
 
+      def requires_mixed_logic?
+        @type == "F" ? true : false
+      end
+
       def eval(context, options={})
         s = "#{@type}[#{@id}:#{@comment}]"
         if options[:method] == "on?"

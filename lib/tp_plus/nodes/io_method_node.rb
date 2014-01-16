@@ -11,6 +11,8 @@ module TPPlus
       end
 
       def eval(context,options={})
+        options[:mixed_logic] = true if @target.requires_mixed_logic?(context)
+
         case @method
         when "turn_on"
           "#{@target.eval(context)}=#{on_off("ON",options)}"

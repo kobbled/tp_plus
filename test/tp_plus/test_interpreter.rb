@@ -465,4 +465,9 @@ LBL[101:ghjk] ;\n)
     parse("# this is a really long comment so it should wrap")
     assert_prog "! this is a really long comment ;\n! so it should wrap ;\n"
   end
+
+  def test_turning_on_a_flag_requires_mixed_logic
+    parse("foo := F[1]\nturn_on foo")
+    assert_prog "F[1:foo]=(ON) ;\n"
+  end
 end

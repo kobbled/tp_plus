@@ -6,14 +6,22 @@ module TPPlus
         @identifier = identifier
       end
 
+      def target_node(context)
+        @target_node ||=  @identifier.upcase == @identifier ? context.get_constant(@identifier) : context.get_var(@identifier)
+      end
+
+      def requires_mixed_logic?(context)
+        target_node(context).is_a?(IONode) && target_node(context).requires_mixed_logic?
+      end
+
       def eval(context,options={})
-        return context.get_constant(@identifier).eval(context) if @identifier.upcase == @identifier
+        return target_node(context).eval(context) if @identifier.upcase == @identifier
 
         s = ""
         if options[:opposite]
           s += "!"
         end
-        s + context.get_var(@identifier).eval(context)
+        s + target_node(context).eval(context)
       end
     end
   end
