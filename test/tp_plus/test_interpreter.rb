@@ -376,4 +376,15 @@ LBL[101:ghjk] ;\n)
 LBL[100:asdf] ;
 LBL[101:ghjk] ;\n)
   end
+
+  def test_can_use_simple_io_value_as_condition
+    parse("foo := UI[5]\n@top\njump_to @top if foo")
+    assert_prog "LBL[100:top] ;\nIF (UI[5:foo]),JMP LBL[100:top] ;\n"
+  end
+
+  def test_can_use_simple_io_value_as_condition_with_unless
+    parse("foo := UI[5]\n@top\njump_to @top unless foo")
+    assert_prog "LBL[100:top] ;\nIF (!UI[5:foo]),JMP LBL[100:top] ;\n"
+  end
+
 end

@@ -14,7 +14,11 @@ module TPPlus
       def condition(context,options={})
         options[:opposite] ||= @type == "unless"
 
-        @c ||= @condition.eval(context, options)
+        if @condition.is_a? VarNode
+          "(#{@condition.eval(context, options)})"
+        else
+          @condition.eval(context, options)
+        end
       end
 
       def eval(context)

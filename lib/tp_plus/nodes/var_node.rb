@@ -6,8 +6,12 @@ module TPPlus
         @identifier = identifier
       end
 
-      def eval(context)
-        context.get_var(@identifier).eval(context)
+      def eval(context,options={})
+        s = ""
+        if options[:opposite]
+          s += "!"
+        end
+        s + context.get_var(@identifier).eval(context)
       end
     end
   end

@@ -256,4 +256,9 @@ class TestParser < Test::Unit::TestCase
     assert_node_type DefinitionNode, last_node
   end
 
+  def test_can_inline_conditional_just_io_value
+    parse("foo := UI[5]\n@top\njump_to @top if foo")
+    assert_node_type InlineConditionalNode, last_node
+  end
+
 end
