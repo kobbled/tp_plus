@@ -13,7 +13,7 @@ module TPPlus
         "(" + @args.map {|a| a.eval(context) }.join(",") + ")"
       end
 
-      def eval(context)
+      def eval(context,options={})
         "CALL #{@program_name.upcase}#{args_string(context)}"
       end
     end

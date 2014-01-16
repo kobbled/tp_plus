@@ -387,4 +387,8 @@ LBL[101:ghjk] ;\n)
     assert_prog "LBL[100:top] ;\nIF (!UI[5:foo]),JMP LBL[100:top] ;\n"
   end
 
+  def test_inline_program_call
+    parse("foo := UI[5]\nbar() unless foo")
+    assert_prog "IF (!UI[5:foo]),CALL BAR ;\n"
+  end
 end
