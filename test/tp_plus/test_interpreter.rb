@@ -541,4 +541,8 @@ LBL[101:ghjk] ;\n)
     assert_prog "IF (F[1:foo] OR F[1:foo] OR F[1:foo]),JMP LBL[100] ;\nLBL[100:end] ;\n"
   end
 
+  def test_assignment_as_bool_result
+    parse "foo := F[1]\nbar := R[1]\nfoo = bar == 1"
+    assert_prog "F[1:foo]=(R[1:bar]=1) ;\n"
+  end
 end

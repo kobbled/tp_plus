@@ -1,6 +1,7 @@
 module TPPlus
   module Nodes
     class OperatorNode
+      attr_reader :string
       def initialize(string)
         @string = string
       end
