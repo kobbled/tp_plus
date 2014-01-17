@@ -18,6 +18,12 @@ module TPPlus
         target_node(context).is_a?(IONode) && target_node(context).requires_mixed_logic?
       end
 
+      def with_parens(s, options)
+        return s unless options[:as_condition]
+
+        "(#{s})"
+      end
+
       def eval(context,options={})
         return target_node(context).eval(context) if constant?
 
@@ -25,7 +31,7 @@ module TPPlus
         if options[:opposite]
           s += "!"
         end
-        s + target_node(context).eval(context)
+        with_parens(s + target_node(context).eval(context), options)
       end
     end
   end

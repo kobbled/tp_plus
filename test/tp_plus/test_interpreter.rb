@@ -511,4 +511,24 @@ LBL[101:ghjk] ;\n)
     assert_prog "F[1:foo]=(F[1:foo] OR !(F[2:bar] OR F[3:baz])) ;\n"
   end
 
+  def test_opposite_flag_in_simple_if
+    parse "foo := F[1]\nif foo\n# foo is true\nend"
+    assert_prog "IF (!F[1:foo]),JMP LBL[100] ;\n! foo is true ;\nLBL[100] ;\n"
+  end
+
+  def test_opposite_flag_in_simple_unless
+    parse "foo := F[1]\nunless foo\n# foo is false\nend"
+    assert_prog "IF (F[1:foo]),JMP LBL[100] ;\n! foo is false ;\nLBL[100] ;\n"
+  end
+
+  def test_inline_if_with_flag
+    parse "foo := F[1]\njump_to @end if foo\n@end"
+    assert_prog "IF (F[1:foo]),JMP LBL[100] ;\nLBL[100:end] ;\n"
+  end
+
+  def test_inline_unless_with_flag
+    parse "foo := F[1]\njump_to @end unless foo\n@end"
+    assert_prog "IF (!F[1:foo]),JMP LBL[100] ;\nLBL[100:end] ;\n"
+  end
+
 end

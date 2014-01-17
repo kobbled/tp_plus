@@ -55,15 +55,15 @@ module TPPlus
         if !@false_block
           if @type == "if"
           # simple if
-          "IF #{@condition.eval(context,opposite:true)},JMP LBL[#{true_label(context)}] ;\n#{true_block(context)}LBL[#{true_label(context)}]"
+          "IF #{@condition.eval(context,opposite: true,as_condition: true)},JMP LBL[#{true_label(context)}] ;\n#{true_block(context)}LBL[#{true_label(context)}]"
           else
             # simple unless
-            "IF #{@condition.eval(context)},JMP LBL[#{true_label(context)}] ;\n#{true_block(context)}LBL[#{true_label(context)}]"
+            "IF #{@condition.eval(context, as_condition: true)},JMP LBL[#{true_label(context)}] ;\n#{true_block(context)}LBL[#{true_label(context)}]"
 
           end
         else
           # could be if-else or unless-else
-          "IF #{@condition.eval(context,opposite:(@type == "if"))},JMP LBL[#{true_label(context)}] ;\n#{true_block(context)}JMP LBL[#{end_label(context)}] ;\nLBL[#{true_label(context)}] ;\n#{false_block(context)}LBL[#{end_label(context)}]"
+          "IF #{@condition.eval(context,opposite: (@type == "if"), as_condition: true)},JMP LBL[#{true_label(context)}] ;\n#{true_block(context)}JMP LBL[#{end_label(context)}] ;\nLBL[#{true_label(context)}] ;\n#{false_block(context)}LBL[#{end_label(context)}]"
         end
       end
     end

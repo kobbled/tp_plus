@@ -9,6 +9,10 @@ module TPPlus
         @right_op = right_op
       end
 
+      def requires_mixed_logic?
+        contains_expression? || @grouped
+      end
+
       def contains_expression?
         @left_op.is_a?(ExpressionNode) || @right_op.is_a?(ExpressionNode)
       end

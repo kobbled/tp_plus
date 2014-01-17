@@ -12,12 +12,22 @@ module TPPlus
         @type == "F" ? true : false
       end
 
+      def result
+        "#{@type}[#{@id}:#{@comment}]"
+      end
+
+      def with_parens(s, options)
+        return s unless options[:as_condition]
+
+        "(#{s})"
+      end
+
       def eval(context, options={})
-        s = "#{@type}[#{@id}:#{@comment}]"
+        s = result
         if options[:method] == "on?"
           s += "=ON"
         end
-        s
+        with_parens(s, options)
       end
     end
   end
