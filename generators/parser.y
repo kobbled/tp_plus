@@ -10,6 +10,20 @@ token IF ELSE END UNLESS
 token WAIT_FOR WAIT_UNTIL
 token MAX_SPEED FANUC_USE FANUC_SET
 token CASE WHEN
+
+prechigh
+#  left DOT
+#  right '!'
+  left STAR SLASH
+  left PLUS MINUS
+  left GT GTE LT LTE
+  left EEQUAL NOTEQUAL
+  left AND
+  left OR
+  right EQUAL
+#  left DOT
+preclow
+
 rule
   program
     : /* nothing */
@@ -226,19 +240,34 @@ rule
     | WORD                             { result = VarNode.new(val[0]) }
     ;
 
+  # this change goes from 6 shift/reduce conflicts to 20
   expression
-    : simple_expression                         { result = val[0] }
-    | simple_expression relop simple_expression { result = ExpressionNode.new(val[0],val[1],val[2]) }
+    : factor                           { result = val[0] }
+    | operator                         { result = val[0] }
+    | '(' expression ')'               { val[1].grouped = true; result = val[1] }
     ;
 
-  simple_expression
-    : term                                      { result = val[0] }
-    | simple_expression addop term              { result = ExpressionNode.new(val[0],val[1],val[2]) }
-    ;
+  #expression
+  #  : simple_expression                         { result = val[0] }
+  #  | simple_expression relop simple_expression { result = ExpressionNode.new(val[0],val[1],val[2]) }
+  #  | '(' expression ')'                        { result = val[1] }
+  #  ;
 
-  term
-    : factor
-    | term mulop factor                         { result = ExpressionNode.new(val[0],val[1],val[2]) }
+  #simple_expression
+  #  : term                                      { result = val[0] }
+  #  | simple_expression addop term              { result = ExpressionNode.new(val[0],val[1],val[2]) }
+  #  ;
+
+  #term
+  #  : factor
+  #  | term mulop factor                         { result = ExpressionNode.new(val[0],val[1],val[2]) }
+  #  ;
+
+  # 20 to 48 conflicts!!
+  operator
+    : expression relop expression      { result = ExpressionNode.new(val[0],val[1],val[2]) }
+    | expression addop expression      { result = ExpressionNode.new(val[0],val[1],val[2]) }
+    | expression mulop expression      { result = ExpressionNode.new(val[0],val[1],val[2]) }
     ;
 
   relop

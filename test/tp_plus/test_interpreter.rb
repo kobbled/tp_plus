@@ -476,4 +476,29 @@ LBL[101:ghjk] ;\n)
     assert_prog "F[1:foo]=(1 AND 1) ;\n"
   end
 
+  def test_simple_math
+    parse("foo := R[1]\nfoo=1+1")
+    assert_prog "R[1:foo]=1+1 ;\n"
+  end
+
+  def test_more_complicated_math
+    parse("foo := R[1]\nfoo=1+2+3")
+    assert_prog "R[1:foo]=(1+2+3) ;\n"
+  end
+
+  def test_operator_precedence
+    parse "foo := R[1]\nfoo=1+2*3"
+    assert_prog "R[1:foo]=(1+2*3) ;\n"
+  end
+
+  def test_expression_grouping
+    parse "foo := R[1]\nfoo=(1+2)*3"
+    assert_prog "R[1:foo]=((1+2)*3) ;\n"
+  end
+
+  def test_boolean_expression
+    parse "foo := F[1]\nfoo = 1 || 1 && 0"
+    assert_prog "F[1:foo]=(1 OR 1 AND 0) ;\n"
+  end
+
 end

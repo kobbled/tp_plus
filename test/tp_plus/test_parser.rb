@@ -295,4 +295,37 @@ class TestParser < Test::Unit::TestCase
     parse("p := P[1]\nlpos := PR[1]\n@somewhere\nlinear_move.to(p).at(2000mm/s).term(0).skip_to(@somewhere, lpos)")
     assert_node_type MotionNode, last_node
   end
+
+  def test_simple_math
+    parse("foo := R[1]\nfoo=1+1")
+    assert_node_type AssignmentNode, last_node
+  end
+
+  def test_more_complicated_expression
+    parse("foo := R[1]\nfoo=1+2+3+4+5")
+    assert_node_type AssignmentNode, last_node
+  end
+
+  def test_operator_precedence
+    parse("foo := R[1]\nfoo=1+2*3")
+    n = last_node
+    assert_node_type AssignmentNode, n
+    e = n.assignable
+    assert_node_type DigitNode, e.left_op
+    assert_node_type ExpressionNode, e.right_op
+  end
+
+  def test_expression_grouping
+    parse("foo := R[1]\nfoo=(1+2)*3")
+    n = last_node
+    assert_node_type AssignmentNode, n
+    e = n.assignable
+    assert_node_type ExpressionNode, e.left_op
+    assert_node_type DigitNode, e.right_op
+  end
+
+  def test_boolean_expressions
+    parse("foo := F[1]\nfoo=1 || 1 && 0")
+    assert_node_type AssignmentNode, last_node
+  end
 end

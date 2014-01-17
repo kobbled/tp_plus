@@ -8,7 +8,12 @@ module TPPlus
       end
 
       def assignable_string(context,options={})
-        @assignable_string ||= if options[:mixed_logic]
+        if @assignable.is_a?(ExpressionNode)
+          options[:mixed_logic] = true if @assignable.contains_expression?
+          options[:mixed_logic] = true if @assignable.op.requires_mixed_logic?
+        end
+
+        if options[:mixed_logic]
           "(#{@assignable.eval(context)})"
         else
           @assignable.eval(context)
