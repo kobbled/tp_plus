@@ -10,7 +10,7 @@ module TPPlus
       end
 
       def requires_mixed_logic?
-        contains_expression? || @grouped
+        contains_expression? || @grouped || @op.requires_mixed_logic?
       end
 
       def contains_expression?

@@ -531,4 +531,14 @@ LBL[101:ghjk] ;\n)
     assert_prog "IF (!F[1:foo]),JMP LBL[100] ;\nLBL[100:end] ;\n"
   end
 
+  def test_automatic_parens_on_boolean
+    parse "foo := F[1]\njump_to @end if foo || foo\n@end"
+    assert_prog "IF (F[1:foo] OR F[1:foo]),JMP LBL[100] ;\nLBL[100:end] ;\n"
+  end
+
+  def test_no_extra_parens_with_booleans
+    parse "foo := F[1]\njump_to @end if foo || foo || foo\n@end"
+    assert_prog "IF (F[1:foo] OR F[1:foo] OR F[1:foo]),JMP LBL[100] ;\nLBL[100:end] ;\n"
+  end
+
 end

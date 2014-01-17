@@ -24,7 +24,7 @@ module TPPlus
       def condition(context,options={})
         options[:opposite] ||= @type == "unless"
 
-        if @condition.is_a? VarNode
+        if @condition.is_a?(VarNode) || @condition.requires_mixed_logic?
           "(#{@condition.eval(context, options)})"
         else
           @condition.eval(context, options)
