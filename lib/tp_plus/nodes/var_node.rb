@@ -7,7 +7,11 @@ module TPPlus
       end
 
       def target_node(context)
-        @target_node ||=  @identifier.upcase == @identifier ? context.get_constant(@identifier) : context.get_var(@identifier)
+        constant? ? context.get_constant(@identifier) : context.get_var(@identifier)
+      end
+
+      def constant?
+        @identifier.upcase == @identifier
       end
 
       def requires_mixed_logic?(context)
@@ -15,7 +19,7 @@ module TPPlus
       end
 
       def eval(context,options={})
-        return target_node(context).eval(context) if @identifier.upcase == @identifier
+        return target_node(context).eval(context) if constant?
 
         s = ""
         if options[:opposite]

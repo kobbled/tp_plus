@@ -11,10 +11,10 @@ module TPPlus
       def simple?(context)
         if @condition.is_a? ExpressionNode
           if @condition.left_op.is_a? VarNode
-            return false if context.get_var(@condition.left_op.identifier).is_a? ArgumentNode
+            return false if @condition.left_op.target_node(context).is_a? ArgumentNode
           end
           if @condition.right_op.is_a? VarNode
-            return false if context.get_var(@condition.right_op.identifier).is_a? ArgumentNode
+            return false if @condition.right_op.target_node(context).is_a? ArgumentNode
           end
         end
 
