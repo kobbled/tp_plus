@@ -4,7 +4,7 @@ token NUMREG POSREG VREG SREG POSITION TIME_SEGMENT ARG
 token MOVE DOT TO AT TERM OFFSET SKIP
 token SEMICOLON NEWLINE
 token REAL DIGIT WORD EQUAL UNITS
-token EEQUAL NOTEQUAL GTE LTE LT GT
+token EEQUAL NOTEQUAL GTE LTE LT GT BANG
 token PLUS MINUS STAR SLASH DIV AND OR MOD
 token IF ELSE END UNLESS
 token WAIT_FOR WAIT_UNTIL
@@ -13,7 +13,7 @@ token CASE WHEN
 
 prechigh
 #  left DOT
-#  right '!'
+  right BANG
   left STAR SLASH
   left PLUS MINUS
   left GT GTE LT LTE
@@ -268,6 +268,8 @@ rule
     : expression relop expression      { result = ExpressionNode.new(val[0],val[1],val[2]) }
     | expression addop expression      { result = ExpressionNode.new(val[0],val[1],val[2]) }
     | expression mulop expression      { result = ExpressionNode.new(val[0],val[1],val[2]) }
+    # 48 => 50 with prec on BANG (62) without
+    | BANG expression                  { result = ExpressionNode.new(val[1],val[0],nil) }
     ;
 
   relop

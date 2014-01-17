@@ -249,10 +249,13 @@ class TPPlus::Scanner < Racc::Parser
       when (text = @ss.scan(/mm\/s/i))
          action { [:UNITS, text] }
 
+      when (text = @ss.scan(/\!/i))
+         action { [:BANG, text] }
+
       when (text = @ss.scan(/\s+/i))
         ;
 
-      when (text = @ss.scan(/[\w\!\?_]+/i))
+      when (text = @ss.scan(/[\w\?_]+/i))
          action { [:WORD, text] }
 
       when (text = @ss.scan(/./i))

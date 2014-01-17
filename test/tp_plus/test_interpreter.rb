@@ -501,4 +501,14 @@ LBL[101:ghjk] ;\n)
     assert_prog "F[1:foo]=(1 OR 1 AND 0) ;\n"
   end
 
+  def test_bang
+    parse "foo := F[1]\nbar := F[2]\nfoo = !bar"
+    assert_prog "F[1:foo]=(!F[2:bar]) ;\n"
+  end
+
+  def test_bang_with_grouping
+    parse "foo := F[1]\nbar := F[2]\nbaz := F[3]\nfoo = foo || !(bar || baz)"
+    assert_prog "F[1:foo]=(F[1:foo] OR !(F[2:bar] OR F[3:baz])) ;\n"
+  end
+
 end

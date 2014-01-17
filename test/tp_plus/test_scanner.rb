@@ -381,4 +381,11 @@ class TestScanner < Test::Unit::TestCase
      @scanner.scan_setup "skip_to"
      assert_token :SKIP, "skip_to"
    end
+
+   def test_scans_bang_separate_from_word
+     @scanner.scan_setup "!foo"
+     assert_token :BANG, "!"
+     assert_token :WORD, "foo"
+   end
+
 end

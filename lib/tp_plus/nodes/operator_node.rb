@@ -5,11 +5,13 @@ module TPPlus
         @string = string
       end
 
+      def bang?
+        @string == "!"
+      end
+
       def requires_mixed_logic?
         case @string
-        when "&&"
-          true
-        when "||"
+        when "&&", "||", "!"
           true
         else
           false

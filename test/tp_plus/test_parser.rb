@@ -328,4 +328,11 @@ class TestParser < Test::Unit::TestCase
     parse("foo := F[1]\nfoo=1 || 1 && 0")
     assert_node_type AssignmentNode, last_node
   end
+
+  def test_bang
+    parse "foo := F[1]\nbar := F[2]\nfoo = !bar"
+    n = last_node
+    assert_node_type AssignmentNode, n
+    assert_node_type ExpressionNode, n.assignable
+  end
 end

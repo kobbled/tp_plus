@@ -98,8 +98,9 @@ rule
          \.             { [:DOT, text] }
          \d+            { [:DIGIT, text.to_i] }
          mm\/s          { [:UNITS, text] }
+         \!             { [:BANG, text] }
 
          \s+            # ignore whitespace
-         [\w\!\?_]+     { [:WORD, text] }
+         [\w\?_]+       { [:WORD, text] }
          .              { [text, text] }
 end
