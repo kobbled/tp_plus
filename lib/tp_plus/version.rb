@@ -1,3 +1,3 @@
 module TPPlus
-  VERSION = '0.0.26'
+  VERSION = '0.0.29'
 end
