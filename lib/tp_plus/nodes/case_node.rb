@@ -17,8 +17,9 @@ module TPPlus
         return "" if @conditions.empty?
 
         s = " ;\n"
-        @conditions.reject {|c| c.nil? }.each do |c|
+        @conditions.reject! {|c| c.nil? }.each do |c|
           s += c.eval(context)
+          s += " ;\n" unless c == @conditions.last
         end
 
         s

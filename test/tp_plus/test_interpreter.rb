@@ -377,6 +377,21 @@ LBL[100:asdf] ;
 LBL[101:ghjk] ;\n)
   end
 
+  def test_case_statement_with_three_whens
+    parse("foo := R[1]\ncase foo\nwhen 1\nbar()\nwhen 2\nbar()\nwhen 3\nbar()\nend")
+    assert_prog %(SELECT R[1:foo]=1,CALL BAR ;
+       =2,CALL BAR ;
+       =3,CALL BAR ;\n)
+  end
+
+  def test_case_statement_with_three_whens_and_else
+    parse("foo := R[1]\ncase foo\nwhen 1\nbar()\nwhen 2\nbar()\nwhen 3\nbar()\nelse\nbar()\nend")
+    assert_prog %(SELECT R[1:foo]=1,CALL BAR ;
+       =2,CALL BAR ;
+       =3,CALL BAR ;
+       ELSE,CALL BAR ;\n)
+  end
+
   def test_can_use_simple_io_value_as_condition
     parse("foo := UI[5]\n@top\njump_to @top if foo")
     assert_prog "LBL[100:top] ;\nIF (UI[5:foo]),JMP LBL[100] ;\n"
