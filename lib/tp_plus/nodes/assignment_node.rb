@@ -9,10 +9,9 @@ module TPPlus
 
       def assignable_string(context,options={})
         if @assignable.is_a?(ExpressionNode)
-          options[:mixed_logic] = true
-          #options[:mixed_logic] = true if @assignable.contains_expression?
-          #options[:mixed_logic] = true if @assignable.op.requires_mixed_logic?
-          #options[:mixed_logic] = true if ["==","<>"].include?(@assignable.op.string)
+          options[:mixed_logic] = true if @assignable.contains_expression?
+          options[:mixed_logic] = true if @assignable.op.requires_mixed_logic?
+          options[:mixed_logic] = true if @assignable.op.boolean?
         end
 
         if options[:mixed_logic]

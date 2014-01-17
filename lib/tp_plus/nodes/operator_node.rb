@@ -19,6 +19,15 @@ module TPPlus
         end
       end
 
+      def boolean?
+        case @string
+        when "&&", "||", "!", "==", "<>", ">", ">=", "<", "<="
+          true
+        else
+          false
+        end
+      end
+
       def eval(context,options={})
         if options[:opposite]
           case @string
