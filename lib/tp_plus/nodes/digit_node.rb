@@ -5,10 +5,6 @@ module TPPlus
         @value = value
       end
 
-      def requires_mixed_logic?
-        false
-      end
-
       def eval(context)
         @value
       end

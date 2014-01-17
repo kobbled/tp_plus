@@ -7,14 +7,8 @@ module TPPlus
         @comment = comment
       end
 
-      def comment_string
-        return "" if @comment == ""
-
-        ":#{@comment}"
-      end
-
       def eval(context)
-        "AR[#{@id}#{comment_string}]"
+        "AR[#{@id}]"
       end
     end
   end

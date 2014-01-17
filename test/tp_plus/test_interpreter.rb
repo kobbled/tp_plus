@@ -418,7 +418,7 @@ LBL[101:ghjk] ;\n)
 
   def test_using_argument_var
     parse("foo := AR[1]\n@top\njump_to @top if foo==1")
-    assert_prog "LBL[100:top] ;\nIF (AR[1:foo]=1),JMP LBL[100] ;\n"
+    assert_prog "LBL[100:top] ;\nIF (AR[1]=1),JMP LBL[100] ;\n"
   end
 
   def test_use_uframe_with_constant
@@ -544,5 +544,10 @@ LBL[101:ghjk] ;\n)
   def test_assignment_as_bool_result
     parse "foo := F[1]\nbar := R[1]\nfoo = bar == 1"
     assert_prog "F[1:foo]=(R[1:bar]=1) ;\n"
+  end
+
+  def test_args_dont_get_comments
+    parse "foo := AR[1]\njump_to @end if foo == 1\n@end"
+    assert_prog "IF (AR[1]=1),JMP LBL[100] ;\nLBL[100:end] ;\n"
   end
 end
