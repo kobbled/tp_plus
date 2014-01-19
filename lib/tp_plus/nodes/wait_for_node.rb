@@ -20,8 +20,20 @@ module TPPlus
         end).sub(/^0+/, "")
       end
 
+      def expression
+        case @units
+        when "s"
+          @time
+        when "ms"
+          e = ExpressionNode.new(@time,"/",DigitNode.new(1000))
+          e.grouped = true
+          e
+        end
+      end
+
       def eval(context)
         raise "Invalid units" unless units_valid?
+        return WaitUntilNode.new(expression,nil).eval(context) if @time.is_a?(VarNode)
 
         "WAIT #{time(context)}(sec)"
       end

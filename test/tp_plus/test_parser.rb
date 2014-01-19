@@ -212,7 +212,7 @@ class TestParser < Test::Unit::TestCase
   end
 
   def test_wait_for_with_units
-    parse("wait_for 5s")
+    parse("wait_for(5,'s')")
     assert_node_type WaitForNode, last_node
   end
 

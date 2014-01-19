@@ -323,20 +323,30 @@ class TestInterpreter < Test::Unit::TestCase
   end
 
   def test_wait_for_with_seconds
-    parse("wait_for 5s")
+    parse("wait_for(5,'s')")
     assert_prog "WAIT 5.00(sec) ;\n"
   end
 
   def test_wait_for_with_invalid_units_throws_error
-    parse("wait_for 5ns")
+    parse("wait_for(5,'ns')")
     assert_raise(RuntimeError) do
       assert_prog ""
     end
   end
 
   def test_wait_for_with_milliseconds
-    parse("wait_for 100ms")
+    parse("wait_for(100,'ms')")
     assert_prog "WAIT .10(sec) ;\n"
+  end
+
+  def test_wait_for_with_indirect_seconds
+    parse "foo := R[1]\nwait_for(foo, 's')"
+    assert_prog "WAIT R[1:foo] ;\n"
+  end
+
+  def test_wait_for_with_indirect_ms
+    parse "foo := R[1]\nwait_for(foo, 'ms')"
+    assert_prog "WAIT (R[1:foo]/1000) ;\n"
   end
 
   def test_wait_until_with_exp

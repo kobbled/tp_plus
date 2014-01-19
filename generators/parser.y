@@ -2,7 +2,7 @@ class TPPlus::Parser
 token ASSIGN AT_SYM COMMENT JUMP IO_METHOD INPUT OUTPUT
 token NUMREG POSREG VREG SREG POSITION TIME_SEGMENT ARG
 token MOVE DOT TO AT TERM OFFSET SKIP
-token SEMICOLON NEWLINE
+token SEMICOLON NEWLINE STRING
 token REAL DIGIT WORD EQUAL UNITS
 token EEQUAL NOTEQUAL GTE LTE LT GT BANG
 token PLUS MINUS STAR SLASH DIV AND OR MOD
@@ -62,7 +62,8 @@ rule
     ;
 
   wait_statement
-    : WAIT_FOR number WORD             { result = WaitForNode.new(val[1], val[2]) }
+    : WAIT_FOR '(' indirectable ',' STRING ')'
+                                       { result = WaitForNode.new(val[2], val[4]) }
     | WAIT_UNTIL '(' expression ')' wait_modifiers
                                        { result = WaitUntilNode.new(val[2],val[4]) }
     ;
