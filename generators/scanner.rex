@@ -84,6 +84,8 @@ rule
          {nw}jump_to{nw}            { [:JUMP, text] }
          {nw}linear_move{nw}        { [:MOVE, text] }
          {nw}offset{nw}             { [:OFFSET, text] }
+         {nw}position_register{nw}  { [:POSITION_REGISTER, text] }
+         {nw}position{nw}           { [:POSITION, text] }
          {nw}skip_to{nw}            { [:SKIP, text] } 
          {nw}term{nw}               { [:TERM, text] }
          {nw}time_after{nw}         { [:TIME_SEGMENT, text] }

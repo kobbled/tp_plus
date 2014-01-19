@@ -600,4 +600,19 @@ LBL[101:ghjk] ;\n)
     parse "foo := AR[1]\njump_to @end if foo == 1\n@end"
     assert_prog "IF (AR[1]=1),JMP LBL[100] ;\nLBL[100:end] ;\n"
   end
+
+  def test_indirect_position_assignment
+    parse "foo := PR[1]\nfoo = position(5)"
+    assert_prog "PR[1:foo]=P[5] ;\n"
+  end
+
+  def test_indirect_indirect_position_assignment
+    parse "foo := PR[1]\nbar := R[1]\nfoo = position(bar)"
+    assert_prog "PR[1:foo]=P[R[1:bar]] ;\n"
+  end
+
+  def test_indirect_posreg_assignment
+    parse "foo := PR[1]\nfoo = position_register(5)"
+    assert_prog "PR[1:foo]=PR[5] ;\n"
+  end
 end

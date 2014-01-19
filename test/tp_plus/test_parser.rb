@@ -336,4 +336,9 @@ class TestParser < Test::Unit::TestCase
     assert_node_type ExpressionNode, n.assignable
   end
 
+  def test_indirect_position_assignment
+    parse "foo := PR[1]\nfoo = position(5)"
+    assert_node_type AssignmentNode, last_node
+  end
+
 end

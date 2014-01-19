@@ -9,7 +9,7 @@ token PLUS MINUS STAR SLASH DIV AND OR MOD
 token IF ELSE END UNLESS
 token WAIT_FOR WAIT_UNTIL TIMEOUT AFTER
 token FANUC_USE FANUC_SET
-token CASE WHEN
+token CASE WHEN POSITION POSITION_REGISTER
 
 prechigh
 #  left DOT
@@ -313,6 +313,13 @@ rule
   factor
     : signed_number
     | var
+    | indirect_position
+    ;
+
+  indirect_position
+    : POSITION '(' indirectable ')'   { result = IndirectNode.new(:position, val[2]) }
+    | POSITION_REGISTER '(' indirectable ')'
+                                      { result = IndirectNode.new(:position_register, val[2]) }
     ;
 
   signed_number

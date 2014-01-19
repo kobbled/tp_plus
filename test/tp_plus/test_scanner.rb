@@ -398,5 +398,14 @@ class TestScanner < Test::Unit::TestCase
      assert_token :STRING, "string"
    end
 
+   def test_scans_position
+     @scanner.scan_setup "position"
+     assert_token :POSITION, "position"
+   end
+
+   def test_scans_position_register
+     @scanner.scan_setup "position_register"
+     assert_token :POSITION_REGISTER, "position_register"
+   end
 
 end
