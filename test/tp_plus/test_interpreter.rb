@@ -625,4 +625,9 @@ LBL[101:ghjk] ;\n)
     parse "namespace Foo\nbar := R[1]\nend\nbar := R[2]\nbar = 2\nFoo.bar = 1"
     assert_prog "R[2:bar]=2 ;\nR[1:Foo bar]=1 ;\n"
   end
+
+  def test_namespace_constant_definition
+    parse "namespace Math\nPI := 3.14\nend\nfoo := R[1]\nfoo = Math.PI"
+    assert_prog "R[1:foo]=3.14 ;\n"
+  end
 end
