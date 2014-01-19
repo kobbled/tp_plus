@@ -7,7 +7,7 @@ token REAL DIGIT WORD EQUAL UNITS
 token EEQUAL NOTEQUAL GTE LTE LT GT BANG
 token PLUS MINUS STAR SLASH DIV AND OR MOD
 token IF ELSE END UNLESS
-token WAIT_FOR WAIT_UNTIL
+token WAIT_FOR WAIT_UNTIL TIMEOUT AFTER
 token MAX_SPEED FANUC_USE FANUC_SET
 token CASE WHEN
 
@@ -63,7 +63,27 @@ rule
 
   wait_statement
     : WAIT_FOR number WORD             { result = WaitForNode.new(val[1], val[2]) }
-    | WAIT_UNTIL expression            { result = WaitUntilNode.new(val[1]) }
+    | WAIT_UNTIL '(' expression ')' wait_modifiers
+                                       { result = WaitUntilNode.new(val[2],val[4]) }
+    ;
+
+  wait_modifiers
+    :
+    | wait_modifier                    { result = val[0] }
+    | wait_modifiers wait_modifier     { result = val[0].merge(val[1]) }
+    ;
+
+  wait_modifier
+    : DOT swallow_newlines TIMEOUT '(' label ')'
+                                       { result = { label: val[4] } }
+    | DOT swallow_newlines AFTER '(' number WORD ')'
+                                       { result = { timeout: [val[4],val[5]] } }
+    | DOT swallow_newlines AFTER '(' var ',' WORD ')'
+                                       { result = { timeout: [val[4],val[6]] } }
+    ;
+
+  label
+    : AT_SYM WORD                      { result = val[1] }
     ;
 
   use_statement
@@ -97,7 +117,7 @@ rule
     ;
 
   jump
-    : JUMP AT_SYM WORD                 { result = JumpNode.new(val[2]) }
+    : JUMP label                       { result = JumpNode.new(val[1]) }
     ;
 
   conditional
@@ -178,8 +198,8 @@ rule
                                        { result = OffsetNode.new(val[4]) }
     | DOT swallow_newlines TIME_SEGMENT '(' time ',' time_seg_actions ')'
                                        { result = TimeNode.new(val[2],val[4],val[6]) }
-    | DOT swallow_newlines SKIP '(' AT_SYM WORD optional_lpos_arg ')'
-                                       { result = SkipNode.new(val[5],val[6]) }
+    | DOT swallow_newlines SKIP '(' label optional_lpos_arg ')'
+                                       { result = SkipNode.new(val[4],val[5]) }
     ;
 
   optional_lpos_arg
@@ -214,7 +234,7 @@ rule
     ;
 
   label_definition
-    : AT_SYM WORD                      { result = LabelDefinitionNode.new(val[1]) }#@interpreter.add_label(val[1]) }
+    : label                            { result = LabelDefinitionNode.new(val[0]) }#@interpreter.add_label(val[1]) }
     ;
 
   definition

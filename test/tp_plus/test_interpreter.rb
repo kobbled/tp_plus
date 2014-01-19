@@ -340,8 +340,33 @@ class TestInterpreter < Test::Unit::TestCase
   end
 
   def test_wait_until_with_exp
-    parse("wait_until 1==0")
-    assert_prog "WAIT (1=0) ;\n"
+    parse("wait_until(1==0)")
+    assert_prog "WAIT 1=0 ;\n"
+  end
+
+  def test_wait_until_with_timeout_to
+    parse("wait_until(1==0).timeout_to(@end)\n@end")
+    assert_prog "WAIT 1=0 TIMEOUT,LBL[100] ;\nLBL[100:end] ;\n"
+  end
+
+  def test_wait_until_with_timeout_to_and_after
+    parse("wait_until(1==0).timeout_to(@end).after(1s)\n@end")
+    assert_prog "$WAITTMOUT=(100) ;\nWAIT 1=0 TIMEOUT,LBL[100] ;\nLBL[100:end] ;\n"
+  end
+
+  def test_wait_until_after_ms
+    parse("wait_until(1==0).timeout_to(@end).after(1000ms)\n@end")
+    assert_prog "$WAITTMOUT=(100) ;\nWAIT 1=0 TIMEOUT,LBL[100] ;\nLBL[100:end] ;\n"
+  end
+
+  def test_wait_until_after_indirect
+    parse("foo := R[1]\nwait_until(1==0).timeout_to(@end).after(foo, s)\n@end")
+    assert_prog "$WAITTMOUT=(R[1:foo]*100) ;\nWAIT 1=0 TIMEOUT,LBL[100] ;\nLBL[100:end] ;\n"
+  end
+
+  def test_wait_until_with_constant
+    parse("WAIT := 5\nwait_until(1==0).timeout_to(@end).after(WAIT, s)\n@end")
+    assert_prog "$WAITTMOUT=(5*100) ;\nWAIT 1=0 TIMEOUT,LBL[100] ;\nLBL[100:end] ;\n"
   end
 
   def test_pr_components

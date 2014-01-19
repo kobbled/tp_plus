@@ -388,4 +388,15 @@ class TestScanner < Test::Unit::TestCase
      assert_token :WORD, "foo"
    end
 
+   def test_timeout_to
+     @scanner.scan_setup "timeout_to"
+     assert_token :TIMEOUT, "timeout_to"
+   end
+
+   def test_after
+     @scanner.scan_setup "after"
+     assert_token :AFTER, "after"
+   end
+
+
 end

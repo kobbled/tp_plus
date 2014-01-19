@@ -177,11 +177,17 @@ class TPPlus::Scanner < Racc::Parser
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)use_utool(?=[\W]+|\A|\z|@)/i))
          action { [:FANUC_USE, text] }
 
+      when (text = @ss.scan(/(?=[\W]+|\A|\z|@)after(?=[\W]+|\A|\z|@)/i))
+         action { [:AFTER, text] }
+
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)at(?=[\W]+|\A|\z|@)/i))
          action { [:AT, text] }
 
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)case(?=[\W]+|\A|\z|@)/i))
          action { [:CASE, text] }
+
+      when (text = @ss.scan(/(?=[\W]+|\A|\z|@)circular_move(?=[\W]+|\A|\z|@)/i))
+         action { [:MOVE, text] }
 
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)else(?=[\W]+|\A|\z|@)/i))
          action { [:ELSE, text] }
@@ -192,10 +198,13 @@ class TPPlus::Scanner < Racc::Parser
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)if(?=[\W]+|\A|\z|@)/i))
          action { [:IF, text] }
 
+      when (text = @ss.scan(/(?=[\W]+|\A|\z|@)joint_move(?=[\W]+|\A|\z|@)/i))
+         action { [:MOVE, text] }
+
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)jump_to(?=[\W]+|\A|\z|@)/i))
          action { [:JUMP, text] }
 
-      when (text = @ss.scan(/(?=[\W]+|\A|\z|@)linear_move|joint_move|circular_move(?=[\W]+|\A|\z|@)/i))
+      when (text = @ss.scan(/(?=[\W]+|\A|\z|@)linear_move(?=[\W]+|\A|\z|@)/i))
          action { [:MOVE, text] }
 
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)max_speed(?=[\W]+|\A|\z|@)/i))
@@ -210,10 +219,19 @@ class TPPlus::Scanner < Racc::Parser
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)term(?=[\W]+|\A|\z|@)/i))
          action { [:TERM, text] }
 
-      when (text = @ss.scan(/(?=[\W]+|\A|\z|@)time_before|time_after(?=[\W]+|\A|\z|@)/i))
+      when (text = @ss.scan(/(?=[\W]+|\A|\z|@)time_after(?=[\W]+|\A|\z|@)/i))
          action { [:TIME_SEGMENT, text] }
 
-      when (text = @ss.scan(/(?=[\W]+|\A|\z|@)turn_on|turn_off|toggle(?=[\W]+|\A|\z|@)/i))
+      when (text = @ss.scan(/(?=[\W]+|\A|\z|@)time_before(?=[\W]+|\A|\z|@)/i))
+         action { [:TIME_SEGMENT, text] }
+
+      when (text = @ss.scan(/(?=[\W]+|\A|\z|@)timeout_to(?=[\W]+|\A|\z|@)/i))
+         action { [:TIMEOUT, text] }
+
+      when (text = @ss.scan(/(?=[\W]+|\A|\z|@)toggle(?=[\W]+|\A|\z|@)/i))
+         action { [:IO_METHOD, text] }
+
+      when (text = @ss.scan(/(?=[\W]+|\A|\z|@)turn_on|turn_off(?=[\W]+|\A|\z|@)/i))
          action { [:IO_METHOD, text] }
 
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)to(?=[\W]+|\A|\z|@)/i))

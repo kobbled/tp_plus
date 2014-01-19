@@ -217,7 +217,7 @@ class TestParser < Test::Unit::TestCase
   end
 
   def test_scan_wait_until
-    parse("wait_until 1==0")
+    parse("wait_until(1==0)")
     assert_node_type WaitUntilNode, last_node
   end
 
@@ -335,4 +335,5 @@ class TestParser < Test::Unit::TestCase
     assert_node_type AssignmentNode, n
     assert_node_type ExpressionNode, n.assignable
   end
+
 end
