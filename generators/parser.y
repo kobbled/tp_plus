@@ -77,9 +77,7 @@ rule
   wait_modifier
     : DOT swallow_newlines TIMEOUT '(' label ')'
                                        { result = { label: val[4] } }
-    | DOT swallow_newlines AFTER '(' number WORD ')'
-                                       { result = { timeout: [val[4],val[5]] } }
-    | DOT swallow_newlines AFTER '(' var ',' WORD ')'
+    | DOT swallow_newlines AFTER '(' indirectable ',' STRING ')'
                                        { result = { timeout: [val[4],val[6]] } }
     ;
 
