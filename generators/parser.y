@@ -3,12 +3,12 @@ token ASSIGN AT_SYM COMMENT JUMP IO_METHOD INPUT OUTPUT
 token NUMREG POSREG VREG SREG POSITION TIME_SEGMENT ARG
 token MOVE DOT TO AT TERM OFFSET SKIP
 token SEMICOLON NEWLINE STRING
-token REAL DIGIT WORD EQUAL UNITS
+token REAL DIGIT WORD EQUAL
 token EEQUAL NOTEQUAL GTE LTE LT GT BANG
 token PLUS MINUS STAR SLASH DIV AND OR MOD
 token IF ELSE END UNLESS
 token WAIT_FOR WAIT_UNTIL TIMEOUT AFTER
-token MAX_SPEED FANUC_USE FANUC_SET
+token FANUC_USE FANUC_SET
 token CASE WHEN
 
 prechigh
@@ -224,14 +224,8 @@ rule
     ;
 
   speed
-    : number units                     { result = [val[0],val[1]] }
-    | MAX_SPEED                        { result = [:max_speed,:max_speed] }
-    | var ',' units                    { result = [val[0],val[2]] }
-    ;
-
-  units
-    : UNITS                            { result = UnitsNode.new(val[0]) }
-    | MOD                              { result = UnitsNode.new(val[0]) }
+    : indirectable ',' STRING          { result = { speed: val[0], units: val[2] } }
+    | STRING                           { result = { speed: val[0], units: nil } }
     ;
 
   label_definition

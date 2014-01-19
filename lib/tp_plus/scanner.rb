@@ -207,9 +207,6 @@ class TPPlus::Scanner < Racc::Parser
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)linear_move(?=[\W]+|\A|\z|@)/i))
          action { [:MOVE, text] }
 
-      when (text = @ss.scan(/(?=[\W]+|\A|\z|@)max_speed(?=[\W]+|\A|\z|@)/i))
-         action { [:MAX_SPEED, text] }
-
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)offset(?=[\W]+|\A|\z|@)/i))
          action { [:OFFSET, text] }
 
@@ -263,9 +260,6 @@ class TPPlus::Scanner < Racc::Parser
 
       when (text = @ss.scan(/\d+/i))
          action { [:DIGIT, text.to_i] }
-
-      when (text = @ss.scan(/mm\/s/i))
-         action { [:UNITS, text] }
 
       when (text = @ss.scan(/\!/i))
          action { [:BANG, text] }

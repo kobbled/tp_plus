@@ -1,23 +1,28 @@
 module TPPlus
   module Nodes
     class SpeedNode
-      def initialize(speed)
-        @speed = speed
+      def initialize(speed_hash)
+        @speed_hash = speed_hash
       end
 
       def speed(context)
-        @speed[0].eval(context)
+        @speed_hash[:speed].eval(context)
       end
 
-      def units(context)
-        @speed[1].eval(context)
+      def units
+        case @speed_hash[:units]
+        when "mm/s"
+          "mm/sec"
+        else
+          @speed_hash[:units]
+        end
       end
 
 
       def eval(context)
-        return "max_speed" if @speed[0] == :max_speed
+        return @speed_hash[:speed] if @speed_hash[:units].nil?
 
-        "#{speed(context)}#{units(context)}"
+        "#{speed(context)}#{units}"
       end
     end
   end

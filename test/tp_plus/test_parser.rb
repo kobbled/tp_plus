@@ -89,7 +89,7 @@ class TestParser < Test::Unit::TestCase
   end
 
   def test_motion
-    parse("linear_move.to(home).at(2000mm/s).term(0)")
+    parse("linear_move.to(home).at(2000, 'mm/s').term(0)")
     assert_node_type MotionNode, last_node
   end
 
@@ -162,17 +162,17 @@ class TestParser < Test::Unit::TestCase
   end
 
   def test_offset
-    parse("foo := P[1]\nbar := PR[1]\nlinear_move.to(foo).at(2000mm/s).term(0).offset(bar)")
+    parse("foo := P[1]\nbar := PR[1]\nlinear_move.to(foo).at(2000, 'mm/s').term(0).offset(bar)")
     assert_node_type MotionNode, last_node
   end
 
   def test_vr_offset
-    parse("foo := P[1]\nbar := VR[1]\nlinear_move.to(foo).at(2000mm/s).term(0).offset(bar)")
+    parse("foo := P[1]\nbar := VR[1]\nlinear_move.to(foo).at(2000, 'mm/s').term(0).offset(bar)")
     assert_node_type MotionNode, last_node
   end
 
   def test_time_before
-    parse("p := P[1]\nlinear_move.to(p).at(2000mm/s).term(0).time_before(0.1, foo())")
+    parse("p := P[1]\nlinear_move.to(p).at(2000, 'mm/s').term(0).time_before(0.1, foo())")
     assert_node_type MotionNode, last_node
   end
 
@@ -287,12 +287,12 @@ class TestParser < Test::Unit::TestCase
   end
 
   def test_skip_to
-    parse("p := P[1]\n@somewhere\nlinear_move.to(p).at(2000mm/s).term(0).skip_to(@somewhere)")
+    parse("p := P[1]\n@somewhere\nlinear_move.to(p).at(2000, 'mm/s').term(0).skip_to(@somewhere)")
     assert_node_type MotionNode, last_node
   end
 
   def test_skip_to_with_pr
-    parse("p := P[1]\nlpos := PR[1]\n@somewhere\nlinear_move.to(p).at(2000mm/s).term(0).skip_to(@somewhere, lpos)")
+    parse("p := P[1]\nlpos := PR[1]\n@somewhere\nlinear_move.to(p).at(2000, 'mm/s').term(0).skip_to(@somewhere, lpos)")
     assert_node_type MotionNode, last_node
   end
 

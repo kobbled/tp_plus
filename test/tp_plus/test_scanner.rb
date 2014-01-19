@@ -272,11 +272,6 @@ class TestScanner < Test::Unit::TestCase
      assert_token :TERM, "term"
    end
 
-   def test_mm_s
-     @scanner.scan_setup "mm/s"
-     assert_token :UNITS, "mm/s"
-   end
-
    def test_if
      @scanner.scan_setup "if"
      assert_token :IF, "if"
@@ -330,11 +325,6 @@ class TestScanner < Test::Unit::TestCase
    def test_time_after
      @scanner.scan_setup "time_after"
      assert_token :TIME_SEGMENT, "time_after"
-   end
-
-   def test_max_speed
-     @scanner.scan_setup "max_speed"
-     assert_token :MAX_SPEED, "max_speed"
    end
 
    def test_word_with_end_in_it

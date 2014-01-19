@@ -98,7 +98,7 @@ class TestInterpreter < Test::Unit::TestCase
   end
 
   def test_simple_linear_motion
-    parse("foo := PR[1]\nlinear_move.to(foo).at(2000mm/s).term(0)")
+    parse("foo := PR[1]\nlinear_move.to(foo).at(2000, 'mm/s').term(0)")
     assert_prog "L PR[1:foo] 2000mm/sec CNT0 ;\n"
   end
 
@@ -193,24 +193,24 @@ class TestInterpreter < Test::Unit::TestCase
   end
 
   def test_motion_to_a_position
-    parse("foo := P[1]\nlinear_move.to(foo).at(2000mm/s).term(0)")
+    parse("foo := P[1]\nlinear_move.to(foo).at(2000, 'mm/s').term(0)")
     assert_prog "L P[1:foo] 2000mm/sec CNT0 ;\n"
   end
 
   def test_joint_move
-    parse("foo := P[1]\njoint_move.to(foo).at(100%).term(0)")
+    parse("foo := P[1]\njoint_move.to(foo).at(100, '%').term(0)")
     assert_prog "J P[1:foo] 100% CNT0 ;\n"
   end
 
   def test_joint_move_throws_error_with_bad_units
-    parse("foo := P[1]\njoint_move.to(foo).at(2000mm/s).term(0)")
+    parse("foo := P[1]\njoint_move.to(foo).at(2000, 'mm/s').term(0)")
     assert_raise(RuntimeError) do
       assert_prog "J P[1:foo] 100% CNT0 ;\n"
     end
   end
 
   def test_linear_move_throws_error_with_bad_units
-    parse("foo := P[1]\nlinear_move.to(foo).at(100%).term(0)")
+    parse("foo := P[1]\nlinear_move.to(foo).at(100, '%').term(0)")
     assert_raise(RuntimeError) do
       assert_prog "L P[1:foo] 100% CNT0 ;\n"
     end
@@ -218,47 +218,47 @@ class TestInterpreter < Test::Unit::TestCase
 
 
   def test_pr_offset
-    parse("home := P[1]\nmy_offset := PR[1]\nlinear_move.to(home).at(2000mm/s).term(0).offset(my_offset)")
+    parse("home := P[1]\nmy_offset := PR[1]\nlinear_move.to(home).at(2000, 'mm/s').term(0).offset(my_offset)")
     assert_prog "L P[1:home] 2000mm/sec CNT0 Offset,PR[1:my_offset] ;\n"
   end
 
   def test_vr_offset
-    parse("home := P[1]\nvision_offset := VR[1]\nlinear_move.to(home).at(2000mm/s).term(0).offset(vision_offset)")
+    parse("home := P[1]\nvision_offset := VR[1]\nlinear_move.to(home).at(2000, 'mm/s').term(0).offset(vision_offset)")
     assert_prog "L P[1:home] 2000mm/sec CNT0 VOFFSET,VR[1:vision_offset] ;\n"
   end
 
   def test_time_before
-    parse("p := P[1]\nlinear_move.to(p).at(2000mm/s).term(0).time_before(0.5, foo())")
+    parse("p := P[1]\nlinear_move.to(p).at(2000, 'mm/s').term(0).time_before(0.5, foo())")
     assert_prog "L P[1:p] 2000mm/sec CNT0 TB .50sec,CALL FOO ;\n"
   end
 
   def test_time_after
-    parse("p := P[1]\nlinear_move.to(p).at(2000mm/s).term(0).time_after(0.5, foo())")
+    parse("p := P[1]\nlinear_move.to(p).at(2000, 'mm/s').term(0).time_after(0.5, foo())")
     assert_prog "L P[1:p] 2000mm/sec CNT0 TA .50sec,CALL FOO ;\n"
   end
 
   def test_time_before_with_register_time
-    parse("p := P[1]\nt := R[1]\nlinear_move.to(p).at(2000mm/s).term(0).time_before(t, foo())")
+    parse("p := P[1]\nt := R[1]\nlinear_move.to(p).at(2000, 'mm/s').term(0).time_before(t, foo())")
     assert_prog "L P[1:p] 2000mm/sec CNT0 TB R[1:t]sec,CALL FOO ;\n"
   end
 
   def test_time_before_with_io_method
-    parse("p := P[1]\nbar := DO[1]\nlinear_move.to(p).at(2000mm/s).term(0).time_before(0.5, turn_on bar)")
+    parse("p := P[1]\nbar := DO[1]\nlinear_move.to(p).at(2000, 'mm/s').term(0).time_before(0.5, turn_on bar)")
     assert_prog "L P[1:p] 2000mm/sec CNT0 TB .50sec,DO[1:bar]=ON ;\n"
   end
 
   def test_motion_with_indirect_termination
-    parse("p := P[1]\ncnt := R[1]\nlinear_move.to(p).at(2000mm/s).term(cnt)")
+    parse("p := P[1]\ncnt := R[1]\nlinear_move.to(p).at(2000, 'mm/s').term(cnt)")
     assert_prog "L P[1:p] 2000mm/sec CNT R[1:cnt] ;\n"
   end
 
   def test_motion_with_indirect_speed
-    parse("p := P[1]\nspeed := R[1]\nlinear_move.to(p).at(speed, mm/s).term(0)")
+    parse("p := P[1]\nspeed := R[1]\nlinear_move.to(p).at(speed, 'mm/s').term(0)")
     assert_prog "L P[1:p] R[1:speed]mm/sec CNT0 ;\n"
   end
 
   def test_motion_with_max_speed
-    parse("p := P[1]\nlinear_move.to(p).at(max_speed).term(0)")
+    parse("p := P[1]\nlinear_move.to(p).at('max_speed').term(0)")
     assert_prog "L P[1:p] max_speed CNT0 ;\n"
   end
 
@@ -313,12 +313,12 @@ class TestInterpreter < Test::Unit::TestCase
   end
 
   def test_multiple_motion_modifiers
-    parse("p := P[1]\no := PR[1]\nlinear_move.to(p).at(max_speed).term(0).offset(o).time_before(0.5,foo())")
+    parse("p := P[1]\no := PR[1]\nlinear_move.to(p).at('max_speed').term(0).offset(o).time_before(0.5,foo())")
     assert_prog "L P[1:p] max_speed CNT0 Offset,PR[1:o] TB .50sec,CALL FOO ;\n"
   end
 
   def test_motion_modifiers_swallow_terminators_after_dots
-    parse("p := P[1]\no := PR[1]\nlinear_move.\nto(p).\nat(max_speed).\nterm(0).\noffset(o).\ntime_before(0.5,foo())")
+    parse("p := P[1]\no := PR[1]\nlinear_move.\nto(p).\nat('max_speed').\nterm(0).\noffset(o).\ntime_before(0.5,foo())")
     assert_prog "L P[1:p] max_speed CNT0 Offset,PR[1:o] TB .50sec,CALL FOO ;\n"
   end
 
@@ -497,12 +497,12 @@ LBL[101:ghjk] ;\n)
   end
 
   def test_skip_to
-    parse("p := P[1]\n@somewhere\nlinear_move.to(p).at(2000mm/s).term(0).skip_to(@somewhere)")
+    parse("p := P[1]\n@somewhere\nlinear_move.to(p).at(2000,'mm/s').term(0).skip_to(@somewhere)")
     assert_prog "LBL[100:somewhere] ;\nL P[1:p] 2000mm/sec CNT0 Skip,LBL[100] ;\n"
   end
 
   def test_skip_to_with_pr
-    parse("p := P[1]\nlpos := PR[1]\n@somewhere\nlinear_move.to(p).at(2000mm/s).term(0).skip_to(@somewhere, lpos)")
+    parse("p := P[1]\nlpos := PR[1]\n@somewhere\nlinear_move.to(p).at(2000,'mm/s').term(0).skip_to(@somewhere, lpos)")
     assert_prog "LBL[100:somewhere] ;\nL P[1:p] 2000mm/sec CNT0 Skip,LBL[100],PR[1:lpos]=LPOS ;\n"
   end
 

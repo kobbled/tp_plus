@@ -83,7 +83,6 @@ rule
          {nw}joint_move{nw}         { [:MOVE, text] }
          {nw}jump_to{nw}            { [:JUMP, text] }
          {nw}linear_move{nw}        { [:MOVE, text] }
-         {nw}max_speed{nw}          { [:MAX_SPEED, text] }
          {nw}offset{nw}             { [:OFFSET, text] }
          {nw}skip_to{nw}            { [:SKIP, text] } 
          {nw}term{nw}               { [:TERM, text] }
@@ -103,7 +102,6 @@ rule
          \d+\.\d+|\.\d+             { [:REAL, text.to_f] }
          \.                         { [:DOT, text] }
          \d+                        { [:DIGIT, text.to_i] }
-         mm\/s                      { [:UNITS, text] }
          \!                         { [:BANG, text] }
 
          \s+                        # ignore whitespace

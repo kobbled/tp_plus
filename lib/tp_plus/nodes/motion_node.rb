@@ -44,11 +44,11 @@ module TPPlus
         when "linear_move"
           return true if speed_node.eval(context) == "max_speed"
 
-          ["mm/sec"].include? speed_node.units(context)
+          ["mm/sec"].include? speed_node.units
         when "joint_move"
           return false if speed_node.eval(context) == "max_speed"
 
-          ["%"].include? speed_node.units(context)
+          ["%"].include? speed_node.units
         end
       end
 
