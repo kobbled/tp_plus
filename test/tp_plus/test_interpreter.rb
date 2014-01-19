@@ -630,4 +630,9 @@ LBL[101:ghjk] ;\n)
     parse "namespace Math\nPI := 3.14\nend\nfoo := R[1]\nfoo = Math.PI"
     assert_prog "R[1:foo]=3.14 ;\n"
   end
+
+  def test_namespace_swallows_everything
+    parse "namespace Foo\n# this is a comment\n#this is another comment\nend"
+    assert_prog ""
+  end
 end
