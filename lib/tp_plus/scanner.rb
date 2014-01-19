@@ -276,6 +276,9 @@ class TPPlus::Scanner < Racc::Parser
       when (text = @ss.scan(/[\w\?_]+/i))
          action { [:WORD, text] }
 
+      when (text = @ss.scan(/"([^\n\r\f"]|\n|\r\n|\r|\f|[^\0-\177]|\\[0-9A-Fa-f]{1,6}(\r\n|[\s])?|\\[^\n\r\f0-9A-Fa-f])*"|'([^\n\r\f']|\n|\r\n|\r|\f|[^\0-\177]|\\[0-9A-Fa-f]{1,6}(\r\n|[\s])?|\\[^\n\r\f0-9A-Fa-f])*'/i))
+         action { [:STRING, text[1,text.length-2]] }
+
       when (text = @ss.scan(/./i))
          action { [text, text] }
 

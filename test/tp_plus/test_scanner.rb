@@ -398,5 +398,15 @@ class TestScanner < Test::Unit::TestCase
      assert_token :AFTER, "after"
    end
 
+   def test_scanning_single_quoted_string
+     @scanner.scan_setup "'string'"
+     assert_token :STRING, "string"
+   end
+
+   def test_scanning_double_quoted_string
+     @scanner.scan_setup '"string"'
+     assert_token :STRING, "string"
+   end
+
 
 end

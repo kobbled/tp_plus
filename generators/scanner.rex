@@ -108,5 +108,6 @@ rule
 
          \s+                        # ignore whitespace
          [\w\?_]+                   { [:WORD, text] }
+         {string}                   { [:STRING, text[1,text.length-2]] }
          .                          { [text, text] }
 end
