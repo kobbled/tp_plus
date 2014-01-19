@@ -7,7 +7,12 @@ module TPPlus
       end
 
       def eval(context)
-        context.get_var(@identifier).eval(context,method:@method)
+        # first try to find a namespace
+        if namespace = context.get_namespace(@identifier)
+          namespace.get_var(@method).eval(context)
+        else
+          context.get_var(@identifier).eval(context,method:@method)
+        end
       end
     end
   end

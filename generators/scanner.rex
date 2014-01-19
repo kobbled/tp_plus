@@ -83,6 +83,7 @@ rule
          {nw}joint_move{nw}         { [:MOVE, text] }
          {nw}jump_to{nw}            { [:JUMP, text] }
          {nw}linear_move{nw}        { [:MOVE, text] }
+         {nw}namespace{nw}          { [:NAMESPACE, text] }
          {nw}offset{nw}             { [:OFFSET, text] }
          {nw}position_register{nw}  { [:POSITION_REGISTER, text] }
          {nw}position{nw}           { [:POSITION, text] }

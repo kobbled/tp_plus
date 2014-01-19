@@ -8,6 +8,7 @@ module TPPlus
       @line_count    = 0
       @nodes         = []
       @labels        = {}
+      @namespaces    = {}
       @variables     = {}
       @constants     = {}
       @current_label = 99
@@ -15,6 +16,12 @@ module TPPlus
 
     def next_label
       @current_label += 1
+    end
+
+    def add_namespace(name, block)
+      raise "Namespace (#{@name}) already defined" unless @namespaces[name.to_sym].nil?
+
+      @namespaces[name.to_sym] = TPPlus::Namespace.new(name, block)
     end
 
     def add_label(identifier)
@@ -33,6 +40,14 @@ module TPPlus
       raise "Constant #{identifier} already defined" if @constants[identifier.to_sym]
 
       @constants[identifier.to_sym] = node
+    end
+
+    def get_namespace(identifier)
+      if ns = @namespaces[identifier.to_sym]
+        return ns
+      end
+
+      false
     end
 
     def get_var(identifier)

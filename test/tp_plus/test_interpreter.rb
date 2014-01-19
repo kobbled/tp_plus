@@ -615,4 +615,14 @@ LBL[101:ghjk] ;\n)
     parse "foo := PR[1]\nfoo = position_register(5)"
     assert_prog "PR[1:foo]=PR[5] ;\n"
   end
+
+  def test_namespace
+    parse "namespace Foo\nbar := R[1]\nend\nFoo.bar = 5"
+    assert_prog "R[1:Foo bar]=5 ;\n"
+  end
+
+  def test_no_namespace_collision
+    parse "namespace Foo\nbar := R[1]\nend\nbar := R[2]\nbar = 2\nFoo.bar = 1"
+    assert_prog "R[2:bar]=2 ;\nR[1:Foo bar]=1 ;\n"
+  end
 end

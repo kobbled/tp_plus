@@ -207,6 +207,9 @@ class TPPlus::Scanner < Racc::Parser
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)linear_move(?=[\W]+|\A|\z|@)/i))
          action { [:MOVE, text] }
 
+      when (text = @ss.scan(/(?=[\W]+|\A|\z|@)namespace(?=[\W]+|\A|\z|@)/i))
+         action { [:NAMESPACE, text] }
+
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)offset(?=[\W]+|\A|\z|@)/i))
          action { [:OFFSET, text] }
 

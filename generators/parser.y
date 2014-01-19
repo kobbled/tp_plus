@@ -8,7 +8,7 @@ token EEQUAL NOTEQUAL GTE LTE LT GT BANG
 token PLUS MINUS STAR SLASH DIV AND OR MOD
 token IF ELSE END UNLESS
 token WAIT_FOR WAIT_UNTIL TIMEOUT AFTER
-token FANUC_USE FANUC_SET
+token FANUC_USE FANUC_SET NAMESPACE
 token CASE WHEN POSITION POSITION_REGISTER
 
 prechigh
@@ -47,6 +47,7 @@ rule
   statement
     #: comment                          { result = val[0] }
     : definition
+    | namespace
     | assignment
     | motion_statement
     | jump
@@ -124,6 +125,10 @@ rule
                                        { result = ConditionalNode.new("if",val[1],val[2],val[3]) }
     | UNLESS expression block else_block END
                                        { result = ConditionalNode.new("unless",val[1],val[2],val[3]) }
+    ;
+
+  namespace
+    : NAMESPACE WORD block END         { result = NamespaceNode.new(val[1],val[2]) }
     ;
 
   case_statement

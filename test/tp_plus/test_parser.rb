@@ -341,4 +341,9 @@ class TestParser < Test::Unit::TestCase
     assert_node_type AssignmentNode, last_node
   end
 
+  def test_namespace_definition
+    parse %(namespace Foo\nbar := R[1]\nend)
+    assert_node_type NamespaceNode, last_node
+  end
+
 end

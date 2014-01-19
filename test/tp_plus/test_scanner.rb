@@ -408,4 +408,8 @@ class TestScanner < Test::Unit::TestCase
      assert_token :POSITION_REGISTER, "position_register"
    end
 
+   def test_scan_namespace
+     @scanner.scan_setup "namespace"
+     assert_token :NAMESPACE, "namespace"
+   end
 end
