@@ -647,4 +647,18 @@ Foo.bar = 1
 Foo::Bar.baz = 2)
     assert_prog "R[1:Foo bar]=1 ;\nR[2:Foo Bar baz]=2 ;\n"
   end
+
+  def test_load_environment
+    environment = "foo := R[1]\nbar := R[2]"
+    @interpreter.load_environment(environment)
+    parse "foo = 5"
+    assert_prog "R[1:foo]=5 ;\n"
+    assert_equal 1, @interpreter.source_line_count
+  end
+
+  def test_bad_environment
+    assert_raise(RuntimeError) do
+      @interpreter.load_environment("asdf")
+    end
+  end
 end

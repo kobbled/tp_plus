@@ -3,7 +3,7 @@ require 'tp_plus/parser'
 module TPPlus
   class Interpreter
     attr_accessor :line_count, :nodes
-    attr_reader :labels, :variables
+    attr_reader :labels, :variables, :constants, :namespaces, :source_line_count
     def initialize
       @line_count    = 0
       @nodes         = []
@@ -12,6 +12,16 @@ module TPPlus
       @variables     = {}
       @constants     = {}
       @current_label = 99
+    end
+
+    def load_environment(string)
+      scanner = TPPlus::Scanner.new
+      parser = TPPlus::Parser.new(scanner, self)
+      scanner.scan_setup(string)
+      parser.parse
+      eval
+    rescue RuntimeError => e
+      raise "Runtime error in environment on line #{@source_line_count}:\n#{e}"
     end
 
     def next_label
@@ -78,6 +88,8 @@ module TPPlus
 
       @nodes.each do |n|
         @source_line_count += 1 unless n.is_a?(Nodes::TerminatorNode) && !last_node.is_a?(Nodes::TerminatorNode)
+        raise if n.is_a?(String)
+
         res = n.eval(self)
 
         # preserve whitespace
