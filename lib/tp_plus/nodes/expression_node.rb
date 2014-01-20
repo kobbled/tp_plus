@@ -27,15 +27,19 @@ module TPPlus
         "(#{string})"
       end
 
+      def to_s(context, options={})
+        if @op.bang?
+          "!#{@left_op.eval(context)}"
+        else
+          "#{@left_op.eval(context)}#{@op.eval(context,options)}#{@right_op.eval(context)}"
+        end
+      end
+
       # TODO: I don't like this
       def eval(context,options={})
         options[:force_parens] = true if @grouped
 
-        if @op.bang?
-          "!#{with_parens(@left_op.eval(context),options)}"
-        else
-          with_parens("#{@left_op.eval(context)}#{@op.eval(context,options)}#{@right_op.eval(context)}", options)
-        end
+        with_parens(to_s(context, options), options)
       end
     end
   end
