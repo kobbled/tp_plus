@@ -21,16 +21,10 @@ module TPPlus
         @left_op.is_a?(ExpressionNode) || @right_op.is_a?(ExpressionNode)
       end
 
-      def left_paren(options={})
-        return "" unless options[:force_parens]
+      def with_parens(string, options={})
+        return string unless options[:force_parens]
 
-        "("
-      end
-
-      def right_paren(options={})
-        return "" unless options[:force_parens]
-
-        ")"
+        "(#{string})"
       end
 
       # TODO: I don't like this
@@ -38,9 +32,9 @@ module TPPlus
         options[:force_parens] = true if @grouped
 
         if @op.bang?
-          "!#{left_paren(options)}#{@left_op.eval(context)}#{right_paren(options)}"
+          "!#{with_parens(@left_op.eval(context),options)}"
         else
-          "#{left_paren(options)}#{@left_op.eval(context)}#{@op.eval(context,options)}#{@right_op.eval(context)}#{right_paren(options)}"
+          with_parens("#{@left_op.eval(context)}#{@op.eval(context,options)}#{@right_op.eval(context)}", options)
         end
       end
     end
