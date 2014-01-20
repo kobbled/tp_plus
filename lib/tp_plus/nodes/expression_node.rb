@@ -12,13 +12,13 @@ module TPPlus
       def requires_mixed_logic?(context)
         contains_expression? ||
           @grouped ||
-          @op.requires_mixed_logic?(context) ||
-          @left_op.requires_mixed_logic?(context) ||
-          @right_op.requires_mixed_logic?(context)
+          [@op, @left_op, @right_op].map { |op|
+            op.requires_mixed_logic?(context)
+          }.any?
       end
 
       def contains_expression?
-        @left_op.is_a?(ExpressionNode) || @right_op.is_a?(ExpressionNode)
+        [@left_op, @right_op].map {|op| op.is_a? ExpressionNode }.any?
       end
 
       def with_parens(string, options={})
