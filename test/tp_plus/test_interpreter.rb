@@ -680,6 +680,11 @@ Foo::Bar.baz = 2)
     parse "namespace Foo\nbar := DI[1]\nend\nif Foo.bar\n# bar is on\nend"
     assert_prog "IF (!DI[1:Foo bar]),JMP LBL[100] ;\n! bar is on ;\nLBL[100] ;\n"
   end
+
+  def test_reopen_namespace
+    parse "namespace Foo\nbar := R[1]\nend\nnamespace Foo\nbaz := R[2]\nend\nFoo.bar = 1\nFoo.baz = 2"
+    assert_prog "R[1:Foo bar]=1 ;\nR[2:Foo baz]=2 ;\n"
+  end
 end
 
 

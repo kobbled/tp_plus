@@ -16,6 +16,11 @@ module TPPlus
       end
     end
 
+    def reopen!(block)
+      @block = block
+      define!
+    end
+
     def add_constant(identifier, node)
       raise "Constant (#{identifier}) already defined within namespace #{@name}" unless @constants[identifier.to_sym].nil?
 
@@ -23,9 +28,11 @@ module TPPlus
     end
 
     def add_namespace(identifier, block)
-      raise "Namespace (#{identifier}) already defined within namespace #{@name}" unless @namespaces[identifier.to_sym].nil?
-
-      @namespaces[identifier.to_sym] = TPPlus::Namespace.new("#{@name} #{identifier}", block)
+      if @namespaces[identifier.to_sym].nil?
+        @namespaces[identifier.to_sym] = TPPlus::Namespace.new("#{@name} #{identifier}", block)
+      else
+        @namespaces[identifier.to_sym].reopen!(block)
+      end
     end
 
     def add_var(identifier, node)

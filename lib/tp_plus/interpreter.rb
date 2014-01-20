@@ -29,9 +29,11 @@ module TPPlus
     end
 
     def add_namespace(name, block)
-      raise "Namespace (#{@name}) already defined" unless @namespaces[name.to_sym].nil?
-
-      @namespaces[name.to_sym] = TPPlus::Namespace.new(name, block)
+      if @namespaces[name.to_sym].nil?
+        @namespaces[name.to_sym] = TPPlus::Namespace.new(name, block)
+      else
+        @namespaces[name.to_sym].reopen!(block)
+      end
     end
 
     def add_label(identifier)
