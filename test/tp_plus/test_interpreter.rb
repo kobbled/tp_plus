@@ -635,4 +635,16 @@ LBL[101:ghjk] ;\n)
     parse "namespace Foo\n# this is a comment\n#this is another comment\nend"
     assert_prog ""
   end
+
+  def test_nested_namespace
+    parse %(namespace Foo
+  bar := R[1]
+  namespace Bar
+    baz := R[2]
+  end
+end
+Foo.bar = 1
+Foo::Bar.baz = 2)
+    assert_prog "R[1:Foo bar]=1 ;\nR[2:Foo Bar baz]=2 ;\n"
+  end
 end

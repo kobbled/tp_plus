@@ -254,8 +254,18 @@ rule
     ;
 
   var
-    : WORD DOT WORD                    { result = VarMethodNode.new(val[0],val[2]) }
+    : namespaces DOT WORD              { result = NamespacedVarNode.new(val[0],val[2]) }
+    | WORD DOT WORD                    { result = VarMethodNode.new(val[0],val[2]) }
     | WORD                             { result = VarNode.new(val[0]) }
+    ;
+
+  namespaces
+    : namespace                       { result = val }
+    | namespaces ':' ':' namespace    { result = val[0] << val[3] }
+    ;
+
+  namespace
+    : WORD
     ;
 
   # this change goes from 6 shift/reduce conflicts to 20
