@@ -8,7 +8,7 @@ module TPPlus
         @comment = ""
       end
 
-      def requires_mixed_logic?
+      def requires_mixed_logic?(context)
         @type == "F" ? true : false
       end
 
@@ -24,7 +24,10 @@ module TPPlus
 
       def eval(context, options={})
         s = result
-        if options[:method] == "on?"
+        if options[:opposite]
+          options[:as_condition] = true
+          s = "!#{s}"
+        elsif options[:method] == "on?"
           s += "=ON"
         end
         with_parens(s, options)

@@ -10,7 +10,7 @@ module TPPlus
         @string == "!"
       end
 
-      def requires_mixed_logic?
+      def requires_mixed_logic?(context)
         case @string
         when "&&", "||", "!"
           true

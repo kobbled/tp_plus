@@ -9,8 +9,8 @@ module TPPlus
         @right_op = right_op
       end
 
-      def requires_mixed_logic?
-        contains_expression? || @grouped || @op.requires_mixed_logic?
+      def requires_mixed_logic?(context)
+        contains_expression? || @grouped || @op.requires_mixed_logic?(context)
       end
 
       def contains_expression?

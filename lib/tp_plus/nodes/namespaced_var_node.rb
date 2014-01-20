@@ -2,9 +2,9 @@ module TPPlus
   module Nodes
     class NamespacedVarNode
       attr_reader :identifier
-      def initialize(namespaces, identifier)
+      def initialize(namespaces, var_node)
         @namespaces = namespaces
-        @identifier = identifier
+        @var_node   = var_node
       end
 
       def namespace(context)
@@ -19,11 +19,11 @@ module TPPlus
       end
 
       def target_node(context)
-        constant? ? context.get_constant(@identifier) : context.get_var(@identifier)
+        constant? ? context.get_constant(@var_node.identifier) : context.get_var(@var_node.identifier)
       end
 
       def constant?
-        @identifier.upcase == @identifier
+        @var_node.identifier.upcase == @identifier
       end
 
       def requires_mixed_logic?(context)

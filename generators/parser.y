@@ -254,7 +254,7 @@ rule
     ;
 
   var
-    : namespaces DOT WORD              { result = NamespacedVarNode.new(val[0],val[2]) }
+    : namespaces DOT var               { result = NamespacedVarNode.new(val[0],val[2]) }
     | WORD DOT WORD                    { result = VarMethodNode.new(val[0],val[2]) }
     | WORD                             { result = VarNode.new(val[0]) }
     ;

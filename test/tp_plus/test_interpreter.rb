@@ -670,4 +670,16 @@ Foo::Bar.baz = 2)
       @interpreter.load_environment("asdf")
     end
   end
+
+  def test_inline_conditional_with_namespaced_var
+    parse "namespace Foo\nbar := DI[1]\nend\njump_to @end unless Foo.bar\n@end"
+    assert_prog "IF (!DI[1:Foo bar]),JMP LBL[100] ;\nLBL[100:end] ;\n"
+  end
+
+  def test_namespaced_var_as_condition
+    parse "namespace Foo\nbar := DI[1]\nend\nif Foo.bar\n# bar is on\nend"
+    assert_prog "IF (!DI[1:Foo bar]),JMP LBL[100] ;\n! bar is on ;\nLBL[100] ;\n"
+  end
 end
+
+
