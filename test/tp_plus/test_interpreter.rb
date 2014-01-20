@@ -690,4 +690,14 @@ Foo::Bar.baz = 2)
     parse "namespace Foo\nbar := R[1]\nend\nnamespace Foo\nbaz := R[2]\nend\nFoo.bar = 1\nFoo.baz = 2"
     assert_prog "R[1:Foo bar]=1 ;\nR[2:Foo baz]=2 ;\n"
   end
+
+  def test_eval
+    parse %(eval "R[1]=5")
+    assert_prog "R[1]=5 ;\n"
+  end
+
+  def test_multiline_eval
+    parse %(eval "R[1]=5 ;\nR[2]=3")
+    assert_prog "R[1]=5 ;\nR[2]=3 ;\n"
+  end
 end

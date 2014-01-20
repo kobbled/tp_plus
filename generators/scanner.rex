@@ -79,6 +79,7 @@ rule
          {nw}circular_move{nw}      { [:MOVE, text] }
          {nw}else{nw}               { [:ELSE, text] }
          {nw}end{nw}                { [:END, text] }
+         {nw}eval{nw}               { [:EVAL, text] }
          {nw}if{nw}                 { [:IF, text] }
          {nw}joint_move{nw}         { [:MOVE, text] }
          {nw}jump_to{nw}            { [:JUMP, text] }

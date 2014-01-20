@@ -412,4 +412,9 @@ class TestScanner < Test::Unit::TestCase
      @scanner.scan_setup "namespace"
      assert_token :NAMESPACE, "namespace"
    end
+
+   def test_scan_eval
+     @scanner.scan_setup "eval"
+     assert_token :EVAL, "eval"
+   end
 end

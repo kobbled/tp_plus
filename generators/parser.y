@@ -10,6 +10,7 @@ token IF ELSE END UNLESS
 token WAIT_FOR WAIT_UNTIL TIMEOUT AFTER
 token FANUC_USE FANUC_SET NAMESPACE
 token CASE WHEN POSITION POSITION_REGISTER
+token EVAL
 
 prechigh
 #  left DOT
@@ -60,6 +61,11 @@ rule
     | set_statement
     | wait_statement
     | case_statement
+    | fanuc_eval
+    ;
+
+  fanuc_eval
+    : EVAL STRING                      { result = EvalNode.new(val[1]) }
     ;
 
   wait_statement

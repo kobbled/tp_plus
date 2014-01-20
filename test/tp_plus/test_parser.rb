@@ -346,4 +346,9 @@ class TestParser < Test::Unit::TestCase
     assert_node_type NamespaceNode, last_node
   end
 
+  def test_scans_eval_with_string
+    parse %(eval "R[1]=5")
+    assert_node_type EvalNode, last_node
+  end
+
 end
