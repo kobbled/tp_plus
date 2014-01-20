@@ -21,6 +21,14 @@ module TPPlus
         end
       end
 
+      def requires_mixed_logic?(context)
+        true
+      end
+
+      def can_be_inlined?
+        true
+      end
+
       def identifier_string(context)
         @identifier.eval(context)
       end

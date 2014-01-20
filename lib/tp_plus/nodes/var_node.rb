@@ -15,7 +15,7 @@ module TPPlus
       end
 
       def requires_mixed_logic?(context)
-        target_node(context).is_a?(IONode) && target_node(context).requires_mixed_logic?(context)
+        target_node(context).requires_mixed_logic?(context)
       end
 
       def with_parens(s, options)

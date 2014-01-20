@@ -2,29 +2,23 @@ module TPPlus
   module Nodes
     class InlineConditionalNode
       def initialize(type, condition, block)
-        @type = type
+        @type      = type
         @condition = condition
-        @block = block
+        @block     = block
       end
 
-      # TODO: refactor.. this is super ugly
-      def simple?(context)
-        if @condition.is_a? ExpressionNode
-          if @condition.left_op.is_a? VarNode
-            return false if @condition.left_op.target_node(context).is_a? ArgumentNode
-          end
-          if @condition.right_op.is_a? VarNode
-            return false if @condition.right_op.target_node(context).is_a? ArgumentNode
-          end
-        end
+      def condition_requires_mixed_logic?(context)
+        @condition.is_a?(VarNode) || @condition.requires_mixed_logic?(context)
+      end
 
-        @block.is_a? JumpNode
+      def block_requires_mixed_logic?(context)
+        @block.requires_mixed_logic?(context)
       end
 
       def condition(context,options={})
         options[:opposite] ||= @type == "unless"
 
-        if @condition.is_a?(VarNode) || @condition.requires_mixed_logic?(context)
+        if condition_requires_mixed_logic?(context) || block_requires_mixed_logic?(context)
           "(#{@condition.eval(context, options)})"
         else
           @condition.eval(context, options)
@@ -32,11 +26,7 @@ module TPPlus
       end
 
       def eval(context)
-        if simple?(context)
-          "IF #{condition(context)},#{@block.eval(context)}"
-        else
-          "IF #{condition(context,force_parens: true)},#{@block.eval(context,mixed_logic:true)}"
-        end
+        "IF #{condition(context)},#{@block.eval(context,mixed_logic:true)}"
       end
     end
   end

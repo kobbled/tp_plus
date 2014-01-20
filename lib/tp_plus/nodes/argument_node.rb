@@ -7,6 +7,10 @@ module TPPlus
         @comment = comment
       end
 
+      def requires_mixed_logic?(context)
+        true
+      end
+
       def eval(context)
         "AR[#{@id}]"
       end

@@ -5,6 +5,10 @@ module TPPlus
         @text = text[1,text.length]
       end
 
+      def can_be_inlined?
+        false
+      end
+
       def eval(context)
         s = ""
         width = 29

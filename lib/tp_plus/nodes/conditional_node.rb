@@ -2,10 +2,10 @@ module TPPlus
   module Nodes
     class ConditionalNode
       def initialize(type,condition,true_block,false_block)
-        @type = type
-        @condition = condition
-        @true_block = true_block
-        @false_block = false_block
+        @type        = type
+        @condition   = condition
+        @true_block  = true_block.flatten.reject  {|n| n.is_a? TerminatorNode }
+        @false_block = false_block.flatten.reject {|n| n.is_a? TerminatorNode }
       end
 
       def true_label(context)
@@ -25,45 +25,28 @@ module TPPlus
       end
 
       def string_for(block,context)
-        s= ""
-        block.flatten.each do |node|
-          res = node.eval(context)
-          next if res.nil?
-
-          s += "#{res} ;\n"
-        end
-        s
+        block.inject("") {|s,n| s << "#{n.eval(context)} ;\n" }
       end
 
       def can_be_inlined?
-        return false unless @false_block.nil?
+        return false unless @false_block.empty?
+        return false unless @true_block.length == 1
 
-        if @true_block.flatten.reject {|n| n.is_a? TerminatorNode}.length == 1
-          n = @true_block.flatten.reject {|n| n.is_a? TerminatorNode }.first
+        @true_block.first.can_be_inlined?
+      end
 
-          if [AssignmentNode,IOMethodNode].include? n.class
-            true
-          else
-            false
-          end
-        end
+      def opposite?
+        @type == "if"
       end
 
       def eval(context)
-        return InlineConditionalNode.new(@type,@condition,@true_block.flatten.reject {|n| n.is_a? TerminatorNode }.first).eval(context) if can_be_inlined?
+        return InlineConditionalNode.new(@type,@condition,@true_block.first).eval(context) if can_be_inlined?
 
-        if !@false_block
-          if @type == "if"
-          # simple if
-          "IF #{@condition.eval(context,opposite: true,as_condition: true)},JMP LBL[#{true_label(context)}] ;\n#{true_block(context)}LBL[#{true_label(context)}]"
-          else
-            # simple unless
-            "IF #{@condition.eval(context, as_condition: true)},JMP LBL[#{true_label(context)}] ;\n#{true_block(context)}LBL[#{true_label(context)}]"
-
-          end
+        if @false_block.empty?
+          "IF #{@condition.eval(context,opposite: opposite?, as_condition: true)},JMP LBL[#{true_label(context)}] ;\n#{true_block(context)}LBL[#{true_label(context)}]"
         else
           # could be if-else or unless-else
-          "IF #{@condition.eval(context,opposite: (@type == "if"), as_condition: true)},JMP LBL[#{true_label(context)}] ;\n#{true_block(context)}JMP LBL[#{end_label(context)}] ;\nLBL[#{true_label(context)}] ;\n#{false_block(context)}LBL[#{end_label(context)}]"
+          "IF #{@condition.eval(context,opposite: opposite?, as_condition: true)},JMP LBL[#{true_label(context)}] ;\n#{true_block(context)}JMP LBL[#{end_label(context)}] ;\nLBL[#{true_label(context)}] ;\n#{false_block(context)}LBL[#{end_label(context)}]"
         end
       end
     end

@@ -362,7 +362,7 @@ racc_reduce_table = [
   1, 101, :_reduce_none,
   1, 101, :_reduce_none,
   2, 95, :_reduce_62,
-  0, 95, :_reduce_none,
+  0, 95, :_reduce_63,
   8, 74, :_reduce_64,
   1, 102, :_reduce_65,
   2, 102, :_reduce_66,
@@ -896,7 +896,10 @@ def _reduce_62(val, _values, result)
     result
 end
 
-# reduce 63 omitted
+def _reduce_63(val, _values, result)
+ result = [] 
+    result
+end
 
 def _reduce_64(val, _values, result)
  result = MotionNode.new(val[0],val[5],val[7]) 

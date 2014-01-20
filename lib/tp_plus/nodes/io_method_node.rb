@@ -6,6 +6,14 @@ module TPPlus
         @target = target
       end
 
+      def requires_mixed_logic?(context)
+        true
+      end
+
+      def can_be_inlined?
+        true
+      end
+
       def on_off(value,options={})
         options[:mixed_logic] ? "(#{value})" : value
       end

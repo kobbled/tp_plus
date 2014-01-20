@@ -179,7 +179,7 @@ rule
 
   else_block
     : ELSE block                       { result = val[1] }
-    |
+    |                                  { result = [] }
     ;
 
   motion_statement
