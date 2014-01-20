@@ -492,8 +492,13 @@ LBL[101:ghjk] ;\n)
   end
 
   def test_set_skip_condition
-    parse("foo := RI[1]\nset_skip_condition foo.on?")
-    assert_prog "SKIP CONDITION RI[1:foo]=ON ;\n"
+    parse("foo := RI[1]\nset_skip_condition foo")
+    assert_prog "SKIP CONDITION (RI[1:foo]) ;\n"
+  end
+
+  def test_set_skip_condition_with_bang
+    parse("foo := RI[1]\nset_skip_condition !foo")
+    assert_prog "SKIP CONDITION (!RI[1:foo]) ;\n"
   end
 
   def test_skip_to
@@ -685,26 +690,4 @@ Foo::Bar.baz = 2)
     parse "namespace Foo\nbar := R[1]\nend\nnamespace Foo\nbaz := R[2]\nend\nFoo.bar = 1\nFoo.baz = 2"
     assert_prog "R[1:Foo bar]=1 ;\nR[2:Foo baz]=2 ;\n"
   end
-
-  def test_dot_on_method
-    parse "foo := DI[1]\njump_to @end if foo.on?\n@end"
-    assert_prog "IF DI[1:foo]=ON,JMP LBL[100] ;\nLBL[100:end] ;\n"
-  end
-
-  def test_dot_off_method
-    parse "foo := DI[1]\njump_to @end if foo.off?\n@end"
-    assert_prog "IF DI[1:foo]=OFF,JMP LBL[100] ;\nLBL[100:end] ;\n"
-  end
-
-  def test_dot_on_method_with_unless
-    parse "foo := DI[1]\njump_to @end unless foo.on?\n@end"
-    assert_prog "IF DI[1:foo]=OFF,JMP LBL[100] ;\nLBL[100:end] ;\n"
-  end
-
-  def test_dot_off_method_with_unless
-    parse "foo := DI[1]\njump_to @end unless foo.off?\n@end"
-    assert_prog "IF DI[1:foo]=ON,JMP LBL[100] ;\nLBL[100:end] ;\n"
-  end
 end
-
-

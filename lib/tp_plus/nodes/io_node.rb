@@ -22,25 +22,14 @@ module TPPlus
         "(#{s})"
       end
 
-      def method_for(string, options)
-        case string
-        when "on?"
-          options[:opposite] ? "OFF" : "ON"
-        when "off?"
-          options[:opposite] ? "ON" : "OFF"
-        else
-          raise "Invalid method (#{string})"
-        end
-      end
-
       def eval(context, options={})
         s = result
-        if options[:method]
-          s += "=#{method_for(options[:method], options)}"
-        elsif options[:opposite]
-          options[:as_condition] = true
+
+        if options[:opposite]
+          options[:as_condition] ||= true
           s = "!#{s}"
         end
+
         with_parens(s, options)
       end
     end
