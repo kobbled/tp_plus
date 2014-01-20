@@ -649,12 +649,21 @@ Foo::Bar.baz = 2)
   end
 
   def test_load_environment
-    environment = "foo := R[1]\nbar := R[2]"
+    environment = "foo := R[1]\nbar := R[2]\n#asdf\n#asdf"
     @interpreter.load_environment(environment)
     parse "foo = 5"
     assert_prog "R[1:foo]=5 ;\n"
     assert_equal 1, @interpreter.source_line_count
   end
+
+  def test_load_environment_only_saves_definitions_etc
+    environment = "foo := R[1]\nbar := R[2]\n#asdf\n#asdf\nfoo=3"
+    @interpreter.load_environment(environment)
+    parse "foo = 5"
+    assert_prog "R[1:foo]=5 ;\n"
+    assert_equal 1, @interpreter.source_line_count
+  end
+
 
   def test_bad_environment
     assert_raise(RuntimeError) do
