@@ -35,7 +35,6 @@ module TPPlus
         end
       end
 
-      # TODO: I don't like this
       def eval(context,options={})
         options[:force_parens] = true if @grouped
 
