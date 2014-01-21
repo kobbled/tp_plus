@@ -29,7 +29,13 @@ module TPPlus
 
       def string_val(context, options={})
         if @op.bang?
-          "!#{@left_op.eval(context)}"
+          # this is for skip conditions, which do not
+          # support mixed logic
+          if options[:disable_mixed_logic]
+            "#{@left_op.eval(context)}=OFF"
+          else
+            "!#{@left_op.eval(context)}"
+          end
         else
           "#{@left_op.eval(context)}#{@op.eval(context,options)}#{@right_op.eval(context)}"
         end

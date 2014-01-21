@@ -16,21 +16,14 @@ module TPPlus
         "#{@type}[#{@id}:#{@comment}]"
       end
 
-      def with_parens(s, options)
-        return s unless options[:as_condition]
-
-        "(#{s})"
-      end
-
       def eval(context, options={})
         s = result
 
-        if options[:opposite]
-          options[:as_condition] ||= true
-          s = "!#{s}"
+        if options[:disable_mixed_logic]
+          s = "#{s}=ON"
         end
 
-        with_parens(s, options)
+        s
       end
     end
   end

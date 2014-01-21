@@ -22,6 +22,10 @@ module TPPlus
         @var_node.identifier
       end
 
+      def target_node(context)
+        @var_node.target_node(namespace(context))
+      end
+
       def requires_mixed_logic?(context)
         @var_node.requires_mixed_logic?(namespace(context))
       end

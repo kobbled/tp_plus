@@ -12,7 +12,7 @@ module TPPlus
         when "set_uframe"
           "UFRAME[#{@target.eval(context)}]=#{@value.eval(context)}"
         when "set_skip_condition"
-          "SKIP CONDITION (#{@value.eval(context)})"
+          "SKIP CONDITION #{@value.eval(context, disable_mixed_logic: true)}"
         else
           raise "Unsupported FANUC setter"
         end

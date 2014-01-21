@@ -493,12 +493,12 @@ LBL[101:ghjk] ;\n)
 
   def test_set_skip_condition
     parse("foo := RI[1]\nset_skip_condition foo")
-    assert_prog "SKIP CONDITION (RI[1:foo]) ;\n"
+    assert_prog "SKIP CONDITION RI[1:foo]=ON ;\n"
   end
 
   def test_set_skip_condition_with_bang
     parse("foo := RI[1]\nset_skip_condition !foo")
-    assert_prog "SKIP CONDITION (!RI[1:foo]) ;\n"
+    assert_prog "SKIP CONDITION RI[1:foo]=OFF ;\n"
   end
 
   def test_skip_to

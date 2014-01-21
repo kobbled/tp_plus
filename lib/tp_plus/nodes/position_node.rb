@@ -13,7 +13,7 @@ module TPPlus
         ":#{@comment}"
       end
 
-      def eval(context)
+      def eval(context,options={})
         "P[#{@id}#{comment_string}]"
       end
     end

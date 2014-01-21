@@ -11,7 +11,7 @@ module TPPlus
         true
       end
 
-      def eval(context)
+      def eval(context,options={})
         "AR[#{@id}]"
       end
     end

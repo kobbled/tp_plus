@@ -31,7 +31,8 @@ module TPPlus
         if options[:opposite]
           s += "!"
         end
-        with_parens(s + target_node(context).eval(context), options)
+
+        with_parens(s + target_node(context).eval(context, options), options)
       end
     end
   end
