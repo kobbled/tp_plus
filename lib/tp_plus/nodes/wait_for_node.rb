@@ -7,17 +7,26 @@ module TPPlus
       end
 
       def units_valid?
-        ["s","ms"].include? @units
+        ["s","ms"].include?(@units)
       end
 
       # 2 decimal places and remove leading 0s
       def time(context)
-        ("%.2f" % case @units
-        when "s"
-          @time.eval(context)
-        when "ms"
-          @time.eval(context).to_f / 1000
-        end).sub(/^0+/, "")
+        if @time.eval(context).is_a?(String)
+          case @units
+          when "s"
+            @time.eval(context)
+          else
+            raise "Invalid units"
+          end
+        else
+          ("%.2f" % case @units
+          when "s"
+            @time.eval(context)
+          when "ms"
+            @time.eval(context).to_f / 1000
+          end).sub(/^0+/, "") + "(sec)"
+        end
       end
 
       def expression
@@ -33,9 +42,8 @@ module TPPlus
 
       def eval(context)
         raise "Invalid units" unless units_valid?
-        return WaitUntilNode.new(expression,nil).eval(context) if @time.is_a?(VarNode)
 
-        "WAIT #{time(context)}(sec)"
+        "WAIT #{time(context)}"
       end
     end
   end

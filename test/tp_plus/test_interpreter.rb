@@ -346,7 +346,9 @@ class TestInterpreter < Test::Unit::TestCase
 
   def test_wait_for_with_indirect_ms
     parse "foo := R[1]\nwait_for(foo, 'ms')"
-    assert_prog "WAIT (R[1:foo]/1000) ;\n"
+    assert_raise(RuntimeError) do
+      assert_prog ""
+    end
   end
 
   def test_wait_until_with_exp
