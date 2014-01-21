@@ -7,6 +7,10 @@ module TPPlus
         @args = args
       end
 
+      def requires_mixed_logic?(context)
+        false
+      end
+
       def args_string(context)
         return "" unless @args.any?
 

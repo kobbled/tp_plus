@@ -705,4 +705,9 @@ Foo::Bar::baz = 2)
     parse "namespace Fixture\npick_offset := PR[1]\nend\nFixture::pick_offset.x = 10"
     assert_prog "PR[1,1:Fixture pick_offset]=10 ;\n"
   end
+
+  def test_inline_program_call_two
+    parse "foo := R[1]\nbar() if foo >= 5"
+    assert_prog "IF R[1:foo]>=5,CALL BAR ;\n"
+  end
 end
