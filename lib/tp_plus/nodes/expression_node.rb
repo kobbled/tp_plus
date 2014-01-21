@@ -27,7 +27,7 @@ module TPPlus
         "(#{string})"
       end
 
-      def to_s(context, options={})
+      def string_val(context, options={})
         if @op.bang?
           "!#{@left_op.eval(context)}"
         else
@@ -38,7 +38,7 @@ module TPPlus
       def eval(context,options={})
         options[:force_parens] = true if @grouped
 
-        with_parens(to_s(context, options), options)
+        with_parens(string_val(context, options), options)
       end
     end
   end

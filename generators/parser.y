@@ -260,18 +260,19 @@ rule
     ;
 
   var
-    : namespaces DOT var               { result = NamespacedVarNode.new(val[0],val[2]) }
+    : WORD                             { result = VarNode.new(val[0]) }
     | WORD DOT WORD                    { result = VarMethodNode.new(val[0],val[2]) }
-    | WORD                             { result = VarNode.new(val[0]) }
+    # introduces 2 reduce/reduce conflicts and 1 useless rule
+    | namespaces ':' ':' var           { result = NamespacedVarNode.new(val[0],val[3]) }
     ;
 
   namespaces
-    : namespace                       { result = val }
-    | namespaces ':' ':' namespace    { result = val[0] << val[3] }
+    : namespace                        { result = val }
+    | namespaces ':' ':' namespace     { result = val[0] << val[3] }
     ;
 
   namespace
-    : WORD
+    : WORD                             { result = val[0] }
     ;
 
   # this change goes from 6 shift/reduce conflicts to 20

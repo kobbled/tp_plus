@@ -1,27 +1,31 @@
 module TPPlus
   module Nodes
     class InlineConditionalNode
+      attr_reader :condition_node
       def initialize(type, condition, block)
-        @type      = type
-        @condition = condition
-        @block     = block
+        @type           = type
+        @condition_node = condition
+        @block          = block
       end
 
       def condition_requires_mixed_logic?(context)
-        @condition.is_a?(VarNode) || @condition.requires_mixed_logic?(context)
+        @condition_node.is_a?(VarNode) ||
+          @condition_node.is_a?(NamespacedVarNode) ||
+          @condition_node.requires_mixed_logic?(context)
       end
 
       def block_requires_mixed_logic?(context)
         @block.requires_mixed_logic?(context)
       end
 
+
       def condition(context,options={})
         options[:opposite] ||= @type == "unless"
 
         if condition_requires_mixed_logic?(context) || block_requires_mixed_logic?(context)
-          "(#{@condition.eval(context, options)})"
+          "(#{@condition_node.eval(context, options)})"
         else
-          @condition.eval(context, options)
+          @condition_node.eval(context, options)
         end
       end
 

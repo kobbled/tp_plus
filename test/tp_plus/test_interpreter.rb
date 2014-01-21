@@ -622,17 +622,17 @@ LBL[101:ghjk] ;\n)
   end
 
   def test_namespace
-    parse "namespace Foo\nbar := R[1]\nend\nFoo.bar = 5"
+    parse "namespace Foo\nbar := R[1]\nend\nFoo::bar = 5"
     assert_prog "R[1:Foo bar]=5 ;\n"
   end
 
   def test_no_namespace_collision
-    parse "namespace Foo\nbar := R[1]\nend\nbar := R[2]\nbar = 2\nFoo.bar = 1"
+    parse "namespace Foo\nbar := R[1]\nend\nbar := R[2]\nbar = 2\nFoo::bar = 1"
     assert_prog "R[2:bar]=2 ;\nR[1:Foo bar]=1 ;\n"
   end
 
   def test_namespace_constant_definition
-    parse "namespace Math\nPI := 3.14\nend\nfoo := R[1]\nfoo = Math.PI"
+    parse "namespace Math\nPI := 3.14\nend\nfoo := R[1]\nfoo = Math::PI"
     assert_prog "R[1:foo]=3.14 ;\n"
   end
 
@@ -648,8 +648,8 @@ LBL[101:ghjk] ;\n)
     baz := R[2]
   end
 end
-Foo.bar = 1
-Foo::Bar.baz = 2)
+Foo::bar = 1
+Foo::Bar::baz = 2)
     assert_prog "R[1:Foo bar]=1 ;\nR[2:Foo Bar baz]=2 ;\n"
   end
 
@@ -677,17 +677,17 @@ Foo::Bar.baz = 2)
   end
 
   def test_inline_conditional_with_namespaced_var
-    parse "namespace Foo\nbar := DI[1]\nend\njump_to @end unless Foo.bar\n@end"
+    parse "namespace Foo\nbar := DI[1]\nend\njump_to @end unless Foo::bar\n@end"
     assert_prog "IF (!DI[1:Foo bar]),JMP LBL[100] ;\nLBL[100:end] ;\n"
   end
 
   def test_namespaced_var_as_condition
-    parse "namespace Foo\nbar := DI[1]\nend\nif Foo.bar\n# bar is on\nend"
+    parse "namespace Foo\nbar := DI[1]\nend\nif Foo::bar\n# bar is on\nend"
     assert_prog "IF (!DI[1:Foo bar]),JMP LBL[100] ;\n! bar is on ;\nLBL[100] ;\n"
   end
 
   def test_reopen_namespace
-    parse "namespace Foo\nbar := R[1]\nend\nnamespace Foo\nbaz := R[2]\nend\nFoo.bar = 1\nFoo.baz = 2"
+    parse "namespace Foo\nbar := R[1]\nend\nnamespace Foo\nbaz := R[2]\nend\nFoo::bar = 1\nFoo::baz = 2"
     assert_prog "R[1:Foo bar]=1 ;\nR[2:Foo baz]=2 ;\n"
   end
 
@@ -699,5 +699,10 @@ Foo::Bar.baz = 2)
   def test_multiline_eval
     parse %(eval "R[1]=5 ;\nR[2]=3")
     assert_prog "R[1]=5 ;\nR[2]=3 ;\n"
+  end
+
+  def test_namespaced_position_reg_component
+    parse "namespace Fixture\npick_offset := PR[1]\nend\nFixture::pick_offset.x = 10"
+    assert_prog "PR[1,1:Fixture pick_offset]=10 ;\n"
   end
 end
