@@ -80,7 +80,9 @@ rule
          {nw}else{nw}               { [:ELSE, text] }
          {nw}end{nw}                { [:END, text] }
          {nw}eval{nw}               { [:EVAL, text] }
+         {nw}for{nw}                { [:FOR, text] }
          {nw}if{nw}                 { [:IF, text] }
+         {nw}in{nw}                 { [:IN, text] }
          {nw}joint_move{nw}         { [:MOVE, text] }
          {nw}jump_to{nw}            { [:JUMP, text] }
          {nw}linear_move{nw}        { [:MOVE, text] }

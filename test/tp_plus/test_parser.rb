@@ -351,4 +351,9 @@ class TestParser < Test::Unit::TestCase
     assert_node_type EvalNode, last_node
   end
 
+  def test_for_loop
+    parse %(foo := R[1]\nfor foo in (1 to 10)\n# bar\nend)
+    assert_node_type ForNode, last_node
+  end
+
 end

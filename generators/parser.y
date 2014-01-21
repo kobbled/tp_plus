@@ -6,7 +6,7 @@ token SEMICOLON NEWLINE STRING
 token REAL DIGIT WORD EQUAL
 token EEQUAL NOTEQUAL GTE LTE LT GT BANG
 token PLUS MINUS STAR SLASH DIV AND OR MOD
-token IF ELSE END UNLESS
+token IF ELSE END UNLESS FOR IN
 token WAIT_FOR WAIT_UNTIL TIMEOUT AFTER
 token FANUC_USE FANUC_SET NAMESPACE
 token CASE WHEN POSITION POSITION_REGISTER
@@ -56,6 +56,7 @@ rule
     | label_definition
     | conditional
     | inline_conditional
+    | forloop
     | program_call
     | use_statement
     | set_statement
@@ -131,6 +132,16 @@ rule
                                        { result = ConditionalNode.new("if",val[1],val[2],val[3]) }
     | UNLESS expression block else_block END
                                        { result = ConditionalNode.new("unless",val[1],val[2],val[3]) }
+    ;
+
+  forloop
+    : FOR var IN '(' minmax_val TO minmax_val ')' block END
+                                       { result = ForNode.new(val[1],val[4],val[6],val[8]) }
+    ;
+
+  minmax_val
+    : integer
+    | var
     ;
 
   namespace
@@ -353,8 +364,12 @@ rule
     ;
 
   number
-    : DIGIT                            { result = DigitNode.new(val[0]) }
+    : integer
     | REAL                             { result = RealNode.new(val[0]) }
+    ;
+
+  integer
+    : DIGIT                            { result = DigitNode.new(val[0]) }
     ;
 
   definable

@@ -727,4 +727,14 @@ Foo::Bar::baz = 2)
     parse "foo := R[1]\nbar() if foo >= 5"
     assert_prog "IF R[1:foo]>=5,CALL BAR ;\n"
   end
+
+  def test_forlooop
+    parse "foo := R[1]\nfor foo in (1 TO 10)\n# bar\nend"
+    assert_prog "FOR R[1:foo]=1 TO 10 ;\n! bar ;\nENDFOR ;\n"
+  end
+
+  def test_forloop_with_vars
+    parse "foo := R[1]\nmin := R[2]\nmax := R[3]\nfor foo in (min to max)\n#bar\nend"
+    assert_prog "FOR R[1:foo]=R[2:min] TO R[3:max] ;\n! bar ;\nENDFOR ;\n"
+  end
 end

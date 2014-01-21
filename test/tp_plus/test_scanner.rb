@@ -417,4 +417,14 @@ class TestScanner < Test::Unit::TestCase
      @scanner.scan_setup "eval"
      assert_token :EVAL, "eval"
    end
+
+   def test_scan_for
+     @scanner.scan_setup "for"
+     assert_token :FOR, "for"
+   end
+
+   def test_scan_in
+     @scanner.scan_setup "in"
+     assert_token :IN, "in"
+   end
 end
