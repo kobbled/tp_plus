@@ -50,7 +50,7 @@ module TPPlus
       end
 
       def eval(context)
-        "#{wait_timeout(context)}WAIT #{@expression.eval(context)}#{timeout(context)}"
+        "#{wait_timeout(context)}WAIT #{@expression.eval(context, force_parens: true)}#{timeout(context)}"
       end
     end
   end
