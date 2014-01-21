@@ -624,17 +624,17 @@ LBL[101:ghjk] ;\n)
   end
 
   def test_indirect_position_assignment
-    parse "foo := PR[1]\nfoo = position(5)"
+    parse "foo := PR[1]\nfoo = indirect('position',5)"
     assert_prog "PR[1:foo]=P[5] ;\n"
   end
 
   def test_indirect_indirect_position_assignment
-    parse "foo := PR[1]\nbar := R[1]\nfoo = position(bar)"
+    parse "foo := PR[1]\nbar := R[1]\nfoo = indirect('position',bar)"
     assert_prog "PR[1:foo]=P[R[1:bar]] ;\n"
   end
 
   def test_indirect_posreg_assignment
-    parse "foo := PR[1]\nfoo = position_register(5)"
+    parse "foo := PR[1]\nfoo = indirect('position_register',5)"
     assert_prog "PR[1:foo]=PR[5] ;\n"
   end
 
@@ -736,5 +736,15 @@ Foo::Bar::baz = 2)
   def test_forloop_with_vars
     parse "foo := R[1]\nmin := R[2]\nmax := R[3]\nfor foo in (min to max)\n#bar\nend"
     assert_prog "FOR R[1:foo]=R[2:min] TO R[3:max] ;\n! bar ;\nENDFOR ;\n"
+  end
+
+  def test_indirect_flag
+    parse "foo := R[1]\nturn_on indirect('flag',foo)"
+    assert_prog "F[R[1:foo]]=(ON) ;\n"
+  end
+
+  def test_indirect_flag_condition
+    parse "foo := R[1]\njump_to @end if indirect('flag',foo)\n@end"
+    assert_prog "IF (F[R[1:foo]]),JMP LBL[100] ;\nLBL[100:end] ;\n"
   end
 end

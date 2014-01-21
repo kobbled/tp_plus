@@ -398,16 +398,6 @@ class TestScanner < Test::Unit::TestCase
      assert_token :STRING, "string"
    end
 
-   def test_scans_position
-     @scanner.scan_setup "position"
-     assert_token :POSITION, "position"
-   end
-
-   def test_scans_position_register
-     @scanner.scan_setup "position_register"
-     assert_token :POSITION_REGISTER, "position_register"
-   end
-
    def test_scan_namespace
      @scanner.scan_setup "namespace"
      assert_token :NAMESPACE, "namespace"
@@ -426,5 +416,10 @@ class TestScanner < Test::Unit::TestCase
    def test_scan_in
      @scanner.scan_setup "in"
      assert_token :IN, "in"
+   end
+
+   def test_scan_indirect
+     @scanner.scan_setup "indirect"
+     assert_token :INDIRECT, "indirect"
    end
 end

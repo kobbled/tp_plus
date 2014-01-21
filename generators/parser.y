@@ -1,6 +1,6 @@
 class TPPlus::Parser
 token ASSIGN AT_SYM COMMENT JUMP IO_METHOD INPUT OUTPUT
-token NUMREG POSREG VREG SREG POSITION TIME_SEGMENT ARG
+token NUMREG POSREG VREG SREG TIME_SEGMENT ARG
 token MOVE DOT TO AT TERM OFFSET SKIP
 token SEMICOLON NEWLINE STRING
 token REAL DIGIT WORD EQUAL
@@ -9,7 +9,7 @@ token PLUS MINUS STAR SLASH DIV AND OR MOD
 token IF ELSE END UNLESS FOR IN
 token WAIT_FOR WAIT_UNTIL TIMEOUT AFTER
 token FANUC_USE FANUC_SET NAMESPACE
-token CASE WHEN POSITION POSITION_REGISTER
+token CASE WHEN INDIRECT POSITION
 token EVAL
 
 prechigh
@@ -121,6 +121,7 @@ rule
 
   io_method
     : IO_METHOD var                    { result = IOMethodNode.new(val[0],val[1]) }
+    | IO_METHOD indirect_thing         { result = IOMethodNode.new(val[0],val[1]) }
     ;
 
   jump
@@ -344,13 +345,12 @@ rule
   factor
     : signed_number
     | var
-    | indirect_position
+    | indirect_thing
     ;
 
-  indirect_position
-    : POSITION '(' indirectable ')'   { result = IndirectNode.new(:position, val[2]) }
-    | POSITION_REGISTER '(' indirectable ')'
-                                      { result = IndirectNode.new(:position_register, val[2]) }
+  indirect_thing
+    : INDIRECT '(' STRING ',' indirectable ')'
+                                      { result = IndirectNode.new(val[2].to_sym, val[4]) }
     ;
 
   signed_number

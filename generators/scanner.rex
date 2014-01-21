@@ -82,14 +82,13 @@ rule
          {nw}eval{nw}               { [:EVAL, text] }
          {nw}for{nw}                { [:FOR, text] }
          {nw}if{nw}                 { [:IF, text] }
+         {nw}indirect{nw}           { [:INDIRECT, text] }
          {nw}in{nw}                 { [:IN, text] }
          {nw}joint_move{nw}         { [:MOVE, text] }
          {nw}jump_to{nw}            { [:JUMP, text] }
          {nw}linear_move{nw}        { [:MOVE, text] }
          {nw}namespace{nw}          { [:NAMESPACE, text] }
          {nw}offset{nw}             { [:OFFSET, text] }
-         {nw}position_register{nw}  { [:POSITION_REGISTER, text] }
-         {nw}position{nw}           { [:POSITION, text] }
          {nw}skip_to{nw}            { [:SKIP, text] } 
          {nw}term{nw}               { [:TERM, text] }
          {nw}time_after{nw}         { [:TIME_SEGMENT, text] }
