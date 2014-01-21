@@ -29,7 +29,11 @@ module TPPlus
       end
 
       def eval(context,options={})
-        "#{string}[#{@target.eval(context)}]"
+        s = "#{string}[#{@target.eval(context)}]"
+        if options[:opposite]
+          s = "!#{s}"
+        end
+        s
       end
     end
   end

@@ -747,4 +747,9 @@ Foo::Bar::baz = 2)
     parse "foo := R[1]\njump_to @end if indirect('flag',foo)\n@end"
     assert_prog "IF (F[R[1:foo]]),JMP LBL[100] ;\nLBL[100:end] ;\n"
   end
+
+  def test_indirect_not_flag_condition
+    parse "foo := R[1]\njump_to @end unless indirect('flag',foo)\n@end"
+    assert_prog "IF (!F[R[1:foo]]),JMP LBL[100] ;\nLBL[100:end] ;\n"
+  end
 end
