@@ -13,6 +13,7 @@ module TPPlus
         contains_expression? ||
           @grouped ||
           [@op, @left_op, @right_op].map { |op|
+            next if op.nil?
             op.requires_mixed_logic?(context)
           }.any?
       end
