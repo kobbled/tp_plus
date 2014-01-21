@@ -49,8 +49,12 @@ module TPPlus
         "$WAITTMOUT=(#{val(context)}) ;\n"
       end
 
+      def string_value(context)
+        "(#{@expression.eval(context)})"
+      end
+
       def eval(context)
-        "#{wait_timeout(context)}WAIT #{@expression.eval(context, force_parens: true)}#{timeout(context)}"
+        "#{wait_timeout(context)}WAIT #{string_value(context)}#{timeout(context)}"
       end
     end
   end

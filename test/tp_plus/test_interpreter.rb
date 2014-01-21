@@ -356,6 +356,21 @@ class TestInterpreter < Test::Unit::TestCase
     assert_prog "WAIT (1=0) ;\n"
   end
 
+  def test_wait_until_with_flag
+    parse("foo := F[1]\nwait_until(foo)")
+    assert_prog "WAIT (F[1:foo]) ;\n"
+  end
+
+  def test_wait_until_with_di
+    parse("foo := DI[1]\nwait_until(foo)")
+    assert_prog "WAIT (DI[1:foo]) ;\n"
+  end
+
+  def test_wait_until_with_boolean
+    parse("foo := DI[1]\nbar := DI[2]\nwait_until(foo && bar)")
+    assert_prog "WAIT (DI[1:foo] AND DI[2:bar]) ;\n"
+  end
+
   def test_wait_until_with_timeout_to
     parse("wait_until(1==0).timeout_to(@end)\n@end")
     assert_prog "WAIT (1=0) TIMEOUT,LBL[100] ;\nLBL[100:end] ;\n"
