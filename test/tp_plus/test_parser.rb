@@ -366,4 +366,92 @@ class TestParser < Test::Unit::TestCase
     assert_node_type TimerMethodNode, last_node
   end
 
+  def test_position_data_block
+    parse "position_data\n{}\nend"
+    assert_node_type PositionDataNode, last_node
+  end
+
+  def test_position_data_block_with_a_position
+    parse %(position_data
+  {
+    positions: [
+      {
+        id: 1,
+        comment: "test",
+        group: 1,
+        uframe: 1,
+        utool: 1,
+        config: {
+          flip: true,
+          up: true,
+          back: false
+        },
+        turn_counts: [0,0,0],
+        components: {
+          x: 0.0,
+          y: 0.0,
+          z: 0.0,
+          w: 0.0,
+          p: 0.0,
+          r: 0.0
+        }
+      }
+    ]
+  }
+end)
+    assert_node_type PositionDataNode, last_node
+  end
+
+  def test_position_data_block_with_two_positions
+        parse %(position_data
+  {
+    positions: [
+      {
+        id: 1,
+        comment: "test",
+        group: 1,
+        uframe: 1,
+        utool: 1,
+        config: {
+          flip: true,
+          up: true,
+          back: false
+        },
+        turn_counts: [0,0,0],
+        components: {
+          x: 0.0,
+          y: 0.0,
+          z: 0.0,
+          w: 0.0,
+          p: 0.0,
+          r: 0.0
+        }
+      },
+      {
+        id: 2,
+        comment: "test two",
+        group: 1,
+        uframe: 1,
+        utool: 1,
+        config: {
+          flip: true,
+          up: true,
+          back: false
+        },
+        turn_counts: [0,0,0],
+        components: {
+          x: 0.0,
+          y: 0.0,
+          z: 0.0,
+          w: 0.0,
+          p: 0.0,
+          r: 0.0
+        }
+      }
+    ]
+  }
+end)
+    assert_node_type PositionDataNode, last_node
+  end
+
 end

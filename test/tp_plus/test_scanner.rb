@@ -52,12 +52,12 @@ class TestScanner < Test::Unit::TestCase
 
   def test_true
     @scanner.scan_setup "true"
-    assert_token :TRUE_FALSE, "true"
+    assert_token :TRUE_FALSE, true
   end
 
   def test_false
     @scanner.scan_setup "false"
-    assert_token :TRUE_FALSE, "false"
+    assert_token :TRUE_FALSE, false
   end
 
   def test_numreg
@@ -451,5 +451,10 @@ class TestScanner < Test::Unit::TestCase
    def test_restart
      @scanner.scan_setup "restart"
      assert_token :TIMER_METHOD, :restart
+   end
+
+   def test_position_data
+     @scanner.scan_setup "position_data"
+     assert_token :POSITION_DATA, "position_data"
    end
 end

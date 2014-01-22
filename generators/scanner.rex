@@ -25,7 +25,7 @@ macro
 rule
          \#.*(?=\n?$)               { [:COMMENT, text] }
 
-         {nw}(true|false){nw}       { [:TRUE_FALSE, text] }
+         {nw}(true|false){nw}       { [:TRUE_FALSE, text.downcase == "true"] }
 
          R(?=\[)                    { [:NUMREG, text] }
          P(?=\[)                    { [:POSITION, text] }
@@ -90,6 +90,7 @@ rule
          {nw}linear_move{nw}        { [:MOVE, text] }
          {nw}namespace{nw}          { [:NAMESPACE, text] }
          {nw}offset{nw}             { [:OFFSET, text] }
+         {nw}position_data{nw}      { [:POSITION_DATA, text] }
          {nw}skip_to{nw}            { [:SKIP, text] }
          {nw}start{nw}              { [:TIMER_METHOD, :start] }
          {nw}stop{nw}               { [:TIMER_METHOD, :stop] }

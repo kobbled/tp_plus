@@ -61,7 +61,7 @@ class TPPlus::Scanner < Racc::Parser
          action { [:COMMENT, text] }
 
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)(true|false)(?=[\W]+|\A|\z|@)/i))
-         action { [:TRUE_FALSE, text] }
+         action { [:TRUE_FALSE, text.downcase == "true"] }
 
       when (text = @ss.scan(/R(?=\[)/i))
          action { [:NUMREG, text] }
@@ -227,6 +227,9 @@ class TPPlus::Scanner < Racc::Parser
 
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)offset(?=[\W]+|\A|\z|@)/i))
          action { [:OFFSET, text] }
+
+      when (text = @ss.scan(/(?=[\W]+|\A|\z|@)position_data(?=[\W]+|\A|\z|@)/i))
+         action { [:POSITION_DATA, text] }
 
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)skip_to(?=[\W]+|\A|\z|@)/i))
          action { [:SKIP, text] }

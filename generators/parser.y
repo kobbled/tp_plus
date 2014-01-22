@@ -11,6 +11,7 @@ token WAIT_FOR WAIT_UNTIL TIMEOUT AFTER
 token FANUC_USE FANUC_SET NAMESPACE
 token CASE WHEN INDIRECT POSITION
 token EVAL TIMER TIMER_METHOD
+token POSITION_DATA TRUE_FALSE
 
 prechigh
 #  left DOT
@@ -65,6 +66,7 @@ rule
     | case_statement
     | fanuc_eval
     | timer_method
+    | position_data
     ;
 
   timer_method
@@ -440,6 +442,53 @@ rule
     : NEWLINE                          { result = TerminatorNode.new }
     |
     ;
+
+  position_data
+    : POSITION_DATA sn hash sn END
+                                       { result = PositionDataNode.new(val[2]) }
+    ;
+
+  sn
+    : swallow_newlines
+    ;
+
+  hash
+    : '{' sn hash_attributes sn '}'    { result = val[2] }
+    | '{' sn '}'                       { result = {} }
+    ;
+
+  hash_attributes
+    : hash_attribute                   { result = val[0] }
+    | hash_attributes ',' sn hash_attribute
+                                       { result = val[0].merge(val[3]) }
+    ;
+
+  hash_attribute
+    : WORD ':' hash_value              { result = { val[0].to_sym => val[2] } }
+    ;
+
+  hash_value
+    : STRING
+    | hash
+    | array
+    | DIGIT
+    | REAL
+    | TRUE_FALSE
+    ;
+
+  array
+    : '[' sn array_values sn ']'       { result = val[2] }
+    ;
+
+  array_values
+    : array_value                      { result = val }
+    | array_values ',' sn array_value  { result = val[0] << val[3] }
+    ;
+
+  array_value
+    : hash_value
+    ;
+
 
 end
 
