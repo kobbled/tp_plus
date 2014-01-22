@@ -70,6 +70,11 @@ class TestScanner < Test::Unit::TestCase
     assert_token :POSREG, "PR"
   end
 
+  def test_timer
+    @scanner.scan_setup "TIMER[1]"
+    assert_token :TIMER, "TIMER"
+  end
+
   def test_position
     @scanner.scan_setup "P[42]"
     assert_token :POSITION, "P"
@@ -426,5 +431,25 @@ class TestScanner < Test::Unit::TestCase
    def test_scan_while
      @scanner.scan_setup "while"
      assert_token :WHILE, "while"
+   end
+
+   def test_start
+     @scanner.scan_setup "start"
+     assert_token :TIMER_METHOD, :start
+   end
+
+   def test_stop
+     @scanner.scan_setup "stop"
+     assert_token :TIMER_METHOD, :stop
+   end
+
+   def test_reset
+     @scanner.scan_setup "reset"
+     assert_token :TIMER_METHOD, :reset
+   end
+
+   def test_restart
+     @scanner.scan_setup "restart"
+     assert_token :TIMER_METHOD, :restart
    end
 end

@@ -361,4 +361,9 @@ class TestParser < Test::Unit::TestCase
     assert_node_type WhileNode, last_node
   end
 
+  def test_start_timer
+    parse %(t := TIMER[1]\nstart t)
+    assert_node_type TimerMethodNode, last_node
+  end
+
 end

@@ -773,4 +773,35 @@ Foo::Bar::baz = 2)
     assert_prog "LBL[100] ;\nIF (!F[1:foo]),JMP LBL[101] ;\n! bar ;\nJMP LBL[100] ;\nLBL[101] ;\n"
   end
 
+  def test_timer_start
+    parse "foo := TIMER[1]\nstart foo"
+    assert_prog "TIMER[1:foo]=START ;\n"
+  end
+
+  def test_timer_reset
+    parse "foo := TIMER[1]\nreset foo"
+    assert_prog "TIMER[1:foo]=RESET ;\n"
+  end
+
+  def test_timer_stop
+    parse "foo := TIMER[1]\nstop foo"
+    assert_prog "TIMER[1:foo]=STOP ;\n"
+  end
+
+  def test_timer_restart
+    parse "foo := TIMER[1]\nrestart foo"
+    assert_prog "TIMER[1:foo]=STOP ;\nTIMER[1:foo]=RESET ;\nTIMER[1:foo]=START ;\n"
+  end
+
+  def test_indirect_timer
+    parse "foo := R[1]\nfoo = indirect('timer', 3)"
+    assert_prog "R[1:foo]=TIMER[3] ;\n"
+  end
+
+  def test_indirect_indirect_timer
+    parse "foo := R[1]\nfoo = indirect('timer', foo)"
+    assert_prog "R[1:foo]=TIMER[R[1:foo]] ;\n"
+  end
+
+
 end

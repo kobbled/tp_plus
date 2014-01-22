@@ -14,6 +14,8 @@ module TPPlus
           "PR"
         when :flag
           "F"
+        when :timer
+          "TIMER"
         else
           raise "Invalid indirect type"
         end
@@ -21,7 +23,7 @@ module TPPlus
 
       def requires_mixed_logic?(context)
         case @type
-        when :flag
+        when :flag, :timer
           true
         else
           false

@@ -81,6 +81,9 @@ class TPPlus::Scanner < Racc::Parser
       when (text = @ss.scan(/AR(?=\[)/i))
          action { [:ARG, text] }
 
+      when (text = @ss.scan(/TIMER(?=\[)/i))
+         action { [:TIMER, text] }
+
       when (text = @ss.scan(/F(?=\[)/i))
          action { [:OUTPUT, text] }
 
@@ -228,6 +231,18 @@ class TPPlus::Scanner < Racc::Parser
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)skip_to(?=[\W]+|\A|\z|@)/i))
          action { [:SKIP, text] }
 
+      when (text = @ss.scan(/(?=[\W]+|\A|\z|@)start(?=[\W]+|\A|\z|@)/i))
+         action { [:TIMER_METHOD, :start] }
+
+      when (text = @ss.scan(/(?=[\W]+|\A|\z|@)stop(?=[\W]+|\A|\z|@)/i))
+         action { [:TIMER_METHOD, :stop] }
+
+      when (text = @ss.scan(/(?=[\W]+|\A|\z|@)reset(?=[\W]+|\A|\z|@)/i))
+         action { [:TIMER_METHOD, :reset] }
+
+      when (text = @ss.scan(/(?=[\W]+|\A|\z|@)restart(?=[\W]+|\A|\z|@)/i))
+         action { [:TIMER_METHOD, :restart] }
+
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)term(?=[\W]+|\A|\z|@)/i))
          action { [:TERM, text] }
 
@@ -285,7 +300,7 @@ class TPPlus::Scanner < Racc::Parser
       when (text = @ss.scan(/\s+/i))
         ;
 
-      when (text = @ss.scan(/[\w\?_]+/i))
+      when (text = @ss.scan(/[\w\?\!_]+/i))
          action { [:WORD, text] }
 
       when (text = @ss.scan(/"([^\n\r\f"]|\n|\r\n|\r|\f|[^\0-\177]|\\[0-9A-Fa-f]{1,6}(\r\n|[\s])?|\\[^\n\r\f0-9A-Fa-f])*"|'([^\n\r\f']|\n|\r\n|\r|\f|[^\0-\177]|\\[0-9A-Fa-f]{1,6}(\r\n|[\s])?|\\[^\n\r\f0-9A-Fa-f])*'/i))

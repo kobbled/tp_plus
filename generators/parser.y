@@ -10,7 +10,7 @@ token IF ELSE END UNLESS FOR IN WHILE
 token WAIT_FOR WAIT_UNTIL TIMEOUT AFTER
 token FANUC_USE FANUC_SET NAMESPACE
 token CASE WHEN INDIRECT POSITION
-token EVAL
+token EVAL TIMER TIMER_METHOD
 
 prechigh
 #  left DOT
@@ -64,6 +64,11 @@ rule
     | wait_statement
     | case_statement
     | fanuc_eval
+    | timer_method
+    ;
+
+  timer_method
+    : TIMER_METHOD var                 { result = TimerMethodNode.new(val[0],val[1]) }
     ;
 
   fanuc_eval
@@ -386,6 +391,11 @@ rule
     | vreg
     | number
     | argument
+    | timer
+    ;
+
+  timer
+    : TIMER '[' DIGIT ']'              { result = TimerNode.new(val[2].to_i) }
     ;
 
   argument

@@ -33,6 +33,7 @@ rule
          VR(?=\[)                   { [:VREG, text] }
          SR(?=\[)                   { [:SREG, text] }
          AR(?=\[)                   { [:ARG, text] }
+         TIMER(?=\[)                { [:TIMER, text] }
 
          F(?=\[)                    { [:OUTPUT, text] }
          DO(?=\[)                   { [:OUTPUT, text] }
@@ -89,7 +90,11 @@ rule
          {nw}linear_move{nw}        { [:MOVE, text] }
          {nw}namespace{nw}          { [:NAMESPACE, text] }
          {nw}offset{nw}             { [:OFFSET, text] }
-         {nw}skip_to{nw}            { [:SKIP, text] } 
+         {nw}skip_to{nw}            { [:SKIP, text] }
+         {nw}start{nw}              { [:TIMER_METHOD, :start] }
+         {nw}stop{nw}               { [:TIMER_METHOD, :stop] }
+         {nw}reset{nw}              { [:TIMER_METHOD, :reset] }
+         {nw}restart{nw}            { [:TIMER_METHOD, :restart] }
          {nw}term{nw}               { [:TERM, text] }
          {nw}time_after{nw}         { [:TIME_SEGMENT, text] }
          {nw}time_before{nw}        { [:TIME_SEGMENT, text] }
@@ -111,7 +116,7 @@ rule
          \!                         { [:BANG, text] }
 
          \s+                        # ignore whitespace
-         [\w\?_]+                   { [:WORD, text] }
+         [\w\?\!_]+                   { [:WORD, text] }
          {string}                   { [:STRING, text[1,text.length-2]] }
          .                          { [text, text] }
 end
