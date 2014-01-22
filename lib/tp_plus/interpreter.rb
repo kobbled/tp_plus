@@ -81,6 +81,20 @@ module TPPlus
       end
     end
 
+    def pos_section
+      return "" if @position_data.empty?
+      return "" if @position_data[:positions].empty?
+
+      @position_data[:positions].inject("") do |s,p|
+        s << %(P[#{p[:id]}:"#{p[:comment]}"]{
+   GP#{p[:group]}:
+  UF : #{p[:uframe]}, UT : #{p[:utool]},  CONFIG : '#{p[:config][:flip] ? 'F' : 'N'} #{p[:config][:up] ? 'U' : 'D'} #{p[:config][:top] ? 'T' : 'B'}, #{p[:config][:turn_counts].join(', ')}',
+  X = #{p[:components][:x]} mm, Y = #{p[:components][:y]} mm, Z = #{p[:components][:z]} mm,
+  W = #{p[:components][:w]} deg, P = #{p[:components][:p]} deg, R = #{p[:components][:r]} deg
+};\n)
+      end
+    end
+
     def eval
       s = ""
       last_node = nil

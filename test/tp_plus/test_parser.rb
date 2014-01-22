@@ -384,9 +384,9 @@ class TestParser < Test::Unit::TestCase
         config: {
           flip: true,
           up: true,
-          back: false
+          top: false,
+          turn_counts: [0,0,0]
         },
-        turn_counts: [0,0,0],
         components: {
           x: 0.0,
           y: 0.0,
@@ -415,9 +415,9 @@ end)
         config: {
           flip: true,
           up: true,
-          back: false
+          top: false,
+          turn_counts: [0,0,0]
         },
-        turn_counts: [0,0,0],
         components: {
           x: 0.0,
           y: 0.0,
@@ -436,9 +436,9 @@ end)
         config: {
           flip: true,
           up: true,
-          back: false
+          top: false,
+          turn_counts: [0,0,0]
         },
-        turn_counts: [0,0,0],
         components: {
           x: 0.0,
           y: 0.0,

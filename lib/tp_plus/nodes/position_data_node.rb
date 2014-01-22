@@ -24,10 +24,10 @@ module TPPlus
         return false unless position_hash[:config].is_a?(Hash)
         return false unless boolean?(position_hash[:config][:flip])
         return false unless boolean?(position_hash[:config][:up])
-        return false unless boolean?(position_hash[:config][:back])
-        return false unless position_hash[:turn_counts].is_a?(Array)
-        return false unless position_hash[:turn_counts].length == 3
-        return false if position_hash[:turn_counts].map {|tc| tc.is_a?(Fixnum) == false }.any?
+        return false unless boolean?(position_hash[:config][:top])
+        return false unless position_hash[:config][:turn_counts].is_a?(Array)
+        return false unless position_hash[:config][:turn_counts].length == 3
+        return false if position_hash[:config][:turn_counts].map {|tc| tc.is_a?(Fixnum) == false }.any?
         return false unless position_hash[:components].is_a?(Hash)
         [:x,:y,:z,:w,:p,:r].each do |component|
           return false unless position_hash[:components][component].is_a?(Float)
