@@ -356,4 +356,9 @@ class TestParser < Test::Unit::TestCase
     assert_node_type ForNode, last_node
   end
 
+  def test_while
+    parse %(foo := R[1]\nwhile foo < 10\n# bar\nend)
+    assert_node_type WhileNode, last_node
+  end
+
 end

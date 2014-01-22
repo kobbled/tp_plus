@@ -422,4 +422,9 @@ class TestScanner < Test::Unit::TestCase
      @scanner.scan_setup "indirect"
      assert_token :INDIRECT, "indirect"
    end
+
+   def test_scan_while
+     @scanner.scan_setup "while"
+     assert_token :WHILE, "while"
+   end
 end

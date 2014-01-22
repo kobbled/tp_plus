@@ -42,6 +42,7 @@ require 'tp_plus/nodes/var_method_node'
 require 'tp_plus/nodes/vision_register_node'
 require 'tp_plus/nodes/wait_for_node'
 require 'tp_plus/nodes/wait_until_node'
+require 'tp_plus/nodes/while_node'
 
 require 'tp_plus/interpreter'
 require 'tp_plus/namespace'

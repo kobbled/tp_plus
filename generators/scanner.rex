@@ -101,6 +101,7 @@ rule
          {nw}wait_for{nw}           { [:WAIT_FOR, text] }
          {nw}wait_until{nw}         { [:WAIT_UNTIL, text] }
          {nw}when{nw}               { [:WHEN, text] }
+         {nw}while{nw}              { [:WHILE, text] }
 
          \r?\n                      { [:NEWLINE, text] }
          ;                          { [:SEMICOLON, text] }

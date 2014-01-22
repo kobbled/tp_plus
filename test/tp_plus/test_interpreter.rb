@@ -758,4 +758,19 @@ Foo::Bar::baz = 2)
     assert_prog "IF (!F[R[1:foo]]),JMP LBL[100] ;\nLBL[100:end] ;\n"
   end
 
+  def test_while_loop
+    parse "foo := R[1]\nwhile foo < 10\n# bar\nend"
+    assert_prog "LBL[100] ;\nIF R[1:foo]>=10,JMP LBL[101] ;\n! bar ;\nJMP LBL[100] ;\nLBL[101] ;\n"
+  end
+
+  def test_while_with_not_flag
+    parse "foo := F[1]\nwhile !foo\n#bar\nend"
+    assert_prog "LBL[100] ;\nIF (F[1:foo]),JMP LBL[101] ;\n! bar ;\nJMP LBL[100] ;\nLBL[101] ;\n"
+  end
+
+  def test_while_with_flag
+    parse "foo := F[1]\nwhile foo\n#bar\nend"
+    assert_prog "LBL[100] ;\nIF (!F[1:foo]),JMP LBL[101] ;\n! bar ;\nJMP LBL[100] ;\nLBL[101] ;\n"
+  end
+
 end

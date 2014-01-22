@@ -261,6 +261,9 @@ class TPPlus::Scanner < Racc::Parser
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)when(?=[\W]+|\A|\z|@)/i))
          action { [:WHEN, text] }
 
+      when (text = @ss.scan(/(?=[\W]+|\A|\z|@)while(?=[\W]+|\A|\z|@)/i))
+         action { [:WHILE, text] }
+
       when (text = @ss.scan(/\r?\n/i))
          action { [:NEWLINE, text] }
 

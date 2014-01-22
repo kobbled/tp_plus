@@ -43,6 +43,8 @@ module TPPlus
             "<"
           when "<="
             ">"
+          when "!"
+            ""
           end
         else
           case @string

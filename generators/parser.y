@@ -6,7 +6,7 @@ token SEMICOLON NEWLINE STRING
 token REAL DIGIT WORD EQUAL
 token EEQUAL NOTEQUAL GTE LTE LT GT BANG
 token PLUS MINUS STAR SLASH DIV AND OR MOD
-token IF ELSE END UNLESS FOR IN
+token IF ELSE END UNLESS FOR IN WHILE
 token WAIT_FOR WAIT_UNTIL TIMEOUT AFTER
 token FANUC_USE FANUC_SET NAMESPACE
 token CASE WHEN INDIRECT POSITION
@@ -57,6 +57,7 @@ rule
     | conditional
     | inline_conditional
     | forloop
+    | while_loop
     | program_call
     | use_statement
     | set_statement
@@ -138,6 +139,10 @@ rule
   forloop
     : FOR var IN '(' minmax_val TO minmax_val ')' block END
                                        { result = ForNode.new(val[1],val[4],val[6],val[8]) }
+    ;
+
+  while_loop
+    : WHILE expression block END       { result = WhileNode.new(val[1],val[2]) }
     ;
 
   minmax_val
