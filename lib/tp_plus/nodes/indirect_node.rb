@@ -35,6 +35,9 @@ module TPPlus
         if options[:opposite]
           s = "!#{s}"
         end
+        if options[:as_condition]
+          s = "(#{s})"
+        end
         s
       end
     end

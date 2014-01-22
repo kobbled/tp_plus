@@ -748,6 +748,11 @@ Foo::Bar::baz = 2)
     assert_prog "IF (F[R[1:foo]]),JMP LBL[100] ;\nLBL[100:end] ;\n"
   end
 
+  def test_indirect_flag_condition_not_inline
+    parse "foo := R[1]\nif indirect('flag',foo)\n# bar\nend"
+    assert_prog "IF (!F[R[1:foo]]),JMP LBL[100] ;\n! bar ;\nLBL[100] ;\n"
+  end
+
   def test_indirect_unless_flag_condition
     parse "foo := R[1]\njump_to @end unless indirect('flag',foo)\n@end"
     assert_prog "IF (!F[R[1:foo]]),JMP LBL[100] ;\nLBL[100:end] ;\n"
@@ -812,6 +817,5 @@ Foo::Bar::baz = 2)
     parse "foo := R[1]\nstart indirect('timer', foo)"
     assert_prog "TIMER[R[1:foo]]=START ;\n"
   end
-
 
 end
