@@ -464,7 +464,7 @@ rule
     ;
 
   hash_attribute
-    : WORD ':' hash_value              { result = { val[0].to_sym => val[2] } }
+    : STRING ':' hash_value              { result = { val[0].to_sym => val[2] } }
     ;
 
   hash_value

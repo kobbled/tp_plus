@@ -821,62 +821,64 @@ Foo::Bar::baz = 2)
   def test_position_data_does_not_output_with_eval
     parse %(position_data
   {
-    positions: [
+    'positions': [
       {
-        id: 1,
-        comment: "test",
-        group: 1,
-        uframe: 1,
-        utool: 1,
-        config: {
-          flip: true,
-          up: true,
-          top: false,
-          turn_counts: [0,0,0]
+        'id': 1,
+        'comment': "test",
+        'group': 1,
+        'uframe': 1,
+        'utool': 1,
+        'config': {
+          'flip': true,
+          'up': true,
+          'top': false,
+          'turn_counts': [0,0,0]
         },
-        components: {
-          x: 0.0,
-          y: 0.0,
-          z: 0.0,
-          w: 0.0,
-          p: 0.0,
-          r: 0.0
+        'components': {
+          'x': 0.0,
+          'y': 0.0,
+          'z': 0.0,
+          'w': 0.0,
+          'p': 0.0,
+          'r': 0.0
         }
       }
     ]
   }
 end)
+
     assert_prog ""
   end
 
   def test_position_data_populates_interpreter_position_data
     parse %(position_data
   {
-    positions: [
+    'positions': [
       {
-        id: 1,
-        comment: "test",
-        group: 1,
-        uframe: 1,
-        utool: 1,
-        config: {
-          flip: true,
-          up: true,
-          top: false,
-          turn_counts: [0,0,0]
+        'id': 1,
+        'comment': "test",
+        'group': 1,
+        'uframe': 1,
+        'utool': 1,
+        'config': {
+          'flip': true,
+          'up': true,
+          'top': false,
+          'turn_counts': [0,0,0]
         },
-        components: {
-          x: 0.0,
-          y: 0.0,
-          z: 0.0,
-          w: 0.0,
-          p: 0.0,
-          r: 0.0
+        'components': {
+          'x': 0.0,
+          'y': 0.0,
+          'z': 0.0,
+          'w': 0.0,
+          'p': 0.0,
+          'r': 0.0
         }
       }
     ]
   }
 end)
+
     assert_prog ""
     assert_equal 1, @interpreter.position_data[:positions].length
   end
@@ -884,7 +886,7 @@ end)
   def test_throws_a_fault_if_position_data_invalid
     parse %(position_data
   {
-    positions : "asdf"
+    'positions' : "asdf"
   }
 end)
     assert_raise(RuntimeError) do
@@ -893,33 +895,34 @@ end)
   end
 
   def test_outputs_position_data_correctly
-        parse %(position_data
+    parse %(position_data
   {
-    positions: [
+    'positions': [
       {
-        id: 1,
-        comment: "test",
-        group: 1,
-        uframe: 1,
-        utool: 1,
-        config: {
-          flip: true,
-          up: true,
-          top: true,
-          turn_counts: [0,0,0]
+        'id': 1,
+        'comment': "test",
+        'group': 1,
+        'uframe': 1,
+        'utool': 1,
+        'config': {
+          'flip': true,
+          'up': true,
+          'top': true,
+          'turn_counts': [0,0,0]
         },
-        components: {
-          x: 0.0,
-          y: 0.0,
-          z: 0.0,
-          w: 0.0,
-          p: 0.0,
-          r: 0.0
+        'components': {
+          'x': 0.0,
+          'y': 0.0,
+          'z': 0.0,
+          'w': 0.0,
+          'p': 0.0,
+          'r': 0.0
         }
       }
     ]
   }
 end)
+
     assert_prog ""
     assert_equal %(P[1:"test"]{
    GP1:
@@ -930,54 +933,55 @@ end)
   end
 
   def test_outputs_position_data_correctly_with_two_positions
-        parse %(position_data
+    parse %(position_data
   {
-    positions: [
+    'positions': [
       {
-        id: 1,
-        comment: "test",
-        group: 1,
-        uframe: 1,
-        utool: 1,
-        config: {
-          flip: true,
-          up: true,
-          top: true,
-          turn_counts: [0,0,0]
+        'id': 1,
+        'comment': "test",
+        'group': 1,
+        'uframe': 1,
+        'utool': 1,
+        'config': {
+          'flip': true,
+          'up': true,
+          'top': true,
+          'turn_counts': [0,0,0]
         },
-        components: {
-          x: 0.0,
-          y: 0.0,
-          z: 0.0,
-          w: 0.0,
-          p: 0.0,
-          r: 0.0
+        'components': {
+          'x': 0.0,
+          'y': 0.0,
+          'z': 0.0,
+          'w': 0.0,
+          'p': 0.0,
+          'r': 0.0
         }
       },
       {
-        id: 2,
-        comment: "test2",
-        group: 1,
-        uframe: 1,
-        utool: 1,
-        config: {
-          flip: true,
-          up: true,
-          top: true,
-          turn_counts: [0,0,0]
+        'id': 2,
+        'comment': "test2",
+        'group': 1,
+        'uframe': 1,
+        'utool': 1,
+        'config': {
+          'flip': true,
+          'up': true,
+          'top': true,
+          'turn_counts': [0,0,0]
         },
-        components: {
-          x: 0.0,
-          y: 0.0,
-          z: 0.0,
-          w: 0.0,
-          p: 0.0,
-          r: 0.0
+        'components': {
+          'x': 0.0,
+          'y': 0.0,
+          'z': 0.0,
+          'w': 0.0,
+          'p': 0.0,
+          'r': 0.0
         }
       }
     ]
   }
 end)
+
     assert_prog ""
     assert_equal %(P[1:"test"]{
    GP1:

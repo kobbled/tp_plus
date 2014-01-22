@@ -374,26 +374,26 @@ class TestParser < Test::Unit::TestCase
   def test_position_data_block_with_a_position
     parse %(position_data
   {
-    positions: [
+    'positions': [
       {
-        id: 1,
-        comment: "test",
-        group: 1,
-        uframe: 1,
-        utool: 1,
-        config: {
-          flip: true,
-          up: true,
-          top: false,
-          turn_counts: [0,0,0]
+        'id': 1,
+        'comment': "test",
+        'group': 1,
+        'uframe': 1,
+        'utool': 1,
+        'config': {
+          'flip': true,
+          'up': true,
+          'top': false,
+          'turn_counts': [0,0,0]
         },
-        components: {
-          x: 0.0,
-          y: 0.0,
-          z: 0.0,
-          w: 0.0,
-          p: 0.0,
-          r: 0.0
+        'components': {
+          'x': 0.0,
+          'y': 0.0,
+          'z': 0.0,
+          'w': 0.0,
+          'p': 0.0,
+          'r': 0.0
         }
       }
     ]
@@ -403,49 +403,49 @@ end)
   end
 
   def test_position_data_block_with_two_positions
-        parse %(position_data
+    parse %(position_data
   {
-    positions: [
+    'positions': [
       {
-        id: 1,
-        comment: "test",
-        group: 1,
-        uframe: 1,
-        utool: 1,
-        config: {
-          flip: true,
-          up: true,
-          top: false,
-          turn_counts: [0,0,0]
+        'id': 1,
+        'comment': "test",
+        'group': 1,
+        'uframe': 1,
+        'utool': 1,
+        'config': {
+          'flip': true,
+          'up': true,
+          'top': false,
+          'turn_counts': [0,0,0]
         },
-        components: {
-          x: 0.0,
-          y: 0.0,
-          z: 0.0,
-          w: 0.0,
-          p: 0.0,
-          r: 0.0
+        'components': {
+          'x': 0.0,
+          'y': 0.0,
+          'z': 0.0,
+          'w': 0.0,
+          'p': 0.0,
+          'r': 0.0
         }
       },
       {
-        id: 2,
-        comment: "test two",
-        group: 1,
-        uframe: 1,
-        utool: 1,
-        config: {
-          flip: true,
-          up: true,
-          top: false,
-          turn_counts: [0,0,0]
+        'id': 2,
+        'comment': "test",
+        'group': 1,
+        'uframe': 1,
+        'utool': 1,
+        'config': {
+          'flip': true,
+          'up': true,
+          'top': false,
+          'turn_counts': [0,0,0]
         },
-        components: {
-          x: 0.0,
-          y: 0.0,
-          z: 0.0,
-          w: 0.0,
-          p: 0.0,
-          r: 0.0
+        'components': {
+          'x': 0.0,
+          'y': 0.0,
+          'z': 0.0,
+          'w': 0.0,
+          'p': 0.0,
+          'r': 0.0
         }
       }
     ]
