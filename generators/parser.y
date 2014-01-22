@@ -69,6 +69,7 @@ rule
 
   timer_method
     : TIMER_METHOD var                 { result = TimerMethodNode.new(val[0],val[1]) }
+    | TIMER_METHOD indirect_thing      { result = TimerMethodNode.new(val[0],val[1]) }
     ;
 
   fanuc_eval

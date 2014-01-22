@@ -803,5 +803,15 @@ Foo::Bar::baz = 2)
     assert_prog "R[1:foo]=TIMER[R[1:foo]] ;\n"
   end
 
+  def test_start_indirect_timer
+    parse "start indirect('timer', 3)"
+    assert_prog "TIMER[3]=START ;\n"
+  end
+
+  def test_start_indirect_indirect_timer
+    parse "foo := R[1]\nstart indirect('timer', foo)"
+    assert_prog "TIMER[R[1:foo]]=START ;\n"
+  end
+
 
 end
