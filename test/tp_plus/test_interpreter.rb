@@ -997,5 +997,19 @@ P[2:"test2"]{
 };\n), @interpreter.pos_section
   end
 
+  def test_simple_pulse
+    parse "foo := DO[1]\npulse foo"
+    assert_prog "DO[1:foo]=PULSE ;\n"
+  end
+
+  def test_pulse_for_seconds
+    parse "foo := DO[1]\npulse(foo,5,'s')"
+    assert_prog "DO[1:foo]=PULSE,5.0sec ;\n"
+  end
+
+  def test_pulse_for_ms
+    parse "foo := DO[1]\npulse(foo,500,'ms')"
+    assert_prog "DO[1:foo]=PULSE,0.5sec ;\n"
+  end
 
 end

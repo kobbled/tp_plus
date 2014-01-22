@@ -457,4 +457,9 @@ class TestScanner < Test::Unit::TestCase
      @scanner.scan_setup "position_data"
      assert_token :POSITION_DATA, "position_data"
    end
+
+   def test_pulse
+     @scanner.scan_setup "pulse"
+     assert_token :IO_METHOD, "pulse"
+   end
 end

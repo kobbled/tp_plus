@@ -91,6 +91,7 @@ rule
          {nw}namespace{nw}          { [:NAMESPACE, text] }
          {nw}offset{nw}             { [:OFFSET, text] }
          {nw}position_data{nw}      { [:POSITION_DATA, text] }
+         {nw}pulse{nw}              { [:IO_METHOD, text] }
          {nw}skip_to{nw}            { [:SKIP, text] }
          {nw}start{nw}              { [:TIMER_METHOD, :start] }
          {nw}stop{nw}               { [:TIMER_METHOD, :stop] }

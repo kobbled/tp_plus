@@ -129,9 +129,17 @@ rule
     ;
 
   io_method
-    : IO_METHOD var                    { result = IOMethodNode.new(val[0],val[1]) }
-    | IO_METHOD indirect_thing         { result = IOMethodNode.new(val[0],val[1]) }
+    : IO_METHOD io_method_args         { result = IOMethodNode.new(val[0],val[1]) }
+    | IO_METHOD '(' io_method_args ')' { result = IOMethodNode.new(val[0],val[2]) }
+    | IO_METHOD '(' io_method_args ',' number ',' STRING ')'
+                                       { result = IOMethodNode.new(val[0],val[2],{ pulse_time: val[4], pulse_units: val[6] }) }
     ;
+
+  io_method_args
+    : var
+    | indirect_thing
+    ;
+
 
   jump
     : JUMP label                       { result = JumpNode.new(val[1]) }

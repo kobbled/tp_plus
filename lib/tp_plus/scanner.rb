@@ -231,6 +231,9 @@ class TPPlus::Scanner < Racc::Parser
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)position_data(?=[\W]+|\A|\z|@)/i))
          action { [:POSITION_DATA, text] }
 
+      when (text = @ss.scan(/(?=[\W]+|\A|\z|@)pulse(?=[\W]+|\A|\z|@)/i))
+         action { [:IO_METHOD, text] }
+
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)skip_to(?=[\W]+|\A|\z|@)/i))
          action { [:SKIP, text] }
 

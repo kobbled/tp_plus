@@ -454,4 +454,13 @@ end)
     assert_node_type PositionDataNode, last_node
   end
 
+  def test_simple_pulse
+    parse "foo := DO[1]\npulse(foo)"
+    assert_node_type IOMethodNode, last_node
+  end
+
+  def test_pulse_with_options
+    parse "foo := DO[1]\npulse(foo,5,'s')"
+    assert_node_type IOMethodNode, last_node
+  end
 end
