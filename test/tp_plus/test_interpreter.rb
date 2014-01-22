@@ -929,5 +929,69 @@ end)
 };\n), @interpreter.pos_section
   end
 
+  def test_outputs_position_data_correctly_with_two_positions
+        parse %(position_data
+  {
+    positions: [
+      {
+        id: 1,
+        comment: "test",
+        group: 1,
+        uframe: 1,
+        utool: 1,
+        config: {
+          flip: true,
+          up: true,
+          top: true,
+          turn_counts: [0,0,0]
+        },
+        components: {
+          x: 0.0,
+          y: 0.0,
+          z: 0.0,
+          w: 0.0,
+          p: 0.0,
+          r: 0.0
+        }
+      },
+      {
+        id: 2,
+        comment: "test2",
+        group: 1,
+        uframe: 1,
+        utool: 1,
+        config: {
+          flip: true,
+          up: true,
+          top: true,
+          turn_counts: [0,0,0]
+        },
+        components: {
+          x: 0.0,
+          y: 0.0,
+          z: 0.0,
+          w: 0.0,
+          p: 0.0,
+          r: 0.0
+        }
+      }
+    ]
+  }
+end)
+    assert_prog ""
+    assert_equal %(P[1:"test"]{
+   GP1:
+  UF : 1, UT : 1,  CONFIG : 'F U T, 0, 0, 0',
+  X = 0.0 mm, Y = 0.0 mm, Z = 0.0 mm,
+  W = 0.0 deg, P = 0.0 deg, R = 0.0 deg
+};
+P[2:"test2"]{
+   GP1:
+  UF : 1, UT : 1,  CONFIG : 'F U T, 0, 0, 0',
+  X = 0.0 mm, Y = 0.0 mm, Z = 0.0 mm,
+  W = 0.0 deg, P = 0.0 deg, R = 0.0 deg
+};\n), @interpreter.pos_section
+  end
+
 
 end
