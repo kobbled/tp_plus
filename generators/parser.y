@@ -480,8 +480,8 @@ rule
     : STRING
     | hash
     | array
-    | DIGIT
-    | REAL
+    | sign DIGIT                       { val[1] = val[1].to_i * -1 if val[0] == "-"; result = val[1] }
+    | sign REAL                        { val[1] = val[1].to_f * -1 if val[0] == "-"; result = val[1] }
     | TRUE_FALSE
     ;
 

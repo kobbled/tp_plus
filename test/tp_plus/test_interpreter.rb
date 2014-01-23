@@ -832,10 +832,10 @@ Foo::Bar::baz = 2)
           'flip': true,
           'up': true,
           'top': false,
-          'turn_counts': [0,0,0]
+          'turn_counts': [-1,0,1]
         },
         'components': {
-          'x': 0.0,
+          'x': -50.0,
           'y': 0.0,
           'z': 0.0,
           'w': 0.0,
