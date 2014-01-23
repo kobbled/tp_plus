@@ -1012,4 +1012,9 @@ P[2:"test2"]{
     assert_prog "DO[1:foo]=PULSE,0.5sec ;\n"
   end
 
+  def test_indirect_numreg
+    parse "foo := R[1]\nindirect('register',foo) = 5"
+    assert_prog "R[R[1:foo]]=5 ;\n"
+  end
+
 end

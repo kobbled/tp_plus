@@ -129,13 +129,14 @@ rule
     ;
 
   io_method
-    : IO_METHOD io_method_args         { result = IOMethodNode.new(val[0],val[1]) }
-    | IO_METHOD '(' io_method_args ')' { result = IOMethodNode.new(val[0],val[2]) }
-    | IO_METHOD '(' io_method_args ',' number ',' STRING ')'
+    : IO_METHOD var_or_indirect        { result = IOMethodNode.new(val[0],val[1]) }
+    | IO_METHOD '(' var_or_indirect ')'
+                                       { result = IOMethodNode.new(val[0],val[2]) }
+    | IO_METHOD '(' var_or_indirect ',' number ',' STRING ')'
                                        { result = IOMethodNode.new(val[0],val[2],{ pulse_time: val[4], pulse_units: val[6] }) }
     ;
 
-  io_method_args
+  var_or_indirect
     : var
     | indirect_thing
     ;
@@ -279,13 +280,13 @@ rule
     ;
 
   assignment
-    : var EQUAL expression            { result = AssignmentNode.new(val[0],val[2]) }
-    | var PLUS EQUAL expression       { result = AssignmentNode.new(
+    : var_or_indirect EQUAL expression            { result = AssignmentNode.new(val[0],val[2]) }
+    | var_or_indirect PLUS EQUAL expression       { result = AssignmentNode.new(
                                            val[0],
                                            ExpressionNode.new(val[0],val[1],val[3])
                                          )
                                        }
-    | var MINUS EQUAL expression       { result = AssignmentNode.new(
+    | var_or_indirect MINUS EQUAL expression       { result = AssignmentNode.new(
                                            val[0],
                                            ExpressionNode.new(val[0],val[1],val[3])
                                          )

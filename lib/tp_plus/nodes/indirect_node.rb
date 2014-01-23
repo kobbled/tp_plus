@@ -16,6 +16,8 @@ module TPPlus
           "F"
         when :timer
           "TIMER"
+        when :register
+          "R"
         else
           raise "Invalid indirect type"
         end
