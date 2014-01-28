@@ -34,6 +34,7 @@ rule
          SR(?=\[)                   { [:SREG, text] }
          AR(?=\[)                   { [:ARG, text] }
          TIMER(?=\[)                { [:TIMER, text] }
+         UALM(?=\[)                 { [:UALM, text] }
 
          F(?=\[)                    { [:OUTPUT, text] }
          DO(?=\[)                   { [:OUTPUT, text] }
@@ -95,6 +96,7 @@ rule
          {nw}skip_to{nw}            { [:SKIP, text] }
          {nw}start{nw}              { [:TIMER_METHOD, :start] }
          {nw}stop{nw}               { [:TIMER_METHOD, :stop] }
+         {nw}raise{nw}              { [:RAISE, text] }
          {nw}reset{nw}              { [:TIMER_METHOD, :reset] }
          {nw}restart{nw}            { [:TIMER_METHOD, :restart] }
          {nw}term{nw}               { [:TERM, text] }

@@ -84,6 +84,9 @@ class TPPlus::Scanner < Racc::Parser
       when (text = @ss.scan(/TIMER(?=\[)/i))
          action { [:TIMER, text] }
 
+      when (text = @ss.scan(/UALM(?=\[)/i))
+         action { [:UALM, text] }
+
       when (text = @ss.scan(/F(?=\[)/i))
          action { [:OUTPUT, text] }
 
@@ -242,6 +245,9 @@ class TPPlus::Scanner < Racc::Parser
 
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)stop(?=[\W]+|\A|\z|@)/i))
          action { [:TIMER_METHOD, :stop] }
+
+      when (text = @ss.scan(/(?=[\W]+|\A|\z|@)raise(?=[\W]+|\A|\z|@)/i))
+         action { [:RAISE, text] }
 
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)reset(?=[\W]+|\A|\z|@)/i))
          action { [:TIMER_METHOD, :reset] }

@@ -18,6 +18,8 @@ module TPPlus
           "TIMER"
         when :register
           "R"
+        when :user_alarm
+          "UALM"
         else
           raise "Invalid indirect type"
         end

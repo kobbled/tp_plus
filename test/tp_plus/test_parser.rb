@@ -463,4 +463,16 @@ end)
     parse "foo := DO[1]\npulse(foo,5,'s')"
     assert_node_type IOMethodNode, last_node
   end
+
+  def test_ualm_definition
+    parse "foo := UALM[1]"
+    n = last_node
+    assert_node_type DefinitionNode, n
+    assert_node_type UserAlarmNode, n.assignable
+  end
+
+  def test_raise
+    parse "my_alarm := UALM[1]\nraise my_alarm"
+    assert_node_type RaiseNode, last_node
+  end
 end

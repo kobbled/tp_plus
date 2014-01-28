@@ -462,4 +462,14 @@ class TestScanner < Test::Unit::TestCase
      @scanner.scan_setup "pulse"
      assert_token :IO_METHOD, "pulse"
    end
+
+   def test_scan_ualm
+     @scanner.scan_setup "UALM[1]"
+     assert_token :UALM, "UALM"
+   end
+
+   def test_scan_raise
+     @scanner.scan_setup "raise"
+     assert_token :RAISE, "raise"
+   end
 end

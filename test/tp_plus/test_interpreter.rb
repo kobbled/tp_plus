@@ -1017,4 +1017,18 @@ P[2:"test2"]{
     assert_prog "R[R[1:foo]]=5 ;\n"
   end
 
+  def test_raise
+    parse "my_alarm := UALM[1]\nraise my_alarm"
+    assert_prog "UALM[1] ;\n"
+  end
+
+  def test_indirect_raise
+    parse "raise indirect('user_alarm',1)"
+    assert_prog "UALM[1] ;\n"
+  end
+
+  def test_indirect_indirect_raise
+    parse "foo := R[1]\nraise indirect('user_alarm',foo)"
+    assert_prog "UALM[R[1:foo]] ;\n"
+  end
 end

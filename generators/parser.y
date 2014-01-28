@@ -1,6 +1,6 @@
 class TPPlus::Parser
 token ASSIGN AT_SYM COMMENT JUMP IO_METHOD INPUT OUTPUT
-token NUMREG POSREG VREG SREG TIME_SEGMENT ARG
+token NUMREG POSREG VREG SREG TIME_SEGMENT ARG UALM
 token MOVE DOT TO AT TERM OFFSET SKIP
 token SEMICOLON NEWLINE STRING
 token REAL DIGIT WORD EQUAL
@@ -10,7 +10,7 @@ token IF ELSE END UNLESS FOR IN WHILE
 token WAIT_FOR WAIT_UNTIL TIMEOUT AFTER
 token FANUC_USE FANUC_SET NAMESPACE
 token CASE WHEN INDIRECT POSITION
-token EVAL TIMER TIMER_METHOD
+token EVAL TIMER TIMER_METHOD RAISE
 token POSITION_DATA TRUE_FALSE
 
 prechigh
@@ -67,11 +67,15 @@ rule
     | fanuc_eval
     | timer_method
     | position_data
+    | raise
+    ;
+
+  raise
+    : RAISE var_or_indirect            { result = RaiseNode.new(val[1]) }
     ;
 
   timer_method
-    : TIMER_METHOD var                 { result = TimerMethodNode.new(val[0],val[1]) }
-    | TIMER_METHOD indirect_thing      { result = TimerMethodNode.new(val[0],val[1]) }
+    : TIMER_METHOD var_or_indirect     { result = TimerMethodNode.new(val[0],val[1]) }
     ;
 
   fanuc_eval
@@ -404,6 +408,11 @@ rule
     | number
     | argument
     | timer
+    | ualm
+    ;
+
+  ualm
+    : UALM '[' DIGIT ']'               { result = UserAlarmNode.new(val[2].to_i) }
     ;
 
   timer

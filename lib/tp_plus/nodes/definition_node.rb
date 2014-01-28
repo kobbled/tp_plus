@@ -1,6 +1,7 @@
 module TPPlus
   module Nodes
     class DefinitionNode
+      attr_reader :identifier, :assignable
       def initialize(identifier,assignable)
         @identifier = identifier
         @assignable = assignable
