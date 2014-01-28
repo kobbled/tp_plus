@@ -1046,4 +1046,9 @@ P[2:"test2"]{
     parse "namespace Foo\nbar := PR[1]\nend\nFoo::bar.x += Foo::bar.x * 10 \n"
     assert_prog "PR[1,1:Foo bar]=(PR[1,1:Foo bar]+PR[1,1:Foo bar]*10) ;\n"
   end
+
+  def test_namespaced_pr_assignment_then_expression
+    parse "namespace Foo\nbar := PR[1]\nend\nbaz := P[1]\nFoo::bar = baz\nFoo::bar.x += 5"
+    assert_prog "PR[1:Foo bar]=P[1:baz] ;\nPR[1,1:Foo bar]=PR[1,1:Foo bar]+5 ;\n"
+  end
 end
