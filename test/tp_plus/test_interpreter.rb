@@ -1031,4 +1031,19 @@ P[2:"test2"]{
     parse "foo := R[1]\nraise indirect('user_alarm',foo)"
     assert_prog "UALM[R[1:foo]] ;\n"
   end
+
+  def test_namespaced_pr_component_assignment
+    parse "namespace Foo\nbar := PR[1]\nend\nFoo::bar.x = 10"
+    assert_prog "PR[1,1:Foo bar]=10 ;\n"
+  end
+
+  def test_namespaced_pr_component_plus_equals
+    parse "namespace Foo\nbar := PR[1]\nend\nFoo::bar.x += 10"
+    assert_prog "PR[1,1:Foo bar]=PR[1,1:Foo bar]+10 ;\n"
+  end
+
+  def test_namespaced_pr_component_in_expression
+    parse "namespace Foo\nbar := PR[1]\nend\nFoo::bar.x += Foo::bar.x * 10 \n"
+    assert_prog "PR[1,1:Foo bar]=(PR[1,1:Foo bar]+PR[1,1:Foo bar]*10) ;\n"
+  end
 end
