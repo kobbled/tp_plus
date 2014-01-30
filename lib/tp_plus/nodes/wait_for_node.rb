@@ -29,6 +29,10 @@ module TPPlus
         end
       end
 
+      def can_be_inlined?
+        false
+      end
+
       def expression
         case @units
         when "s"

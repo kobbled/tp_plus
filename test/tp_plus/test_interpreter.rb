@@ -1051,4 +1051,20 @@ P[2:"test2"]{
     parse "namespace Foo\nbar := PR[1]\nend\nbaz := P[1]\nFoo::bar = baz\nFoo::bar.x += 5"
     assert_prog "PR[1:Foo bar]=P[1:baz] ;\nPR[1,1:Foo bar]=PR[1,1:Foo bar]+5 ;\n"
   end
+
+  def test_wait_until_does_not_get_inlined
+    parse "foo := DO[1]\nunless foo\nwait_until(foo)\nend"
+    assert_prog "IF (DO[1:foo]),JMP LBL[100] ;\nWAIT (DO[1:foo]) ;\nLBL[100] ;\n"
+  end
+
+  def test_wait_for_does_not_get_inlined
+    parse "foo := DO[1]\nunless foo\nwait_for(1,'s')\nend"
+    assert_prog "IF (DO[1:foo]),JMP LBL[100] ;\nWAIT 1.00(sec) ;\nLBL[100] ;\n"
+  end
+
+  def test_inline_conditional_does_not_get_inlined
+    parse "foo := DO[1]\nif foo\nturn_off foo if foo\nend"
+    assert_prog "IF (!DO[1:foo]),JMP LBL[100] ;\nIF (DO[1:foo]),DO[1:foo]=(OFF) ;\nLBL[100] ;\n"
+  end
+
 end

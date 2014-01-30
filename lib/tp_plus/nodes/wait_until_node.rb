@@ -43,6 +43,10 @@ module TPPlus
         value
       end
 
+      def can_be_inlined?
+        false
+      end
+
       def wait_timeout(context)
         return "" if @timeout_options[:timeout].nil?
 

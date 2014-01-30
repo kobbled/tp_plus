@@ -18,6 +18,9 @@ module TPPlus
         @block.requires_mixed_logic?(context)
       end
 
+      def can_be_inlined?
+        false
+      end
 
       def condition(context,options={})
         options[:opposite] ||= @type == "unless"
