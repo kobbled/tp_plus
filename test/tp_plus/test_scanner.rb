@@ -477,4 +477,19 @@ class TestScanner < Test::Unit::TestCase
      @scanner.scan_setup "run"
      assert_token :RUN, "run"
    end
+
+   def test_tp_ignore_pause
+     @scanner.scan_setup "TP_IGNORE_PAUSE"
+     assert_token :TP_HEADER, "TP_IGNORE_PAUSE"
+   end
+
+   def test_tp_comment
+     @scanner.scan_setup "TP_COMMENT"
+     assert_token :TP_HEADER, "TP_COMMENT"
+   end
+
+   def test_tp_groupmask
+     @scanner.scan_setup "TP_GROUPMASK"
+     assert_token :TP_HEADER, "TP_GROUPMASK"
+   end
 end

@@ -11,7 +11,7 @@ token WAIT_FOR WAIT_UNTIL TIMEOUT AFTER
 token FANUC_USE FANUC_SET NAMESPACE
 token CASE WHEN INDIRECT POSITION
 token EVAL TIMER TIMER_METHOD RAISE
-token POSITION_DATA TRUE_FALSE RUN
+token POSITION_DATA TRUE_FALSE RUN TP_HEADER
 
 prechigh
 #  left DOT
@@ -68,6 +68,16 @@ rule
     | timer_method
     | position_data
     | raise
+    | tp_header_definition
+    ;
+
+  tp_header_definition
+    : TP_HEADER EQUAL tp_header_value { result = HeaderNode.new(val[0],val[2]) }
+    ;
+
+  tp_header_value
+    : STRING
+    | TRUE_FALSE
     ;
 
   raise

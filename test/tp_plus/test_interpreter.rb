@@ -1072,4 +1072,22 @@ P[2:"test2"]{
     assert_prog "RUN FOO ;\n"
   end
 
+  def test_tp_ignore_pause
+    parse "TP_IGNORE_PAUSE = true"
+    assert_prog ""
+    assert @interpreter.header_data[:ignore_pause]
+  end
+
+  def test_tp_comment
+    parse %(TP_COMMENT = "foo")
+    assert_prog ""
+    assert_equal "foo", @interpreter.header_data[:comment]
+  end
+
+  def test_tp_groupmask
+    parse %(TP_GROUPMASK = "*,*,*,*,*")
+    assert_prog ""
+    assert_equal "*,*,*,*,*", @interpreter.header_data[:group_mask]
+  end
+
 end

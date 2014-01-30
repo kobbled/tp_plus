@@ -2,7 +2,7 @@ require 'tp_plus/parser'
 
 module TPPlus
   class Interpreter
-    attr_accessor :line_count, :nodes, :position_data
+    attr_accessor :line_count, :nodes, :position_data, :header_data
     attr_reader :labels, :variables, :constants, :namespaces, :source_line_count
     def initialize
       @line_count    = 0
@@ -12,6 +12,7 @@ module TPPlus
       @variables     = {}
       @constants     = {}
       @position_data = {}
+      @header_data   = {}
       @current_label = 99
     end
 
