@@ -7,6 +7,10 @@ module TPPlus
         @comment = ""
       end
 
+      def requires_mixed_logic?(context)
+        false
+      end
+
       def comment_string
         return "" if @comment == ""
 

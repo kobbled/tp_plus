@@ -33,6 +33,10 @@ module TPPlus
         [""].concat(COMPONENTS.keys).include? c
       end
 
+      def requires_mixed_logic?(context)
+        false
+      end
+
       def eval(context,options={})
         options[:method] ||= ""
         raise "Invalid component" unless component_valid?(options[:method])

@@ -5,6 +5,10 @@ module TPPlus
         @value = value
       end
 
+      def requires_mixed_logic?(context)
+        false
+      end
+
       def eval(context,options={})
         ("%.2f" % @value).sub(/^0/,'')
       end

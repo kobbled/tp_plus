@@ -27,7 +27,7 @@ module TPPlus
 
       def requires_mixed_logic?(context)
         case @type
-        when :flag, :timer
+        when :flag#, :timer
           true
         else
           false

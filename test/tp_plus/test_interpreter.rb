@@ -1095,4 +1095,9 @@ P[2:"test2"]{
     assert_prog "IF (!DI[1:foo] AND !DI[2:bar]),JMP LBL[100] ;\n! do something ;\nLBL[100] ;\n"
   end
 
+  def test_flag_assignment_always_gets_parens
+    parse %(foo := F[1]\nbar := DI[2]\nfoo = bar)
+    assert_prog "F[1:foo]=(DI[2:bar]) ;\n"
+  end
+
 end
