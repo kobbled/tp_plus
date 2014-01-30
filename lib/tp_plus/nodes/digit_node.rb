@@ -9,7 +9,7 @@ module TPPlus
         false
       end
 
-      def eval(context)
+      def eval(context, options={})
         @value
       end
     end

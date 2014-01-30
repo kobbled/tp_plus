@@ -20,9 +20,7 @@ module TPPlus
 
 
       def condition(context)
-        s = @condition_node.eval(context, opposite: true)
-
-        @condition_node.requires_mixed_logic?(context) ? "(#{s})" : s
+        @condition_node.eval(context, opposite: true, as_condition: true)
       end
 
 

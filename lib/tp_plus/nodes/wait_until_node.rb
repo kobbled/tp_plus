@@ -54,7 +54,7 @@ module TPPlus
       end
 
       def string_value(context)
-        "(#{@expression.eval(context)})"
+        "#{@expression.eval(context, force_parens: true)}"
       end
 
       def eval(context)

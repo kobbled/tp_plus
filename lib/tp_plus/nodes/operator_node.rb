@@ -21,7 +21,7 @@ module TPPlus
 
       def boolean?
         case @string
-        when "&&", "||", "!", "==", "<>", ">", ">=", "<", "<="
+        when "&&", "||", "!"#, "==", "<>", ">", ">=", "<", "<="
           true
         else
           false
@@ -45,6 +45,10 @@ module TPPlus
             ">"
           when "!"
             ""
+          when "||"
+            " AND "
+          when "&&"
+            " OR "
           end
         else
           case @string

@@ -39,7 +39,7 @@ module TPPlus
         @type == "if"
       end
 
-      def eval(context)
+      def eval(context, options={})
         return InlineConditionalNode.new(@type,@condition,@true_block.first).eval(context) if can_be_inlined?
 
         if @false_block.empty?

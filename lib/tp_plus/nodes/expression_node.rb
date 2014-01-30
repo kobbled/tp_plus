@@ -22,8 +22,17 @@ module TPPlus
         [@left_op, @right_op].map {|op| op.is_a? ExpressionNode }.any?
       end
 
-      def with_parens(string, options={})
-        return string unless options[:force_parens]
+      def boolean_result?
+        case @op.string
+        when "&&","||","!","==","<>",">",">=","<","<="
+          true
+        else
+          false
+        end
+      end
+
+      def with_parens(string, context, options={})
+        return string unless options[:force_parens] || options[:as_condition] && requires_mixed_logic?(context)
 
         "(#{string})"
       end
@@ -38,14 +47,18 @@ module TPPlus
             "#{@op.eval(context,options)}#{@left_op.eval(context)}"
           end
         else
-          "#{@left_op.eval(context)}#{@op.eval(context,options)}#{@right_op.eval(context)}"
+          if @op.boolean? && options[:opposite]
+            "!#{@left_op.eval(context)}#{@op.eval(context,options)}!#{@right_op.eval(context)}"
+          else
+            "#{@left_op.eval(context)}#{@op.eval(context,options)}#{@right_op.eval(context)}"
+          end
         end
       end
 
       def eval(context,options={})
         options[:force_parens] = true if @grouped
 
-        with_parens(string_val(context, options), options)
+        with_parens(string_val(context, options), context, options)
       end
     end
   end

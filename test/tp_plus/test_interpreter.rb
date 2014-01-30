@@ -1090,4 +1090,9 @@ P[2:"test2"]{
     assert_equal "*,*,*,*,*", @interpreter.header_data[:group_mask]
   end
 
+  def test_mixed_logic_or
+    parse %(foo := DI[1]\nbar := DI[2]\nif foo || bar\n# do something\nend)
+    assert_prog "IF (!DI[1:foo] AND !DI[2:bar]),JMP LBL[100] ;\n! do something ;\nLBL[100] ;\n"
+  end
+
 end

@@ -23,7 +23,7 @@ module TPPlus
           s = "#{s}=ON"
         end
 
-        s
+        options[:force_parens] ? "(#{s})" : s
       end
     end
   end
