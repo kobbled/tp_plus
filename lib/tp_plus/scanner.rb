@@ -237,15 +237,6 @@ class TPPlus::Scanner < Racc::Parser
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)pulse(?=[\W]+|\A|\z|@)/i))
          action { [:IO_METHOD, text] }
 
-      when (text = @ss.scan(/(?=[\W]+|\A|\z|@)skip_to(?=[\W]+|\A|\z|@)/i))
-         action { [:SKIP, text] }
-
-      when (text = @ss.scan(/(?=[\W]+|\A|\z|@)start(?=[\W]+|\A|\z|@)/i))
-         action { [:TIMER_METHOD, :start] }
-
-      when (text = @ss.scan(/(?=[\W]+|\A|\z|@)stop(?=[\W]+|\A|\z|@)/i))
-         action { [:TIMER_METHOD, :stop] }
-
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)raise(?=[\W]+|\A|\z|@)/i))
          action { [:RAISE, text] }
 
@@ -254,6 +245,18 @@ class TPPlus::Scanner < Racc::Parser
 
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)restart(?=[\W]+|\A|\z|@)/i))
          action { [:TIMER_METHOD, :restart] }
+
+      when (text = @ss.scan(/(?=[\W]+|\A|\z|@)run(?=[\W]+|\A|\z|@)/i))
+         action { [:RUN, text] }
+
+      when (text = @ss.scan(/(?=[\W]+|\A|\z|@)skip_to(?=[\W]+|\A|\z|@)/i))
+         action { [:SKIP, text] }
+
+      when (text = @ss.scan(/(?=[\W]+|\A|\z|@)start(?=[\W]+|\A|\z|@)/i))
+         action { [:TIMER_METHOD, :start] }
+
+      when (text = @ss.scan(/(?=[\W]+|\A|\z|@)stop(?=[\W]+|\A|\z|@)/i))
+         action { [:TIMER_METHOD, :stop] }
 
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)term(?=[\W]+|\A|\z|@)/i))
          action { [:TERM, text] }

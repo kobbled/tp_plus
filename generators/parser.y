@@ -11,7 +11,7 @@ token WAIT_FOR WAIT_UNTIL TIMEOUT AFTER
 token FANUC_USE FANUC_SET NAMESPACE
 token CASE WHEN INDIRECT POSITION
 token EVAL TIMER TIMER_METHOD RAISE
-token POSITION_DATA TRUE_FALSE
+token POSITION_DATA TRUE_FALSE RUN
 
 prechigh
 #  left DOT
@@ -119,6 +119,7 @@ rule
 
   program_call
     : WORD '(' args ')'                { result = CallNode.new(val[0],val[2]) }
+    | RUN WORD '(' args ')'            { result = CallNode.new(val[1],val[3],async: true) }
     ;
 
   args

@@ -472,4 +472,9 @@ class TestScanner < Test::Unit::TestCase
      @scanner.scan_setup "raise"
      assert_token :RAISE, "raise"
    end
+
+   def test_scan_run
+     @scanner.scan_setup "run"
+     assert_token :RUN, "run"
+   end
 end

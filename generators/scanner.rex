@@ -93,12 +93,13 @@ rule
          {nw}offset{nw}             { [:OFFSET, text] }
          {nw}position_data{nw}      { [:POSITION_DATA, text] }
          {nw}pulse{nw}              { [:IO_METHOD, text] }
-         {nw}skip_to{nw}            { [:SKIP, text] }
-         {nw}start{nw}              { [:TIMER_METHOD, :start] }
-         {nw}stop{nw}               { [:TIMER_METHOD, :stop] }
          {nw}raise{nw}              { [:RAISE, text] }
          {nw}reset{nw}              { [:TIMER_METHOD, :reset] }
          {nw}restart{nw}            { [:TIMER_METHOD, :restart] }
+         {nw}run{nw}                { [:RUN, text] }
+         {nw}skip_to{nw}            { [:SKIP, text] }
+         {nw}start{nw}              { [:TIMER_METHOD, :start] }
+         {nw}stop{nw}               { [:TIMER_METHOD, :stop] }
          {nw}term{nw}               { [:TERM, text] }
          {nw}time_after{nw}         { [:TIME_SEGMENT, text] }
          {nw}time_before{nw}        { [:TIME_SEGMENT, text] }

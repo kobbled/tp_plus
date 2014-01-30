@@ -475,4 +475,10 @@ end)
     parse "my_alarm := UALM[1]\nraise my_alarm"
     assert_node_type RaiseNode, last_node
   end
+
+  def test_run
+    parse "run FOO()"
+    assert_node_type CallNode, last_node
+    assert last_node.async?
+  end
 end

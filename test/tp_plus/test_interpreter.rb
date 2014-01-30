@@ -1067,4 +1067,9 @@ P[2:"test2"]{
     assert_prog "IF (!DO[1:foo]),JMP LBL[100] ;\nIF (DO[1:foo]),DO[1:foo]=(OFF) ;\nLBL[100] ;\n"
   end
 
+  def test_run
+    parse "run foo()"
+    assert_prog "RUN FOO ;\n"
+  end
+
 end
