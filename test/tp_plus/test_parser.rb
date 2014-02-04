@@ -481,4 +481,9 @@ end)
     assert_node_type CallNode, last_node
     assert last_node.async?
   end
+
+  def test_tool_offset
+    parse "p := P[1]\nbar := PR[1]\nlinear_move.to(p).at(1000,'mm/s').term(0).tool_offset(bar)"
+    assert_node_type MotionNode, last_node
+  end
 end

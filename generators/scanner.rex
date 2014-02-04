@@ -109,9 +109,11 @@ rule
          {nw}time_before{nw}        { [:TIME_SEGMENT, text] }
          {nw}timeout_to{nw}         { [:TIMEOUT, text] }
          {nw}toggle{nw}             { [:IO_METHOD, text] }
+         {nw}tool_offset{nw}        { [:OFFSET, text] }
          {nw}turn_on|turn_off{nw}   { [:IO_METHOD, text] }
          {nw}to{nw}                 { [:TO, text] }
          {nw}unless{nw}             { [:UNLESS, text] }
+         {nw}vision_offset{nw}      { [:OFFSET, text] }
          {nw}wait_for{nw}           { [:WAIT_FOR, text] }
          {nw}wait_until{nw}         { [:WAIT_UNTIL, text] }
          {nw}when{nw}               { [:WHEN, text] }

@@ -282,6 +282,9 @@ class TPPlus::Scanner < Racc::Parser
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)toggle(?=[\W]+|\A|\z|@)/i))
          action { [:IO_METHOD, text] }
 
+      when (text = @ss.scan(/(?=[\W]+|\A|\z|@)tool_offset(?=[\W]+|\A|\z|@)/i))
+         action { [:OFFSET, text] }
+
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)turn_on|turn_off(?=[\W]+|\A|\z|@)/i))
          action { [:IO_METHOD, text] }
 
@@ -290,6 +293,9 @@ class TPPlus::Scanner < Racc::Parser
 
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)unless(?=[\W]+|\A|\z|@)/i))
          action { [:UNLESS, text] }
+
+      when (text = @ss.scan(/(?=[\W]+|\A|\z|@)vision_offset(?=[\W]+|\A|\z|@)/i))
+         action { [:OFFSET, text] }
 
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)wait_for(?=[\W]+|\A|\z|@)/i))
          action { [:WAIT_FOR, text] }

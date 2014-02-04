@@ -254,7 +254,7 @@ rule
     | DOT swallow_newlines TERM '(' indirectable ')'
                                        { result = TerminationNode.new(val[4]) }
     | DOT swallow_newlines OFFSET '(' var ')'
-                                       { result = OffsetNode.new(val[4]) }
+                                       { result = OffsetNode.new(val[2],val[4]) }
     | DOT swallow_newlines TIME_SEGMENT '(' time ',' time_seg_actions ')'
                                        { result = TimeNode.new(val[2],val[4],val[6]) }
     | DOT swallow_newlines SKIP '(' label optional_lpos_arg ')'

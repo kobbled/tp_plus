@@ -492,4 +492,14 @@ class TestScanner < Test::Unit::TestCase
      @scanner.scan_setup "TP_GROUPMASK"
      assert_token :TP_HEADER, "TP_GROUPMASK"
    end
+
+   def test_tool_offset
+     @scanner.scan_setup "tool_offset"
+     assert_token :OFFSET, "tool_offset"
+   end
+
+   def test_vision_offset
+     @scanner.scan_setup "vision_offset"
+     assert_token :OFFSET, "vision_offset"
+   end
 end

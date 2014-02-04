@@ -1,16 +1,26 @@
 module TPPlus
   module Nodes
     class OffsetNode
-      def initialize(var)
+      def initialize(type, var)
+        @type = type
         @var = var
       end
 
-      def eval(context)
-        if context.get_var(@var.identifier).is_a? PosregNode
-          "Offset,#{@var.eval(context)}"
+      def name
+        case @type.downcase
+        when "offset"
+          "Offset"
+        when "tool_offset"
+          "Tool_Offset"
+        when "vision_offset"
+          "VOFFSET"
         else
-          "VOFFSET,#{@var.eval(context)}"
+          raise "Invalid type"
         end
+      end
+
+      def eval(context)
+        "#{name},#{@var.eval(context)}"
       end
     end
   end

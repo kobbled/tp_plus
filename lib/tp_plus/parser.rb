@@ -1180,7 +1180,7 @@ def _reduce_90(val, _values, result)
 end
 
 def _reduce_91(val, _values, result)
- result = OffsetNode.new(val[4]) 
+ result = OffsetNode.new(val[2],val[4]) 
     result
 end
 

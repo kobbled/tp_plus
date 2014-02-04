@@ -223,8 +223,8 @@ class TestInterpreter < Test::Unit::TestCase
   end
 
   def test_vr_offset
-    parse("home := P[1]\nvision_offset := VR[1]\nlinear_move.to(home).at(2000, 'mm/s').term(0).offset(vision_offset)")
-    assert_prog "L P[1:home] 2000mm/sec CNT0 VOFFSET,VR[1:vision_offset] ;\n"
+    parse("home := P[1]\nvoff := VR[1]\nlinear_move.to(home).at(2000, 'mm/s').term(0).vision_offset(voff)")
+    assert_prog "L P[1:home] 2000mm/sec CNT0 VOFFSET,VR[1:voff] ;\n"
   end
 
   def test_time_before
@@ -1100,4 +1100,8 @@ P[2:"test2"]{
     assert_prog "F[1:foo]=(DI[2:bar]) ;\n"
   end
 
+  def test_tool_offset
+    parse %(p := P[1]\ntoff := PR[1]\nlinear_move.to(p).at(2000,'mm/s').term(0).tool_offset(toff))
+    assert_prog "L P[1:p] 2000mm/sec CNT0 Tool_Offset,PR[1:toff] ;\n"
+  end
 end
