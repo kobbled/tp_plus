@@ -17,7 +17,7 @@ module TPPlus
       end
 
       def eval(context)
-        "#{type} #{@time.eval(context)}sec,#{@action.eval(context)}"
+        "#{type} #{@time.eval(context,as_string: true)}sec,#{@action.eval(context)}"
       end
     end
   end

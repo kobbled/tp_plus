@@ -466,7 +466,7 @@ LBL[101:ghjk] ;\n)
 
   def test_constant_definition_real
     parse("PI := 3.14159\nfoo:= R[1]\nfoo = PI")
-    assert_prog "R[1:foo]=3.14 ;\n"
+    assert_prog "R[1:foo]=3.14159 ;\n"
   end
 
   def test_redefining_const_throws_error
@@ -1103,5 +1103,20 @@ P[2:"test2"]{
   def test_tool_offset
     parse %(p := P[1]\ntoff := PR[1]\nlinear_move.to(p).at(2000,'mm/s').term(0).tool_offset(toff))
     assert_prog "L P[1:p] 2000mm/sec CNT0 Tool_Offset,PR[1:toff] ;\n"
+  end
+
+  def test_wait_for_digit
+    parse %(wait_for(1,'s'))
+    assert_prog "WAIT 1.00(sec) ;\n"
+  end
+
+  def test_wait_for_real
+    parse %(wait_for(0.5,'s'))
+    assert_prog "WAIT .50(sec) ;\n"
+  end
+
+  def test_wait_for_real_const
+    parse %(FOO := 0.5\nwait_for(FOO,'s'))
+    assert_prog "WAIT .50(sec) ;\n"
   end
 end
