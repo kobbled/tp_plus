@@ -10,7 +10,11 @@ module TPPlus
       end
 
       def eval(context, options={})
-        @value
+        if @value < 0
+          "(#{@value})"
+        else
+          @value
+        end
       end
     end
   end

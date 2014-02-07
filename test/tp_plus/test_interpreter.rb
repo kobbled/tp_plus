@@ -1119,4 +1119,9 @@ P[2:"test2"]{
     parse %(FOO := 0.5\nwait_for(FOO,'s'))
     assert_prog "WAIT .50(sec) ;\n"
   end
+
+  def test_negative_numbers_have_parens
+    parse %(foo := R[1]\njump_to @end if foo > -1\njump_to @end if foo > -5.3\n@end)
+    assert_prog "IF R[1:foo]>(-1),JMP LBL[100] ;\nIF R[1:foo]>(-5.3),JMP LBL[100] ;\nLBL[100:end] ;\n"
+  end
 end

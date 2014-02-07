@@ -10,10 +10,16 @@ module TPPlus
       end
 
       def eval(context,options={})
-        if options[:as_string]
+        val = if options[:as_string]
           ("%.2f" % @value).sub(/^0/,'')
         else
           @value
+        end
+
+        if @value < 0
+          "(#{val})"
+        else
+          val
         end
       end
     end
