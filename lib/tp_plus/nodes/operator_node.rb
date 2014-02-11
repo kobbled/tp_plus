@@ -60,6 +60,8 @@ module TPPlus
             " AND "
           when "||"
             " OR "
+          when "%"
+            " MOD "
           else
             "#{@string}"
           end

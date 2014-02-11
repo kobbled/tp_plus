@@ -1124,4 +1124,9 @@ P[2:"test2"]{
     parse %(foo := R[1]\njump_to @end if foo > -1\njump_to @end if foo > -5.3\n@end)
     assert_prog "IF R[1:foo]>(-1),JMP LBL[100] ;\nIF R[1:foo]>(-5.3),JMP LBL[100] ;\nLBL[100:end] ;\n"
   end
+
+  def test_modulus
+    parse %(foo := R[1]\nfoo = 5 % 2)
+    assert_prog "R[1:foo]=5 MOD 2 ;\n"
+  end
 end
