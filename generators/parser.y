@@ -141,6 +141,11 @@ rule
   arg
     : number
     | var
+    | string
+    ;
+
+  string
+    : STRING                           { result = StringNode.new(val[0]) }
     ;
 
   io_method

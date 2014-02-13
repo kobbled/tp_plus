@@ -1144,4 +1144,9 @@ P[2:"test2"]{
     parse %(foo := SR[1]\nbar := SR[2]\nfoo = bar)
     assert_prog "SR[1:foo]=SR[2:bar] ;\n"
   end
+
+  def test_string_argument
+    parse %(foo('bar'))
+    assert_prog "CALL FOO('bar') ;\n"
+  end
 end
