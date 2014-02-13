@@ -1139,4 +1139,9 @@ P[2:"test2"]{
     parse %(foo := DO[1]\nbar := DI[1]\nfoo = bar)
     assert_prog "DO[1:foo]=(DI[1:bar]) ;\n"
   end
+
+  def test_string_register_definition
+    parse %(foo := SR[1]\nbar := SR[2]\nfoo = bar)
+    assert_prog "SR[1:foo]=SR[2:bar] ;\n"
+  end
 end

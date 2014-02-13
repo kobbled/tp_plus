@@ -420,6 +420,12 @@ rule
     | argument
     | timer
     | ualm
+    | sreg
+    ;
+
+
+  sreg
+    : SREG '[' DIGIT ']'               { result = StringRegisterNode.new(val[2].to_i) }
     ;
 
   ualm
