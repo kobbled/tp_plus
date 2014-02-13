@@ -9,7 +9,7 @@ module TPPlus
       end
 
       def requires_mixed_logic?(context)
-        @type == "F" ? true : false
+        ["F","SO","SI","DI"].include?(@type) ? true : false
       end
 
       def result

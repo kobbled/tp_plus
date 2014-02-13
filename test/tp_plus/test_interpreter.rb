@@ -1129,4 +1129,14 @@ P[2:"test2"]{
     parse %(foo := R[1]\nfoo = 5 % 2)
     assert_prog "R[1:foo]=5 MOD 2 ;\n"
   end
+
+    def test_assignment_to_sop
+    parse %(foo := DO[1]\nbar := SO[1]\nfoo = bar)
+    assert_prog "DO[1:foo]=(SO[1:bar]) ;\n"
+  end
+
+  def test_assignment_to_di
+    parse %(foo := DO[1]\nbar := DI[1]\nfoo = bar)
+    assert_prog "DO[1:foo]=(DI[1:bar]) ;\n"
+  end
 end
