@@ -1078,6 +1078,12 @@ P[2:"test2"]{
     assert @interpreter.header_data[:ignore_pause]
   end
 
+  def test_tp_subtype
+    parse "TP_SUBTYPE = 'macro'"
+    assert_prog ""
+    assert_equal :macro, @interpreter.header_data[:subtype]
+  end
+
   def test_tp_comment
     parse %(TP_COMMENT = "foo")
     assert_prog ""

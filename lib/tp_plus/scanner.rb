@@ -177,6 +177,9 @@ class TPPlus::Scanner < Racc::Parser
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)TP_GROUPMASK(?=[\W]+|\A|\z|@)/i))
          action { [:TP_HEADER, text] }
 
+      when (text = @ss.scan(/(?=[\W]+|\A|\z|@)TP_SUBTYPE(?=[\W]+|\A|\z|@)/i))
+         action { [:TP_HEADER, text] }
+
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)set_uframe(?=[\W]+|\A|\z|@)/i))
          action { [:FANUC_SET, text] }
 

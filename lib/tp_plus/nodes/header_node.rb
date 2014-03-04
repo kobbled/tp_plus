@@ -14,6 +14,8 @@ module TPPlus
           context.header_data[:comment] = @value
         when "TP_GROUPMASK"
           context.header_data[:group_mask] = @value
+        when "TP_SUBTYPE"
+          context.header_data[:subtype] = @value.to_sym
         else
           raise "Unsupported TP Header value (#{@type})"
         end

@@ -71,6 +71,7 @@ rule
          {nw}TP_IGNORE_PAUSE{nw}    { [:TP_HEADER, text] }
          {nw}TP_COMMENT{nw}         { [:TP_HEADER, text] }
          {nw}TP_GROUPMASK{nw}       { [:TP_HEADER, text] }
+         {nw}TP_SUBTYPE{nw}         { [:TP_HEADER, text] }
 
          {nw}set_uframe{nw}         { [:FANUC_SET, text] }
          {nw}set_skip_condition{nw} { [:FANUC_SET, text] }
