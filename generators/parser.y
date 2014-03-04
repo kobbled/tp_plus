@@ -10,7 +10,7 @@ token IF ELSE END UNLESS FOR IN WHILE
 token WAIT_FOR WAIT_UNTIL TIMEOUT AFTER
 token FANUC_USE FANUC_SET NAMESPACE
 token CASE WHEN INDIRECT POSITION
-token EVAL TIMER TIMER_METHOD RAISE
+token EVAL TIMER TIMER_METHOD RAISE ABORT
 token POSITION_DATA TRUE_FALSE RUN TP_HEADER PAUSE
 
 prechigh
@@ -70,6 +70,7 @@ rule
     | raise
     | tp_header_definition
     | PAUSE                           { result = PauseNode.new }
+    | ABORT                           { result = AbortNode.new }
     ;
 
   tp_header_definition

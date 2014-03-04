@@ -79,6 +79,7 @@ rule
          {nw}use_utool{nw}          { [:FANUC_USE, text] }
 
 
+         {nw}abort{nw}              { [:ABORT, text] }
          {nw}after{nw}              { [:AFTER, text] }
          {nw}at{nw}                 { [:AT, text] }
          {nw}case{nw}               { [:CASE, text] }

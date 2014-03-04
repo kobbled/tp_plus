@@ -192,6 +192,9 @@ class TPPlus::Scanner < Racc::Parser
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)use_utool(?=[\W]+|\A|\z|@)/i))
          action { [:FANUC_USE, text] }
 
+      when (text = @ss.scan(/(?=[\W]+|\A|\z|@)abort(?=[\W]+|\A|\z|@)/i))
+         action { [:ABORT, text] }
+
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)after(?=[\W]+|\A|\z|@)/i))
          action { [:AFTER, text] }
 

@@ -1154,4 +1154,9 @@ P[2:"test2"]{
     parse %(pause)
     assert_prog "PAUSE ;\n"
   end
+
+  def test_abort
+    parse %(abort)
+    assert_prog "ABORT ;\n"
+  end
 end

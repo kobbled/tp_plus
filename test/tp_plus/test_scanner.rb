@@ -507,4 +507,9 @@ class TestScanner < Test::Unit::TestCase
      @scanner.scan_setup "pause"
      assert_token :PAUSE, "pause"
    end
+
+   def test_abort
+     @scanner.scan_setup "abort"
+     assert_token :ABORT, "abort"
+   end
 end
