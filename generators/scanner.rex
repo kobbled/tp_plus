@@ -95,6 +95,7 @@ rule
          {nw}linear_move{nw}        { [:MOVE, text] }
          {nw}namespace{nw}          { [:NAMESPACE, text] }
          {nw}offset{nw}             { [:OFFSET, text] }
+         {nw}pause{nw}              { [:PAUSE, text] }
          {nw}position_data{nw}      { [:POSITION_DATA, text] }
          {nw}pulse{nw}              { [:IO_METHOD, text] }
          {nw}raise{nw}              { [:RAISE, text] }

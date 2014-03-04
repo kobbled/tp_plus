@@ -240,6 +240,9 @@ class TPPlus::Scanner < Racc::Parser
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)offset(?=[\W]+|\A|\z|@)/i))
          action { [:OFFSET, text] }
 
+      when (text = @ss.scan(/(?=[\W]+|\A|\z|@)pause(?=[\W]+|\A|\z|@)/i))
+         action { [:PAUSE, text] }
+
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)position_data(?=[\W]+|\A|\z|@)/i))
          action { [:POSITION_DATA, text] }
 

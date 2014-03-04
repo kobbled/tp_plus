@@ -502,4 +502,9 @@ class TestScanner < Test::Unit::TestCase
      @scanner.scan_setup "vision_offset"
      assert_token :OFFSET, "vision_offset"
    end
+
+   def test_pause
+     @scanner.scan_setup "pause"
+     assert_token :PAUSE, "pause"
+   end
 end

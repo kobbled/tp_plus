@@ -1149,4 +1149,9 @@ P[2:"test2"]{
     parse %(foo('bar'))
     assert_prog "CALL FOO('bar') ;\n"
   end
+
+  def test_pause
+    parse %(pause)
+    assert_prog "PAUSE ;\n"
+  end
 end
