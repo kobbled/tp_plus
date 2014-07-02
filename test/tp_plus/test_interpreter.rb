@@ -1078,6 +1078,12 @@ P[2:"test2"]{
     assert @interpreter.header_data[:ignore_pause]
   end
 
+  def test_tp_subtype
+    parse "TP_SUBTYPE = 'macro'"
+    assert_prog ""
+    assert_equal :macro, @interpreter.header_data[:subtype]
+  end
+
   def test_tp_comment
     parse %(TP_COMMENT = "foo")
     assert_prog ""
@@ -1148,5 +1154,15 @@ P[2:"test2"]{
   def test_string_argument
     parse %(foo('bar'))
     assert_prog "CALL FOO('bar') ;\n"
+  end
+
+  def test_pause
+    parse %(pause)
+    assert_prog "PAUSE ;\n"
+  end
+
+  def test_abort
+    parse %(abort)
+    assert_prog "ABORT ;\n"
   end
 end

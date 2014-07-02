@@ -174,6 +174,9 @@ class TPPlus::Scanner < Racc::Parser
       when (text = @ss.scan(/\bTP_GROUPMASK\b/i))
          action { [:TP_HEADER, text] }
 
+      when (text = @ss.scan(/\bTP_SUBTYPE\b/i))
+         action { [:TP_HEADER, text] }
+
       when (text = @ss.scan(/\bset_uframe\b/i))
          action { [:FANUC_SET, text] }
 
@@ -188,6 +191,9 @@ class TPPlus::Scanner < Racc::Parser
 
       when (text = @ss.scan(/\buse_utool\b/i))
          action { [:FANUC_USE, text] }
+
+      when (text = @ss.scan(/\babort\b/i))
+         action { [:ABORT, text] }
 
       when (text = @ss.scan(/\bafter\b/i))
          action { [:AFTER, text] }
@@ -236,6 +242,9 @@ class TPPlus::Scanner < Racc::Parser
 
       when (text = @ss.scan(/\boffset\b/i))
          action { [:OFFSET, text] }
+
+      when (text = @ss.scan(/\bpause\b/i))
+         action { [:PAUSE, text] }
 
       when (text = @ss.scan(/\bposition_data\b/i))
          action { [:POSITION_DATA, text] }

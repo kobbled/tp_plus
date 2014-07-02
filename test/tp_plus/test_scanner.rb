@@ -493,6 +493,11 @@ class TestScanner < Test::Unit::TestCase
      assert_token :TP_HEADER, "TP_GROUPMASK"
    end
 
+   def test_tp_subtype
+     @scanner.scan_setup "TP_SUBTYPE"
+     assert_token :TP_HEADER, "TP_SUBTYPE"
+   end
+
    def test_tool_offset
      @scanner.scan_setup "tool_offset to toff"
      assert_token :OFFSET, "tool_offset"
@@ -503,5 +508,15 @@ class TestScanner < Test::Unit::TestCase
    def test_vision_offset
      @scanner.scan_setup "vision_offset"
      assert_token :OFFSET, "vision_offset"
+   end
+
+   def test_pause
+     @scanner.scan_setup "pause"
+     assert_token :PAUSE, "pause"
+   end
+
+   def test_abort
+     @scanner.scan_setup "abort"
+     assert_token :ABORT, "abort"
    end
 end

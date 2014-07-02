@@ -72,6 +72,7 @@ rule
          {nw}TP_IGNORE_PAUSE{nw}    { [:TP_HEADER, text] }
          {nw}TP_COMMENT{nw}         { [:TP_HEADER, text] }
          {nw}TP_GROUPMASK{nw}       { [:TP_HEADER, text] }
+         {nw}TP_SUBTYPE{nw}         { [:TP_HEADER, text] }
 
          {nw}set_uframe{nw}         { [:FANUC_SET, text] }
          {nw}set_skip_condition{nw} { [:FANUC_SET, text] }
@@ -80,6 +81,7 @@ rule
          {nw}use_utool{nw}          { [:FANUC_USE, text] }
 
 
+         {nw}abort{nw}              { [:ABORT, text] }
          {nw}after{nw}              { [:AFTER, text] }
          {nw}at{nw}                 { [:AT, text] }
          {nw}case{nw}               { [:CASE, text] }
@@ -96,6 +98,7 @@ rule
          {nw}linear_move{nw}        { [:MOVE, text] }
          {nw}namespace{nw}          { [:NAMESPACE, text] }
          {nw}offset{nw}             { [:OFFSET, text] }
+         {nw}pause{nw}              { [:PAUSE, text] }
          {nw}position_data{nw}      { [:POSITION_DATA, text] }
          {nw}pulse{nw}              { [:IO_METHOD, text] }
          {nw}raise{nw}              { [:RAISE, text] }

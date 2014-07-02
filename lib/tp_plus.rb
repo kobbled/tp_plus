@@ -1,7 +1,7 @@
 module TPPlus
 end
 
-
+require 'tp_plus/nodes/abort_node'
 require 'tp_plus/nodes/argument_node'
 require 'tp_plus/nodes/assignment_node'
 require 'tp_plus/nodes/call_node'
@@ -27,6 +27,7 @@ require 'tp_plus/nodes/namespaced_var_node'
 require 'tp_plus/nodes/numreg_node'
 require 'tp_plus/nodes/offset_node'
 require 'tp_plus/nodes/operator_node'
+require 'tp_plus/nodes/pause_node'
 require 'tp_plus/nodes/position_node'
 require 'tp_plus/nodes/position_data_node'
 require 'tp_plus/nodes/posreg_node'
