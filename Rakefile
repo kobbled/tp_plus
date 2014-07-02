@@ -10,7 +10,6 @@ end
 
 task compile: ["compile:parser","compile:scanner"]
 
-
 require 'rake/testtask'
 
 Rake::TestTask.new do |t|
