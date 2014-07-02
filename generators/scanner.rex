@@ -64,8 +64,8 @@ rule
          \|\|                       { [:OR, text] }
          \%                         { [:MOD, text] }
 
-         \@                         { @state = :label; [:AT_SYM, text] }
-  :label [\w_0-9]+{nw}              { @state = nil; [:WORD, text] }
+         \@                         { @state = :LABEL; [:AT_SYM, text] }
+  :LABEL [\w_0-9]+{nw}              { @state = nil; [:WORD, text] }
 
 
          {nw}TP_IGNORE_PAUSE{nw}    { [:TP_HEADER, text] }

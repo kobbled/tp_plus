@@ -45,7 +45,7 @@ class TPPlus::Scanner < Racc::Parser
 
   def next_token
     return if @ss.eos?
-
+    
     # skips empty actions
     until token = _next_token or @ss.eos?; end
     token
@@ -55,7 +55,7 @@ class TPPlus::Scanner < Racc::Parser
     text = @ss.peek(1)
     @lineno  +=  1  if text == "\n"
     token = case @state
-    when nil, :label
+    when nil
       case
       when (text = @ss.scan(/\#.*(?=\n?$)/i))
          action { [:COMMENT, text] }
@@ -163,10 +163,7 @@ class TPPlus::Scanner < Racc::Parser
          action { [:MOD, text] }
 
       when (text = @ss.scan(/\@/i))
-         action { @state = :label; [:AT_SYM, text] }
-
-      when((state == :label) and (text = @ss.scan(/[\w_0-9]+(?=[\W]+|\A|\z|@)/i)))
-         action { @state = nil; [:WORD, text] }
+         action { @state = :LABEL; [:AT_SYM, text] }
 
       when (text = @ss.scan(/(?=[\W]+|\A|\z|@)TP_IGNORE_PAUSE(?=[\W]+|\A|\z|@)/i))
          action { [:TP_HEADER, text] }
@@ -339,7 +336,16 @@ class TPPlus::Scanner < Racc::Parser
       when (text = @ss.scan(/./i))
          action { [text, text] }
 
-      
+      else
+        text = @ss.string[@ss.pos .. -1]
+        raise  ScanError, "can not match: '" + text + "'"
+      end  # if
+
+    when :LABEL
+      case
+      when (text = @ss.scan(/[\w_0-9]+(?=[\W]+|\A|\z|@)/i))
+         action { @state = nil; [:WORD, text] }
+
       else
         text = @ss.string[@ss.pos .. -1]
         raise  ScanError, "can not match: '" + text + "'"
