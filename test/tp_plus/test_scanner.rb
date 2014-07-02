@@ -494,8 +494,10 @@ class TestScanner < Test::Unit::TestCase
    end
 
    def test_tool_offset
-     @scanner.scan_setup "tool_offset"
+     @scanner.scan_setup "tool_offset to toff"
      assert_token :OFFSET, "tool_offset"
+     assert_token :TO, "to"
+     assert_token :WORD, "toff"
    end
 
    def test_vision_offset

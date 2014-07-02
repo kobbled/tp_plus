@@ -7,7 +7,8 @@ macro
          blank                      [\ \t]+
          nl                         \n|\r\n|\r|\f
          w                          [\s]*
-         nw                         (?=[\W]+|\A|\z|@)
+         // nw                         (?=[\W]+|\A|\z|@)
+	 nw                         \b
          nonascii                   [^\0-\177]
          num                        -?([0-9]+|[0-9]*\.[0-9]+)
          unicode                    \\[0-9A-Fa-f]{1,6}(\r\n|[\s])?
