@@ -22,6 +22,10 @@ module TPPlus
         "(" + @args.map {|a| a.eval(context) }.join(",") + ")"
       end
 
+      def can_be_inlined?
+        true
+      end
+
       def eval(context,options={})
         "#{async? ? "RUN" : "CALL"} #{@program_name.upcase}#{args_string(context)}"
       end
