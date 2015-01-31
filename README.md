@@ -57,3 +57,9 @@ example_1.ls
       1:   ;
       1:  L PR[1:home] 2000mm/sec CNT0 ;
     /END
+
+
+License
+-------
+
+TP+ is released under the [MIT License](http://www.opensource.org/licenses/MIT).
