@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.name                      = 'tp_plus'
   spec.description               = %q{TP+}
   spec.summary                   = spec.description
-  spec.homepage                  = 'http://github.com/unreal/tp_plus/'
+  spec.homepage                  = 'http://github.com/onerobotics/tp_plus/'
   spec.licenses                  = ['MIT']
   spec.version                   = TPPlus::VERSION
 
