@@ -58,6 +58,13 @@ example_1.ls
       1:  L PR[1:home] 2000mm/sec CNT0 ;
     /END
 
+Usage
+-----
+
+1. `gem install tp_plus`
+2. `tpp filename.tpp > filename.ls`
+
+See `tpp --help` for options.
 
 License
 -------

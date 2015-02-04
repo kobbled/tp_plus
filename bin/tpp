@@ -1,0 +1,73 @@
+#!/usr/bin/env ruby
+require 'tp_plus'
+require 'optparse'
+
+options = {}
+OptionParser.new do |opts|
+  opts.banner = "Usage: tpp [options] filename"
+
+  opts.on("-e", "--environment env_file.tpp", "Require an environment file before parsing files") do |e|
+    options[:environment] = e
+  end
+
+  opts.on_tail("-h", "--help", "Show this message") do
+    puts opts
+    exit
+  end
+end.parse!
+
+def contents(filename)
+  if !File.exist?(filename)
+    puts "File (#{filename}) does not exist"
+    exit
+  end
+  f = File.open(filename,'rb')
+  src = f.read
+  f.close
+  return src
+end
+
+scanner = TPPlus::Scanner.new
+parser = TPPlus::Parser.new(scanner)
+interpreter = parser.interpreter
+if options[:environment]
+  interpreter.load_environment(contents(options[:environment]))
+end
+
+if ARGV.length != 1
+  puts "Must provide filename argument. See tpp --help for details"
+  exit
+end
+
+src = contents(ARGV[0])
+
+scanner.scan_setup(src)
+parser.parse
+
+lines = interpreter.eval
+
+tpp_filename = File.basename(ARGV[0],".*")
+output = %(/PROG #{tpp_filename.upcase}
+/ATTR
+COMMENT = "#{interpreter.header_data[:comment] || tpp_filename.upcase}";
+TCD:  STACK_SIZE	= 0,
+      TASK_PRIORITY	= 50,
+      TIME_SLICE	= 0,
+      BUSY_LAMP_OFF	= 0,
+      ABORT_REQUEST	= 0,
+      PAUSE_REQUEST	= #{interpreter.header_data[:ignore_pause] ? "7" : "0"};
+DEFAULT_GROUP = #{interpreter.header_data[:group_mask] || "1,*,*,*,*"};
+/MN\n)
+
+lines.each_line do |line|
+  output += " : " + line
+end
+
+if interpreter.pos_section != ""
+  output += "/POS\n"
+  output += interpreter.pos_section
+end
+
+output += %(/END\n)
+
+print output
