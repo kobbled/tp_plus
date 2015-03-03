@@ -1,4 +1,4 @@
-require 'test_helper'
+require_relative '../test_helper'
 
 class TestInterpreter < Test::Unit::TestCase
   include TPPlus::Nodes
@@ -401,12 +401,12 @@ class TestInterpreter < Test::Unit::TestCase
     assert_prog "PR[1,1:foo]=5 ;\nPR[1,2:foo]=6 ;\nPR[1,3:foo]=7 ;\nPR[1,4:foo]=8 ;\nPR[1,5:foo]=9 ;\nPR[1,6:foo]=10 ;\n"
   end
 
-  def test_pr_with_invalid_component_raises_error
-    parse("foo := PR[1]\nfoo.bar=5\n")
-    assert_raise(RuntimeError) do
-      assert_prog ""
-    end
-  end
+  #def test_pr_with_invalid_component_raises_error
+  #  parse("foo := PR[1]\nfoo.bar=5\n")
+  #  assert_raise(RuntimeError) do
+  #  assert_prog ""
+  #  end
+  #end
 
   def test_simple_case_statement
     parse("foo := R[1]\ncase foo\nwhen 1\njump_to @asdf\nend\n@asdf")
@@ -835,23 +835,25 @@ Foo::Bar::baz = 2)
       {
         'id': 1,
         'comment': "test",
-        'group': 1,
-        'uframe': 1,
-        'utool': 1,
-        'config': {
-          'flip': true,
-          'up': true,
-          'top': false,
-          'turn_counts': [-1,0,1]
-        },
-        'components': {
-          'x': -50.0,
-          'y': 0.0,
-          'z': 0.0,
-          'w': 0.0,
-          'p': 0.0,
-          'r': 0.0
-        }
+        'mask' : [{
+          'group': 1,
+          'uframe': 1,
+          'utool': 1,
+          'config': {
+            'flip': true,
+            'up': true,
+            'top': false,
+            'turn_counts': [-1,0,1]
+          },
+          'components': {
+            'x': -50.0,
+            'y': 0.0,
+            'z': 0.0,
+            'w': 0.0,
+            'p': 0.0,
+            'r': 0.0
+          }
+        }]
       }
     ]
   }
@@ -867,23 +869,25 @@ end)
       {
         'id': 1,
         'comment': "test",
-        'group': 1,
-        'uframe': 1,
-        'utool': 1,
-        'config': {
-          'flip': true,
-          'up': true,
-          'top': false,
-          'turn_counts': [0,0,0]
-        },
-        'components': {
-          'x': 0.0,
-          'y': 0.0,
-          'z': 0.0,
-          'w': 0.0,
-          'p': 0.0,
-          'r': 0.0
-        }
+        'mask': [{
+          'group': 1,
+          'uframe': 1,
+          'utool': 1,
+          'config': {
+            'flip': true,
+            'up': true,
+            'top': false,
+            'turn_counts': [0,0,0]
+          },
+          'components': {
+            'x': 0.0,
+            'y': 0.0,
+            'z': 0.0,
+            'w': 0.0,
+            'p': 0.0,
+            'r': 0.0
+          }
+        }]
       }
     ]
   }
@@ -911,23 +915,25 @@ end)
       {
         'id': 1,
         'comment': "test",
-        'group': 1,
-        'uframe': 1,
-        'utool': 1,
-        'config': {
-          'flip': true,
-          'up': true,
-          'top': true,
-          'turn_counts': [0,0,0]
-        },
-        'components': {
-          'x': 0.0,
-          'y': 0.0,
-          'z': 0.0,
-          'w': 0.0,
-          'p': 0.0,
-          'r': 0.0
-        }
+        'mask' : [{
+          'group': 1,
+          'uframe': 1,
+          'utool': 1,
+          'config': {
+            'flip': true,
+            'up': true,
+            'top': true,
+            'turn_counts': [0,0,0]
+          },
+          'components': {
+            'x': 0.0,
+            'y': 0.0,
+            'z': 0.0,
+            'w': 0.0,
+            'p': 0.0,
+            'r': 0.0
+          }
+        }]
       }
     ]
   }
@@ -949,44 +955,48 @@ end)
       {
         'id': 1,
         'comment': "test",
-        'group': 1,
-        'uframe': 1,
-        'utool': 1,
-        'config': {
-          'flip': true,
-          'up': true,
-          'top': true,
-          'turn_counts': [0,0,0]
-        },
-        'components': {
-          'x': 0.0,
-          'y': 0.0,
-          'z': 0.0,
-          'w': 0.0,
-          'p': 0.0,
-          'r': 0.0
-        }
+        'mask': [{
+          'group': 1,
+          'uframe': 1,
+          'utool': 1,
+          'config': {
+            'flip': true,
+            'up': true,
+            'top': true,
+            'turn_counts': [0,0,0]
+          },
+          'components': {
+            'x': 0.0,
+            'y': 0.0,
+            'z': 0.0,
+            'w': 0.0,
+            'p': 0.0,
+            'r': 0.0
+          }
+        }]
       },
       {
         'id': 2,
         'comment': "test2",
-        'group': 1,
-        'uframe': 1,
-        'utool': 1,
-        'config': {
-          'flip': true,
-          'up': true,
-          'top': true,
-          'turn_counts': [0,0,0]
-        },
-        'components': {
-          'x': 0.0,
-          'y': 0.0,
-          'z': 0.0,
-          'w': 0.0,
-          'p': 0.0,
-          'r': 0.0
-        }
+        'mask': [{
+          'group': 1,
+          'uframe': 1,
+          'utool': 1,
+          'config': {
+            'flip': true,
+            'up': true,
+            'top': true,
+            'turn_counts': [0,0,0]
+          },
+          'components': {
+            'x': 0.0,
+            'y': 0.0,
+            'z': 0.0,
+            'w': 0.0,
+            'p': 0.0,
+            'r': 0.0
+          }
+        }]
       }
     ]
   }
@@ -1186,9 +1196,9 @@ P[2:"test2"]{
     assert_prog "IF R[1:foo]<>R[2:foo2],JMP LBL[100] ;\nR[1:foo]=1 ;\nR[2:foo2]=2 ;\nLBL[100] ;\n"
   end
 
-  def test_fine_termination
-    parse("foo := PR[1]\nlinear_move.to(foo).at(2000, 'mm/s').term(-1)")
-    assert_prog "L PR[1:foo] 2000mm/sec FINE ;\n"
+  def test_if_statement_multiple_arguments
+    parse("foo := R[1]\nfoo2 := R[2]\nif foo == 1 && foo2 == 2\nfoo = 1\nfoo2 = 2\nend")
+    assert_prog "IF (R[1:foo]<>1 OR R[2:foo2]<>2),JMP LBL[100] ;\nR[1:foo]=1 ;\nR[2:foo2]=2 ;\nLBL[100] ;\n"
   end
 
   def test_parse_error_on_invalid_term
@@ -1206,5 +1216,94 @@ P[2:"test2"]{
     parse("foo := PR[1]\nTERM := 100\nlinear_move.to(foo).at(2000, 'mm/s').term(TERM)")
     assert_prog "L PR[1:foo] 2000mm/sec CNT100 ;\n"
   end
-end
 
+  def test_pr_components_groups
+    parse("foo := PR[1]\nfoo.group(1).y=5\n")
+    assert_prog "PR[GP1:1,2:foo]=5 ;\n"
+  end
+
+  def test_position_data_with_mask
+    parse %(position_data
+{
+  'positions' : [
+    {
+      'id' : 1,
+      'mask' :  [{
+        'group' : 1,
+        'uframe' : 5,
+        'utool' : 2,
+        'config' : {
+            'flip' : false,
+            'up'   : true,
+            'top'  : true,
+            'turn_counts' : [0,0,0]
+            },
+        'components' : {
+            'x' : -.590,
+            'y' : -29.400,
+            'z' : 1304.471,
+            'w' : 78.512,
+            'p' : 89.786,
+            'r' : -11.595
+            }
+        },
+        {
+        'group' : 2,
+        'uframe' : 5,
+        'utool' : 2,
+        'components' : {
+            'J1' : 0.00
+            }
+        }]
+    }
+  ]
+}
+end)
+    assert_prog ""
+    #output = @interpreter.pos_section
+    #output = output
+    assert_equal 1, @interpreter.position_data[:positions].length
+  end
+
+  def test_conditional_equals_minus_one
+    parse("foo := R[1]\nfoo2 := R[2]\nif foo == (foo2-1)\nfoo = 1\nfoo2 = 2\nend")
+    assert_prog "IF (R[1:foo]<>(R[2:foo2]-1)),JMP LBL[100] ;\nR[1:foo]=1 ;\nR[2:foo2]=2 ;\nLBL[100] ;\n"
+  end
+
+  def test_conditional_equals_minus_and
+    parse("foo := R[1]\nfoo2 := R[2]\nif foo >= (foo2-1) && foo <= (foo2+1) \nfoo = 1\nfoo2 = 2\nend")
+    assert_prog "IF (R[1:foo]<(R[2:foo2]-1) OR R[1:foo]>(R[2:foo2]+1)),JMP LBL[100] ;\nR[1:foo]=1 ;\nR[2:foo2]=2 ;\nLBL[100] ;\n"
+  end
+
+  def test_inline_conditional_equals_minus_and
+    parse("foo := R[1]\nfoo2 := R[2]\nif foo >= (foo2-1) && foo <= (foo2+1) \nfoo2 = 2\nend")
+    assert_prog "IF (R[1:foo]>=(R[2:foo2]-1) AND R[1:foo]<=(R[2:foo2]+1)),R[2:foo2]=(2) ;\n"
+  end
+
+  def test_address
+    parse("a := AR[1]
+b := DI[2]
+c := R[3]
+d := P[4]
+e := PR[5]
+f := SR[6]
+g := TIMER[7]
+h := UALM[8]
+i := VR[9]
+TEST(&a,&b,&c,&d,&e,&f,&g,&h,&i)")
+    assert_prog "CALL TEST(1,2,3,4,5,6,7,8,9) ;\n"
+  end
+
+  def test_address_assignment
+    parse("foo := R[1]
+foo = &foo")
+    assert_prog "R[1:foo]=1 ;\n"
+  end
+
+  def test_invalid_address_throws_error
+    parse("foo := R[1]\nfoo = &bar")
+    assert_raise(RuntimeError) do
+      assert_prog ""
+    end
+  end
+end

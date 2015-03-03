@@ -4,7 +4,7 @@ module TPPlus
       attr_reader :identifier
       def initialize(identifier, method)
         @identifier = identifier
-        @method = method
+        @method = method || {}
       end
 
       def requires_mixed_logic?(context)
@@ -16,7 +16,7 @@ module TPPlus
       end
 
       def eval(context,options={})
-        node(context).eval(context,options.merge(method:@method))
+        node(context).eval(context,options.merge(@method))
       end
     end
   end

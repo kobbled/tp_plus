@@ -51,6 +51,8 @@ module TPPlus
             " OR "
           when "DIV"
             " MOD "
+          else
+            "#{@string}"
           end
         else
           case @string

@@ -1,4 +1,4 @@
-require 'test_helper'
+require_relative '../test_helper'
 
 class TestScanner < Test::Unit::TestCase
   def setup
@@ -560,4 +560,15 @@ class TestScanner < Test::Unit::TestCase
        assert_tok pair[1]
      end
    end
+
+  def test_address
+    @scanner.scan_setup "&foo"
+    assert_token :ADDRESS, "foo"
+  end
+
+  def test_groups
+    @scanner.scan_setup "gp3"
+    assert_token :GROUP, "gp3"
+  end
+
 end

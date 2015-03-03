@@ -1,7 +1,7 @@
 class TPPlus::Parser
 token ASSIGN AT_SYM COMMENT JUMP IO_METHOD INPUT OUTPUT
 token NUMREG POSREG VREG SREG TIME_SEGMENT ARG UALM
-token MOVE DOT TO AT TERM OFFSET SKIP
+token MOVE DOT TO AT TERM OFFSET SKIP GROUP
 token SEMICOLON NEWLINE STRING
 token REAL DIGIT WORD EQUAL
 token EEQUAL NOTEQUAL GTE LTE LT GT BANG
@@ -13,7 +13,7 @@ token CASE WHEN INDIRECT POSITION
 token EVAL TIMER TIMER_METHOD RAISE ABORT
 token POSITION_DATA TRUE_FALSE RUN TP_HEADER PAUSE
 token LPAREN RPAREN COLON COMMA LBRACK RBRACK LBRACE RBRACE
-token LABEL
+token LABEL ADDRESS
 token false
 
 prechigh
@@ -64,6 +64,7 @@ rule
     #| jump
     #| io_method
     | label_definition
+    | address
     | conditional
     | inline_conditional
     | forloop
@@ -162,6 +163,7 @@ rule
     : number
     | var
     | string
+    | address
     ;
 
   string
@@ -345,21 +347,56 @@ rule
     ;
 
   var
+    : var_without_namespaces
+    | var_with_namespaces
+    ;
+
+  var_without_namespaces
     : WORD                             { result = VarNode.new(val[0]) }
-    | WORD DOT WORD                    { result = VarMethodNode.new(val[0],val[2]) }
-    # introduces 2 reduce/reduce conflicts and 1 useless rule
-    | namespaces var           { result = NamespacedVarNode.new(val[0],val[1]) }
+    | WORD var_method_modifiers        { result = VarMethodNode.new(val[0],val[1]) }
+    ;
+
+  var_with_namespaces
+    : namespaces var_without_namespaces
+                                       { result = NamespacedVarNode.new(val[0],val[1]) }
+    ;
+
+  var_method_modifiers
+    : var_method_modifier              { result = val[0] }
+    | var_method_modifiers var_method_modifier
+                                       { result = val[0].merge(val[1]) }
+    ;
+
+  var_method_modifier
+    : DOT swallow_newlines WORD        { result = { method: val[2] } }
+    | DOT swallow_newlines GROUP LPAREN integer RPAREN
+                                       { result = { group: val[4] } }
     ;
 
   namespaces
-    : WORD COLON COLON                     { result = val }
+    : ns                               { result = [val[0]] }
+    | namespaces ns                    { result = val[0] << val[1] }
+    ;
+
+  ns
+    : WORD COLON COLON                 { result = val[0] }
     ;
 
 
   expression
+    : unary_expression
+    | binary_expression
+    ;
+
+  unary_expression
     : factor                           { result = val[0] }
+    | address
     | BANG factor                      { result = ExpressionNode.new(val[1], "!", nil) }
-    | expression operator expression   { result = ExpressionNode.new(val[0], val[1], val[2]) }
+    ;
+
+  binary_expression
+    : expression operator expression
+                                       { result = ExpressionNode.new(val[0], val[1], val[2]) }
     ;
 
   operator
@@ -471,6 +508,10 @@ rule
 
   input
     : INPUT LBRACK DIGIT RBRACK              { result = IONode.new(val[0], val[2].to_i) }
+    ;
+
+  address
+    : ADDRESS                            { result = AddressNode.new(val[0]) }
     ;
 
   comment

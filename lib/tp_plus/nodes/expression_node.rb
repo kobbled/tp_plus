@@ -24,7 +24,8 @@ module TPPlus
       end
 
       def contains_expression?
-        [@left_op, @right_op].map {|op| op.is_a? ExpressionNode }.any?
+        [@left_op, @right_op].map {|op| op.is_a? ExpressionNode }.any? ||
+          [@left_op, @right_op].map { |op| op.is_a? ParenExpressionNode }.any?
       end
 
       def boolean_result?
@@ -34,12 +35,6 @@ module TPPlus
         else
           false
         end
-      end
-
-      def with_parens(string, context, options={})
-        return string unless options[:force_parens] || options[:as_condition] && requires_mixed_logic?(context)
-
-        "(#{string})"
       end
 
       def string_val(context, options={})
@@ -52,11 +47,13 @@ module TPPlus
             "#{@op.eval(context,options)}#{@left_op.eval(context)}"
           end
         else
-          if @op.boolean? && options[:opposite]
-            o = { opposite: true }
-            "#{@left_op.eval(context,o)}#{@op.eval(context,options)}#{@right_op.eval(context,o)}"
+          if @op.boolean?
+            # if operator is &&, || or !, we flip the operator and the operands
+            "#{@left_op.eval(context,options)}#{@op.eval(context, options)}#{@right_op.eval(context, options)}"
           else
-            "#{@left_op.eval(context)}#{@op.eval(context,options)}#{@right_op.eval(context)}"
+            # flip the operator if options[:opposite]
+            # flip the operands only if opposite and the operand is an expression
+            "#{@left_op.eval(context, opposite: (@left_op.is_a?(ExpressionNode) && options[:opposite]))}#{@op.eval(context, options)}#{@right_op.eval(context, opposite: (@right_op.is_a?(ExpressionNode) && options[:opposite]))}"
           end
         end
       end
@@ -64,7 +61,7 @@ module TPPlus
       def eval(context,options={})
         options[:force_parens] = true if grouped?
 
-        with_parens(string_val(context, options), context, options)
+        string_val(context, options)
       end
     end
   end

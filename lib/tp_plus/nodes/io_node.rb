@@ -2,6 +2,7 @@ module TPPlus
   module Nodes
     class IONode
       attr_accessor :comment
+      attr_reader :id
       def initialize(type, id)
         @type    = type
         @id      = id.to_i

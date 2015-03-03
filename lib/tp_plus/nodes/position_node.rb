@@ -2,6 +2,7 @@ module TPPlus
   module Nodes
     class PositionNode
       attr_accessor :comment
+      attr_reader :id
       def initialize(id)
         @id = id
         @comment = ""

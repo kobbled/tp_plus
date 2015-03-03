@@ -1,4 +1,4 @@
-require 'test_helper'
+require_relative '../test_helper'
 
 class TestParser < Test::Unit::TestCase
   include TPPlus::Nodes
@@ -481,4 +481,16 @@ end)
     parse "p := P[1]\nbar := PR[1]\nlinear_move.to(p).at(1000,'mm/s').term(0).tool_offset(bar)"
     assert_node_type MotionNode, last_node
   end
+
+  def test_parse_address
+    parse("foo := R[1]\n &foo")
+    assert_node_type AddressNode, last_node
+  end
+
+  def test_parse_address_as_argument
+    parse("foo := R[1]\n foo2 := R[5]\n foo3 := R[10]\n Func(&foo, &foo2, &foo3)")
+    l = last_node
+    assert_equal 3, l.args.length
+  end
+
 end

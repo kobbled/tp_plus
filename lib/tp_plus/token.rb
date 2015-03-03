@@ -10,6 +10,7 @@ module TPPlus
         "end" => :END,
         "eval" => :EVAL,
         "for" => :FOR,
+        "group" => :GROUP,
         "if" => :IF,
         "indirect" => :INDIRECT,
         "in" => :IN,

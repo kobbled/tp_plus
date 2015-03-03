@@ -14,13 +14,19 @@ module TPPlus
         @bottom_label ||= context.next_label
       end
 
+      def parens(s, context)
+        return s unless @condition_node.requires_mixed_logic?(context)
+
+        "(#{s})"
+      end
+
       def if_statement(context)
-        "IF #{condition(context)},JMP LBL[#{bottom_label(context)}] ;\n"
+        "IF #{parens(condition(context), context)},JMP LBL[#{bottom_label(context)}] ;\n"
       end
 
 
       def condition(context)
-        @condition_node.eval(context, opposite: true, as_condition: true)
+        @condition_node.eval(context, opposite: true)
       end
 
 
