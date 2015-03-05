@@ -588,6 +588,16 @@ LBL[101:ghjk] ;\n)
     assert_prog "IF (!F[1:foo]),JMP LBL[100] ;\n! foo is true ;\nLBL[100] ;\n"
   end
 
+  def test_opposite_with_boolean_and
+    parse "foo := F[1]\nbar := F[2]\nbaz := F[3]\nif foo && bar && baz\n#foo, bar and baz are true\nend"
+    assert_prog "IF (!F[1:foo] OR !F[2:bar] OR !F[3:baz]),JMP LBL[100] ;\n! foo, bar and baz are true ;\nLBL[100] ;\n"
+  end
+
+  def test_opposite_with_boolean_or
+    parse "foo := F[1]\nbar := F[2]\nbaz := F[3]\nif foo || bar || baz\n#foo or bar or baz is true\nend"
+    assert_prog "IF (!F[1:foo] AND !F[2:bar] AND !F[3:baz]),JMP LBL[100] ;\n! foo or bar or baz is true ;\nLBL[100] ;\n"
+  end
+
   def test_opposite_flag_in_simple_unless
     parse "foo := F[1]\nunless foo\n# foo is false\nend"
     assert_prog "IF (F[1:foo]),JMP LBL[100] ;\n! foo is false ;\nLBL[100] ;\n"

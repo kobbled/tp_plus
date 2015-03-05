@@ -48,7 +48,8 @@ module TPPlus
           end
         else
           if @op.boolean? && options[:opposite]
-            "!#{@left_op.eval(context)}#{@op.eval(context,options)}!#{@right_op.eval(context)}"
+	    o = { opposite: true }
+            "#{@left_op.eval(context,o)}#{@op.eval(context,options)}#{@right_op.eval(context,o)}"
           else
             "#{@left_op.eval(context)}#{@op.eval(context,options)}#{@right_op.eval(context)}"
           end
