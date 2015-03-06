@@ -48,9 +48,9 @@ example_1.ls
     /MN
       1:  R[1:foo] = 1 ;
       1:   ;
-      1:  LBL[1:loop] ;
+      1:  LBL[100:loop] ;
       1:  R[1:foo]=R[1:foo]+1 ;
-      1:  IF R[1:foo]<10,JMP LBL[1] ;
+      1:  IF R[1:foo]<10,JMP LBL[100] ;
       1:   ;
       1:  IF (R[1:foo]=5),DO[1:bar]=(ON) ;
       1:  DO[2:baz]=(!DO[2:baz]) ;
