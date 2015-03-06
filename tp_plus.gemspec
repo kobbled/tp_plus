@@ -4,7 +4,8 @@ require File.expand_path('../lib/tp_plus/version', __FILE__)
 Gem::Specification.new do |spec|
   spec.add_development_dependency 'rexical', '~> 1.0'
   spec.add_development_dependency 'racc', '~> 1.4'
-  spec.add_development_dependency 'test-unit', '~> 2.0'
+  spec.add_development_dependency 'test-unit', '~> 3.0'
+  spec.add_development_dependency 'rake', '~> 10.4'
 
   spec.authors                   = ["Jay Strybis"]
   spec.email                     = ['jay.strybis@gmail.com']
