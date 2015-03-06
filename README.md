@@ -24,19 +24,17 @@ Examples
 example_1.tpp
 
     foo  := R[1]
-
     bar  := DO[1]
     baz  := DO[2]
 
     home := PR[1]
-
 
     foo = 1
 
     @loop
       foo += 1
 
-      jump_to @foo if foo < 10
+      jump_to @loop if foo < 10
 
     turn_on bar if foo == 5
     toggle baz
