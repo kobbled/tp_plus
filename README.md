@@ -58,6 +58,8 @@ example_1.ls
       1:  L PR[1:home] 2000mm/sec CNT0 ;
     /END
 
+For a more extensive example and test environment, visit http://tp-plus.herokuapp.com/.
+
 Usage
 -----
 
