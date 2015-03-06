@@ -213,6 +213,20 @@ module TPPlus
         when "@"
           tok = :LABEL
           lit = self.scanLabel
+        when '('
+          tok = :LPAREN
+        when ')'
+          tok = :RPAREN
+        when ','
+          tok = :COMMA
+        when '['
+          tok = :LBRACK
+        when ']'
+          tok = :RBRACK
+        when '{'
+          tok = :LBRACE
+        when '}'
+          tok = :RBRACE
         when "\n"
           tok = :NEWLINE
         else

@@ -532,4 +532,22 @@ class TestScanner < Test::Unit::TestCase
      @scanner.scan_setup "abort"
      assert_token :ABORT, "abort"
    end
+
+   def test_punctuation
+     pairs = [
+       ['(', :LPAREN],
+       [')', :RPAREN],
+       ['[', :LBRACK],
+       [']', :RBRACK],
+       ['{', :LBRACE],
+       ['}', :RBRACE],
+       [',', :COMMA],
+       [':', :COLON]
+     ]
+
+     pairs.each do |pair|
+       @scanner.scan_setup pair[0]
+       assert_tok pair[1]
+     end
+   end
 end
