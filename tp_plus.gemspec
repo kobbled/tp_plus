@@ -2,6 +2,7 @@
 require File.expand_path('../lib/tp_plus/version', __FILE__)
 
 Gem::Specification.new do |spec|
+  spec.add_development_dependency 'benchmark-ips', '~> 2.1'
   spec.add_development_dependency 'rexical', '~> 1.0'
   spec.add_development_dependency 'racc', '~> 1.4'
   spec.add_development_dependency 'test-unit', '~> 3.0'
