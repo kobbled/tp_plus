@@ -57,6 +57,8 @@ require 'tp_plus/interpreter'
 require 'tp_plus/namespace'
 require 'tp_plus/parser'
 require 'tp_plus/scanner'
+require 'tp_plus/token'
+require 'tp_plus/new_scanner'
 require 'tp_plus/version'
 
 
