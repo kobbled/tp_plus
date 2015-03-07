@@ -4,7 +4,7 @@ class TestParser < Test::Unit::TestCase
   include TPPlus::Nodes
 
   def setup
-    @scanner = TPPlus::NewScanner.new
+    @scanner = TPPlus::Scanner.new
     @parser  = TPPlus::Parser.new @scanner
     @interpreter = @parser.interpreter
   end

@@ -2,7 +2,7 @@ require 'test_helper'
 
 class TestScanner < Test::Unit::TestCase
   def setup
-    @scanner = TPPlus::NewScanner.new
+    @scanner = TPPlus::Scanner.new
   end
 
   def assert_tok(token)
