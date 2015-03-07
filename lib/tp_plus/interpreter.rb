@@ -17,7 +17,7 @@ module TPPlus
     end
 
     def load_environment(string)
-      scanner = TPPlus::Scanner.new
+      scanner = TPPlus::NewScanner.new
       parser = TPPlus::Parser.new(scanner, self)
       scanner.scan_setup(string)
       parser.parse

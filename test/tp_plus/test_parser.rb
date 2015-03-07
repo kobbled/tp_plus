@@ -228,27 +228,27 @@ class TestParser < Test::Unit::TestCase
 
   def test_scans_simplest_case_statement
     parse("foo := R[1]\ncase foo\nwhen 1\njump_to @asdf\nend\n@asdf")
-    assert_node_type CaseNode, @interpreter.nodes[1]
+    assert_node_type CaseNode, @interpreter.nodes[2]
   end
 
   def test_scans_case_with_else
     parse("foo := R[1]\ncase foo\nwhen 1\njump_to @asdf\nelse\njump_to @ghjk\nend\n@asdf\n@ghjk")
-    assert_node_type CaseNode, @interpreter.nodes[1]
+    assert_node_type CaseNode, @interpreter.nodes[2]
   end
 
   def test_scans_two_cases
     parse("foo := R[1]\ncase foo\nwhen 1\njump_to @asdf\nwhen 2\njump_to @ghjk\nend\n@asdf\n@ghjk")
-    assert_node_type CaseNode, @interpreter.nodes[1]
+    assert_node_type CaseNode, @interpreter.nodes[2]
   end
 
   def test_case_can_use_a_var_as_a_condition
     parse("foo := R[1]\nbar := R[2]\ncase foo\nwhen bar\njump_to @asdf\nend\n@asdf")
-    assert_node_type CaseNode, @interpreter.nodes[2]
+    assert_node_type CaseNode, @interpreter.nodes[4]
   end
 
   def test_case_can_call_a_prog_as_an_action
     parse("foo := R[1]\ncase foo\nwhen 1\nmy_program()\nend\n@asdf")
-    assert_node_type CaseNode, @interpreter.nodes[1]
+    assert_node_type CaseNode, @interpreter.nodes[2]
   end
 
   def test_can_define_input
@@ -320,7 +320,7 @@ class TestParser < Test::Unit::TestCase
     n = last_node
     assert_node_type AssignmentNode, n
     e = n.assignable
-    assert_node_type ExpressionNode, e.left_op
+    assert_node_type ParenExpressionNode, e.left_op
     assert_node_type DigitNode, e.right_op
   end
 

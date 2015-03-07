@@ -20,13 +20,13 @@ module TPPlus
 
       def eval(context,options={})
         case @method
-        when :start
+        when "start"
           "#{timer(context)}=START"
-        when :stop
+        when "stop"
           "#{timer(context)}=STOP"
-        when :reset
+        when "reset"
           "#{timer(context)}=RESET"
-        when :restart
+        when "restart"
           "#{timer(context)}=STOP ;\n#{timer(context)}=RESET ;\n#{timer(context)}=START"
         else
           raise "Invalid timer method (#{@method})"

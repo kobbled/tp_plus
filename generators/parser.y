@@ -38,8 +38,14 @@ rule
 
 
   statements
-    : statement terminator              { result = [val[0]] }
-    | statements statement terminator   { result = val[0] << val[1] }
+    : statement terminator              {
+                                          result = [val[0]]
+                                          result << val[1] unless val[1].nil?
+                                        }
+    | statements statement terminator   {
+                                          result = val[0] << val[1]
+                                          result << val[2] unless val[2].nil?
+                                        }
     ;
 
   #statements
@@ -90,7 +96,7 @@ rule
     ;
 
   empty_stmt
-    : NEWLINE
+    : NEWLINE                         { result = EmptyStmtNode.new() }
     ;
 
   tp_header_definition
@@ -326,12 +332,12 @@ rule
     : var_or_indirect EQUAL expression            { result = AssignmentNode.new(val[0],val[2]) }
     | var_or_indirect PLUS EQUAL expression       { result = AssignmentNode.new(
                                            val[0],
-                                           ExpressionNode.new(val[0],val[1],val[3])
+                                           ExpressionNode.new(val[0],"+",val[3])
                                          )
                                        }
     | var_or_indirect MINUS EQUAL expression       { result = AssignmentNode.new(
                                            val[0],
-                                           ExpressionNode.new(val[0],val[1],val[3])
+                                           ExpressionNode.new(val[0],"-",val[3])
                                          )
                                        }
     ;
@@ -340,12 +346,12 @@ rule
     : WORD                             { result = VarNode.new(val[0]) }
     | WORD DOT WORD                    { result = VarMethodNode.new(val[0],val[2]) }
     # introduces 2 reduce/reduce conflicts and 1 useless rule
-    | namespaces COLON ':' var           { result = NamespacedVarNode.new(val[0],val[3]) }
+    | namespaces COLON COLON var           { result = NamespacedVarNode.new(val[0],val[3]) }
     ;
 
   namespaces
     : namespace                        { result = val }
-    | namespaces COLON ':' namespace     { result = val[0] << val[3] }
+    | namespaces COLON COLON namespace     { result = val[0] << val[3] }
     ;
 
   namespace
@@ -356,7 +362,7 @@ rule
   expression
     : factor                           { result = val[0] }
     | operator                         { result = val[0] }
-    | LPAREN expression RPAREN               { val[1].grouped = true; result = val[1] }
+    | LPAREN expression RPAREN         { result = ParenExpressionNode.new(val[1]) }
     ;
 
   #expression
@@ -381,30 +387,30 @@ rule
     | expression addop expression      { result = ExpressionNode.new(val[0],val[1],val[2]) }
     | expression mulop expression      { result = ExpressionNode.new(val[0],val[1],val[2]) }
     # 48 => 50 with prec on BANG (62) without
-    | BANG expression                  { result = ExpressionNode.new(val[1],val[0],nil) }
+    | BANG expression                  { result = ExpressionNode.new(val[1],"!",nil) }
     ;
 
   relop
-    : EEQUAL
-    | NOTEQUAL
-    | LT
-    | GT
-    | GTE
-    | LTE
+    : EEQUAL { result = "==" }
+    | NOTEQUAL { result = "<>" }
+    | LT { result = "<" }
+    | GT { result = ">" }
+    | GTE { result = ">=" }
+    | LTE { result = "<=" }
     ;
 
   addop
-    : PLUS
-    | MINUS
-    | OR
+    : PLUS { result = "+" }
+    | MINUS { result = "-" }
+    | OR { result = "||" }
     ;
 
   mulop
-    : STAR
-    | SLASH
-    | DIV
-    | MOD
-    | AND
+    : STAR { result = "*" }
+    | SLASH { result = "/" }
+    | DIV { result = "DIV" }
+    | MOD { result = "%" }
+    | AND { result = "&&" }
     ;
 
   factor
@@ -419,12 +425,15 @@ rule
     ;
 
   signed_number
-    : sign DIGIT                      { val[1] = val[1].to_i * -1 if val[0] == "-"; result = DigitNode.new(val[1]) }
+    : sign DIGIT                      {
+                                          val[1] = val[1].to_i * -1 if val[0] == "-"
+                                          result = DigitNode.new(val[1])
+                                      }
     | sign REAL                       { val[1] = val[1].to_f * -1 if val[0] == "-"; result = RealNode.new(val[1]) }
     ;
 
   sign
-    : MINUS
+    : MINUS { result = "-" }
     |
     ;
 
@@ -498,7 +507,8 @@ rule
 
   terminator
     : NEWLINE                          { result = TerminatorNode.new }
-    | comment                          { result = val[0] }
+    | comment optional_newline         { result = val[0] }
+              # ^-- consume newlines or else we will get an extra space from EmptyStmt in the output
     | false
     |
     ;
@@ -538,7 +548,7 @@ rule
     | array
     | sign DIGIT                       { val[1] = val[1].to_i * -1 if val[0] == "-"; result = val[1] }
     | sign REAL                        { val[1] = val[1].to_f * -1 if val[0] == "-"; result = val[1] }
-    | TRUE_FALSE
+    | TRUE_FALSE                       { result = val[0] == "true" }
     ;
 
   array

@@ -4,7 +4,7 @@ class TestInterpreter < Test::Unit::TestCase
   include TPPlus::Nodes
 
   def setup
-    @scanner = TPPlus::Scanner.new
+    @scanner = TPPlus::NewScanner.new
     @parser  = TPPlus::Parser.new @scanner
     @interpreter = @parser.interpreter
   end
@@ -739,7 +739,7 @@ Foo::Bar::baz = 2)
   end
 
   def test_forlooop
-    parse "foo := R[1]\nfor foo in (1 TO 10)\n# bar\nend"
+    parse "foo := R[1]\nfor foo in (1 to 10)\n# bar\nend"
     assert_prog "FOR R[1:foo]=1 TO 10 ;\n! bar ;\nENDFOR ;\n"
   end
 
