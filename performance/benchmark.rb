@@ -16,7 +16,7 @@ Benchmark.ips do |x|
   puts
 
   x.report("parse:") {
-    scanner = TPPlus::Scanner.new
+    scanner = TPPlus::NewScanner.new
     parser = TPPlus::Parser.new(scanner)
     scanner.scan_setup(src)
     parser.parse
