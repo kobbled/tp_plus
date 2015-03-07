@@ -1,7 +1,6 @@
 module TPPlus
   class Token
-    def self.keywords
-      {
+    KEYWORDS = {
         "abort" => :ABORT,
         "after" => :AFTER,
         "at" => :AT,
@@ -45,26 +44,6 @@ module TPPlus
         "when" => :WHEN,
         "while" => :WHILE,
 
-        ";" => :SEMICOLON,
-        "!" => :BANG,
-        "==" => :EEQUAL,
-        "=" => :EQUAL,
-        ":=" => :ASSIGN,
-        "<>" => :NOTEQUAL,
-        "!=" => :NOTEQUAL,
-        ">=" => :GTE,
-        "<=" => :LTE,
-        "<" => :LT,
-        ">" => :GT,
-        "+" => :PLUS,
-        "-" => :MINUS,
-        "*" => :STAR,
-        "/" => :SLASH,
-        "DIV" => :DIV,
-        "&&" => :AND,
-        "||" => :OR,
-        "%" => :MOD,
-
         "true" => :TRUE_FALSE,
         "false" => :TRUE_FALSE,
 
@@ -79,10 +58,9 @@ module TPPlus
         "use_uframe" => :FANUC_USE,
         "use_utool" => :FANUC_USE
       }
-    end
 
-    def self.data
-      {
+
+    DATA = {
         "R" => :NUMREG,
         "P" => :POSITION,
         "PR" => :POSREG,
@@ -105,38 +83,13 @@ module TPPlus
         "SI" => :INPUT,
         "GI" => :INPUT
       }
-    end
-
-    def self.string(tok)
-      self.keywords.each do |str, t|
-        if tok == t
-          return str
-        end
-      end
-
-      self.data.each do |str, t|
-        if tok == t
-          return str
-        end
-      end
-
-      return "tok(#{tok})"
-    end
 
     def self.lookup(string)
-      if self.keywords.has_key? string
-        return self.keywords[string]
-      end
-
-      return :WORD
+      KEYWORDS[string] || :WORD
     end
 
     def self.lookup_data(string)
-      if self.data.has_key? string
-        return self.data[string]
-      end
-
-      return :WORD
+      DATA[string] || :WORD
     end
   end
 end
