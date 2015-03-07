@@ -19,12 +19,14 @@ class TestScanner < Test::Unit::TestCase
 
   def test_blank_string
     @scanner.scan_setup ""
-    assert_tok :EOF
+    assert_nil @scanner.next_token
+    #assert_tok :EOF
   end
 
   def test_ignore_whitespace
     @scanner.scan_setup " "
-    assert_tok :EOF
+    assert_nil @scanner.next_token
+    #assert_tok :EOF
   end
 
   def test_newline
@@ -228,6 +230,7 @@ class TestScanner < Test::Unit::TestCase
   def test_assign
     @scanner.scan_setup ":="
     assert_tok :ASSIGN
+    assert_nil @scanner.next_token
   end
 
   #def test_at_sym
@@ -531,6 +534,13 @@ class TestScanner < Test::Unit::TestCase
    def test_abort
      @scanner.scan_setup "abort"
      assert_token :ABORT, "abort"
+   end
+
+   def test_ident
+     @scanner.scan_setup "foo_bar1 foo? foo!"
+     assert_token :WORD, "foo_bar1"
+     assert_token :WORD, "foo?"
+     assert_token :WORD, "foo!"
    end
 
    def test_punctuation

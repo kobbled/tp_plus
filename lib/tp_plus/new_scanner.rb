@@ -55,7 +55,12 @@ module TPPlus
 
     def scanIdentifier
       offs = @offset
-      while isLetter?(@ch)
+      while isLetter?(@ch) || isDigit?(@ch)
+        self.next
+      end
+
+      # allow one ? or ! at end
+      if @ch == '?' || @ch == '!'
         self.next
       end
 
@@ -103,7 +108,10 @@ module TPPlus
         self.next
       end
 
-      return @src[offs, (@offset-offs)]
+      # consume close
+      self.next
+
+      return @src[offs, (@offset-offs-1)] # -1 to remove trailing " or '
     end
 
     def scanLabel
@@ -141,30 +149,35 @@ module TPPlus
         self.next # always make progress
         case ch
         when -1
-          tok = :EOF
+          return nil
         when '='
           if @ch == '='
             tok = :EEQUAL
+            self.next
           else
             tok = :EQUAL
           end
         when ':'
           if @ch == "="
             tok = :ASSIGN
+            self.next
           else
             tok = :COLON
           end
         when "<"
           if @ch == "="
             tok = :LTE
+            self.next
           elsif @ch == ">"
             tok = :NOTEQUAL
+            self.next
           else
             tok = :LT
           end
         when ">"
           if @ch == "="
             tok = :GTE
+            self.next
           else
             tok = :GT
           end
@@ -179,12 +192,14 @@ module TPPlus
         when "&"
           if @ch == "&"
             tok = :AND
+            self.next
           else
             tok = :ILLEGAL
           end
         when "|"
           if @ch == "|"
             tok = :OR
+            self.next
           else
             tok = :ILLEGAL
           end
@@ -201,6 +216,7 @@ module TPPlus
         when "!"
           if @ch == "="
             tok = :NOTEQUAL
+            self.next
           else
             tok = :BANG
           end
