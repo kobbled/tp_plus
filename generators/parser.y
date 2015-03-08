@@ -111,21 +111,27 @@ rule
   wait_statement
     : WAIT_FOR LPAREN indirectable COMMA STRING RPAREN
                                        { result = WaitForNode.new(val[2], val[4]) }
-    | WAIT_UNTIL LPAREN expression RPAREN wait_modifiers
-                                       { result = WaitUntilNode.new(val[2],val[4]) }
-    ;
-
-  wait_modifiers
-    :
-    | wait_modifier                    { result = val[0] }
-    | wait_modifiers wait_modifier     { result = val[0].merge(val[1]) }
+    | WAIT_UNTIL LPAREN expression RPAREN
+                                       { result = WaitUntilNode.new(val[2], nil) }
+    | WAIT_UNTIL LPAREN expression RPAREN DOT wait_modifier
+                                       { result = WaitUntilNode.new(val[2],val[5]) }
+    | WAIT_UNTIL LPAREN expression RPAREN DOT wait_modifier DOT wait_modifier
+                                       { result = WaitUntilNode.new(val[2],val[5].merge(val[7])) }
     ;
 
   wait_modifier
-    : DOT swallow_newlines TIMEOUT LPAREN label RPAREN
-                                       { result = { label: val[4] } }
-    | DOT swallow_newlines AFTER LPAREN indirectable COMMA STRING RPAREN
-                                       { result = { timeout: [val[4],val[6]] } }
+    : timeout_modifier
+    | after_modifier
+    ;
+
+  timeout_modifier
+    : swallow_newlines TIMEOUT LPAREN label RPAREN
+                                       { result = { label: val[3] } }
+    ;
+
+  after_modifier
+    : swallow_newlines AFTER LPAREN indirectable COMMA STRING RPAREN
+                                       { result = { timeout: [val[3],val[5]] } }
     ;
 
   label
@@ -367,7 +373,11 @@ rule
     : signed_number
     | var
     | indirect_thing
-    | LPAREN expression RPAREN        { result = ParenExpressionNode.new(val[1]) }
+    | paren_expr
+    ;
+
+  paren_expr
+    : LPAREN expression RPAREN        { result = ParenExpressionNode.new(val[1]) }
     ;
 
   indirect_thing
