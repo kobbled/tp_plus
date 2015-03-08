@@ -8,7 +8,7 @@ token EEQUAL NOTEQUAL GTE LTE LT GT BANG
 token PLUS MINUS STAR SLASH DIV AND OR MOD
 token IF ELSE END UNLESS FOR IN WHILE
 token WAIT_FOR WAIT_UNTIL TIMEOUT AFTER
-token FANUC_USE FANUC_SET NAMESPACE
+token FANUC_USE SET_SKIP_CONDITION NAMESPACE
 token CASE WHEN INDIRECT POSITION
 token EVAL TIMER TIMER_METHOD RAISE ABORT
 token POSITION_DATA TRUE_FALSE RUN TP_HEADER PAUSE
@@ -70,7 +70,7 @@ rule
     | while_loop
     #| program_call
     | use_statement
-    | set_statement
+    | set_skip_statement
     | wait_statement
     | case_statement
     | fanuc_eval
@@ -136,11 +136,9 @@ rule
     : FANUC_USE indirectable           { result = UseNode.new(val[0],val[1]) }
     ;
 
-  set_statement
-    : FANUC_SET indirectable COMMA var
-                                       { result = SetNode.new(val[0],val[1],val[3]) }
-    # this introduces 2 conflicts somehow
-    | FANUC_SET expression             { result = SetNode.new(val[0],nil,val[1]) }
+  # set_skip_condition x
+  set_skip_statement
+    : SET_SKIP_CONDITION expression             { result = SetSkipNode.new(val[1]) }
     ;
 
   program_call

@@ -276,14 +276,9 @@ class TestParser < Test::Unit::TestCase
     assert_node_type DefinitionNode, last_node
   end
 
-  def test_fanuc_set_uframe_with_pr
-    parse("foo := PR[1]\nset_uframe 5, foo")
-    assert_node_type SetNode, last_node
-  end
-
   def test_set_skip_condition
     parse("foo := RI[1]\nset_skip_condition foo.on?")
-    assert_node_type SetNode, last_node
+    assert_node_type SetSkipNode, last_node
   end
 
   def test_skip_to

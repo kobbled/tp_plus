@@ -20,6 +20,8 @@ module TPPlus
           "R"
         when :user_alarm
           "UALM"
+        when :user_frame
+          "UFRAME"
         else
           raise "Invalid indirect type"
         end
