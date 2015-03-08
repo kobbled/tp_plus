@@ -240,19 +240,9 @@ rule
     ;
 
   inline_conditional
-    : inlineable optional_exp {
-                                if val[1]
-                                  result = InlineConditionalNode.new(val[1].first, val[1][1], val[0])
-                                else
-                                  result = val[0]
-                                end
-                              }
-    ;
-
-  optional_exp
-    : IF expression          { result = [val[0], val[1]] }
-    | UNLESS expression      { result = [val[0], val[1]] }
-    |                        { result = nil }
+    : inlineable
+    | inlineable IF expression     { result = InlineConditionalNode.new(val[1], val[2], val[0]) }
+    | inlineable UNLESS expression { result = InlineConditionalNode.new(val[1], val[2], val[0]) }
     ;
 
   inlineable
