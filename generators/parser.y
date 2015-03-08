@@ -17,16 +17,14 @@ token LABEL
 token false
 
 prechigh
-#  left DOT
   right BANG
-  left STAR SLASH
+  left STAR SLASH DIV MOD
   left PLUS MINUS
   left GT GTE LT LTE
   left EEQUAL NOTEQUAL
   left AND
   left OR
   right EQUAL
-#  left DOT
 preclow
 
 rule
@@ -48,18 +46,8 @@ rule
                                         }
     ;
 
-  #statements
-  #  : statement terminator             { result = val }
-  #  | statements terminator statement  { result = val[0] << val[1] << val[2] }
-  #    # to ignore trailing line breaks
-  #  | statements terminator            { result = val[0] << val[1] }
-  #  # this adds a couple conflicts
-  #  | terminator statements            { result = [val[0]] << val[1] }
-  #  | terminator                       { result = [val[0]] }
-  #  ;
-
   block
-    : optional_newline statements      { result = val[1] }
+    : NEWLINE statements      { result = val[1] }
     ;
 
   optional_newline
@@ -254,9 +242,19 @@ rule
     ;
 
   inline_conditional
-    : inlineable IF expression { result = InlineConditionalNode.new("if",val[2],val[0]) }
-    | inlineable UNLESS expression { result = InlineConditionalNode.new("unless",val[2],val[0]) }
-    | inlineable
+    : inlineable optional_exp {
+                                if val[1]
+                                  result = InlineConditionalNode.new(val[1].first, val[1][1], val[0])
+                                else
+                                  result = val[0]
+                                end
+                              }
+    ;
+
+  optional_exp
+    : IF expression          { result = [val[0], val[1]] }
+    | UNLESS expression      { result = [val[0], val[1]] }
+    |                        { result = nil }
     ;
 
   inlineable
@@ -346,67 +344,31 @@ rule
     : WORD                             { result = VarNode.new(val[0]) }
     | WORD DOT WORD                    { result = VarMethodNode.new(val[0],val[2]) }
     # introduces 2 reduce/reduce conflicts and 1 useless rule
-    | namespaces COLON COLON var           { result = NamespacedVarNode.new(val[0],val[3]) }
+    | namespaces var           { result = NamespacedVarNode.new(val[0],val[1]) }
     ;
 
   namespaces
-    : namespace                        { result = val }
-    | namespaces COLON COLON namespace     { result = val[0] << val[3] }
+    : WORD COLON COLON                     { result = val }
     ;
 
-  namespace
-    : WORD                             { result = val[0] }
-    ;
 
-  # this change goes from 6 shift/reduce conflicts to 20
   expression
     : factor                           { result = val[0] }
-    | operator                         { result = val[0] }
-    | LPAREN expression RPAREN         { result = ParenExpressionNode.new(val[1]) }
+    | BANG factor                      { result = ExpressionNode.new(val[1], "!", nil) }
+    | expression operator expression   { result = ExpressionNode.new(val[0], val[1], val[2]) }
     ;
 
-  #expression
-  #  : simple_expression                         { result = val[0] }
-  #  | simple_expression relop simple_expression { result = ExpressionNode.new(val[0],val[1],val[2]) }
-  #  | LPAREN expression RPAREN                        { result = val[1] }
-  #  ;
-
-  #simple_expression
-  #  : term                                      { result = val[0] }
-  #  | simple_expression addop term              { result = ExpressionNode.new(val[0],val[1],val[2]) }
-  #  ;
-
-  #term
-  #  : factor
-  #  | term mulop factor                         { result = ExpressionNode.new(val[0],val[1],val[2]) }
-  #  ;
-
-  # 20 to 48 conflicts!!
   operator
-    : expression relop expression      { result = ExpressionNode.new(val[0],val[1],val[2]) }
-    | expression addop expression      { result = ExpressionNode.new(val[0],val[1],val[2]) }
-    | expression mulop expression      { result = ExpressionNode.new(val[0],val[1],val[2]) }
-    # 48 => 50 with prec on BANG (62) without
-    | BANG expression                  { result = ExpressionNode.new(val[1],"!",nil) }
-    ;
-
-  relop
     : EEQUAL { result = "==" }
     | NOTEQUAL { result = "<>" }
     | LT { result = "<" }
     | GT { result = ">" }
     | GTE { result = ">=" }
     | LTE { result = "<=" }
-    ;
-
-  addop
-    : PLUS { result = "+" }
+    | PLUS { result = "+" }
     | MINUS { result = "-" }
     | OR { result = "||" }
-    ;
-
-  mulop
-    : STAR { result = "*" }
+    | STAR { result = "*" }
     | SLASH { result = "/" }
     | DIV { result = "DIV" }
     | MOD { result = "%" }
@@ -417,6 +379,7 @@ rule
     : signed_number
     | var
     | indirect_thing
+    | LPAREN expression RPAREN        { result = ParenExpressionNode.new(val[1]) }
     ;
 
   indirect_thing

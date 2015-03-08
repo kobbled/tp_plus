@@ -11,3 +11,4 @@ doc/*
 log/*
 pkg/*
 .idea/*
+*.output

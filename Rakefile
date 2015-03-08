@@ -1,6 +1,6 @@
 namespace :compile do
   task :parser do
-    sh "racc -l -t -o lib/tp_plus/parser.rb generators/parser.y"
+    sh "racc -l -t -v -o lib/tp_plus/parser.rb generators/parser.y"
   end
 
   task :scanner do
