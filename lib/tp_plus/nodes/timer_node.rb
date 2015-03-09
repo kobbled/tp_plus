@@ -7,14 +7,8 @@ module TPPlus
         @comment = ""
       end
 
-      def comment_string
-        return "" if @comment == ""
-
-        ":#{comment}"
-      end
-
       def eval(context, options={})
-        "TIMER[#{@id}#{comment_string}]"
+        "TIMER[#{@id}]" # FANUC does not like timer comments
       end
     end
   end
