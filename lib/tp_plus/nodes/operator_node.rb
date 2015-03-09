@@ -49,6 +49,8 @@ module TPPlus
             " AND "
           when "&&"
             " OR "
+          when "DIV"
+            " MOD "
           end
         else
           case @string
@@ -62,6 +64,8 @@ module TPPlus
             " OR "
           when "%"
             " MOD "
+          when "DIV"
+            " DIV "
           else
             "#{@string}"
           end

@@ -44,6 +44,8 @@ module TPPlus
         "when" => :WHEN,
         "while" => :WHILE,
 
+        "DIV" => :DIV,
+
         "true" => :TRUE_FALSE,
         "false" => :TRUE_FALSE,
 

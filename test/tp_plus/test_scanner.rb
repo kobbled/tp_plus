@@ -212,6 +212,11 @@ class TestScanner < Test::Unit::TestCase
     assert_tok :AND
   end
 
+  def test_div
+    @scanner.scan_setup "DIV"
+    assert_tok :DIV
+  end
+
   def test_or
     @scanner.scan_setup "||"
     assert_tok :OR
