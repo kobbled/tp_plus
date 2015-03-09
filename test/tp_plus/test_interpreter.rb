@@ -1185,5 +1185,16 @@ P[2:"test2"]{
     parse("foo := R[1]\nfoo2 := R[2]\nif foo == foo2\nfoo = 1\nfoo2 = 2\nend")
     assert_prog "IF R[1:foo]<>R[2:foo2],JMP LBL[100] ;\nR[1:foo]=1 ;\nR[2:foo2]=2 ;\nLBL[100] ;\n"
   end
+
+  def test_fine_termination
+    parse("foo := PR[1]\nlinear_move.to(foo).at(2000, 'mm/s').term(-1)")
+    assert_prog "L PR[1:foo] 2000mm/sec FINE ;\n"
+  end
+
+  def test_parse_error_on_invalid_term
+    assert_raise do
+      parse("foo := PR[1]\nlinear_move.to(foo).at(2000, 'mm/s').term(-2)")
+    end
+  end
 end
 
