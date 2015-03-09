@@ -1196,5 +1196,15 @@ P[2:"test2"]{
       parse("foo := PR[1]\nlinear_move.to(foo).at(2000, 'mm/s').term(-2)")
     end
   end
+
+  def test_term_fine_with_constant
+    parse("foo := PR[1]\nTERM := -1\nlinear_move.to(foo).at(2000, 'mm/s').term(TERM)")
+    assert_prog "L PR[1:foo] 2000mm/sec FINE ;\n"
+  end
+
+  def test_term_cnt_with_constant
+    parse("foo := PR[1]\nTERM := 100\nlinear_move.to(foo).at(2000, 'mm/s').term(TERM)")
+    assert_prog "L PR[1:foo] 2000mm/sec CNT100 ;\n"
+  end
 end
 

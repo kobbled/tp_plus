@@ -380,7 +380,8 @@ rule
     ;
 
   factor
-    : signed_number
+    : number
+    | signed_number
     | var
     | indirect_thing
     | paren_expr
@@ -405,7 +406,6 @@ rule
 
   sign
     : MINUS { result = "-" }
-    |
     ;
 
   number
@@ -425,6 +425,7 @@ rule
     | position
     | vreg
     | number
+    | signed_number
     | argument
     | timer
     | ualm
@@ -517,9 +518,14 @@ rule
     : STRING
     | hash
     | array
-    | sign DIGIT                       { val[1] = val[1].to_i * -1 if val[0] == "-"; result = val[1] }
-    | sign REAL                        { val[1] = val[1].to_f * -1 if val[0] == "-"; result = val[1] }
+    | optional_sign DIGIT              { val[1] = val[1].to_i * -1 if val[0] == "-"; result = val[1] }
+    | optional_sign REAL               { val[1] = val[1].to_f * -1 if val[0] == "-"; result = val[1] }
     | TRUE_FALSE                       { result = val[0] == "true" }
+    ;
+
+  optional_sign
+    : sign
+    |
     ;
 
   array

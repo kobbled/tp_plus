@@ -6,15 +6,16 @@ module TPPlus
       end
 
       def eval(context)
-        if @value.is_a? DigitNode
-          if @value.value >= 0
-            "CNT#{@value.eval(context)}"
+        val = @value.eval(context)
+        case val
+        when Integer
+          "CNT#{val}"
+        else
+          if val[0] == "R"
+            "CNT #{val}"
           else
             "FINE"
           end
-        else
-          # for registers
-          "CNT #{@value.eval(context)}"
         end
       end
     end
