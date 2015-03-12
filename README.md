@@ -73,8 +73,10 @@ Development
 
 1. Install Ruby
 2. Install git
-3. Clone the repo `git clone https://github.com/onerobotics/tp_plus.git`
-4. Build the parser and run the tests with `rake`
+3. Install bundler `gem install bundler`
+4. Clone the repo `git clone https://github.com/onerobotics/tp_plus.git`
+5. Install dependencies with `bundle`
+6. Build the parser and run the tests with `rake`
 
 License
 -------
