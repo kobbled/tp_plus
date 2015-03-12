@@ -12,3 +12,4 @@ log/*
 pkg/*
 .idea/*
 *.output
+lib/tp_plus/parser.rb
