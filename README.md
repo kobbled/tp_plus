@@ -68,6 +68,14 @@ Usage
 
 See `tpp --help` for options.
 
+Development
+-----------
+
+1. Install Ruby
+2. Install git
+3. Clone the repo `git clone https://github.com/onerobotics/tp_plus.git`
+4. Build the parser and run the tests with `rake`
+
 License
 -------
 
