@@ -7,7 +7,7 @@ test_file = File.open(File.join(File.dirname(__FILE__),'test.tpp'), 'rb')
 src = test_file.read
 test_file.close
 
-scanner = TPPlus::NewScanner.new
+scanner = TPPlus::Scanner.new
 
 Benchmark.ips do |x|
   x.time = 60
