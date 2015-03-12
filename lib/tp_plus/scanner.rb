@@ -9,6 +9,7 @@ module TPPlus
       @ch = " "
       @offset = 0
       @rdOffset = 0
+      @prevDot = false # for groups
       self.next
     end
 
@@ -140,12 +141,19 @@ module TPPlus
           tok = TPPlus::Token.lookup_data(lit)
         elsif lit == "DIV"
           tok = :DIV
-        elsif lit =~ /gp[1-5]/i
-          tok = :GROUP
         else
+          # keywords are longer than 1 char, avoid lookup otherwise
           if lit.length > 1
-            # keywords are longer than 1 char, avoid lookup otherwise
-            tok = TPPlus::Token.lookup(lit)
+            if @prevDot
+              case lit
+              when "gp1","gp2","gp3","gp4","gp5"
+                tok = :GROUP
+              else
+                tok = TPPlus::Token.lookup(lit)
+              end
+            else
+              tok = TPPlus::Token.lookup(lit)
+            end
           else
             tok = :WORD
           end
@@ -259,6 +267,12 @@ module TPPlus
           tok = :ILLEGAL
           lit = ch
         end
+      end
+
+      if tok == :DOT
+        @prevDot = true
+      else
+        @prevDot = false
       end
 
       return [tok, lit]
