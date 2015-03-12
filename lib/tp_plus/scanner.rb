@@ -3,13 +3,20 @@ module TPPlus
     def initialize
     end
 
+    attr_reader :lineno, :col
+    attr_reader :tok_line, :tok_col
     def scan_setup(src)
       @src = src
       @lineno = 1
       @ch = " "
       @offset = 0
+      @col = 0
       @rdOffset = 0
       @prevDot = false # for groups
+
+      @tok_line = 0
+      @tok_col = 0
+
       self.next
     end
 
@@ -19,8 +26,10 @@ module TPPlus
         @ch = @src[@rdOffset]
         if @ch == "\n"
           @lineno += 1
+          @col = 0
         end
         @rdOffset += 1
+        @col += 1
       else
         @offset = @src.length
         @ch = -1
@@ -130,6 +139,9 @@ module TPPlus
     # return token
     def next_token
       self.skipWhitespace
+
+      @tok_line = @lineno
+      @tok_col = @col
 
       tok = nil
       lit = ""

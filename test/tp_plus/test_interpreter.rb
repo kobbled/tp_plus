@@ -698,7 +698,7 @@ Foo::Bar::baz = 2)
 
 
   def test_bad_environment
-    assert_raise(RuntimeError) do
+    assert_raise(TPPlus::Parser::ParseError) do
       @interpreter.load_environment("asdf")
     end
   end

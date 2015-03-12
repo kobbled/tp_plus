@@ -493,4 +493,10 @@ end)
     assert_equal 3, l.args.length
   end
 
+  def test_parse_error_reporting
+    e = assert_raise(TPPlus::Parser::ParseError) do
+      parse("foo bar")
+    end
+    assert_equal "Parse error on line 1 column 5: \"bar\" (WORD)", e.message
+  end
 end

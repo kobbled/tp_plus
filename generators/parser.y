@@ -609,6 +609,11 @@ end
 
     do_parse
     @interpreter
-  rescue Racc::ParseError => e
-    raise "Parse error on line #{@interpreter.line_count+1}: #{e}"
   end
+
+  def on_error(t, val, vstack)
+    raise ParseError, sprintf("Parse error on line #{@scanner.tok_line} column #{@scanner.tok_col}: %s (%s)",
+                                val.inspect, token_to_str(t) || '?')
+  end
+
+  class ParseError < StandardError ; end
