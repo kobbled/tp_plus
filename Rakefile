@@ -1,6 +1,10 @@
+file "lib/tp_plus/parser.rb" => ["generators/parser.y"] do |t|
+  sh "racc -l -t -v -o lib/tp_plus/parser.rb generators/parser.y"
+end
+
 namespace :compile do
   task :parser do
-    sh "racc -l -t -v -o lib/tp_plus/parser.rb generators/parser.y"
+    Rake::Task["lib/tp_plus/parser.rb"].invoke
   end
 end
 
@@ -9,6 +13,9 @@ task compile: ["compile:parser"]
 require 'rake/testtask'
 
 Rake::TestTask.new do |t|
+  # build the parser if necessary
+  Rake::Task["lib/tp_plus/parser.rb"].invoke
+
   t.libs << "test"
   t.test_files = FileList['test/**/test_*.rb']
   t.verbose = true
