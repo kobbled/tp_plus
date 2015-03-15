@@ -173,23 +173,25 @@ position_data
     {
       'id' : 1,
       'comment' : "test position",
-      'group' : 1,
-      'uframe' : 1,
-      'utool' : 1,
-      'config' : {
-        'flip' : true,
-        'up'   : true,
-        'top'  : true,
-        'turn_counts' : [0,0,0]
-      },
-      'components' : {
-        'x' : 0.0,
-        'y' : 0.0,
-        'z' : 0.0,
-        'w' : 0.0,
-        'p' : 0.0,
-        'r' : 0.0
-      }
+      'mask' : [{
+        'group' : 1,
+        'uframe' : 1,
+        'utool' : 1,
+        'config' : {
+          'flip' : true,
+          'up'   : true,
+          'top'  : true,
+          'turn_counts' : [0,0,0]
+        },
+        'components' : {
+          'x' : 0.0,
+          'y' : 0.0,
+          'z' : 0.0,
+          'w' : 0.0,
+          'p' : 0.0,
+          'r' : 0.0
+        }
+      }]
     }
   ]
 }
