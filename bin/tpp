@@ -1,13 +1,17 @@
 #!/usr/bin/env ruby
-require 'tp_plus'
+require_relative '../lib/tp_plus'
 require 'optparse'
 
 options = {}
 OptionParser.new do |opts|
   opts.banner = "Usage: tpp [options] filename"
 
-  opts.on("-e", "--environment env_file.tpp", "Require an environment file before parsing files") do |e|
+  opts.on("-e", "--environment <file>", "Require an environment file <file> before parsing") do |e|
     options[:environment] = e
+  end
+
+  opts.on("-o", "--output <file>", "Write output to <file>") do |o|
+    options[:output] = o
   end
 
   opts.on_tail("-h", "--help", "Show this message") do
@@ -16,9 +20,25 @@ OptionParser.new do |opts|
   end
 end.parse!
 
+if ARGV.length != 1
+  puts "Must provide filename argument. See tpp --help for details"
+  exit
+end
+
+tpp_filename = File.basename(ARGV[0],".*")
+
+if options[:output]
+  # ensure filename matches (FANUC parser will complain otherwise)
+  output_filename = File.basename(options[:output], ".*")
+  if output_filename != tpp_filename
+    puts "Output filename <#{output_filename}> does not match input filename <#{tpp_filename}>"
+    exit
+  end
+end
+
 def contents(filename)
   if !File.exist?(filename)
-    puts "File (#{filename}) does not exist"
+    puts "File <#{filename}> does not exist"
     exit
   end
   f = File.open(filename,'rb')
@@ -34,11 +54,6 @@ if options[:environment]
   interpreter.load_environment(contents(options[:environment]))
 end
 
-if ARGV.length != 1
-  puts "Must provide filename argument. See tpp --help for details"
-  exit
-end
-
 src = contents(ARGV[0])
 
 scanner.scan_setup(src)
@@ -46,7 +61,6 @@ parser.parse
 
 lines = interpreter.eval
 
-tpp_filename = File.basename(ARGV[0],".*")
 output = %(/PROG #{tpp_filename.upcase}
 /ATTR
 COMMENT = "#{interpreter.header_data[:comment] || tpp_filename.upcase}";
@@ -70,4 +84,9 @@ end
 
 output += %(/END\n)
 
-print output
+if options[:output]
+  # write to file
+  File.write(options[:output], output)
+else
+  print output
+end
