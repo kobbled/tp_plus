@@ -1,4 +1,4 @@
-require 'tp_plus/parser'
+require_relative 'parser'
 
 module TPPlus
   class Interpreter
