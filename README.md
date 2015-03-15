@@ -46,16 +46,16 @@ example_1.ls
 
     /PROG example_1
     /MN
-      1:  R[1:foo] = 1 ;
-      1:   ;
-      1:  LBL[100:loop] ;
-      1:  R[1:foo]=R[1:foo]+1 ;
-      1:  IF R[1:foo]<10,JMP LBL[100] ;
-      1:   ;
-      1:  IF (R[1:foo]=5),DO[1:bar]=(ON) ;
-      1:  DO[2:baz]=(!DO[2:baz]) ;
-      1:   ;
-      1:  L PR[1:home] 2000mm/sec CNT0 ;
+     : R[1:foo] = 1 ;
+     :  ;
+     : LBL[100:loop] ;
+     : R[1:foo]=R[1:foo]+1 ;
+     : IF R[1:foo]<10,JMP LBL[100] ;
+     :  ;
+     : IF (R[1:foo]=5),DO[1:bar]=(ON) ;
+     : DO[2:baz]=(!DO[2:baz]) ;
+     :  ;
+     : L PR[1:home] 2000mm/sec CNT0 ;
     /END
 
 For a more extensive example and test environment, visit http://tp-plus.herokuapp.com/.
@@ -64,7 +64,7 @@ Usage
 -----
 
 1. `gem install tp_plus`
-2. `tpp filename.tpp > filename.ls`
+2. `tpp filename.tpp -o filename.ls`
 
 See `tpp --help` for options.
 
