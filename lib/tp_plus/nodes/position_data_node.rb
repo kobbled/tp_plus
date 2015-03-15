@@ -18,6 +18,8 @@ module TPPlus
         return false if @ids.include?(position_hash[:id])
         @ids.push(position_hash[:id])
 
+        return false unless position_hash[:mask].is_a? Array
+
         position_hash[:mask].select {|q|
           !mask_valid?(q)
         }.empty?
