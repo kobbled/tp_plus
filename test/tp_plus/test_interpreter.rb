@@ -1207,6 +1207,26 @@ P[2:"test2"]{
     end
   end
 
+  def test_acc_zero
+    parse("foo := PR[1]\nlinear_move.to(foo).at(2000, 'mm/s').term(0).acc(0)")
+    assert_prog "L PR[1:foo] 2000mm/sec CNT0 ACC0 ;\n"
+  end
+
+  def test_acc_150
+    parse("foo := PR[1]\nlinear_move.to(foo).at(2000, 'mm/s').term(0).acc(150)")
+    assert_prog "L PR[1:foo] 2000mm/sec CNT0 ACC150 ;\n"
+  end
+
+  def test_acc_with_constant
+    parse("foo := PR[1]\nBAR := 50\nlinear_move.to(foo).at(2000, 'mm/s').term(0).acc(BAR)")
+    assert_prog "L PR[1:foo] 2000mm/sec CNT0 ACC50 ;\n"
+  end
+
+  def test_acc_with_var
+    parse("foo := PR[1]\nbar := R[1]\nlinear_move.to(foo).at(2000, 'mm/s').term(0).acc(bar)")
+    assert_prog "L PR[1:foo] 2000mm/sec CNT0 ACC R[1:bar] ;\n"
+  end
+
   def test_term_fine_with_constant
     parse("foo := PR[1]\nTERM := -1\nlinear_move.to(foo).at(2000, 'mm/s').term(TERM)")
     assert_prog "L PR[1:foo] 2000mm/sec FINE ;\n"

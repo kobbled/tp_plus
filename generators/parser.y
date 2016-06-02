@@ -1,7 +1,7 @@
 class TPPlus::Parser
 token ASSIGN AT_SYM COMMENT JUMP IO_METHOD INPUT OUTPUT
 token NUMREG POSREG VREG SREG TIME_SEGMENT ARG UALM
-token MOVE DOT TO AT TERM OFFSET SKIP GROUP
+token MOVE DOT TO AT ACC TERM OFFSET SKIP GROUP
 token SEMICOLON NEWLINE STRING
 token REAL DIGIT WORD EQUAL
 token EEQUAL NOTEQUAL GTE LTE LT GT BANG
@@ -196,7 +196,7 @@ rule
     ;
 
   forloop
-    : FOR var IN LPAREN minmax_val TO minmax_val RPAREN block END
+    : FOR var IN LPAREN int_or_var TO int_or_var RPAREN block END
                                        { result = ForNode.new(val[1],val[4],val[6],val[8]) }
     ;
 
@@ -204,7 +204,7 @@ rule
     : WHILE expression block END       { result = WhileNode.new(val[1],val[2]) }
     ;
 
-  minmax_val
+  int_or_var
     : integer
     | var
     ;
@@ -279,6 +279,8 @@ rule
   motion_modifier
     : DOT swallow_newlines AT LPAREN speed RPAREN
                                        { result = SpeedNode.new(val[4]) }
+    | DOT swallow_newlines ACC LPAREN int_or_var RPAREN
+                                       { result = AccNode.new(val[4]) }
     | DOT swallow_newlines TERM LPAREN valid_terminations RPAREN
                                        { result = TerminationNode.new(val[4]) }
     | DOT swallow_newlines OFFSET LPAREN var RPAREN

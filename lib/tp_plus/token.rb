@@ -2,6 +2,7 @@ module TPPlus
   class Token
     KEYWORDS = {
         "abort" => :ABORT,
+        "acc" => :ACC,
         "after" => :AFTER,
         "at" => :AT,
         "case" => :CASE,
