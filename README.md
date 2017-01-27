@@ -28,6 +28,7 @@ example_1.tpp
     baz  := DO[2]
 
     home := PR[1]
+    lpos := PR[2]
 
     foo = 1
 
@@ -40,6 +41,7 @@ example_1.tpp
     toggle baz
 
     linear_move.to(home).at(2000mm/s).term(0)
+    linear_position(lpos)
 
 
 example_1.ls
@@ -56,6 +58,7 @@ example_1.ls
      : DO[2:baz]=(!DO[2:baz]) ;
      :  ;
      : L PR[1:home] 2000mm/sec CNT0 ;
+     : PR[2:lpos]=LPOS ;
     /END
 
 For a more extensive example and test environment, visit http://tp-plus.herokuapp.com/.

@@ -14,6 +14,7 @@ token EVAL TIMER TIMER_METHOD RAISE ABORT
 token POSITION_DATA TRUE_FALSE RUN TP_HEADER PAUSE
 token LPAREN RPAREN COLON COMMA LBRACK RBRACK LBRACE RBRACE
 token LABEL ADDRESS
+token LPOS JPOS
 token false
 
 prechigh
@@ -79,9 +80,15 @@ rule
     | position_data
     | raise
     | tp_header_definition
+    | lpos_or_jpos
     | empty_stmt
     | PAUSE                           { result = PauseNode.new }
     | ABORT                           { result = AbortNode.new }
+    ;
+
+  lpos_or_jpos
+    : LPOS LPAREN var RPAREN          { result = LPOSNode.new(val[2]) }
+    | JPOS LPAREN var RPAREN          { result = JPOSNode.new(val[2]) }
     ;
 
   empty_stmt

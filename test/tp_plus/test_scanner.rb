@@ -566,6 +566,16 @@ class TestScanner < Test::Unit::TestCase
     assert_token :ADDRESS, "foo"
   end
 
+  def test_linear_position
+    @scanner.scan_setup "linear_position"
+    assert_token :LPOS, "linear_position"
+  end
+
+  def test_joint_position
+    @scanner.scan_setup "joint_position"
+    assert_token :JPOS, "joint_position"
+  end
+
   def test_groups
     @scanner.scan_setup "gp3 foo.gp3"
     assert_token :WORD, "gp3"
