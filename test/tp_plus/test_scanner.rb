@@ -567,13 +567,13 @@ class TestScanner < Test::Unit::TestCase
   end
 
   def test_linear_position
-    @scanner.scan_setup "linear_position"
-    assert_token :LPOS, "linear_position"
+    @scanner.scan_setup "get_linear_position"
+    assert_token :LPOS, "get_linear_position"
   end
 
   def test_joint_position
-    @scanner.scan_setup "joint_position"
-    assert_token :JPOS, "joint_position"
+    @scanner.scan_setup "get_joint_position"
+    assert_token :JPOS, "get_joint_position"
   end
 
   def test_groups

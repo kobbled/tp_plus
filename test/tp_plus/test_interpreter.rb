@@ -1356,12 +1356,12 @@ foo = &foo")
   end
 
   def test_lpos
-    parse "foo := PR[1]\nlinear_position(foo)"
+    parse "foo := PR[1]\nget_linear_position(foo)"
     assert_prog "PR[1:foo]=LPOS ;\n"
   end
 
   def test_jpos
-    parse "foo := PR[1]\njoint_position(foo)"
+    parse "foo := PR[1]\nget_joint_position(foo)"
     assert_prog "PR[1:foo]=JPOS ;\n"
   end
 end
