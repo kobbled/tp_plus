@@ -578,6 +578,17 @@ LBL[101:ghjk] ;\n)
     assert_prog "F[1:foo]=(!F[2:bar]) ;\n"
   end
 
+  # issue #15 https://github.com/onerobotics/tp_plus/issues/15
+  def test_assign_output_to_ro
+    parse "foo := DO[1]\nbar := RO[1]\nfoo = bar"
+    assert_prog "DO[1:foo]=(RO[1:bar]) ;\n"
+  end
+
+  def test_assign_output_to_numreg_requires_no_parens
+    parse "foo := DO[1]\nbar := R[1]\nfoo = bar"
+    assert_prog "DO[1:foo]=R[1:bar] ;\n"
+  end
+
   # issue #16 https://github.com/onerobotics/tp_plus/issues/16
   def test_negative_assignment
     parse "foo := R[1]\nfoo = -foo"

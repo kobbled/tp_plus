@@ -13,6 +13,8 @@ module TPPlus
           options[:mixed_logic] = true if @assignable.op.requires_mixed_logic?(context)
           options[:mixed_logic] = true if @assignable.op.boolean?
           options[:mixed_logic] = true if @assignable.boolean_result?
+        elsif @assignable.is_a?(VarNode)
+          options[:mixed_logic] = true if @assignable.target_node(context).is_a? IONode
         else
           options[:mixed_logic] = true if @assignable.requires_mixed_logic?(context)
           options[:mixed_logic] = true if @identifier.requires_mixed_logic?(context)
