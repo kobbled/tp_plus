@@ -1364,4 +1364,9 @@ foo = &foo")
     parse "foo := PR[1]\nget_joint_position(foo)"
     assert_prog "PR[1:foo]=JPOS ;\n"
   end
+
+  def test_return
+    parse "return"
+    assert_prog "END ;\n"
+  end
 end

@@ -28,6 +28,7 @@ module TPPlus
         "raise" => :RAISE,
         "reset" => :TIMER_METHOD,
         "restart" => :TIMER_METHOD,
+        "return" => :RETURN,
         "run" => :RUN,
         "skip_to" => :SKIP,
         "start" => :TIMER_METHOD,

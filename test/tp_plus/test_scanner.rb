@@ -584,4 +584,8 @@ class TestScanner < Test::Unit::TestCase
     assert_token :GROUP, "gp3"
   end
 
+  def test_return
+    @scanner.scan_setup "return"
+    assert_token :RETURN, "return"
+  end
 end

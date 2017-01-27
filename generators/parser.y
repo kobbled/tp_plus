@@ -10,7 +10,7 @@ token IF ELSE END UNLESS FOR IN WHILE
 token WAIT_FOR WAIT_UNTIL TIMEOUT AFTER
 token FANUC_USE SET_SKIP_CONDITION NAMESPACE
 token CASE WHEN INDIRECT POSITION
-token EVAL TIMER TIMER_METHOD RAISE ABORT
+token EVAL TIMER TIMER_METHOD RAISE ABORT RETURN
 token POSITION_DATA TRUE_FALSE RUN TP_HEADER PAUSE
 token LPAREN RPAREN COLON COMMA LBRACK RBRACK LBRACE RBRACE
 token LABEL ADDRESS
@@ -84,6 +84,7 @@ rule
     | empty_stmt
     | PAUSE                           { result = PauseNode.new }
     | ABORT                           { result = AbortNode.new }
+    | RETURN                          { result = ReturnNode.new }
     ;
 
   lpos_or_jpos
