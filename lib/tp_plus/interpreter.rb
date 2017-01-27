@@ -6,6 +6,7 @@ module TPPlus
     attr_reader :labels, :variables, :constants, :namespaces, :source_line_count
     def initialize
       @line_count    = 0
+      @source_line_count = 0
       @nodes         = []
       @labels        = {}
       @namespaces    = {}
