@@ -328,7 +328,7 @@ class TestParser < Test::Unit::TestCase
     parse "foo := F[1]\nbar := F[2]\nfoo = !bar"
     n = last_node
     assert_node_type AssignmentNode, n
-    assert_node_type ExpressionNode, n.assignable
+    assert_node_type UnaryExpressionNode, n.assignable
   end
 
   def test_indirect_position_assignment

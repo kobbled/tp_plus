@@ -393,7 +393,7 @@ rule
   unary_expression
     : factor                           { result = val[0] }
     | address
-    | BANG factor                      { result = ExpressionNode.new(val[1], "!", nil) }
+    | BANG factor                      { result = UnaryExpressionNode.new("!",val[1]) }
     ;
 
   binary_expression

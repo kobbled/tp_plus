@@ -24,11 +24,9 @@ module TPPlus
         "IF #{parens(condition(context), context)},JMP LBL[#{bottom_label(context)}] ;\n"
       end
 
-
       def condition(context)
         @condition_node.eval(context, opposite: true)
       end
-
 
       def block(context)
         @block.inject("") {|s,n| s << "#{n.eval(context)} ;\n" }
