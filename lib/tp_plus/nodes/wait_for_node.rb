@@ -17,7 +17,7 @@ module TPPlus
           when "s"
             @time.eval(context)
           else
-            raise "Invalid units"
+            raise "Indirect values can only use seconds ('s') as the units argument"
           end
         else
           ("%.2f" % case @units

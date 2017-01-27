@@ -346,7 +346,7 @@ class TestInterpreter < Test::Unit::TestCase
 
   def test_wait_for_with_indirect_ms
     parse "foo := R[1]\nwait_for(foo, 'ms')"
-    assert_raise(RuntimeError) do
+    assert_raise_message("Runtime error on line 2:\nIndirect values can only use seconds ('s') as the units argument") do
       assert_prog ""
     end
   end
