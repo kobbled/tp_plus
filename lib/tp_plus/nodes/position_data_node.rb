@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class PositionDataNode
+    class PositionDataNode < BaseNode
       attr_reader :hash
       def initialize(hash)
         @hash = hash

@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class AddressNode
+    class AddressNode < BaseNode
       attr_reader :id
       def initialize(id)
         @id = id

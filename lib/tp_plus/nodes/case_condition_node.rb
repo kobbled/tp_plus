@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class CaseConditionNode
+    class CaseConditionNode < BaseNode
       def initialize(condition, block)
         @condition = condition
         @block = block

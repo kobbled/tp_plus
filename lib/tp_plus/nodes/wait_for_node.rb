@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class WaitForNode
+    class WaitForNode < BaseNode
       def initialize(time, units)
         @time = time
         @units = units
@@ -27,10 +27,6 @@ module TPPlus
             @time.eval(context).to_f / 1000
           end).sub(/^0+/, "") + "(sec)"
         end
-      end
-
-      def can_be_inlined?
-        false
       end
 
       def expression

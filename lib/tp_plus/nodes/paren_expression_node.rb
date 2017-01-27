@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class ParenExpressionNode
+    class ParenExpressionNode < BaseNode
       def initialize(x)
         @x = x
       end

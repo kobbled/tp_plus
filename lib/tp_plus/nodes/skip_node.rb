@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class SkipNode
+    class SkipNode < BaseNode
       def initialize(target, lpos_pr)
         @target = target
         @lpos_pr = lpos_pr

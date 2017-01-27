@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class NamespaceNode
+    class NamespaceNode < BaseNode
       attr_reader :block
       def initialize(name, block)
         @name = name

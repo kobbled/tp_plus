@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class CaseNode
+    class CaseNode < BaseNode
       def initialize(var, conditions, else_condition)
         @var = var
         @conditions = conditions

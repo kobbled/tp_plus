@@ -1,7 +1,7 @@
 module TPPlus
   module Nodes
     # for setting skip conditions
-    class SetSkipNode
+    class SetSkipNode < BaseNode
       def initialize(value)
         @value  = value
       end

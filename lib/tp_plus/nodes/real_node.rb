@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class RealNode
+    class RealNode < BaseNode
       def initialize(value)
         @value = value
       end

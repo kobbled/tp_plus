@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class VarMethodNode
+    class VarMethodNode < BaseNode
       attr_reader :identifier
       def initialize(identifier, method)
         @identifier = identifier

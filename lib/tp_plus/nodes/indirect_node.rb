@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class IndirectNode
+    class IndirectNode < BaseNode
       def initialize(type, target)
         @type = type
         @target = target

@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class CallNode
+    class CallNode < BaseNode
       attr_reader :args
       def initialize(program_name, args, options={})
         @program_name = program_name

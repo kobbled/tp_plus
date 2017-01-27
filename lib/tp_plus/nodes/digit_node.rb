@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class DigitNode
+    class DigitNode < BaseNode
       attr_reader :value
       def initialize(value)
         @value = value

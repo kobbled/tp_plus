@@ -1,6 +1,7 @@
 module TPPlus
 end
 
+require_relative 'tp_plus/nodes/base_node'
 require_relative 'tp_plus/nodes/abort_node'
 require_relative 'tp_plus/nodes/acc_node'
 require_relative 'tp_plus/nodes/argument_node'

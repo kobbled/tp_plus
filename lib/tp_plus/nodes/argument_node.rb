@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class ArgumentNode
+    class ArgumentNode < BaseNode
       attr_accessor :comment
       attr_reader :id
       def initialize(id)

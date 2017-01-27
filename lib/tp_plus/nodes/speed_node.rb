@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class SpeedNode
+    class SpeedNode < BaseNode
       def initialize(speed_hash)
         @speed_hash = speed_hash
       end

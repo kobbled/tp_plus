@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class TimerMethodNode
+    class TimerMethodNode < BaseNode
       def initialize(method, target)
         @method = method
         @target = target
@@ -8,10 +8,6 @@ module TPPlus
 
       def requires_mixed_logic?(context)
         true
-      end
-
-      def can_be_inlined?
-        false
       end
 
       def timer(context)

@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class StringNode
+    class StringNode < BaseNode
       def initialize(s)
         @s = s
       end

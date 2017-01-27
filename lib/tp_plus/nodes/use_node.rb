@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class UseNode
+    class UseNode < BaseNode
       def initialize(type, value)
         @type = type
         @value = value

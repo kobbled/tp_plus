@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class PosregNode
+    class PosregNode < BaseNode
 
       COMPONENTS = {
         "x" => 1,

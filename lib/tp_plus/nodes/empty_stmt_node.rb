@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class EmptyStmtNode
+    class EmptyStmtNode < BaseNode
       def eval(context, options={})
         ""
       end

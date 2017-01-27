@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class IOMethodNode
+    class IOMethodNode < BaseNode
       def initialize(method, target,options={})
         @method = method
         @target = target

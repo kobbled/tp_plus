@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class WhileNode
+    class WhileNode < BaseNode
       def initialize(condition_node, block)
         @condition_node = condition_node
         @block = block.flatten.reject {|n| n.is_a?(TerminatorNode) }

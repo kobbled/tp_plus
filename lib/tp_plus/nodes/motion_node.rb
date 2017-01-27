@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class MotionNode
+    class MotionNode < BaseNode
       def initialize(type, destination, modifiers)
         @type = type
         @destination = destination

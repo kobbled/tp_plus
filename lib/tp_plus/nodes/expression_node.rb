@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class ExpressionNode
+    class ExpressionNode < BaseNode
       attr_reader :left_op, :op, :right_op
       def initialize(left_op, op_string, right_op)
         @left_op  = left_op

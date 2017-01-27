@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class ConditionalNode
+    class ConditionalNode < BaseNode
       def initialize(type,condition,true_block,false_block)
         @type        = type
         @condition   = condition

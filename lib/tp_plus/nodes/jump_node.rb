@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class JumpNode 
+    class JumpNode < BaseNode
       def initialize(identifier)
         @identifier = identifier
       end

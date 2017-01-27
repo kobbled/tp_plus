@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class TimeNode
+    class TimeNode < BaseNode
       def initialize(type, time, action)
         @type = type
         @time = time

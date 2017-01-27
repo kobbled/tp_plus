@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class UnitsNode
+    class UnitsNode < BaseNode
       def initialize(s)
         @s = s
       end

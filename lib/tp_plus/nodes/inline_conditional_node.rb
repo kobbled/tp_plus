@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class InlineConditionalNode
+    class InlineConditionalNode < BaseNode
       attr_reader :condition_node
       def initialize(type, condition, block)
         @type           = type
@@ -16,10 +16,6 @@ module TPPlus
 
       def block_requires_mixed_logic?(context)
         @block.requires_mixed_logic?(context)
-      end
-
-      def can_be_inlined?
-        false
       end
 
       def condition(context,options={})

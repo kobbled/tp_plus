@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class UnaryExpressionNode
+    class UnaryExpressionNode < BaseNode
       attr_reader :op, :x
       def initialize(op, x)
         @op = OperatorNode.new(op)

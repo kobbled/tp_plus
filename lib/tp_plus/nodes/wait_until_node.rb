@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class WaitUntilNode
+    class WaitUntilNode < BaseNode
       def initialize(expression, timeout_options)
         @expression = expression
         @timeout_options = timeout_options || {}
@@ -41,10 +41,6 @@ module TPPlus
         end
 
         value
-      end
-
-      def can_be_inlined?
-        false
       end
 
       def wait_timeout(context)

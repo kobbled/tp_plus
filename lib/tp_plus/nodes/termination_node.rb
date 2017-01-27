@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class TerminationNode
+    class TerminationNode < BaseNode
       def initialize(value)
         @value = value
       end

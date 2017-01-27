@@ -1,12 +1,8 @@
 module TPPlus
   module Nodes
-    class CommentNode
+    class CommentNode < BaseNode
       def initialize(text)
         @text = text[1,text.length]
-      end
-
-      def can_be_inlined?
-        false
       end
 
       def eval(context)

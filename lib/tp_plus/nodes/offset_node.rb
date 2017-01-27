@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class OffsetNode
+    class OffsetNode < BaseNode
       def initialize(type, var)
         @type = type
         @var = var

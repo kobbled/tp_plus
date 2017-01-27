@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class NamespacedVarNode
+    class NamespacedVarNode < BaseNode
       attr_reader :namespaces
       def initialize(namespaces, var_node)
         @namespaces = namespaces

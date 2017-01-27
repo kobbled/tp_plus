@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class LabelDefinitionNode
+    class LabelDefinitionNode < BaseNode
       attr_reader :identifier
       def initialize(identifier)
         @identifier = identifier

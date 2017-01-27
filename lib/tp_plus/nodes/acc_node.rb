@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class AccNode
+    class AccNode < BaseNode
       def initialize(value)
         @value = value
       end

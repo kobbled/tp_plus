@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class RaiseNode
+    class RaiseNode < BaseNode
       def initialize(target)
         @target = target
       end

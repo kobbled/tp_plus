@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class HeaderNode
+    class HeaderNode < BaseNode
       def initialize(type, value)
         @type  = type
         @value = value

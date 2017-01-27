@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class EvalNode
+    class EvalNode < BaseNode
       def initialize(string)
         @string = string
       end

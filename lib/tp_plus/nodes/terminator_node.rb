@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class TerminatorNode
+    class TerminatorNode < BaseNode
       def eval(context)
         nil
       end

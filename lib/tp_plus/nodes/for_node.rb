@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class ForNode
+    class ForNode < BaseNode
       def initialize(var_node, initial_value_node, final_value_node, block)
         @var_node           = var_node
         @initial_value_node = initial_value_node

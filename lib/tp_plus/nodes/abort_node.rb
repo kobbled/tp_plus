@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class AbortNode
+    class AbortNode < BaseNode
       def eval(context)
         "ABORT"
       end

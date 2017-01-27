@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class PauseNode
+    class PauseNode < BaseNode
       def eval(context)
         "PAUSE"
       end
