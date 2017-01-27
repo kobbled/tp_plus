@@ -41,7 +41,7 @@ example_1.tpp
     toggle baz
 
     linear_move.to(home).at(2000mm/s).term(0)
-    linear_position(lpos)
+    get_linear_position(lpos)
 
 
 example_1.ls
