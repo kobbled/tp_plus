@@ -578,6 +578,12 @@ LBL[101:ghjk] ;\n)
     assert_prog "F[1:foo]=(!F[2:bar]) ;\n"
   end
 
+  # issue #16 https://github.com/onerobotics/tp_plus/issues/16
+  def test_negative_assignment
+    parse "foo := R[1]\nfoo = -foo"
+    assert_prog "R[1:foo]=R[1:foo]*(-1) ;\n"
+  end
+
   def test_bang_with_grouping
     parse "foo := F[1]\nbar := F[2]\nbaz := F[3]\nfoo = foo || !(bar || baz)"
     assert_prog "F[1:foo]=(F[1:foo] OR !(F[2:bar] OR F[3:baz])) ;\n"
