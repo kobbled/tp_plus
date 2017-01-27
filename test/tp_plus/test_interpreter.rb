@@ -665,6 +665,11 @@ LBL[101:ghjk] ;\n)
     assert_prog "PR[1:foo]=PR[5] ;\n"
   end
 
+  def test_add_posregs
+    parse "a := PR[1]\nb := PR[2]\nc := PR[3]\nd := PR[4]\na=b+c+d"
+    assert_prog "PR[1:a]=PR[2:b]+PR[3:c]+PR[4:d] ;\n"
+  end
+
   def test_namespace
     parse "namespace Foo\nbar := R[1]\nend\nFoo::bar = 5"
     assert_prog "R[1:Foo bar]=5 ;\n"
