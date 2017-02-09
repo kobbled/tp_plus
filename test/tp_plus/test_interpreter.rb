@@ -1369,4 +1369,10 @@ foo = &foo")
     parse "return"
     assert_prog "END ;\n"
   end
+
+  # issue #18 https://github.com/onerobotics/tp_plus/issues/18
+  def test_mixed_logic_with_multiple_conditions_and_not_operator
+    parse "foo := RI[1]\nbar := RI[2]\nif !foo && !bar\n# true\nend"
+    assert_prog "IF (RI[1:foo] OR RI[2:bar]),JMP LBL[100] ;\n! true ;\nLBL[100] ;\n"
+  end
 end

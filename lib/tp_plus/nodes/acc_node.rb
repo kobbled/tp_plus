@@ -6,12 +6,17 @@ module TPPlus
       end
 
       def eval(context)
-        val = @value.eval(context)
-        case val
-        when Integer
-          "ACC#{val}"
+        case @value
+        when DigitNode
+          "ACC#{@value.eval(context)}"
+        when VarNode
+          if @value.constant?
+            "ACC#{@value.eval(context)}"
+          else
+            "ACC #{@value.eval(context)}"
+          end
         else
-          "ACC #{val}"
+          raise "invalid acc"
         end
       end
     end

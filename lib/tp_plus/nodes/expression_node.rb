@@ -49,11 +49,14 @@ module TPPlus
         else
           if @op.boolean?
             # if operator is &&, || or !, we flip the operator and the operands
-            "#{@left_op.eval(context,options)}#{@op.eval(context, options)}#{@right_op.eval(context, options)}"
+            left = @left_op.eval(context, options)
+            op = @op.eval(context, options)
+            right = @right_op.eval(context, options)
+            [left, op, right].reject(&:empty?).join('')
           else
             # flip the operator if options[:opposite]
             # flip the operands only if opposite and the operand is an expression
-            "#{@left_op.eval(context, opposite: (@left_op.is_a?(ExpressionNode) && options[:opposite]))}#{@op.eval(context, options)}#{@right_op.eval(context, opposite: (@right_op.is_a?(ExpressionNode) && options[:opposite]))}"
+            "#{@left_op.eval(context, opposite: ((@left_op.is_a?(ExpressionNode) || @left_op.is_a?(UnaryExpressionNode))&& options[:opposite]))}#{@op.eval(context, options)}#{@right_op.eval(context, opposite: ((@right_op.is_a?(ExpressionNode) || @right_op.is_a?(UnaryExpressionNode)) && options[:opposite]))}"
           end
         end
       end

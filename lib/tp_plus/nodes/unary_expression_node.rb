@@ -16,7 +16,7 @@ module TPPlus
       end
 
       def contains_expression?
-        false
+        true
       end
 
       def boolean_result?
@@ -25,8 +25,9 @@ module TPPlus
 
       def eval(context,options={})
         if options[:opposite]
-          options[:opposite] = false #VarNode.eval() with options[:opposite] will add a !
-          @x.eval(context, options)
+          new_options = options.dup
+          new_options.delete(:opposite) # VarNode.eval() with opposite will add a !
+          @x.eval(context, new_options)
         elsif options[:disable_mixed_logic]
           options[:disable_mixed_logic] = false
           "#{@x.eval(context, options)}=OFF"

@@ -14,7 +14,7 @@ module TPPlus
         if @value < 0
           "(#{@value})"
         else
-          @value
+          @value.to_s
         end
       end
     end

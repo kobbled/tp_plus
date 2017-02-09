@@ -6,16 +6,22 @@ module TPPlus
       end
 
       def eval(context)
-        val = @value.eval(context)
-        case val
-        when Integer
-          "CNT#{val}"
-        else
-          if val[0] == "R"
-            "CNT #{val}"
+        case @value
+        when DigitNode
+          "CNT#{@value.eval(context)}"
+        when VarNode
+          if @value.constant?
+            val = @value.eval(context)
+            if val[0] == "(" # negative
+              "FINE"
+            else
+              "CNT#{val}"
+            end
           else
-            "FINE"
+            "CNT #{@value.eval(context)}"
           end
+        else
+          raise "invalid term"
         end
       end
     end

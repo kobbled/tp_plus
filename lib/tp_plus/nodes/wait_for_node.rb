@@ -12,20 +12,27 @@ module TPPlus
 
       # 2 decimal places and remove leading 0s
       def time(context)
-        if @time.eval(context).is_a?(String)
+        case @time
+        when DigitNode, RealNode
           case @units
           when "s"
-            @time.eval(context)
+            return ("%.2f(sec)" % @time.eval(context)).sub(/^0+/, "")
+          when "ms"
+            return ("%.2f(sec)" % (@time.eval(context).to_f / 1000)).sub(/^0+/, "")
+          end
+        when VarNode
+          case @units
+          when "s"
+            if @time.constant?
+              return ("%.2f(sec)" % @time.eval(context)).sub(/^0+/, "")
+            else
+              return @time.eval(context)
+            end
           else
             raise "Indirect values can only use seconds ('s') as the units argument"
           end
         else
-          ("%.2f" % case @units
-          when "s"
-            @time.eval(context)
-          when "ms"
-            @time.eval(context).to_f / 1000
-          end).sub(/^0+/, "") + "(sec)"
+          raise "PANIC"
         end
       end
 
