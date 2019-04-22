@@ -40,7 +40,7 @@ example_1.tpp
     turn_on bar if foo == 5
     toggle baz
 
-    linear_move.to(home).at(2000mm/s).term(0)
+    linear_move.to(home).at(2000, 'mm/s').term(0)
     get_linear_position(lpos)
 
 
