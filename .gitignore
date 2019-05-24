@@ -15,3 +15,5 @@ pkg/*
 lib/tp_plus/parser.rb
 SyncToy*.dat
 *.swp
+*.code-workspace
+.vscode/*

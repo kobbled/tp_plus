@@ -63,6 +63,38 @@ class TestInterpreter < Test::Unit::TestCase
     assert_prog "LBL[100:foo] ;\n"
   end
 
+  #@kobbled adds
+  def test_label_with_number_definition
+    parse("@foo2")
+    assert_prog "LBL[100:foo2] ;\n"
+  end
+
+  def test_label_in_while_loop
+    parse("i   := R[1]
+    inc := R[2]
+    i = 0
+    inc = 10
+    while i < inc
+        @finlbl1
+        i += 1
+    end
+    jump_to @finlbl1")
+    
+    assert_prog "R[1:i]=0 ;
+    R[2:inc]=10 ;
+    \n
+    LBL[101] ;
+    IF R[1:i]>=R[2:inc],JMP LBL[102] ;
+    LBL[100:finlbl1] ;
+    R[1:i]=R[1:i]+1 ;
+    JMP LBL[101] ;
+    LBL[102] ;
+    \n
+    JMP LBL[100] ;"
+
+  end
+  # ------
+
   def test_duplicate_label_definition
     parse("@foo\n@foo")
     assert_raise RuntimeError do
@@ -507,6 +539,13 @@ LBL[101:ghjk] ;\n)
     parse("foo := PR[1]\nbar := R[1]\nindirect('uframe',bar)=foo")
     assert_prog "UFRAME[R[1:bar]]=PR[1:foo] ;\n"
   end
+
+  #@kobbled adds
+  def test_fanuc_set_utool_with_reg
+    parse("foo := PR[1]\nbar := R[1]\nindirect('utool',bar)=foo")
+    assert_prog "UTOOL[R[1:bar]]=PR[1:foo] ;\n"
+  end
+  # ---------
 
   def test_set_skip_condition
     parse("foo := RI[1]\nset_skip_condition foo")
@@ -1184,6 +1223,19 @@ P[2:"test2"]{
     assert_prog "R[1:foo]=5 MOD 2 ;\n"
   end
 
+  #@kobbled adds
+  def test_modulus_in_if
+    parse %(foo := R[1]\nis := R[2]\n is = 2\n if is % 0 == 0 \n foo = 5 \n end)
+    assert_prog "R[2:is]=2 ;\nIF (R[2:is] MOD 0=0),R[1:foo]=(5) ;\n"
+  end
+
+  def test_modulus_in_if_logic
+    parse %(foo := R[1]\nis := R[2]\n is = 2\n if is % 0 == 0 \n foo = 5\nGO_TO1() \n end)
+    assert_prog "R[2:is]=2 ;\nIF (R[2:is] MOD 0<>0),JMP LBL[100] ;\nR[1:foo]=5 ;\nCALL GO_TO1 ;\nLBL[100] ;\n"
+  end
+
+  # -------
+
   def test_assignment_to_sop
     parse %(foo := DO[1]\nbar := SO[1]\nfoo = bar)
     assert_prog "DO[1:foo]=(SO[1:bar]) ;\n"
@@ -1368,6 +1420,37 @@ foo = &foo")
   def test_return
     parse "return"
     assert_prog "END ;\n"
+  end
+
+  #@kobbled additions
+  def test_motion_indirect_offset
+    parse("p := P[1]\no := PR[1]\nfoo := AR[1]\nlinear_move.to(p).at(100, 'mm/s').term(0).offset(indirect('pr', foo))")
+    assert_prog "L P[1:p] 100mm/sec CNT0 Offset,PR[AR[1]] ;\n"
+  end
+
+  def test_indirect_motion_to_a_position
+    parse("foo := AR[1]\nlinear_move.to(indirect('pr', foo)).at(2000, 'mm/s').term(0)")
+    assert_prog "L PR[AR[1]] 2000mm/sec CNT0 ;\n"
+  end
+
+  def test_pr_components_indirect
+    parse("arg := AR[1]\nindirect('pr', arg).gp1.y=5\n")
+    assert_prog "PR[GP1:AR[1],2]=5 ;\n"
+  end
+
+  def test_motion_circular
+    parse("foo := PR[1]\nfoo2 := PR[2]\nTERM := 100\ncircular_move.from(foo).to(foo2).at(2000, 'mm/s').term(TERM).coord")
+    assert_prog "C PR[1:foo] PR[2:foo2] 2000mm/sec CNT100 COORD ;\n"
+  end
+
+  def test_analogin
+    parse("foo := AI[1]\nfoo = 20")
+    assert_prog "AI[1:foo]=(20) ;\n"
+  end
+
+  def test_analogout
+    parse("foo := AO[1]\nfoo = 20")
+    assert_prog "AO[1:foo]=20 ;\n"
   end
 
   # issue #18 https://github.com/onerobotics/tp_plus/issues/18
