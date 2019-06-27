@@ -1441,7 +1441,7 @@ foo = &foo")
   end
 
   def test_pr_components_indirect
-    parse("arg := AR[1]\nindirect('pr', arg).gp1.y=5\n")
+    parse("arg := AR[1]\nindirect('pr', arg).group(1).y=5\n")
     assert_prog "PR[GP1:AR[1],2]=5 ;\n"
   end
 

@@ -1,9 +1,10 @@
 module TPPlus
   module Nodes
     class IndirectNode < BaseNode
-      def initialize(type, target)
+      def initialize(type, target, method)
         @type   = type
         @target = target
+        @method = method || {}
       end
 
       def requires_mixed_logic?(context)
@@ -12,8 +13,53 @@ module TPPlus
         false
       end
 
+      COMPONENTS = {
+        "x" => 1,
+        "y" => 2,
+        "z" => 3,
+        "w" => 4,
+        "p" => 5,
+        "r" => 6,
+      }
+
+      GROUPS = {
+        "gp1" => "GP1",
+        "gp2" => "GP2",
+        "gp3" => "GP3",
+        "gp4" => "GP4",
+        "gp5" => "GP5"
+      }
+
+      def groups(context)
+        return "" if context == ""
+        "#{GROUPS[context]}:"
+      end
+
+      def component(m)
+        return "" if m == ""
+
+        ",#{COMPONENTS[m]}"
+      end
+
+      def component_valid?(c)
+        [""].concat(COMPONENTS.keys).include? c
+      end
+
+      def component_groups?(c)
+        [""].concat(GROUPS.keys).include? c
+      end
+
       def eval(context,options={})
-        s = "#{@type.upcase}[#{@target.eval(context)}]"
+
+        @method[:method] ||= ""
+
+        if @method[:group].is_a? DigitNode
+          group_string = GROUPS["gp" + @method[:group].eval(context).to_s] + ":" if @method[:group]
+        else
+          group_string = GROUPS[@method[:group]] + ":" if @method[:group]
+        end
+
+        s = "#{@type.upcase}[#{group_string}#{@target.eval(context)}#{component(@method[:method])}]"
         if options[:opposite]
           s = "!#{s}"
         end
