@@ -129,7 +129,7 @@ module TPPlus
 
     def scanLabel
       offs = @offset
-      while self.isLetter?(@ch)
+      while self.isLetter?(@ch) || isDigit?(@ch)
         self.next
       end
 

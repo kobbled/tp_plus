@@ -1237,8 +1237,8 @@ P[2:"test2"]{
   end
 
   def test_modulus_in_if_logic
-    parse %(foo := R[1]\nis := R[2]\n is = 2\n if is % 0 == 0 \n foo = 5\nGO_TO1() \n end)
-    assert_prog "R[2:is]=2 ;\nIF (R[2:is] MOD 0<>0),JMP LBL[100] ;\nR[1:foo]=5 ;\nCALL GO_TO1 ;\nLBL[100] ;\n"
+    parse %(foo := R[1]\ni := R[2]\n i = 2\n if i % 0 == 0 \n foo = 5\nGO_TO1() \n end)
+    assert_prog "R[2:i]=2 ;\nIF (R[2:i] MOD 0<>0),JMP LBL[100] ;\nR[1:foo]=5 ;\nCALL GO_TO1 ;\nLBL[100] ;\n"
   end
 
   # -------

@@ -26,9 +26,9 @@ module TPPlus
       end
 
       def mask_valid?(position_hash)
-        return false unless position_hash[:group].is_a?(Fixnum)
-        return false unless position_hash[:uframe].is_a?(Fixnum)
-        return false unless position_hash[:utool].is_a?(Fixnum)
+        return false unless position_hash[:group].is_a?(Integer)
+        return false unless position_hash[:uframe].is_a?(Integer)
+        return false unless position_hash[:utool].is_a?(Integer)
 
         if position_hash[:config].is_a?(Hash)
           return false unless boolean?(position_hash[:config][:flip])
@@ -36,7 +36,7 @@ module TPPlus
           return false unless boolean?(position_hash[:config][:top])
           return false unless position_hash[:config][:turn_counts].is_a?(Array)
           return false unless position_hash[:config][:turn_counts].length == 3
-          return false if position_hash[:config][:turn_counts].map {|tc| tc.is_a?(Fixnum) == false }.any?
+          return false if position_hash[:config][:turn_counts].map {|tc| tc.is_a?(Integer) == false }.any?
           return false unless position_hash[:components].is_a?(Hash)
           [:x,:y,:z,:w,:p,:r].each do |component|
             return false unless position_hash[:components][component].is_a?(Float)
