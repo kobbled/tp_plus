@@ -1,8 +1,9 @@
 module TPPlus
   module Nodes
     class MotionNode < BaseNode
-      def initialize(type, destination, modifiers)
+      def initialize(type, origin, destination, modifiers)
         @type = type
+        @origin = origin
         @destination = destination
         @modifiers = modifiers
       end
@@ -38,13 +39,27 @@ module TPPlus
         strings_array = [""] << actual_modifiers.map { |m| m.eval(context) }
         @modifiers_string = strings_array.join(" ")
       end
+      
+      def position_string(context)
+        if @origin != nil
+          "#{@origin.eval(context)} #{@destination.eval(context)}"
+        else
+          "#{@destination.eval(context)}"
+        end
+      end
 
       def speed_valid?(context)
         case @type
         when "linear_move"
           return true if speed_node.eval(context) == "max_speed"
 
-          ["mm/sec"].include? speed_node.units
+          ["mm/sec"].include?(speed_node.units) or ["deg/sec"].include?(speed_node.units) or ["sec"].include?(speed_node.units)
+
+        when "circular_move"
+          return true if speed_node.eval(context) == "max_speed"
+
+          ["mm/sec"].include?(speed_node.units) or ["deg/sec"].include?(speed_node.units) or ["sec"].include?(speed_node.units)
+
         when "joint_move"
           return false if speed_node.eval(context) == "max_speed"
 
@@ -54,8 +69,9 @@ module TPPlus
 
       def eval(context)
         raise "Speed is invalid for motion type" unless speed_valid?(context)
+        raise "Origin position not set" if @origin == nil && @type == "circular_move"
 
-        "#{prefix} #{@destination.eval(context)} #{speed_node.eval(context)} #{termination_node.eval(context)}#{modifiers_string(context)}"
+        "#{prefix} #{position_string(context)} #{speed_node.eval(context)} #{termination_node.eval(context)}#{modifiers_string(context)}"
       end
     end
   end

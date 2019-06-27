@@ -1,7 +1,7 @@
 class TPPlus::Parser
 token ASSIGN AT_SYM COMMENT JUMP IO_METHOD INPUT OUTPUT
 token NUMREG POSREG VREG SREG TIME_SEGMENT ARG UALM
-token MOVE DOT TO AT ACC TERM OFFSET SKIP GROUP
+token MOVE DOT TO FROM AT ACC TERM OFFSET SKIP GROUP COORD
 token SEMICOLON NEWLINE STRING
 token REAL DIGIT WORD EQUAL
 token EEQUAL NOTEQUAL GTE LTE LT GT BANG
@@ -274,8 +274,10 @@ rule
     ;
 
   motion_statement
-    : MOVE DOT swallow_newlines TO LPAREN var RPAREN motion_modifiers
-                                       { result = MotionNode.new(val[0],val[5],val[7]) }
+    : MOVE DOT swallow_newlines TO LPAREN var_or_indirect RPAREN motion_modifiers
+                                       { result = MotionNode.new(val[0],nil,val[5],val[7]) }
+    | MOVE DOT swallow_newlines FROM LPAREN var_or_indirect RPAREN DOT swallow_newlines TO LPAREN var_or_indirect RPAREN motion_modifiers
+                                       { result = MotionNode.new(val[0],val[5],val[11],val[13]) }
     ;
 
   motion_modifiers
@@ -291,12 +293,14 @@ rule
                                        { result = AccNode.new(val[4]) }
     | DOT swallow_newlines TERM LPAREN valid_terminations RPAREN
                                        { result = TerminationNode.new(val[4]) }
-    | DOT swallow_newlines OFFSET LPAREN var RPAREN
+    | DOT swallow_newlines OFFSET LPAREN var_or_indirect RPAREN
                                        { result = OffsetNode.new(val[2],val[4]) }
     | DOT swallow_newlines TIME_SEGMENT LPAREN time COMMA time_seg_actions RPAREN
                                        { result = TimeNode.new(val[2],val[4],val[6]) }
     | DOT swallow_newlines SKIP LPAREN label optional_lpos_arg RPAREN
                                        { result = SkipNode.new(val[4],val[5]) }
+    | DOT swallow_newlines COORD
+                                       { result = CoordNode.new(val[2]) }
     ;
 
   valid_terminations

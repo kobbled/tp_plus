@@ -294,6 +294,13 @@ class TestInterpreter < Test::Unit::TestCase
     assert_prog "L P[1:p] max_speed CNT0 ;\n"
   end
 
+  #@kobbled adds
+  def test_motion_with_seconds_motion_type
+    parse("p := P[1]\nspeed := R[1]\nlinear_move.to(p).at(speed, 's').term(0)")
+    assert_prog "L P[1:p] R[1:speed]sec CNT0 ;\n"
+  end
+  # ---------
+
   def test_use_uframe
     parse("use_uframe 5")
     assert_prog "UFRAME_NUM=5 ;\n"
