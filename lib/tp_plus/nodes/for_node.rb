@@ -12,6 +12,10 @@ module TPPlus
         @s ||= @block.inject("") {|s,n| s << "#{n.eval(context)} ;\n" }
       end
 
+      def get_block
+        @block
+      end
+
       def eval(context)
         "FOR #{@var_node.eval(context)}=#{@initial_value_node.eval(context)} TO #{@final_value_node.eval(context)} ;\n#{block(context)}ENDFOR"
       end

@@ -32,6 +32,10 @@ module TPPlus
         @block.inject("") {|s,n| s << "#{n.eval(context)} ;\n" }
       end
 
+      def get_block
+        @block
+      end
+
       def eval(context)
         "LBL[#{top_label(context)}] ;\n#{if_statement(context)}#{block(context)}JMP LBL[#{top_label(context)}] ;\nLBL[#{bottom_label(context)}]"
       end

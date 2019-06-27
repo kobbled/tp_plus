@@ -80,17 +80,75 @@ class TestInterpreter < Test::Unit::TestCase
     end
     jump_to @finlbl1")
     
-    assert_prog "R[1:i]=0 ;
-    R[2:inc]=10 ;
-    \n
-    LBL[101] ;
-    IF R[1:i]>=R[2:inc],JMP LBL[102] ;
-    LBL[100:finlbl1] ;
-    R[1:i]=R[1:i]+1 ;
-    JMP LBL[101] ;
-    LBL[102] ;
-    \n
-    JMP LBL[100] ;"
+    assert_prog "R[1:i]=0 ;\n" +
+    "R[2:inc]=10 ;\n" +
+    "LBL[101] ;\n" +
+    "IF R[1:i]>=R[2:inc],JMP LBL[102] ;\n" +
+    "LBL[100:finlbl1] ;\n" +
+    "R[1:i]=R[1:i]+1 ;\n" +
+    "JMP LBL[101] ;\n" +
+    "LBL[102] ;\n" +
+    "JMP LBL[100] ;\n"
+
+  end
+
+  def test_label_in_nested_loop
+    parse("i   := R[1]
+    inc := R[2]
+    j   := R[3]
+    inc2 := R[4]
+    i = 0
+    j = 0
+    inc = 10
+    inc2 = 20
+    while i < inc
+        @finlbl1
+        while j < inc2
+          @finlbl2
+          j += 1
+        end
+        i += 1
+    end
+    jump_to @finlbl1
+    jump_to @finlbl2")
+    
+    assert_prog "R[1:i]=0 ;\n" +
+    "R[3:j]=0 ;\n" +
+    "R[2:inc]=10 ;\n" +
+    "R[4:inc2]=20 ;\n" +
+    "LBL[102] ;\n" +
+    "IF R[1:i]>=R[2:inc],JMP LBL[103] ;\n" +
+    "LBL[100:finlbl1] ;\n" +
+    "LBL[104] ;\n" +
+    "IF R[3:j]>=R[4:inc2],JMP LBL[105] ;\n" +
+    "LBL[101:finlbl2] ;\n" +
+    "R[3:j]=R[3:j]+1 ;\n" +
+    "JMP LBL[104] ;\n" +
+    "LBL[105] ;\n" +
+    "R[1:i]=R[1:i]+1 ;\n" +
+    "JMP LBL[102] ;\n" +
+    "LBL[103] ;\n" +
+    "JMP LBL[100] ;\n" +
+    "JMP LBL[101] ;\n"
+
+  end
+
+  def test_label_in_for_loop
+    parse("i   := R[1]
+    inc := R[2]
+    i = 0
+    inc = 10
+    for i in (1 to 10)
+        @finlbl1
+    end
+    jump_to @finlbl1")
+    
+    assert_prog "R[1:i]=0 ;\n" +
+    "R[2:inc]=10 ;\n" +
+    "FOR R[1:i]=1 TO 10 ;\n" +
+    "LBL[100:finlbl1] ;\n" +
+    "ENDFOR ;\n" +
+    "JMP LBL[100] ;\n"
 
   end
   # ------

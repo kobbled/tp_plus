@@ -77,8 +77,28 @@ module TPPlus
       @constants[identifier.to_sym]
     end
 
+    def label_recur(nodes, labels)
+      if nodes.is_a?(Array)
+        nodes.each do |node|
+          if node.is_a?(Nodes::LabelDefinitionNode)
+            labels << node
+          else
+              label_recur(node, labels)
+          end
+        end
+      end
+
+      if nodes.is_a?(Nodes::WhileNode) || nodes.is_a?(Nodes::ForNode)
+        label_recur(nodes.get_block, labels)
+      end
+
+      labels
+
+    end
+
     def define_labels
-      @nodes.select {|n| n.is_a? Nodes::LabelDefinitionNode}.each do |n|
+      label_nodes = []
+      label_recur(@nodes, label_nodes).each do |n|
         add_label(n.identifier)
       end
     end
