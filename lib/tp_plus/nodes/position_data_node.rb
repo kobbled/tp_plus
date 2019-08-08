@@ -45,7 +45,11 @@ module TPPlus
           # must be joint representation
           return false unless position_hash[:components].is_a?(Hash)
           position_hash[:components].each do |component|
-            return false unless component[1].is_a?(Float)
+            if component[1].is_a?(Array)
+              return false unless component[1][1] == 'deg' || component[1][1] == 'mm'
+            else
+              return false unless component[1].is_a?(Float)
+            end
           end
         end
 
