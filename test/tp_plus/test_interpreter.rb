@@ -1149,6 +1149,148 @@ P[2:"test2"]{
 };\n), @interpreter.pos_section
   end
 
+  def test_joint_position_outputs
+    parse %(position_data
+  {
+    'positions': [
+      {
+        'id': 1,
+        'comment': "test",
+        'mask': [{
+          'group': 1,
+          'uframe': 0,
+          'utool': 1,
+          'components': {
+            'J1': 180.0,
+            'J2': 90.0,
+            'J3': 60.0,
+            'J4': -90.0,
+            'J5': 0.0,
+            'J6': 180.0
+          }
+        }]
+      }
+    ]
+  }
+end)
+
+    assert_prog ""
+    assert_equal %(P[1:"test"]{
+   GP1:
+UF : 0, UT : 1, 
+	J1 = 180.0 deg, 
+	J2 = 90.0 deg, 
+	J3 = 60.0 deg, 
+	J4 = -90.0 deg, 
+	J5 = 0.0 deg, 
+	J6 = 180.0 deg
+};\n), @interpreter.pos_section
+  end
+
+  def test_independent_group_position_rot
+    parse %(position_data
+  {
+    'positions': [
+      {
+        'id': 1,
+        'comment': "test",
+        'mask': [{
+          'group': 1,
+          'uframe': 1,
+          'utool': 1,
+          'config': {
+            'flip': true,
+            'up': true,
+            'top': true,
+            'turn_counts': [0,0,0]
+          },
+          'components': {
+            'x' : -576.703,
+            'y' : 652.415,
+            'z' : 10751.806,
+            'w' : 76.235,
+            'p' : 9.185,
+            'r' : 27.809
+          }
+        },
+        {
+          'group' : 2,
+          'uframe': 1,
+          'utool': 1,
+          'components' : {
+              'J1' : 90.0,
+              'J2' : 180.0
+              }
+        }]
+      }
+    ]
+  }
+end)
+
+    assert_prog ""
+    assert_equal %(P[1:"test"]{
+   GP1:
+  UF : 1, UT : 1,  CONFIG : 'F U T, 0, 0, 0',
+  X = -576.703 mm, Y = 652.415 mm, Z = 10751.806 mm,
+  W = 76.235 deg, P = 9.185 deg, R = 27.809 deg
+   GP2:
+UF : 1, UT : 1, 
+\tJ1 = 90.0 deg, 
+\tJ2 = 180.0 deg
+};\n), @interpreter.pos_section
+  end
+
+  def test_independent_group_pos_linear
+    parse %(position_data
+  {
+    'positions': [
+      {
+        'id' : 1,
+        'comment' : "test",
+        'mask' :  [{
+          'group' : 1,
+          'uframe' : 8,
+          'utool' : 5,
+          'config' : {
+              'flip' : true,
+              'up'   : true,
+              'top'  : true,
+              'turn_counts' : [0,0,0]
+              },
+          'components' : {
+              'x' : 0.0,
+              'y' : 0.0,
+              'z' : 0.0,
+              'w' : 90.0,
+              'p' : 90.0,
+              'r' : 0.0
+              }
+          },
+          {
+          'group' : 2,
+          'uframe' : 8,
+          'utool' : 5,
+          'components' : {
+              'J1' : [11500.0, 'mm']
+              }
+          }]
+      }
+    ]
+  }
+end)
+
+    assert_prog ""
+    assert_equal %(P[1:"test"]{
+   GP1:
+  UF : 8, UT : 5,  CONFIG : 'F U T, 0, 0, 0',
+  X = 0.0 mm, Y = 0.0 mm, Z = 0.0 mm,
+  W = 90.0 deg, P = 90.0 deg, R = 0.0 deg
+   GP2:
+UF : 8, UT : 5, 
+\tJ1 = 11500.0 mm
+};\n), @interpreter.pos_section
+  end
+
   def test_simple_pulse
     parse "foo := DO[1]\npulse foo"
     assert_prog "DO[1:foo]=PULSE ;\n"

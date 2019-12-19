@@ -112,9 +112,10 @@ module TPPlus
 
         p[:mask].each do |q|
           s << pos_return(q)
+          s << %(\n)
         end
 
-        s << %(\n};\n)
+        s << %(};\n)
       end
     end
 
