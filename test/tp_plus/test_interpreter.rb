@@ -1177,13 +1177,13 @@ end)
     assert_prog ""
     assert_equal %(P[1:"test"]{
    GP1:
-UF : 0, UT : 1, 
-	J1 = 180.0 deg, 
-	J2 = 90.0 deg, 
-	J3 = 60.0 deg, 
-	J4 = -90.0 deg, 
-	J5 = 0.0 deg, 
-	J6 = 180.0 deg
+  UF : 0, UT : 1, 
+  J1 = 180.0 deg, 
+  J2 = 90.0 deg, 
+  J3 = 60.0 deg, 
+  J4 = -90.0 deg, 
+  J5 = 0.0 deg, 
+  J6 = 180.0 deg
 };\n), @interpreter.pos_section
   end
 
@@ -1234,9 +1234,9 @@ end)
   X = -576.703 mm, Y = 652.415 mm, Z = 10751.806 mm,
   W = 76.235 deg, P = 9.185 deg, R = 27.809 deg
    GP2:
-UF : 1, UT : 1, 
-\tJ1 = 90.0 deg, 
-\tJ2 = 180.0 deg
+  UF : 1, UT : 1, 
+  J1 = 90.0 deg, 
+  J2 = 180.0 deg
 };\n), @interpreter.pos_section
   end
 
@@ -1286,8 +1286,8 @@ end)
   X = 0.0 mm, Y = 0.0 mm, Z = 0.0 mm,
   W = 90.0 deg, P = 90.0 deg, R = 0.0 deg
    GP2:
-UF : 8, UT : 5, 
-\tJ1 = 11500.0 mm
+  UF : 8, UT : 5, 
+  J1 = 11500.0 mm
 };\n), @interpreter.pos_section
   end
 

@@ -128,15 +128,15 @@ module TPPlus
   W = #{position_hash[:components][:w]} deg, P = #{position_hash[:components][:p]} deg, R = #{position_hash[:components][:r]} deg)
       else
         s << %(   GP#{position_hash[:group]}:
-UF : #{position_hash[:uframe]}, UT : #{position_hash[:utool]})
+  UF : #{position_hash[:uframe]}, UT : #{position_hash[:utool]})
         if position_hash[:components].is_a?(Hash)
           position_hash[:components].each_with_index do |key|
             if key[1].is_a?(Array)
               s << %(, \n)
-              s << %(\t#{key[0]} = #{key[1][0]} #{key[1][1]})
+              s << %(  #{key[0]} = #{key[1][0]} #{key[1][1]})
             else
               s << %(, \n)
-              s << %(\t#{key[0]} = #{key[1]} deg)
+              s << %(  #{key[0]} = #{key[1]} deg)
             end
           end
         end
