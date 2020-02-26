@@ -66,6 +66,9 @@ module TPPlus
         if options[:as_condition]
           s = "(#{s})"
         end
+        if options[:disable_mixed_logic]
+          s = "#{s}=ON"
+        end
         s
       end
     end

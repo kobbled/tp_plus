@@ -613,13 +613,19 @@ LBL[101:ghjk] ;\n)
   # ---------
 
   def test_set_skip_condition
-    parse("foo := RI[1]\nset_skip_condition foo")
-    assert_prog "SKIP CONDITION RI[1:foo]=ON ;\n"
+    parse("foo := DI[1]\nset_skip_condition foo")
+    assert_prog "SKIP CONDITION DI[1:foo]=ON ;\n"
   end
 
   def test_set_skip_condition_with_bang
     parse("foo := RI[1]\nset_skip_condition !foo")
     assert_prog "SKIP CONDITION RI[1:foo]=OFF ;\n"
+  end
+
+  #@kobbled adds
+  def test_set_skip_condition_indirect
+    parse("foo := AR[1]\nset_skip_condition indirect('DI', foo)")
+    assert_prog "SKIP CONDITION DI[AR[1]]=ON ;\n"
   end
 
   def test_skip_to
@@ -1623,6 +1629,18 @@ foo = &foo")
     parse "foo := PR[1]\nget_joint_position(foo)"
     assert_prog "PR[1:foo]=JPOS ;\n"
   end
+
+  #@kobbled additions
+  def test_lpos_indirect
+    parse "foo := AR[1]\nget_linear_position(indirect('PR', foo))"
+    assert_prog "PR[AR[1]]=LPOS ;\n"
+  end
+
+  def test_jpos_indirect
+    parse "get_joint_position(indirect('PR', 3))"
+    assert_prog "PR[3]=JPOS ;\n"
+  end
+  #@
 
   def test_return
     parse "return"

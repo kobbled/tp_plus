@@ -88,8 +88,8 @@ rule
     ;
 
   lpos_or_jpos
-    : LPOS LPAREN var RPAREN          { result = LPOSNode.new(val[2]) }
-    | JPOS LPAREN var RPAREN          { result = JPOSNode.new(val[2]) }
+    : LPOS LPAREN var_or_indirect RPAREN          { result = LPOSNode.new(val[2]) }
+    | JPOS LPAREN var_or_indirect RPAREN          { result = JPOSNode.new(val[2]) }
     ;
 
   empty_stmt
