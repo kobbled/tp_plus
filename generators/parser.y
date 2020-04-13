@@ -1,5 +1,5 @@
 class TPPlus::Parser
-token ASSIGN AT_SYM COMMENT JUMP IO_METHOD INPUT OUTPUT
+token ASSIGN AT_SYM COMMENT MESSAGE JUMP IO_METHOD INPUT OUTPUT
 token NUMREG POSREG VREG SREG TIME_SEGMENT ARG UALM
 token MOVE DOT TO FROM AT ACC TERM OFFSET SKIP GROUP COORD
 token SEMICOLON NEWLINE STRING
@@ -58,6 +58,7 @@ rule
 
   statement
     : comment
+    | message
     | definition
     | namespace
     #| assignment
@@ -541,6 +542,10 @@ rule
 
   comment
     : COMMENT                                { result = CommentNode.new(val[0]) }
+    ;
+  
+  message
+    : MESSAGE LPAREN STRING RPAREN      { result = MessageNode.new(val[2]) }
     ;
 
   terminator

@@ -227,6 +227,11 @@ class TestInterpreter < Test::Unit::TestCase
     assert_prog "! comment ;\nR[1:foo]=1 ;\n! another comment ;\n"
   end
 
+  def test_message
+    parse("message('This is a test message!')")
+    assert_prog "MESSAGE[This is a test message!] ;\n"
+  end
+
   def test_inline_conditional_if_on_jump
     parse("foo := R[1]\n@bar\njump_to @bar if foo==1\n")
     assert_prog "LBL[100:bar] ;\nIF R[1:foo]=1,JMP LBL[100] ;\n"
@@ -605,12 +610,10 @@ LBL[101:ghjk] ;\n)
     assert_prog "UFRAME[R[1:bar]]=PR[1:foo] ;\n"
   end
 
-  #@kobbled adds
   def test_fanuc_set_utool_with_reg
     parse("foo := PR[1]\nbar := R[1]\nindirect('utool',bar)=foo")
     assert_prog "UTOOL[R[1:bar]]=PR[1:foo] ;\n"
   end
-  # ---------
 
   def test_set_skip_condition
     parse("foo := DI[1]\nset_skip_condition foo")
@@ -622,7 +625,6 @@ LBL[101:ghjk] ;\n)
     assert_prog "SKIP CONDITION RI[1:foo]=OFF ;\n"
   end
 
-  #@kobbled adds
   def test_set_skip_condition_indirect
     parse("foo := AR[1]\nset_skip_condition indirect('DI', foo)")
     assert_prog "SKIP CONDITION DI[AR[1]]=ON ;\n"
@@ -1436,7 +1438,6 @@ end)
     assert_prog "R[1:foo]=5 MOD 2 ;\n"
   end
 
-  #@kobbled adds
   def test_modulus_in_if
     parse %(foo := R[1]\nis := R[2]\n is = 2\n if is % 0 == 0 \n foo = 5 \n end)
     assert_prog "R[2:is]=2 ;\nIF (R[2:is] MOD 0=0),R[1:foo]=(5) ;\n"
@@ -1446,8 +1447,6 @@ end)
     parse %(foo := R[1]\ni := R[2]\n i = 2\n if i % 0 == 0 \n foo = 5\nGO_TO1() \n end)
     assert_prog "R[2:i]=2 ;\nIF (R[2:i] MOD 0<>0),JMP LBL[100] ;\nR[1:foo]=5 ;\nCALL GO_TO1 ;\nLBL[100] ;\n"
   end
-
-  # -------
 
   def test_assignment_to_sop
     parse %(foo := DO[1]\nbar := SO[1]\nfoo = bar)
@@ -1630,7 +1629,6 @@ foo = &foo")
     assert_prog "PR[1:foo]=JPOS ;\n"
   end
 
-  #@kobbled additions
   def test_lpos_indirect
     parse "foo := AR[1]\nget_linear_position(indirect('PR', foo))"
     assert_prog "PR[AR[1]]=LPOS ;\n"
@@ -1640,14 +1638,12 @@ foo = &foo")
     parse "get_joint_position(indirect('PR', 3))"
     assert_prog "PR[3]=JPOS ;\n"
   end
-  #@
 
   def test_return
     parse "return"
     assert_prog "END ;\n"
   end
 
-  #@kobbled additions
   def test_motion_indirect_offset
     parse("p := P[1]\no := PR[1]\nfoo := AR[1]\nlinear_move.to(p).at(100, 'mm/s').term(0).offset(indirect('pr', foo))")
     assert_prog "L P[1:p] 100mm/sec CNT0 Offset,PR[AR[1]] ;\n"
