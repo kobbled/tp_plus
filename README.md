@@ -3,6 +3,9 @@ TP+
 
 [![Build Status](https://travis-ci.org/onerobotics/tp_plus.svg?branch=master)](https://travis-ci.org/onerobotics/tp_plus)
 
+
+> Creation, and all rights of this repository goes to [One Robotics](https://www.onerobotics.com/). This branch was forked from the archived repo [TP+](https://github.com/onerobotics/tp_plus)
+
 TP+ is a higher-level language abstraction that translates into FANUC
 TP. It features many useful utilities that makes creating TP programs
 easier:
