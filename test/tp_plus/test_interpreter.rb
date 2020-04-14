@@ -232,6 +232,52 @@ class TestInterpreter < Test::Unit::TestCase
     assert_prog "MESSAGE[This is a test message!] ;\n"
   end
 
+  def test_warning
+    parse %(foo := R[1]
+
+      if foo == 1
+          message('foo == 1')
+          warning('This is a warning')
+      else
+          message('foo != 1')
+      end
+      
+      warning('This is another warning')
+    )
+
+    assert_prog %( ;
+IF R[1:foo]<>1,JMP LBL[102] ;
+MESSAGE[foo == 1] ;
+JMP LBL[100] ;
+JMP LBL[103] ;
+LBL[102] ;
+MESSAGE[foo != 1] ;
+LBL[103] ;
+ ;
+JMP LBL[101] ;\n)
+
+    assert_equal %(
+! ******** ;
+! WARNINGS ;
+! ******** ;
+ ;
+JMP LBL[104] ;
+LBL[100:warning1] ;
+CALL USERCLR ;
+MESSAGE[This is a warning]
+WAIT UI[5]=ON ;
+WAIT UI[5]=OFF ;
+LBL[104] ;
+ ;
+JMP LBL[105] ;
+LBL[101:warning2] ;
+CALL USERCLR ;
+MESSAGE[This is another warning]
+WAIT UI[5]=ON ;
+WAIT UI[5]=OFF ;
+LBL[105] ;\n), @interpreter.list_warnings
+  end
+
   def test_inline_conditional_if_on_jump
     parse("foo := R[1]\n@bar\njump_to @bar if foo==1\n")
     assert_prog "LBL[100:bar] ;\nIF R[1:foo]=1,JMP LBL[100] ;\n"

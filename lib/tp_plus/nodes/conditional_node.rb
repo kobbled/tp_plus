@@ -20,6 +20,14 @@ module TPPlus
         @t ||= string_for(@true_block,context)
       end
 
+      def get_true_block
+        @true_block
+      end
+
+      def get_false_block
+        @false_block
+      end
+
       def false_block(context)
         @f ||= string_for(@false_block,context)
       end

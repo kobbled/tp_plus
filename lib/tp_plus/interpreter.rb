@@ -123,6 +123,45 @@ module TPPlus
       end
     end
 
+    def find_warnings(nodes, warnings)
+      if nodes.is_a?(Array)
+        nodes.each do |node|
+          if node.is_a?(Nodes::WarningNode)
+            warnings << node
+          else
+            find_warnings(node, warnings)
+          end
+        end
+      end
+
+      if nodes.is_a?(Nodes::WhileNode) || nodes.is_a?(Nodes::ForNode)
+        find_warnings(nodes.get_block, warnings)
+      end
+
+      if nodes.is_a?(Nodes::ConditionalNode)
+        find_warnings(nodes.get_true_block, warnings)
+        find_warnings(nodes.get_false_block, warnings)
+      end
+
+      warnings
+    end
+
+    def list_warnings
+      
+      s = ""
+
+      warning_nodes = []
+      find_warnings(@nodes, warning_nodes).each do |n|
+        s += n.block_eval(self)
+      end
+
+      if !s.empty?
+        s = "\n! ******** ;\n! WARNINGS ;\n! ******** ;\n" + s
+      end
+
+      s
+    end
+
     def pos_section
       return "" if @position_data.empty?
       return "" if @position_data[:positions].empty?

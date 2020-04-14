@@ -61,6 +61,9 @@ parser.parse
 
 lines = interpreter.eval
 
+#list warning messages
+lines += interpreter.list_warnings
+
 output = %(/PROG #{tpp_filename.upcase}
 /ATTR
 COMMENT = "#{interpreter.header_data[:comment] || tpp_filename.upcase}";
