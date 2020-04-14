@@ -510,40 +510,81 @@ class TestInterpreter < Test::Unit::TestCase
   #  end
   #end
 
-  def test_simple_case_statement
-    parse("foo := R[1]\ncase foo\nwhen 1\njump_to @asdf\nend\n@asdf")
-    assert_prog %(SELECT R[1:foo]=1,JMP LBL[100] ;\nLBL[100:asdf] ;\n)
-  end
-
-  def test_simple_case_with_else_statement
-    parse("foo := R[1]\ncase foo\nwhen 1\njump_to @asdf\nelse\njump_to @ghjk\nend\n@asdf\n@ghjk")
-    assert_prog %(SELECT R[1:foo]=1,JMP LBL[100] ;
-       ELSE,JMP LBL[101] ;
-LBL[100:asdf] ;
-LBL[101:ghjk] ;\n)
-  end
-
-  def test_case_statement_with_two_whens
-    parse("foo := R[1]\ncase foo\nwhen 1\njump_to @asdf\nwhen 2\njump_to @ghjk\nend\n@asdf\n@ghjk")
-    assert_prog %(SELECT R[1:foo]=1,JMP LBL[100] ;
+  def test_case_statement_with_blocks
+    parse %(foo := R[1]
+            foo2:= R[2]
+            foo3 := DO[1]
+            t    := TIMER[1]
+      
+      case foo
+          when 1
+              message('foo == 1')
+              wait_for(1, 's')
+              turn_on foo3
+          when 2
+              PROG1()
+              foo2 += 1
+          else
+             stop t
+      end)
+    assert_prog %( ;
+SELECT R[1:foo]=1,JMP LBL[100] ;
        =2,JMP LBL[101] ;
-LBL[100:asdf] ;
-LBL[101:ghjk] ;\n)
+       ELSE,JMP LBL[102] ;
+ ;
+LBL[100:caselbl1] ;
+MESSAGE[foo == 1] ;
+WAIT 1.00(sec) ;
+DO[1:foo3]=ON ;
+JMP LBL[103] ;
+LBL[101:caselbl2] ;
+CALL PROG1 ;
+R[2:foo2]=R[2:foo2]+1 ;
+JMP LBL[103] ;
+LBL[102:caselbl3] ;
+TIMER[1]=STOP ;
+JMP LBL[103] ;
+LBL[103:endcase] ;\n)
   end
 
   def test_case_statement_with_three_whens
     parse("foo := R[1]\ncase foo\nwhen 1\nbar()\nwhen 2\nbar()\nwhen 3\nbar()\nend")
-    assert_prog %(SELECT R[1:foo]=1,CALL BAR ;
-       =2,CALL BAR ;
-       =3,CALL BAR ;\n)
+    assert_prog %(SELECT R[1:foo]=1,JMP LBL[100] ;
+       =2,JMP LBL[101] ;
+       =3,JMP LBL[102] ;
+ ;
+LBL[100:caselbl1] ;
+CALL BAR ;
+JMP LBL[103] ;
+LBL[101:caselbl2] ;
+CALL BAR ;
+JMP LBL[103] ;
+LBL[102:caselbl3] ;
+CALL BAR ;
+JMP LBL[103] ;
+LBL[103:endcase] ;\n)
   end
 
   def test_case_statement_with_three_whens_and_else
     parse("foo := R[1]\ncase foo\nwhen 1\nbar()\nwhen 2\nbar()\nwhen 3\nbar()\nelse\nbar()\nend")
-    assert_prog %(SELECT R[1:foo]=1,CALL BAR ;
-       =2,CALL BAR ;
-       =3,CALL BAR ;
-       ELSE,CALL BAR ;\n)
+    assert_prog %(SELECT R[1:foo]=1,JMP LBL[100] ;
+       =2,JMP LBL[101] ;
+       =3,JMP LBL[102] ;
+       ELSE,JMP LBL[103] ;
+ ;
+LBL[100:caselbl1] ;
+CALL BAR ;
+JMP LBL[104] ;
+LBL[101:caselbl2] ;
+CALL BAR ;
+JMP LBL[104] ;
+LBL[102:caselbl3] ;
+CALL BAR ;
+JMP LBL[104] ;
+LBL[103:caselbl4] ;
+CALL BAR ;
+JMP LBL[104] ;
+LBL[104:endcase] ;\n)
   end
 
   def test_can_use_simple_io_value_as_condition
@@ -1390,6 +1431,11 @@ end)
     parse %(TP_COMMENT = "foo")
     assert_prog ""
     assert_equal "foo", @interpreter.header_data[:comment]
+  end
+
+  def test_tp_message
+    parse %(message('This is a Message! It can be over the character limit!'))
+    assert_prog "MESSAGE[This is a Message! It can] ;\nMESSAGE[be over the character] ;\nMESSAGE[limit!] ;\n"
   end
 
   def test_tp_groupmask
