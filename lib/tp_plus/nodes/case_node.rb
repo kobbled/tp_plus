@@ -33,6 +33,12 @@ module TPPlus
         " ;\n#{@else_condition.eval(context)}"
       end
 
+      def else_condition_block(context)
+        return "" if @else_condition.nil?
+
+        @else_condition.block_eval(context, final_label(context))
+      end
+
       def other_conditions(context)
         return "" if @conditions.empty?
 
@@ -55,6 +61,9 @@ module TPPlus
         @conditions.each do |c|
           s += c.block_eval(context, final_label(context))
         end
+        #else select blocks
+        s += else_condition_block(context)
+
         #add end label
         s += "LBL[#{final_label(context)}:endcase]"
 
