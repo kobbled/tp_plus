@@ -47,6 +47,7 @@ module TPPlus
         "to" => :TO,
         "unless" => :UNLESS,
         "vision_offset" => :OFFSET,
+        "warning" => :WARNING,
         "wait_for" => :WAIT_FOR,
         "wait_until" => :WAIT_UNTIL,
         "when" => :WHEN,

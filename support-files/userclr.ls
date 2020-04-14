@@ -1,0 +1,23 @@
+/PROG  USERCLR	  Macro
+/ATTR
+OWNER		= MNEDITOR;
+COMMENT		= "Clear User Page";
+PROG_SIZE	= 206;
+VERSION		= 0;
+LINE_COUNT	= 2;
+MEMORY_SIZE	= 578;
+PROTECT		= READ;
+TCD:  STACK_SIZE	= 0,
+      TASK_PRIORITY	= 50,
+      TIME_SLICE	= 0,
+      BUSY_LAMP_OFF	= 0,
+      ABORT_REQUEST	= 0,
+      PAUSE_REQUEST	= 0;
+DEFAULT_GROUP	= *,*,*,*,*;
+CONTROL_CODE	= 00000000 00000000;
+/APPL
+/MN
+   1:  !Clear user page ;
+   2:  CALL MHUSERCL    ;
+/POS
+/END

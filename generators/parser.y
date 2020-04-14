@@ -1,5 +1,5 @@
 class TPPlus::Parser
-token ASSIGN AT_SYM COMMENT MESSAGE JUMP IO_METHOD INPUT OUTPUT
+token ASSIGN AT_SYM COMMENT MESSAGE WARNING JUMP IO_METHOD INPUT OUTPUT
 token NUMREG POSREG VREG SREG TIME_SEGMENT ARG UALM
 token MOVE DOT TO FROM AT ACC TERM OFFSET SKIP GROUP COORD
 token SEMICOLON NEWLINE STRING
@@ -83,6 +83,7 @@ rule
     | tp_header_definition
     | lpos_or_jpos
     | empty_stmt
+    | warning
     | PAUSE                           { result = PauseNode.new }
     | ABORT                           { result = AbortNode.new }
     | RETURN                          { result = ReturnNode.new }
@@ -550,6 +551,12 @@ rule
   
   message
     : MESSAGE LPAREN STRING RPAREN      { result = MessageNode.new(val[2]) }
+    ;
+
+warning
+    : WARNING LPAREN STRING RPAREN      { @interpreter.increment_warning_labels()
+label = @interpreter.get_warning_label()
+result = WarningNode.new(MessageNode.new(val[2]), LabelDefinitionNode.new(label)) }
     ;
 
   terminator
