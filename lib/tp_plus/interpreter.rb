@@ -15,6 +15,7 @@ module TPPlus
       @position_data = {}
       @header_data   = {}
       @current_label = 99
+      @null_identifier = 0
     end
 
     def load_environment(string)
@@ -94,6 +95,15 @@ module TPPlus
 
       labels
 
+    end
+
+    def increment_label_identifier
+      @null_identifier += 1
+      add_label("caselbl#{@null_identifier}")
+    end
+
+    def get_label_identifier
+      "caselbl#{@null_identifier}"
     end
 
     def define_labels

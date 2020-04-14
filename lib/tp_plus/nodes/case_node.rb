@@ -7,6 +7,26 @@ module TPPlus
         @else_condition = else_condition
       end
 
+      def final_label(context)
+        @final_label ||= context.next_label
+      end
+
+      def first_condition(context)
+        #split off first condition as it is
+        #formatted differently than proceeding conditions
+        @first_condition ||= @conditions.shift
+      end
+
+      def first_cond_statement(context)
+        first_condition(context)
+        @first_condition.eval(context, no_indent: true)
+      end
+
+      def first_cond_block(context)
+        first_condition(context)
+        @first_condition.block_eval(context, final_label(context))
+      end
+
       def else_condition(context)
         return "" if @else_condition.nil?
 
@@ -25,9 +45,31 @@ module TPPlus
         s
       end
 
-      def eval(context)
-        "SELECT #{@var.eval(context)}#{@conditions.shift.eval(context, no_indent: true)}#{other_conditions(context)}#{else_condition(context)}"
+      def blocks(context)
+        s = " ;\n"
+        #first select block
+        s += first_cond_block(context)
+        
+        #all other select blocks
+        return s+"LBL[#{final_label(context)}:endcase]" if @conditions.empty?
+        @conditions.each do |c|
+          s += c.block_eval(context, final_label(context))
+        end
+        #add end label
+        s += "LBL[#{final_label(context)}:endcase]"
+
+        s
       end
+
+      def eval(context)
+        #select statment
+        s = "SELECT #{@var.eval(context)}#{first_cond_statement(context)}#{other_conditions(context)}#{else_condition(context)} ;\n"
+        #select blocks
+        s += blocks(context)
+
+        s
+      end
+
     end
   end
 end

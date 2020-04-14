@@ -236,8 +236,10 @@ rule
     ;
 
   case_condition
-    : WHEN case_allowed_condition swallow_newlines case_allowed_statement
-        terminator                      { result = CaseConditionNode.new(val[1],val[3]) }
+    : WHEN case_allowed_condition block  
+                                        { @interpreter.increment_label_identifier()
+  label = @interpreter.get_label_identifier()
+  result = CaseConditionNode.new(val[1],LabelDefinitionNode.new(label),JumpNode.new(label),val[2]) }
     ;
 
   case_allowed_condition
@@ -246,8 +248,10 @@ rule
     ;
 
   case_else
-    : ELSE swallow_newlines case_allowed_statement terminator
-                                        { result = CaseConditionNode.new(nil,val[2]) }
+    : ELSE block
+                                        { @interpreter.increment_label_identifier()
+  label = @interpreter.get_label_identifier()
+  result = CaseConditionNode.new(nil,LabelDefinitionNode.new(label),JumpNode.new(label),val[1]) }
     |
     ;
 
