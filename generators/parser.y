@@ -237,9 +237,9 @@ rule
 
   case_condition
     : WHEN case_allowed_condition block  
-                                        { @interpreter.increment_label_identifier()
-  label = @interpreter.get_label_identifier()
-  result = CaseConditionNode.new(val[1],LabelDefinitionNode.new(label),JumpNode.new(label),val[2]) }
+                                        { @interpreter.increment_case_labels()
+  label = @interpreter.get_case_label()
+  result = CaseConditionNode.new(val[1],LabelDefinitionNode.new(label),val[2]) }
     ;
 
   case_allowed_condition
@@ -249,9 +249,9 @@ rule
 
   case_else
     : ELSE block
-                                        { @interpreter.increment_label_identifier()
-  label = @interpreter.get_label_identifier()
-  result = CaseConditionNode.new(nil,LabelDefinitionNode.new(label),JumpNode.new(label),val[1]) }
+                                        { @interpreter.increment_case_labels()
+  label = @interpreter.get_case_label()
+  result = CaseConditionNode.new(nil,LabelDefinitionNode.new(label),val[1]) }
     |
     ;
 

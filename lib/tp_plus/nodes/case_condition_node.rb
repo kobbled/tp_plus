@@ -1,10 +1,9 @@
 module TPPlus
   module Nodes
     class CaseConditionNode < BaseNode
-      def initialize(condition, label, jump_label, block)
+      def initialize(condition, label, block)
         @condition  = condition
         @label      = label
-        @jump_label = jump_label
         @block      = block.flatten.reject {|n| n.is_a?(TerminatorNode) }
       end
 
@@ -20,7 +19,7 @@ module TPPlus
         if @block[0].is_a?(Nodes::JumpNode)
           return @block[0].eval(context)
         else
-          return @jump_label.eval(context)
+          return JumpNode.new(@label.identifier).eval(context)
         end
       end
 
