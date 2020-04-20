@@ -13,7 +13,7 @@ module TPPlus
 
       def block_eval(context)
         s = " ;\nJMP LBL[#{skip_label(context)}] ;\n"
-        s += "#{@label.eval(context)} ;\nCALL USERCLR ;\n#{@message.eval(context)}\nWAIT UI[5]=ON ;\nWAIT UI[5]=OFF ;\n"
+        s += "#{@label.eval(context)} ;\nCALL USERCLR ;\n#{@message.eval(context)} ;\nWAIT UI[5]=ON ;\nWAIT UI[5]=OFF ;\n"
         s += "LBL[#{skip_label(context)}] ;\n"
       end
 

@@ -256,7 +256,7 @@ LBL[103] ;
  ;
 JMP LBL[101] ;\n)
 
-    assert_equal %(
+    assert_equal %(;
 ! ******** ;
 ! WARNINGS ;
 ! ******** ;
@@ -264,7 +264,7 @@ JMP LBL[101] ;\n)
 JMP LBL[104] ;
 LBL[100:warning1] ;
 CALL USERCLR ;
-MESSAGE[This is a warning]
+MESSAGE[This is a warning] ;
 WAIT UI[5]=ON ;
 WAIT UI[5]=OFF ;
 LBL[104] ;
@@ -272,7 +272,7 @@ LBL[104] ;
 JMP LBL[105] ;
 LBL[101:warning2] ;
 CALL USERCLR ;
-MESSAGE[This is another warning]
+MESSAGE[This is another warning] ;
 WAIT UI[5]=ON ;
 WAIT UI[5]=OFF ;
 LBL[105] ;\n), @interpreter.list_warnings

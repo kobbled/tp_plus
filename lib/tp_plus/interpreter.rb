@@ -156,7 +156,7 @@ module TPPlus
       end
 
       if !s.empty?
-        s = "\n! ******** ;\n! WARNINGS ;\n! ******** ;\n" + s
+        s = ";\n! ******** ;\n! WARNINGS ;\n! ******** ;\n" + s
       end
 
       s
