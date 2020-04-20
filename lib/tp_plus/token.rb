@@ -8,6 +8,7 @@ module TPPlus
         "case" => :CASE,
         "coord" => :COORD,
         "circular_move" => :MOVE,
+        "elsif" => :ELSIF,
         "else" => :ELSE,
         "end" => :END,
         "eval" => :EVAL,

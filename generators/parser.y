@@ -6,7 +6,7 @@ token SEMICOLON NEWLINE STRING
 token REAL DIGIT WORD EQUAL
 token EEQUAL NOTEQUAL GTE LTE LT GT BANG
 token PLUS MINUS STAR SLASH DIV AND OR MOD
-token IF ELSE END UNLESS FOR IN WHILE
+token IF ELSE ELSIF END UNLESS FOR IN WHILE
 token WAIT_FOR WAIT_UNTIL TIMEOUT AFTER
 token FANUC_USE SET_SKIP_CONDITION NAMESPACE
 token CASE WHEN INDIRECT POSITION
@@ -199,10 +199,22 @@ rule
     ;
 
   conditional
-    : IF expression block else_block END
-                                       { result = ConditionalNode.new("if",val[1],val[2],val[3]) }
+    : IF expression block elsif_conditions else_block END
+                                       { result = ConditionalNode.new("if",val[1],val[2],val[3],val[4]) }
     | UNLESS expression block else_block END
-                                       { result = ConditionalNode.new("unless",val[1],val[2],val[3]) }
+                                       { result = ConditionalNode.new("unless",val[1],val[2],[],val[3]) }
+    ;
+
+  elsif_conditions
+    : elsif_condition                   { result = val }
+    | elsif_conditions elsif_condition
+                                        { result = val[0] << val[1] << val[2] }
+    |                                   { result = [] }
+    ;
+  
+  elsif_condition
+    : ELSIF expression block  
+                                        { result = ConditionalNode.new("if",val[1],val[2],[],[]) }
     ;
 
   forloop
