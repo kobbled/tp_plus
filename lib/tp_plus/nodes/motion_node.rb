@@ -37,6 +37,13 @@ module TPPlus
         return "" unless actual_modifiers.any?
 
         strings_array = [""] << actual_modifiers.map { |m| m.eval(context) }
+        #add guard so that minimal rotation is not added into a linear move without
+        #the wrist joint modifier
+        if @type == "linear_move"
+          if (strings_array[1].include? 'MROT') && !(strings_array[1].include? 'Wjnt')
+            raise "Wrist Joint modifier is needed if minimal rotation is specified for a linear move."
+          end
+        end
         @modifiers_string = strings_array.join(" ")
       end
       

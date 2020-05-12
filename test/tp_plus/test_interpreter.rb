@@ -470,6 +470,51 @@ LBL[105] ;\n), @interpreter.list_warnings
     assert_prog "L P[1:p] max_speed CNT0 Offset,PR[1:o] TB .50sec,CALL FOO ;\n"
   end
 
+  def test_motion_min_rotation
+    parse %(foo := PR[1]
+      foo2 := PR[2]
+      TERM := -1
+      joint_move.to(foo).at(100, '%').term(TERM).minimal_rotation
+      linear_move.to(foo2).at(400, 'mm/s').term(TERM).acc(100).
+              wrist_joint.
+              mrot
+      )
+    assert_prog "J PR[1:foo] 100% FINE MROT ;\nL PR[2:foo2] 400mm/sec FINE ACC100 Wjnt MROT ;\n"
+  end
+
+  def test_motion_min_rotation_error
+    parse %(foo := PR[1]
+      TERM := -1
+      linear_move.to(foo).at(400, 'mm/s').term(TERM).acc(100).mrot
+      )
+    assert_raise_message("Runtime error on line 3:\nWrist Joint modifier is needed if minimal rotation is specified for a linear move.") do
+      assert_prog ""
+    end
+  end
+
+  def test_motion_path
+    parse %(foo := PR[1]
+      TERM := 100
+      linear_move.to(foo).term(TERM).at(400, 'mm/s').pth
+    )
+    assert_prog "L PR[1:foo] 400mm/sec CNT100 PTH ;\n"
+  end
+
+  def test_motion_break
+    parse %(edge_start := P[1]
+      corner_start := P[2]
+      corner_end := P[3]
+      di          := DI[1]
+      TERM := -1
+      joint_move.to(edge_start).at(50, '%').term(TERM)
+      linear_move.to(corner_start).at(500, 'mm/s').term(100).break
+      thread_prog()
+      wait_until(di)
+      linear_move.to(corner_end).at(500, 'mm/s').term(0)
+    )
+    assert_prog "J P[1:edge_start] 50% FINE ;\nL P[2:corner_start] 500mm/sec CNT100 BREAK ;\nCALL THREAD_PROG ;\nWAIT (DI[1:di]) ;\nL P[3:corner_end] 500mm/sec CNT0 ;\n"
+  end
+
   def test_wait_for_with_seconds
     parse("wait_for(5,'s')")
     assert_prog "WAIT 5.00(sec) ;\n"
