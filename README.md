@@ -21,6 +21,45 @@ away from the code the robot is running. However, it's hoped that the
 increased productivity and rigid syntax requirements will actually
 improve your TP code.
 
+Install
+-----------
+
+1. Install Ruby
+2. Install git
+3. Install bundler `gem install bundler`
+4. Clone the repo `git clone https://github.com/onerobotics/tp_plus.git`
+5. Install dependencies with `bundle`
+6. Build the parser and run the tests with `rake`
+7. Make sure all tests pass
+8. Add full path of **./tp_plus/bin** to your environment path
+
+```shell
+set PATH=%PATH%;\path\to\tp_plus\bin
+```
+
+Usage
+-----
+print output to console:
+
+```shell
+tpp filename.tpp
+```
+
+print output to file (must be the same filename):
+
+```shell
+tpp filename.tpp -o filename.ls
+```
+
+interpret using an environment file:
+
+```shell
+tpp filename.tpp -e env.tpp
+```
+
+See `tpp --help` for options.
+
+
 Examples
 --------
 
@@ -65,24 +104,6 @@ example_1.ls
     /END
 
 For a more extensive example and test environment, visit http://tp-plus.herokuapp.com/.
-
-Usage
------
-
-1. `gem install tp_plus`
-2. `tpp filename.tpp -o filename.ls`
-
-See `tpp --help` for options.
-
-Development
------------
-
-1. Install Ruby
-2. Install git
-3. Install bundler `gem install bundler`
-4. Clone the repo `git clone https://github.com/onerobotics/tp_plus.git`
-5. Install dependencies with `bundle`
-6. Build the parser and run the tests with `rake`
 
 License
 -------
