@@ -36,7 +36,7 @@ module TPPlus
       def elsif_block(context)
         s = ""
 
-        @elsif_block.reject! {|c| c.nil? }.each do |c, i|
+        @elsif_block.reject {|c| c.nil? }.each do |c, i|
           s += c.eval(context, inlined: false, recursive: true)
           s += "JMP LBL[#{end_label(context)}] ;\n"
           s += "LBL[#{c.true_label(context)}] ;\n"
