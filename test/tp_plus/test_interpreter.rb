@@ -1797,7 +1797,7 @@ foo = &foo")
   end
 
   def test_motion_circular
-    parse("foo := PR[1]\nfoo2 := PR[2]\nTERM := 100\ncircular_move.from(foo).to(foo2).at(2000, 'mm/s').term(TERM).coord")
+    parse("foo := PR[1]\nfoo2 := PR[2]\nTERM := 100\ncircular_move.mid(foo).to(foo2).at(2000, 'mm/s').term(TERM).coord")
     assert_prog "C PR[1:foo] PR[2:foo2] 2000mm/sec CNT100 COORD ;\n"
   end
 

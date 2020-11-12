@@ -1,9 +1,9 @@
 module TPPlus
   module Nodes
     class MotionNode < BaseNode
-      def initialize(type, origin, destination, modifiers)
+      def initialize(type, mid, destination, modifiers)
         @type = type
-        @origin = origin
+        @mid = mid
         @destination = destination
         @modifiers = modifiers
       end
@@ -48,8 +48,8 @@ module TPPlus
       end
       
       def position_string(context)
-        if @origin != nil
-          "#{@origin.eval(context)} #{@destination.eval(context)}"
+        if @mid != nil
+          "#{@mid.eval(context)} #{@destination.eval(context)}"
         else
           "#{@destination.eval(context)}"
         end
@@ -76,7 +76,7 @@ module TPPlus
 
       def eval(context)
         raise "Speed is invalid for motion type" unless speed_valid?(context)
-        raise "Origin position not set" if @origin == nil && @type == "circular_move"
+        raise "Mid position not set" if @mid == nil && @type == "circular_move"
 
         "#{prefix} #{position_string(context)} #{speed_node.eval(context)} #{termination_node.eval(context)}#{modifiers_string(context)}"
       end

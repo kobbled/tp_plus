@@ -20,7 +20,7 @@ module TPPlus
         "end" => :END,
         "eval" => :EVAL,
         "for" => :FOR,
-        "from" => :FROM,
+        "mid" => :MID,
         "get_joint_position" => :JPOS,
         "get_linear_position" => :LPOS,
         "group" => :GROUP,
