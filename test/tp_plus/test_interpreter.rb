@@ -1811,6 +1811,21 @@ foo = &foo")
     assert_prog "AO[1:foo]=20 ;\n"
   end
 
+  def test_system_vars
+    parse("$PRIORITY = 128")
+    assert_prog "$PRIORITY=128 ;\n"
+  end
+
+  def test_system_vars_nested
+    parse("test_pr := PR[1]\n$CD_PAIR[1].$LEADER_FRM = test_pr")
+    assert_prog "$CD_PAIR[1].$LEADER_FRM=PR[1:test_pr] ;\n"
+  end
+
+  def test_system_vars_nested_arrays
+    parse("$MRR_GRP[2].$MASTER_POS[1] = 0")
+    assert_prog "$MRR_GRP[2].$MASTER_POS[1]=0 ;\n"
+  end
+
   # issue #18 https://github.com/onerobotics/tp_plus/issues/18
   def test_mixed_logic_with_multiple_conditions_and_not_operator
     parse "foo := RI[1]\nbar := RI[2]\nif !foo && !bar\n# true\nend"

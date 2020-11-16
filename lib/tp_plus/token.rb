@@ -62,6 +62,7 @@ module TPPlus
         "while" => :WHILE,
 
         "DIV" => :DIV,
+        "system" => :SYSTEM,
 
         "true" => :TRUE_FALSE,
         "false" => :TRUE_FALSE,

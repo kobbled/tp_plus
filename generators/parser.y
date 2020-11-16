@@ -13,7 +13,7 @@ token CASE WHEN INDIRECT POSITION
 token EVAL TIMER TIMER_METHOD RAISE ABORT RETURN
 token POSITION_DATA TRUE_FALSE RUN TP_HEADER PAUSE
 token LPAREN RPAREN COLON COMMA LBRACK RBRACK LBRACE RBRACE
-token LABEL ADDRESS
+token LABEL SYSTEM ADDRESS
 token LPOS JPOS
 token false
 
@@ -84,6 +84,7 @@ rule
     | lpos_or_jpos
     | empty_stmt
     | warning
+    | var_system
     | PAUSE                           { result = PauseNode.new }
     | ABORT                           { result = AbortNode.new }
     | RETURN                          { result = ReturnNode.new }
@@ -191,6 +192,7 @@ rule
   var_or_indirect
     : var
     | indirect_thing
+    | var_system
     ;
 
 
@@ -412,6 +414,22 @@ rule
     : DOT swallow_newlines WORD        { result = { method: val[2] } }
     | DOT swallow_newlines GROUP LPAREN integer RPAREN
                                        { result = { group: val[4] } }
+    ;
+  
+  var_system
+    : SYSTEM WORD var_system_modifers    { result = SystemDefinitionNode.new(val[1], nil, val[2]) }
+    | SYSTEM WORD LBRACK integer RBRACK var_system_modifers { result = SystemDefinitionNode.new(val[1], val[3], val[5])  }
+    ;
+
+  var_system_modifers
+    : var_system_modifer                      { result = [val[0]] }
+    | var_system_modifers var_system_modifer
+                                              {result =  val[0] << val[1] }
+    |
+    ;
+
+  var_system_modifer
+    : DOT var_system                        { result = val[1] }
     ;
 
   namespaces

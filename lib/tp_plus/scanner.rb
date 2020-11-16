@@ -275,6 +275,8 @@ module TPPlus
           tok = :RBRACE
         when "\n"
           tok = :NEWLINE
+        when '$'
+          tok = :SYSTEM
         else
           tok = :ILLEGAL
           lit = ch
