@@ -5,6 +5,7 @@ module TPPlus
         "acc" => :ACC,
         "after" => :AFTER,
         "at" => :AT,
+        "arc_move" => :MOVE,
         "case" => :CASE,
         "coord" => :COORD,
         "pth" => :PTH,

@@ -16,6 +16,8 @@ module TPPlus
           "J"
         when "circular_move"
           "C"
+        when "arc_move"
+          "A"
         else
           raise "Unsupported motion"
         end
@@ -57,12 +59,7 @@ module TPPlus
 
       def speed_valid?(context)
         case @type
-        when "linear_move"
-          return true if speed_node.eval(context) == "max_speed"
-
-          ["mm/sec"].include?(speed_node.units) or ["deg/sec"].include?(speed_node.units) or ["sec"].include?(speed_node.units)
-
-        when "circular_move"
+        when "linear_move", "circular_move", "arc_move"
           return true if speed_node.eval(context) == "max_speed"
 
           ["mm/sec"].include?(speed_node.units) or ["deg/sec"].include?(speed_node.units) or ["sec"].include?(speed_node.units)

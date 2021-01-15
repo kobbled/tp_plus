@@ -1801,6 +1801,34 @@ foo = &foo")
     assert_prog "C PR[1:foo] PR[2:foo2] 2000mm/sec CNT100 COORD ;\n"
   end
 
+  def test_motion_arc
+    parse("p1 := P[1]
+    p2 := P[2]
+    p3 := P[3]
+    p4 := P[4]
+    p5 := P[5]
+    p6 := P[6]
+    
+    FINE := -1
+    
+    
+    joint_move.to(p1).at(100, '%').term(FINE)
+    arc_move.to(p2).at(200, 'mm/s').term(FINE)
+    arc_move.to(p3).at(200, 'mm/s').term(100)
+    arc_move.to(p4).at(200, 'mm/s').term(100)
+    arc_move.to(p5).at(200, 'mm/s').term(FINE)
+    linear_move.to(p6).at(200, 'mm/s').term(FINE)")
+    
+    assert_prog " ;\n" +
+    " ;\n" +
+    "J P[1:p1] 100% FINE ;\n" +
+    "A P[2:p2] 200mm/sec FINE ;\n" +
+    "A P[3:p3] 200mm/sec CNT100 ;\n" +
+    "A P[4:p4] 200mm/sec CNT100 ;\n" +
+    "A P[5:p5] 200mm/sec FINE ;\n" +
+    "L P[6:p6] 200mm/sec FINE ;\n"
+  end
+
   def test_analogin
     parse("foo := AI[1]\nfoo = 20")
     assert_prog "AI[1:foo]=(20) ;\n"
