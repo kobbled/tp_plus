@@ -90,6 +90,10 @@ module TPPlus
         "TIMER" => :TIMER,
         "UALM" => :UALM,
 
+        "SIN" => :OPERATION,
+        "COS" => :OPERATION,
+        "TAN" => :OPERATION,
+
         "F" => :OUTPUT,
         "AO" => :OUTPUT,
         "DO" => :OUTPUT,

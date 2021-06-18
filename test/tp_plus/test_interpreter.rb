@@ -1859,4 +1859,10 @@ foo = &foo")
     parse "foo := RI[1]\nbar := RI[2]\nif !foo && !bar\n# true\nend"
     assert_prog "IF (RI[1:foo] OR RI[2:bar]),JMP LBL[100] ;\n! true ;\nLBL[100] ;\n"
   end
+
+  def test_operations
+    parse("foo := R[1]\nfoo2 := R[2]\nfoo2 = foo*SIN[foo]")
+    assert_prog "R[2:foo2]=R[1:foo]*SIN[R[1:foo]] ;\n"
+  end
+
 end

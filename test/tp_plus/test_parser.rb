@@ -341,6 +341,13 @@ class TestParser < Test::Unit::TestCase
     assert_node_type NamespaceNode, last_node
   end
 
+  def test_operations_definition
+    parse "foo := R[1]\nfoo2 := R[2]\nfoo2 = foo + SIN[foo]"
+    n = last_node
+    assert_node_type AssignmentNode, n
+    # assert_node_type OperationNode, last_node
+  end
+
   def test_scans_eval_with_string
     parse %(eval "R[1]=5")
     assert_node_type EvalNode, last_node

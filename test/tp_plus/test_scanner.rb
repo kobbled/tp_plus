@@ -588,4 +588,9 @@ class TestScanner < Test::Unit::TestCase
     @scanner.scan_setup "return"
     assert_token :RETURN, "return"
   end
+
+  def test_operations
+    @scanner.scan_setup "SIN[angle]"
+    assert_token :OPERATION, "SIN"
+  end
 end

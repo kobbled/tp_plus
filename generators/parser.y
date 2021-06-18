@@ -16,6 +16,7 @@ token LPAREN RPAREN COLON COMMA LBRACK RBRACK LBRACE RBRACE
 token LABEL SYSTEM ADDRESS
 token LPOS JPOS
 token false
+token OPERATION
 
 prechigh
   right BANG
@@ -478,6 +479,7 @@ rule
   factor
     : number
     | signed_number
+    | operation
     | var
     | signed_var
     | indirect_thing
@@ -574,6 +576,10 @@ rule
 
   output
     : OUTPUT LBRACK DIGIT RBRACK             { result = IONode.new(val[0], val[2].to_i) }
+    ;
+  
+  operation
+    : OPERATION LBRACK var_or_indirect RBRACK             { result = OperationNode.new(val[0], val[2]) }
     ;
 
   input
