@@ -1865,4 +1865,18 @@ foo = &foo")
     assert_prog "R[2:foo2]=R[1:foo]*SIN[R[1:foo]] ;\n"
   end
 
+  def test_operations2
+    parse("foo := R[1]\nfoo2 := AR[1]\nif COS[foo] || SQRT[foo2]\n# true\nend")
+    assert_prog "IF (COS[R[1:foo]] AND SQRT[AR[1]]),JMP LBL[100] ;\n" +
+    "! true ;\n" +
+    "LBL[100] ;\n"
+  end
+
+  def test_operations_cannot_use_numbers
+    parse("foo := R[1]\nfoo2 := AR[1]\nif ABS[-10] || SQRT[64]\n# true\nend")
+    assert_raise(RuntimeError) do
+      assert_prog ""
+    end
+  end
+
 end

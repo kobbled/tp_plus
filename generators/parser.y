@@ -579,7 +579,9 @@ rule
     ;
   
   operation
-    : OPERATION LBRACK var_or_indirect RBRACK             { result = OperationNode.new(val[0], val[2]) }
+    : OPERATION LBRACK var_or_indirect RBRACK     { result = OperationNode.new(val[0], val[2]) }
+    | OPERATION LBRACK number RBRACK              {  result = OperationNode.new(val[0], val[2]) }
+    | OPERATION LBRACK signed_number RBRACK       {  result = OperationNode.new(val[0], val[2]) }
     ;
 
   input

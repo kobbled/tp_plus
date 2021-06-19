@@ -15,6 +15,10 @@ module TPPlus
       end
 
       def eval(context,options={})
+        if @reg.is_a?(DigitNode)
+          raise "Only registers can be used with built ins."
+        end
+
         "#{@op}[#{@reg.eval(context)}]"
       end
     end
