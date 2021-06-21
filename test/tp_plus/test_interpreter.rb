@@ -1872,6 +1872,11 @@ foo = &foo")
     "LBL[100] ;\n"
   end
 
+  def test_inverse_trig
+    parse("foo := R[1]\nfoo2 := R[2]\nfoo2 = ATAN2[foo,foo2]")
+    assert_prog "R[2:foo2]=ATAN2[R[1:foo],R[2:foo2]] ;\n"
+  end
+
   def test_operations_cannot_use_numbers
     parse("foo := R[1]\nfoo2 := AR[1]\nif ABS[-10] || SQRT[64]\n# true\nend")
     assert_raise(RuntimeError) do
