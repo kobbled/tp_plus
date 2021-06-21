@@ -6,7 +6,7 @@ token SEMICOLON NEWLINE STRING
 token REAL DIGIT WORD EQUAL
 token EEQUAL NOTEQUAL GTE LTE LT GT BANG
 token PLUS MINUS STAR SLASH DIV AND OR MOD
-token IF ELSE ELSIF END UNLESS FOR IN WHILE
+token IF THEN ELSE ELSIF END UNLESS FOR IN WHILE
 token WAIT_FOR WAIT_UNTIL TIMEOUT AFTER
 token FANUC_USE SET_SKIP_CONDITION NAMESPACE
 token CASE WHEN INDIRECT POSITION
@@ -70,6 +70,7 @@ rule
     | address
     | conditional
     | inline_conditional
+    | conditional_block
     | forloop
     | while_loop
     #| program_call
@@ -208,6 +209,10 @@ rule
                                        { result = ConditionalNode.new("unless",val[1],val[2],[],val[3]) }
     ;
 
+  conditional_block
+    : IF expression THEN block elsif_block else_block END
+                                      { result = ConditionalBlockNode.new(val[1],val[3],val[4],val[5]) }
+
   elsif_conditions
     : elsif_condition                   { result = val }
     | elsif_conditions elsif_condition
@@ -220,6 +225,17 @@ rule
                                         { result = ConditionalNode.new("if",val[1],val[2],[],[]) }
     ;
 
+  elsif_block
+    : elsif_block_condition                  { result = val }
+    | elsif_block elsif_block_condition
+                                        { result = val[0] << val[1] << val[2] }
+    |                                   { result = [] }
+    ;
+
+  elsif_block_condition
+    : ELSIF expression THEN block
+                      { result = ConditionalBlockNode.new(val[1],val[3],[],[]) }
+  
   forloop
     : FOR var IN LPAREN int_or_var TO int_or_var RPAREN block END
                                        { result = ForNode.new(val[1],val[4],val[6],val[8]) }
@@ -578,6 +594,8 @@ rule
     : OUTPUT LBRACK DIGIT RBRACK             { result = IONode.new(val[0], val[2].to_i) }
     ;
   
+
+
   operation
     : OPERATION LBRACK var_or_indirect RBRACK     { result = OperationNode.new(val[0], val[2], nil) }
     | OPERATION LBRACK var_or_indirect COMMA var_or_indirect RBRACK   { result = OperationNode.new(val[0], val[2], val[4]) }

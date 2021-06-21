@@ -1884,4 +1884,60 @@ foo = &foo")
     end
   end
 
+  def test_conditional_block
+    parse("Dummy1 := R[225]
+      Dummy2 := R[226]
+      pin1 := DO[33]
+      pin2 := DO[34]
+      pin3 := DO[35]
+      
+      Dummy1 = 0
+      Dummy2 = 0
+      
+      if ATAN2[Dummy1, Dummy2] == 0 then
+        turn_on(pin1)
+        turn_off(pin2)
+        turn_off(pin3)
+      elsif ATAN2[Dummy1, Dummy2] == 90 then
+        turn_off(pin1)
+        turn_on(pin2)
+        turn_off(pin3)
+      elsif ATAN2[Dummy1, Dummy2] == -90 then
+        turn_off(pin1)
+        turn_off(pin2)
+        turn_on(pin3)
+      else
+        turn_off(pin1)
+        turn_off(pin2)
+        turn_off(pin3)
+      end")
+    
+    assert_prog " ;\n" +
+    "R[225:Dummy1]=0 ;\n" +
+    "R[226:Dummy2]=0 ;\n" +
+    " ;\n" +
+    "IF (ATAN2[R[225:Dummy1],R[226:Dummy2]]=0) THEN ;\n" +
+    "DO[33:pin1]=ON ;\n" +
+    "DO[34:pin2]=OFF ;\n" +
+    "DO[35:pin3]=OFF ;\n" +
+    "ELSE ;\n" +
+    "IF (ATAN2[R[225:Dummy1],R[226:Dummy2]]=90) THEN ;\n" +
+    "DO[33:pin1]=OFF ;\n" +
+    "DO[34:pin2]=ON ;\n" +
+    "DO[35:pin3]=OFF ;\n" +
+    "ELSE ;\n" +
+    "IF (ATAN2[R[225:Dummy1],R[226:Dummy2]]=(-90)) THEN ;\n" +
+    "DO[33:pin1]=OFF ;\n" +
+    "DO[34:pin2]=OFF ;\n" +
+    "DO[35:pin3]=ON ;\n" +
+    "ELSE ;\n" +
+    "DO[33:pin1]=OFF ;\n" +
+    "DO[34:pin2]=OFF ;\n" +
+    "DO[35:pin3]=OFF ;\n" +
+    "ENDIF ;\n" +
+    "ENDIF ;\n" +
+    "ENDIF ;\n" +
+    " ;\n"
+  end
+
 end

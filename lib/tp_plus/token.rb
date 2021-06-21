@@ -27,6 +27,7 @@ module TPPlus
         "group" => :GROUP,
         "if" => :IF,
         "indirect" => :INDIRECT,
+        "then" => :THEN,
         "in" => :IN,
         "joint_move" => :MOVE,
         "jump_to" => :JUMP,
