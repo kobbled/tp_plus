@@ -525,6 +525,14 @@ LBL[105] ;\n), @interpreter.list_warnings
     assert_prog "J PR[1:foo] 40% FINE EV50% ;\n" + "J PR[2:foo2] 40% FINE Ind.EV50% ;\n"
   end
 
+  def test_process_speed
+    parse %(foo := PR[1]
+      TERM := -1
+      linear_move.to(foo).at(100, 'mm/s').term(TERM).process_speed(110)
+      )
+    assert_prog "L PR[1:foo] 100mm/sec FINE PSPD110 ;\n"
+  end
+
   def test_linear_distance
     parse %(foo := PR[1]
       foo2 := PR[2]

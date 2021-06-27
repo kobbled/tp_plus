@@ -18,6 +18,8 @@ module TPPlus
             "Ind.EV"
           when "ev", "simultaneous_ev"
             "EV"
+          when "pspd", "process_speed"
+            "PSPD"
           else
             raise "invalid motion modifier " + @modifier 
         end

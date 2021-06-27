@@ -32,6 +32,8 @@ module TPPlus
         "indev" => :INDEV,
         "simultaneous_ev" => :EV,
         "ev" => :EV,
+        "process_speed" => :PSPD,
+        "pspd" => :PSPD,
 
         "circular_move" => :MOVE,
         "elsif" => :ELSIF,
