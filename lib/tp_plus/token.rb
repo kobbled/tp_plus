@@ -26,6 +26,8 @@ module TPPlus
         "rt_ld" => :RT_LD,
         "corner_distance" => :CD,
         "cd" => :CD,
+        "corner_region" => :CR,
+        "cr" => :CR,
         "independent_ev" => :INDEV,
         "indev" => :INDEV,
         "simultaneous_ev" => :EV,

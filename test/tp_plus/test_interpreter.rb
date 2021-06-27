@@ -506,6 +506,15 @@ LBL[105] ;\n), @interpreter.list_warnings
     "L PR[3:foo3] 400mm/sec FINE ;\n"
   end
 
+  def test_corner_region_termination
+    parse %(foo := PR[1]
+      linear_move.to(foo).at(100, 'mm/s').corner_region(30)
+      linear_move.to(foo).at(100, 'mm/s').corner_region(5,10)
+      )
+    assert_prog "L PR[1:foo] 100mm/sec CR30 ;\n" + 
+    "L PR[1:foo] 100mm/sec CR5,10 ;\n"
+  end
+
   def test_extended_velocity
     parse %(foo := PR[1]
       foo2 := PR[2]

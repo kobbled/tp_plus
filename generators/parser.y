@@ -3,7 +3,7 @@ token ASSIGN AT_SYM COMMENT MESSAGE WARNING JUMP IO_METHOD INPUT OUTPUT
 token NUMREG POSREG VREG SREG TIME_SEGMENT ARG UALM
 token MOVE DOT TO MID AT ACC TERM OFFSET SKIP GROUP COORD 
 token MROT PTH WJNT INC BREAK RTCP FPLIN
-token AP_LD RT_LD CD INDEV EV
+token AP_LD RT_LD CD CR INDEV EV
 token SEMICOLON NEWLINE STRING
 token REAL DIGIT WORD EQUAL
 token EEQUAL NOTEQUAL GTE LTE LT GT BANG
@@ -325,13 +325,22 @@ rule
                                        { result = val[0] << val[1] }
     ;
 
+  motion_arguements
+    : valid_terminations
+        { result = [val[0]] }
+    | valid_terminations COMMA valid_terminations
+        { result = [val[0], val[2]] }
+    ;
+
   motion_modifier
     : DOT swallow_newlines AT LPAREN speed RPAREN
                                        { result = SpeedNode.new(val[4]) }
     | DOT swallow_newlines ACC LPAREN int_or_var RPAREN
                                        { result = AccNode.new(val[4]) }
+    | DOT swallow_newlines CR LPAREN motion_arguements RPAREN
+                                       { result = TerminationNode.new(val[2],val[4][0],val[4][1]) }
     | DOT swallow_newlines TERM LPAREN valid_terminations RPAREN
-                                       { result = TerminationNode.new(val[4]) }
+                                       { result = TerminationNode.new(val[2],val[4],nil) }
     | DOT swallow_newlines OFFSET LPAREN var_or_indirect RPAREN
                                        { result = OffsetNode.new(val[2],val[4]) }
     | DOT swallow_newlines TIME_SEGMENT LPAREN time COMMA time_seg_actions RPAREN
