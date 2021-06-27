@@ -533,6 +533,14 @@ LBL[105] ;\n), @interpreter.list_warnings
     assert_prog "L PR[1:foo] 100mm/sec FINE PSPD110 ;\n"
   end
 
+  def test_continuous_rotation_speed
+    parse %(foo := PR[1]
+      TERM := -1
+      linear_move.to(foo).at(100, 'mm/s').term(TERM).continuous_rotation_speed(0)
+      )
+    assert_prog "L PR[1:foo] 100mm/sec FINE CTV0 ;\n"
+  end
+
   def test_linear_distance
     parse %(foo := PR[1]
       foo2 := PR[2]

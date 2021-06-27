@@ -20,6 +20,8 @@ module TPPlus
             "EV"
           when "pspd", "process_speed"
             "PSPD"
+          when "ctv", "continuous_rotation_speed"
+            "CTV"
           else
             raise "invalid motion modifier " + @modifier 
         end

@@ -34,6 +34,8 @@ module TPPlus
         "ev" => :EV,
         "process_speed" => :PSPD,
         "pspd" => :PSPD,
+        "continuous_rotation_speed" => :CTV,
+        "ctv" => :CTV,
 
         "circular_move" => :MOVE,
         "elsif" => :ELSIF,
