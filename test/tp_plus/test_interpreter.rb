@@ -482,6 +482,64 @@ LBL[105] ;\n), @interpreter.list_warnings
     assert_prog "J PR[1:foo] 100% FINE MROT ;\nL PR[2:foo2] 400mm/sec FINE ACC100 Wjnt MROT ;\n"
   end
 
+  def test_remote_TCP_motion
+    parse %(foo := PR[1]
+      foo2 := PR[2]
+      TERM := -1
+      joint_move.to(foo).at(40, '%').term(TERM)
+      linear_move.to(foo2).at(400, 'mm/s').term(100).acc(100).rtcp
+      )
+    assert_prog "J PR[1:foo] 40% FINE ;\n" + "L PR[2:foo2] 400mm/sec CNT100 ACC100 RTCP ;\n"
+  end
+
+  def test_corner_distance
+    parse %(foo := PR[1]
+      foo2 := PR[2]
+      foo3 := PR[3]
+      TERM := -1
+      linear_move.to(foo).at(400, 'mm/s').term(TERM).acc(100)
+      linear_move.to(foo2).at(400, 'mm/s').term(100).acc(100).cd(50)
+      linear_move.to(foo3).at(400, 'mm/s').term(TERM)
+      )
+    assert_prog "L PR[1:foo] 400mm/sec FINE ACC100 ;\n" +
+    "L PR[2:foo2] 400mm/sec CNT100 ACC100 CD50 ;\n" +
+    "L PR[3:foo3] 400mm/sec FINE ;\n"
+  end
+
+  def test_extended_velocity
+    parse %(foo := PR[1]
+      foo2 := PR[2]
+      TERM := -1
+      joint_move.to(foo).at(40, '%').term(TERM).simultaneous_ev(50)
+      joint_move.to(foo2).at(40, '%').term(TERM).independent_ev(50)
+      )
+    assert_prog "J PR[1:foo] 40% FINE EV50% ;\n" + "J PR[2:foo2] 40% FINE Ind.EV50% ;\n"
+  end
+
+  def test_linear_distance
+    parse %(foo := PR[1]
+      foo2 := PR[2]
+      TERM := -1
+      linear_move.to(foo).at(400, 'mm/s').term(TERM).approach_ld(100)
+      linear_move.to(foo2).at(400, 'mm/s').term(100).retract_ld(100)
+      )
+    assert_prog "L PR[1:foo] 400mm/sec FINE AP_LD100 ;\n" +
+    "L PR[2:foo2] 400mm/sec CNT100 RT_LD100 ;\n"
+  end
+
+  def test_linear_distance_register
+    parse %(foo := PR[1]
+      foo2 := PR[2]
+      TERM := -1
+      reg1 := R[1]
+      arreg := AR[1]
+      linear_move.to(foo).at(400, 'mm/s').term(TERM).approach_ld(reg1)
+      linear_move.to(foo2).at(400, 'mm/s').term(100).retract_ld(arreg)
+      )
+    assert_prog "L PR[1:foo] 400mm/sec FINE AP_LDR[1:reg1] ;\n" +
+    "L PR[2:foo2] 400mm/sec CNT100 RT_LDAR[1] ;\n"
+  end
+
   def test_motion_min_rotation_error
     parse %(foo := PR[1]
       TERM := -1

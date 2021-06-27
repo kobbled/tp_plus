@@ -1,7 +1,9 @@
 class TPPlus::Parser
 token ASSIGN AT_SYM COMMENT MESSAGE WARNING JUMP IO_METHOD INPUT OUTPUT
 token NUMREG POSREG VREG SREG TIME_SEGMENT ARG UALM
-token MOVE DOT TO MID AT ACC TERM OFFSET SKIP GROUP COORD MROT PTH WJNT INC BREAK
+token MOVE DOT TO MID AT ACC TERM OFFSET SKIP GROUP COORD 
+token MROT PTH WJNT INC BREAK RTCP FPLIN
+token AP_LD RT_LD CD INDEV EV
 token SEMICOLON NEWLINE STRING
 token REAL DIGIT WORD EQUAL
 token EEQUAL NOTEQUAL GTE LTE LT GT BANG
@@ -338,6 +340,8 @@ rule
                                        { result = SkipNode.new(val[4],val[5]) }
     | DOT swallow_newlines valid_motion_statements
                                        { result = StatementModifierNode.new(val[2]) }
+    | DOT swallow_newlines single_argument_motion_modifiers LPAREN int_or_var RPAREN
+                                       { result = ArguementModifierNode.new(val[2],val[4]) }
     ;
 
   valid_motion_statements
@@ -347,6 +351,16 @@ rule
     | INC
     | WJNT
     | BREAK
+    | RTCP
+    | FPLIN
+    ;
+
+  single_argument_motion_modifiers
+    : CD
+    | EV
+    | INDEV
+    | RT_LD
+    | AP_LD
     ;
 
   valid_terminations
