@@ -1932,9 +1932,47 @@ foo = &foo")
     assert_prog "$CD_PAIR[1].$LEADER_FRM=PR[1:test_pr] ;\n"
   end
 
+  def test_system_vars_nested_rval
+    parse("test_pr := PR[1]\ntest_pr = $CD_PAIR[1].$LEADER_FRM")
+    assert_prog "PR[1:test_pr]=$CD_PAIR[1].$LEADER_FRM ;\n"
+  end
+
   def test_system_vars_nested_arrays
     parse("$MRR_GRP[2].$MASTER_POS[1] = 0")
     assert_prog "$MRR_GRP[2].$MASTER_POS[1]=0 ;\n"
+  end
+
+  def test_system_var_in_expression
+    parse("if $SCR.$NUM_GROUP > 1 then
+      #true block
+      else
+      #false block
+      end")
+    assert_prog "IF ($SCR.$NUM_GROUP>1) THEN ;\n" +
+    "! true block ;\n" +
+    "ELSE ;\n" +
+    "! false block ;\n" +
+    "ENDIF ;\n"
+  end
+
+  def test_system_var_in_expression_rval
+    parse("foo := R[1]
+
+      foo = $SCR.$NUM_GROUP
+      
+      if foo > $SCR.$NUM_GROUP then
+      #true block
+      else
+      #false block
+      end")
+    assert_prog " ;\n" +
+    "R[1:foo]=$SCR.$NUM_GROUP ;\n" +
+    " ;\n" +
+    "IF (R[1:foo]>$SCR.$NUM_GROUP) THEN ;\n" +
+    "! true block ;\n" +
+    "ELSE ;\n" +
+    "! false block ;\n" +
+    "ENDIF ;\n"
   end
 
   # issue #18 https://github.com/onerobotics/tp_plus/issues/18

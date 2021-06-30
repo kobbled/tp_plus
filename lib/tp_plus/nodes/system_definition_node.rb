@@ -28,7 +28,7 @@ module TPPlus
         "$#{@identifier}[#{@index.eval(context)}]"
       end
 
-      def eval(context)
+      def eval(context,options={})
         "#{with_bracks?(context)}#{modifier_string(context)}"
       end
     end

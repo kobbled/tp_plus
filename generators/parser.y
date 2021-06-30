@@ -523,6 +523,7 @@ rule
     | operation
     | var
     | signed_var
+    | var_system
     | indirect_thing
     | paren_expr
     ;
