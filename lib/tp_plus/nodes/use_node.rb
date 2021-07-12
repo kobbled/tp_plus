@@ -14,7 +14,11 @@ module TPPlus
           "UTOOL_NUM=#{@value.eval(context)}"
         when "use_payload"
           "PAYLOAD[#{@value.eval(context)}]"
-        end
+        when "use_override"
+          "OVERRIDE=#{@value.eval(context)}"
+        when "use_colguard"
+          "COL GUARD ADJUST #{@value.eval(context)}"
+        end	
       end
     end
   end

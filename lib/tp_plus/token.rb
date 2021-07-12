@@ -99,7 +99,9 @@ module TPPlus
         "set_skip_condition" => :SET_SKIP_CONDITION,
         "use_payload" => :FANUC_USE,
         "use_uframe" => :FANUC_USE,
-        "use_utool" => :FANUC_USE
+        "use_utool" => :FANUC_USE,		
+        "use_override" => :FANUC_USE,		
+        "use_colguard" => :FANUC_USE
       }
 
 
