@@ -10,7 +10,7 @@ token EEQUAL NOTEQUAL GTE LTE LT GT BANG
 token PLUS MINUS STAR SLASH DIV AND OR MOD
 token IF THEN ELSE ELSIF END UNLESS FOR IN WHILE
 token WAIT_FOR WAIT_UNTIL TIMEOUT AFTER
-token FANUC_USE SET_SKIP_CONDITION NAMESPACE
+token FANUC_USE COLL_GUARD SET_SKIP_CONDITION NAMESPACE
 token CASE WHEN INDIRECT POSITION
 token EVAL TIMER TIMER_METHOD RAISE ABORT RETURN
 token POSITION_DATA TRUE_FALSE RUN TP_HEADER PAUSE
@@ -92,6 +92,7 @@ rule
     | PAUSE                           { result = PauseNode.new }
     | ABORT                           { result = AbortNode.new }
     | RETURN                          { result = ReturnNode.new }
+    | collguard_statement
     ;
 
   lpos_or_jpos
@@ -156,6 +157,10 @@ rule
 
   use_statement
     : FANUC_USE indirectable           { result = UseNode.new(val[0],val[1]) }
+    ;
+
+  collguard_statement
+    : COLL_GUARD optional_arg           { result = ColGuard.new(val[0],val[1]) }
     ;
 
   # set_skip_condition x
@@ -392,6 +397,12 @@ rule
   indirectable
     : number
     | var
+    ;
+
+  optional_arg
+    : number
+    | var
+    |                 { result = nil }
     ;
 
   time_seg_actions

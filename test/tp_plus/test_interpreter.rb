@@ -2061,4 +2061,23 @@ foo = &foo")
     " ;\n"
   end
 
+  def test_override
+    parse("foo := R[1]
+      use_override 50
+      use_override foo")
+    assert_prog "OVERRIDE=50% ;\n" + "OVERRIDE=R[1:foo] ;\n"
+  end
+
+  def test_collision_guard
+    parse("foo := R[1]
+      colguard_on 
+      adjust_colguard
+      adjust_colguard 80
+      colguard_off ")
+    assert_prog "COL DETECT ON ;\n" +
+    "COL GUARD ADJUST ;\n" +
+    "COL GUARD ADJUST 80 ;\n" +
+    "COL DETECT OFF ;\n"
+  end
+
 end
