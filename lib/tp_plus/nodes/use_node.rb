@@ -15,10 +15,12 @@ module TPPlus
         when "use_payload"
           "PAYLOAD[#{@value.eval(context)}]"
         when "use_override"
-          "OVERRIDE=#{@value.eval(context)}"
-        when "use_colguard"
-          "COL GUARD ADJUST #{@value.eval(context)}"
-        end	
+          if @value.is_a?(VarNode)
+            "OVERRIDE=#{@value.eval(context)}"
+          else
+            "OVERRIDE=#{@value.eval(context)}%"
+          end
+        end
       end
     end
   end

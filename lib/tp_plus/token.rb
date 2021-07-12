@@ -100,8 +100,11 @@ module TPPlus
         "use_payload" => :FANUC_USE,
         "use_uframe" => :FANUC_USE,
         "use_utool" => :FANUC_USE,		
-        "use_override" => :FANUC_USE,		
-        "use_colguard" => :FANUC_USE
+        "use_override" => :FANUC_USE,
+
+        "colguard_on" => :COLL_GUARD,
+        "adjust_colguard" => :COLL_GUARD,
+        "colguard_off" => :COLL_GUARD	
       }
 
 
