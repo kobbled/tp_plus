@@ -18,7 +18,12 @@ module TPPlus
 
         case @valuex
         when DigitNode
-          s += "#{@valuex.eval(context)}"
+          val = @valuex.eval(context)
+          if val[0] == "(" # negative
+            s = "FINE"
+          else
+            s += "#{val}"
+          end
         when VarNode
           if @valuex.constant?
             val = @valuex.eval(context)

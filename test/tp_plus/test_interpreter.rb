@@ -1900,7 +1900,8 @@ foo = &foo")
     arc_move.to(p3).at(200, 'mm/s').term(100)
     arc_move.to(p4).at(200, 'mm/s').term(100)
     arc_move.to(p5).at(200, 'mm/s').term(FINE)
-    linear_move.to(p6).at(200, 'mm/s').term(FINE)")
+    linear_move.to(p6).at(200, 'mm/s').term(FINE)
+    linear_move.to(p6).at(200, 'mm/s').term(-1)")
     
     assert_prog " ;\n" +
     " ;\n" +
@@ -1909,6 +1910,7 @@ foo = &foo")
     "A P[3:p3] 200mm/sec CNT100 ;\n" +
     "A P[4:p4] 200mm/sec CNT100 ;\n" +
     "A P[5:p5] 200mm/sec FINE ;\n" +
+    "L P[6:p6] 200mm/sec FINE ;\n" +
     "L P[6:p6] 200mm/sec FINE ;\n"
   end
 
