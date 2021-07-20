@@ -181,6 +181,7 @@ rule
 
   arg
     : number
+    | signed_number
     | var
     | string
     | address
