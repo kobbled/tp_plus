@@ -2063,6 +2063,44 @@ foo = &foo")
     " ;\n"
   end
 
+  def test_conditional_block_no_else
+    parse("foo := R[1]
+      pin1 := DO[33]
+
+      if foo == 1 then
+       # do something
+       turn_on(pin1)
+      end")
+
+    assert_prog " ;\n" +
+    "IF (R[1:foo]=1) THEN ;\n" +
+    "! do something ;\n" +
+    "DO[33:pin1]=ON ;\n" +
+    "ENDIF ;\n"
+  end
+
+  def test_conditional_block_with_else
+    parse("foo := R[1]
+      pin1 := DO[33]
+
+      if foo == 1 then
+       # do something
+       turn_on(pin1)
+      else
+        # do something else
+        turn_off(pin1)
+      end")
+
+    assert_prog " ;\n" +
+    "IF (R[1:foo]=1) THEN ;\n" +
+    "! do something ;\n" +
+    "DO[33:pin1]=ON ;\n" +
+    "ELSE ;\n" +
+    "! do something else ;\n" +
+    "DO[33:pin1]=OFF ;\n" +
+    "ENDIF ;\n"
+  end
+
   def test_override
     parse("foo := R[1]
       use_override 50

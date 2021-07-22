@@ -64,7 +64,7 @@ module TPPlus
 
         if @elsif_block.empty?
           if @false_block.empty?
-            s += "ENDIF ;"
+            s += "ENDIF"
           else
             # could be if-else or unless-else
             s += "ELSE ;\n#{false_block(context)}ENDIF"
