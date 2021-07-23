@@ -8,6 +8,17 @@ namespace :compile do
   end
 end
 
+require 'rdoc/task'
+
+RDoc::Task.new do |rdoc|
+  rdoc.rdoc_dir = 'doc'
+  rdoc.main = "README.md"
+  rdoc.rdoc_files.include("README.md", "examples.md")
+  rdoc.rdoc_files.include("test/tp_plus/*.rb")
+  rdoc.rdoc_files.include("lib/tp_plus/*.rb", "lib/tp_plus/nodes/*.rb")
+  rdoc.rdoc_files.exclude("lib/tp_plus/parser.rb")
+end
+
 task compile: ["compile:parser"]
 
 require 'rake/testtask'

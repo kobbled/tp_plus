@@ -63,47 +63,16 @@ See `tpp --help` for options.
 Examples
 --------
 
-example_1.tpp
+see [examples.md](examples.md)
 
-    foo  := R[1]
-    bar  := DO[1]
-    baz  := DO[2]
+Documentation
+----------
 
-    home := PR[1]
-    lpos := PR[2]
+Build rdocs with:
 
-    foo = 1
-
-    @loop
-      foo += 1
-
-      jump_to @loop if foo < 10
-
-    turn_on bar if foo == 5
-    toggle baz
-
-    linear_move.to(home).at(2000, 'mm/s').term(0)
-    get_linear_position(lpos)
-
-
-example_1.ls
-
-    /PROG example_1
-    /MN
-     : R[1:foo] = 1 ;
-     :  ;
-     : LBL[100:loop] ;
-     : R[1:foo]=R[1:foo]+1 ;
-     : IF R[1:foo]<10,JMP LBL[100] ;
-     :  ;
-     : IF (R[1:foo]=5),DO[1:bar]=(ON) ;
-     : DO[2:baz]=(!DO[2:baz]) ;
-     :  ;
-     : L PR[1:home] 2000mm/sec CNT0 ;
-     : PR[2:lpos]=LPOS ;
-    /END
-
-For a more extensive example and test environment, visit http://tp-plus.herokuapp.com/.
+```
+rake rdoc
+```
 
 License
 -------

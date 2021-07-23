@@ -8,6 +8,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'test-unit', '~> 3.0'
   spec.add_development_dependency 'rake', '~> 12.3.3'
   spec.add_development_dependency 'ruby-prof', '~> 0.15'
+  spec.add_development_dependency 'rdoc'
 
   spec.authors                   = ["Jay Strybis"]
   spec.email                     = ['jay.strybis@gmail.com']

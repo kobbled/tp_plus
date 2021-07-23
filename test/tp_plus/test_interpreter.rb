@@ -63,7 +63,6 @@ class TestInterpreter < Test::Unit::TestCase
     assert_prog "LBL[100:foo] ;\n"
   end
 
-  #@kobbled adds
   def test_label_with_number_definition
     parse("@foo2")
     assert_prog "LBL[100:foo2] ;\n"
@@ -92,6 +91,25 @@ class TestInterpreter < Test::Unit::TestCase
 
   end
 
+  ##
+  # i   := R[1]
+  # inc := R[2]
+  # j   := R[3]
+  # inc2 := R[4]
+  # i = 0
+  # j = 0
+  # inc = 10
+  # inc2 = 20
+  # while i < inc
+  #     @finlbl1
+  #     while j < inc2
+  #       @finlbl2
+  #       j += 1
+  #     end
+  #     i += 1
+  # end
+  # jump_to @finlbl1
+  # jump_to @finlbl2
   def test_label_in_nested_loop
     parse("i   := R[1]
     inc := R[2]
