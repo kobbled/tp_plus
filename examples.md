@@ -1,5 +1,7 @@
 # TP+ Examples
 
+**IN DEVELOPMENT** : If you any examples to contribute post them to issues.
+
 TP+
 ```ruby
 ```
@@ -229,6 +231,190 @@ LS
  : LBL[103:endcase] ;
 /END
 ```
+
+Functions
+-------------
+
+**NOTE::** Currently in development
+
+### Call A Function with Return
+TP+
+```ruby
+pose := PR[1]
+
+def set_pose(x,y,z,w,p,r) : posreg
+  dummy := PR[50]
+
+  clpr(&dummy, 0)
+  dummy.x = x
+  dummy.y = y
+  dummy.z = z
+  dummy.w = w
+  dummy.p = p
+  dummy.r = r
+
+  return (dummy)
+end
+
+
+pose = set_pose(100,0,50,90,0,-90)
+```
+
+LS
+```fanuc
+/PROG SET_POSE
+/ATTR
+COMMENT = "SET_POSE";
+TCD:  STACK_SIZE	= 0,
+      TASK_PRIORITY	= 50,
+      TIME_SLICE	= 0,
+      BUSY_LAMP_OFF	= 0,
+      ABORT_REQUEST	= 0,
+      PAUSE_REQUEST	= 0;
+DEFAULT_GROUP = *,*,*,*,*;
+/MN
+ :  ;
+ : CALL CLPR(50,0) ;
+ : PR[50,1:dummy]=AR[1] ;
+ : PR[50,2:dummy]=AR[2] ;
+ : PR[50,3:dummy]=AR[3] ;
+ : PR[50,4:dummy]=AR[4] ;
+ : PR[50,5:dummy]=AR[5] ;
+ : PR[50,6:dummy]=AR[6] ;
+ :  ;
+ : PR[AR[7]]=PR[50:dummy] ;
+/END
+
+/PROG MAIN
+/ATTR
+COMMENT = "MAIN";
+TCD:  STACK_SIZE	= 0,
+      TASK_PRIORITY	= 50,
+      TIME_SLICE	= 0,
+      BUSY_LAMP_OFF	= 0,
+      ABORT_REQUEST	= 0,
+      PAUSE_REQUEST	= 0;
+DEFAULT_GROUP = 1,*,*,*,*;
+/MN
+ :  ;
+ : CALL SET_POSE(100,0,50,90,0,(-90),1) ;
+ :  ;
+/END
+```
+
+### Multiple Functions with multiple return statements
+TP+
+```ruby
+sum := R[1]
+prop := R[2]
+i := R[3]
+j := R[4]
+
+SEED := 1
+INCREMENTS := 5
+AMPLITUDE := 100
+MAX_PROPIGATION := 30
+WAVE_DISTANCE := 20
+
+def linear_sequence(n1, n2) : numreg
+  return(n1*n2 + AMPLITUDE)
+end
+
+def divide_sequence(n1, n2) : numreg
+  if n2 < 1 then
+    return(n1)
+  end
+
+  return(n1/n2)
+end
+
+i=0
+while i < MAX_PROPIGATION
+  # inital seed
+  sum = SEED
+  j = 0
+  while (j < WAVE_DISTANCE)
+    sum = divide_sequence(sum, j)
+    sum = linear_sequence(sum, i)
+
+    j += 1
+  end
+  i += INCREMENTS
+end
+```
+
+LS
+```fanuc
+/PROG DIVIDE_SEQUENCE
+/ATTR
+COMMENT = "DIVIDE_SEQUENCE";
+TCD:  STACK_SIZE	= 0,
+      TASK_PRIORITY	= 50,
+      TIME_SLICE	= 0,
+      BUSY_LAMP_OFF	= 0,
+      ABORT_REQUEST	= 0,
+      PAUSE_REQUEST	= 0;
+DEFAULT_GROUP = *,*,*,*,*;
+/MN
+ : IF (AR[2]<1) THEN ;
+ : R[AR[3]]=AR[1] ;
+ : END ;
+ : ENDIF ;
+ :  ;
+ : R[AR[3]]=AR[1]/AR[2] ;
+ : END ;
+/END
+
+/PROG LINEAR_SEQUENCE
+/ATTR
+COMMENT = "LINEAR_SEQUENCE";
+TCD:  STACK_SIZE	= 0,
+      TASK_PRIORITY	= 50,
+      TIME_SLICE	= 0,
+      BUSY_LAMP_OFF	= 0,
+      ABORT_REQUEST	= 0,
+      PAUSE_REQUEST	= 0;
+DEFAULT_GROUP = *,*,*,*,*;
+/MN
+ : R[AR[3]]=(AR[1]*AR[2]+100) ;
+ : END ;
+/END
+
+/PROG MAIN
+/ATTR
+COMMENT = "MAIN";
+TCD:  STACK_SIZE	= 0,
+      TASK_PRIORITY	= 50,
+      TIME_SLICE	= 0,
+      BUSY_LAMP_OFF	= 0,
+      ABORT_REQUEST	= 0,
+      PAUSE_REQUEST	= 0;
+DEFAULT_GROUP = 1,*,*,*,*;
+/MN
+ :  ;
+ : R[3:i]=0 ;
+ : LBL[100] ;
+ : IF R[3:i]>=30,JMP LBL[101] ;
+ : ! inital seed ;
+ : R[1:sum]=1 ;
+ : R[4:j]=0 ;
+ : LBL[102] ;
+ : IF (R[4:j]>=20),JMP LBL[103] ;
+ : CALL DIVIDE_SEQUENCE(R[1:sum],R[4:j],1) ;
+ : CALL LINEAR_SEQUENCE(R[1:sum],R[3:i],1) ;
+ :  ;
+ : R[4:j]=R[4:j]+1 ;
+ : JMP LBL[102] ;
+ : LBL[103] ;
+ : R[3:i]=R[3:i]+5 ;
+ : JMP LBL[100] ;
+ : LBL[101] ;
+ :  ;
+ :  ;
+/END
+
+```
+
 
 Motion
 ------------
