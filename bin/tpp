@@ -12,6 +12,7 @@ OptionParser.new do |opts|
 
   opts.on("-o", "--output <file>", "Write output to <file>") do |o|
     options[:output] = o
+    options[:output_folder] = File.dirname(o)
   end
 
   opts.on_tail("-h", "--help", "Show this message") do
@@ -93,3 +94,6 @@ if options[:output]
 else
   print output
 end
+
+#write functions to disk
+interpreter.output_functions(options)

@@ -2,14 +2,15 @@ require_relative 'parser'
 
 module TPPlus
   class Interpreter
-    attr_accessor :line_count, :nodes, :position_data, :header_data
-    attr_reader :labels, :variables, :constants, :namespaces, :source_line_count
+    attr_accessor :line_count, :nodes, :position_data, :header_data, :ret_type
+    attr_reader :labels, :variables, :constants, :namespaces, :functions, :source_line_count
     def initialize
       @line_count    = 0
       @source_line_count = 0
       @nodes         = []
       @labels        = {}
       @namespaces    = {}
+      @functions     = {}
       @variables     = {}
       @constants     = {}
       @position_data = {}
@@ -41,6 +42,17 @@ module TPPlus
       end
     end
 
+    def add_function(name, args, block, ret_type = '')
+      if @functions[name.to_sym].nil?
+        @functions[name.to_sym] = TPPlus::Function.new(name, args, block, ret_type=ret_type, vars=@variables, consts=@constants)
+        @functions[name.to_sym].eval
+      end
+    end
+
+    def set_function_methods(context)
+      @ret_type = context.ret_type
+    end
+
     def add_label(identifier)
       raise "Label @#{identifier} already defined" if @labels[identifier.to_sym]
       @labels[identifier.to_sym] = next_label
@@ -62,6 +74,14 @@ module TPPlus
     def get_namespace(identifier)
       if ns = @namespaces[identifier.to_sym]
         return ns
+      end
+
+      false
+    end
+
+    def get_function(identifier)
+      if df = @functions[identifier.to_sym]
+        return df
       end
 
       false
@@ -160,6 +180,14 @@ module TPPlus
       end
 
       s
+    end
+
+    def output_functions(options)
+      return if @functions.empty?
+
+      @functions.each do |k, v|
+        v.output_program(options)
+      end
     end
 
     def pos_section
