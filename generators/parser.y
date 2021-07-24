@@ -171,6 +171,7 @@ rule
   program_call
     : WORD LPAREN args RPAREN                { result = CallNode.new(val[0],val[2]) }
     | RUN WORD LPAREN args RPAREN            { result = CallNode.new(val[1],val[3],async: true) }
+    | var_or_indirect EQUAL WORD LPAREN args RPAREN     { result = CallNode.new(val[2],val[4],ret:val[0]) }
     ;
 
   args
