@@ -18,7 +18,7 @@ token LPAREN RPAREN COLON COMMA LBRACK RBRACK LBRACE RBRACE
 token LABEL SYSTEM ADDRESS
 token LPOS JPOS
 token false
-token OPERATION
+token FUNCTION OPERATION
 
 prechigh
   right BANG
@@ -91,8 +91,9 @@ rule
     | var_system
     | PAUSE                           { result = PauseNode.new }
     | ABORT                           { result = AbortNode.new }
-    | RETURN                          { result = ReturnNode.new }
+    | return_statement
     | collguard_statement
+    | function
     ;
 
   lpos_or_jpos
@@ -188,6 +189,18 @@ rule
     | address
     ;
 
+  program_vars
+    : program_var                     { result = [val[0]] }
+    | program_vars COMMA program_var  { result = val[0] << val[2] }
+    |                                  { result = [] }
+
+  program_var
+    : WORD                             { result = FunctionVarNode.new(val[0]) }
+
+  return_statement
+    : RETURN LPAREN expression RPAREN      { result = FunctionReturnNode.new(val[2]) }
+    | RETURN                               { result = ReturnNode.new }
+
   string
     : STRING                           { result = StringNode.new(val[0]) }
     ;
@@ -261,6 +274,11 @@ rule
 
   namespace
     : NAMESPACE WORD block END         { result = NamespaceNode.new(val[1],val[2]) }
+    ;
+  
+  function
+    : FUNCTION WORD LPAREN program_vars RPAREN block END         { result = FunctionNode.new(val[1],val[3],val[5]) }
+    | FUNCTION WORD LPAREN program_vars RPAREN COLON WORD block END  { result = FunctionNode.new(val[1],val[3],val[7],val[6]) }
     ;
 
   case_statement
