@@ -30,6 +30,13 @@ module TPPlus
         "gp5" => "GP5"
       }
 
+      EXP_TYPES = {
+        "numreg" => "R",
+        "posreg" => "PR",
+        "strreg" => "SR",
+        "argreg" => "AR"
+      }
+
       def groups(context)
         return "" if context == ""
         "#{GROUPS[context]}:"
@@ -39,6 +46,13 @@ module TPPlus
         return "" if m == ""
 
         ",#{COMPONENTS[m]}"
+      end
+
+      def set_type(s)
+        if EXP_TYPES[s.to_s]
+          return "#{EXP_TYPES[s.to_s]}"
+        end
+        s
       end
 
       def component_valid?(c)
@@ -58,8 +72,8 @@ module TPPlus
         else
           group_string = GROUPS[@method[:group]] + ":" if @method[:group]
         end
-
-        s = "#{@type.upcase}[#{group_string}#{@target.eval(context)}#{component(@method[:method])}]"
+        
+        s = "#{set_type(@type).upcase}[#{group_string}#{@target.eval(context)}#{component(@method[:method])}]"
         if options[:opposite]
           s = "!#{s}"
         end
