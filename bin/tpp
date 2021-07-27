@@ -88,12 +88,12 @@ end
 
 output += %(/END\n)
 
+#write functions to disk
+output += interpreter.output_functions(options)
+
 if options[:output]
   # write to file
   File.write(options[:output], output)
 else
   print output
 end
-
-#write functions to disk
-interpreter.output_functions(options)

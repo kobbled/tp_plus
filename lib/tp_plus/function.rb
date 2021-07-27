@@ -92,9 +92,9 @@ TCD:  STACK_SIZE	= 0,
 DEFAULT_GROUP = #{interpreter.header_data[:group_mask] || "*,*,*,*,*"};
 /MN\n)
       else
-        output = ': ! ------- ;'
-        output += ': ! '+ @name + ' ;'
-        output += ': ! ------- ;'
+        output = ": ! ------- ;\n"
+        output += ": ! "+ @name + " ;\n"
+        output += ": ! ------- ;\n"
       end
 
       lines.each_line do |line|
@@ -104,15 +104,16 @@ DEFAULT_GROUP = #{interpreter.header_data[:group_mask] || "*,*,*,*,*"};
       if prog_options[:output]
         output += %(/END\n)
       else
-        output += ': ! end of ' + @name + ' ;'
-        output += ': ! ------- ;'
+        output += ": ! end of " + @name + " ;\n"
+        output += ": ! ------- ;\n"
       end
 
       if prog_options[:output]
         filname = prog_options[:output_folder] +'/' + @name + '.ls'
         File.write(filname, output)
+        return ""
       else
-        print output
+        return output
       end
     end
 

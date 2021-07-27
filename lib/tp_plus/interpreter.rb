@@ -124,11 +124,14 @@ module TPPlus
     end
 
     def output_functions(options)
-      return if @functions.empty?
+      return "" if @functions.empty?
 
+      s = ""
       @functions.each do |k, v|
-        v.output_program(options)
+        s += v.output_program(options)
       end
+      
+      return s
     end
 
     def pos_section

@@ -2138,4 +2138,24 @@ foo = &foo")
     "COL DETECT OFF ;\n"
   end
 
+  def test_function_with_return
+    parse("foo := R[1]
+      def set_reg(x) : numreg    
+        return (x)
+      end
+      foo=set_reg(100)")
+      assert_prog "CALL SET_REG(100,1) ;\n"
+
+      options = {}
+      options[:output] = false
+      assert_equal %(: ! ------- ;
+: ! set_reg ;
+: ! ------- ;
+ : R[AR[2]]=AR[1] ;
+ : END ;
+: ! end of set_reg ;
+: ! ------- ;
+), @interpreter.output_functions(options)
+  end
+
 end
