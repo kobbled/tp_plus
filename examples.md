@@ -1,3 +1,23 @@
+<!-- TOC -->
+
+- [TP+ Examples](#tp-examples)
+  - [IO](#io)
+  - [Loops](#loops)
+    - [looping with a jump label](#looping-with-a-jump-label)
+  - [Conditionals](#conditionals)
+    - [If-Then Block](#if-then-block)
+  - [Select](#select)
+  - [Namespaces](#namespaces)
+  - [Functions](#functions)
+    - [Call A Function with Return](#call-a-function-with-return)
+    - [Multiple Functions with multiple return statements](#multiple-functions-with-multiple-return-statements)
+  - [Motion](#motion)
+  - [Positions](#positions)
+  - [Function parameters](#function-parameters)
+  - [Arguments](#arguments)
+
+<!-- /TOC -->
+
 # TP+ Examples
 
 **IN DEVELOPMENT** : If you any examples to contribute post them to issues.
@@ -13,8 +33,7 @@ LS
 /END
 ```
 
-IO
-------------
+##  IO
 
 TP+
 ```Ruby
@@ -35,8 +54,7 @@ LS
 /END
 ```
 
-Loops
-------------
+##  Loops
 
 TP+
 ```ruby
@@ -49,7 +67,7 @@ LS
 /END
 ```
 
-### looping with a jump label
+###  looping with a jump label
 
 TP+
 ```ruby
@@ -75,10 +93,9 @@ LS
 /END
 ```
 
-Conditionals
-------------
+##  Conditionals
 
-### If-Then Block
+###  If-Then Block
 
 TP+
 ```ruby
@@ -182,8 +199,7 @@ LS
 ```
 
 
-Select
----------
+##  Select
 
 TP+
 ```ruby
@@ -231,13 +247,24 @@ LS
  : LBL[103:endcase] ;
 /END
 ```
+## Namespaces
 
-Functions
--------------
+TP+
+```ruby
+```
+
+LS
+```fanuc
+/PROG example_1
+/MN
+/END
+```
+
+##  Functions
 
 **NOTE::** Currently in development
 
-### Call A Function with Return
+###  Call A Function with Return
 TP+
 ```ruby
 pose := PR[1]
@@ -302,7 +329,7 @@ DEFAULT_GROUP = 1,*,*,*,*;
 /END
 ```
 
-### Multiple Functions with multiple return statements
+###  Multiple Functions with multiple return statements
 TP+
 ```ruby
 sum := R[1]
@@ -416,8 +443,7 @@ DEFAULT_GROUP = 1,*,*,*,*;
 ```
 
 
-Motion
-------------
+##  Motion
 
 TP+
 ```ruby
@@ -438,8 +464,7 @@ LS
 /END
 ```
 
-Positions
-----------------
+##  Positions
 
 TP+
 ```ruby
@@ -498,8 +523,7 @@ P[1:""]{
 ```
 
 
-Function parameters
-------------
+##  Function parameters
 
 TP+
 ```ruby
@@ -524,8 +548,7 @@ LS
 /END
 ```
 
-Arguments
-------------
+##  Arguments
 
 TP+
 ```ruby
