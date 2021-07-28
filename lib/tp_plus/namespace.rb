@@ -10,7 +10,7 @@ module TPPlus
     end
 
     def define!
-      @nodes.flatten.select {|n| [TPPlus::Nodes::DefinitionNode, TPPlus::Nodes::NamespaceNode].include? n.class }.each do |node|
+      @nodes.flatten.select {|n| [TPPlus::Nodes::DefinitionNode, TPPlus::Nodes::FunctionNode, TPPlus::Nodes::NamespaceNode].include? n.class }.each do |node|
         node.eval(self)
       end
     end
@@ -31,6 +31,15 @@ module TPPlus
 
       @variables[identifier.to_sym] = node
       node.comment = "#{@name} #{identifier}"
+    end
+
+    def add_function(name, args, block, ret_type = '')
+      identifier = @name + '_' + name
+      
+      if @functions[name.to_sym].nil?
+        @functions[name.to_sym] = TPPlus::Function.new(identifier, args, block, ret_type=ret_type, vars=@variables, consts=@constants)
+        @functions[name.to_sym].eval
+      end
     end
 
     def get_constant(identifier)

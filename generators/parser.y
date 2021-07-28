@@ -169,10 +169,14 @@ rule
     : SET_SKIP_CONDITION expression             { result = SetSkipNode.new(val[1]) }
     ;
 
+  function_call
+    : WORD                { result = val[0] }
+    | namespaces WORD     { result = val[0][0] + '_' + val[1] }
+    ;
   program_call
-    : WORD LPAREN args RPAREN                { result = CallNode.new(val[0],val[2]) }
-    | RUN WORD LPAREN args RPAREN            { result = CallNode.new(val[1],val[3],async: true) }
-    | var_or_indirect EQUAL WORD LPAREN args RPAREN     { result = CallNode.new(val[2],val[4],ret:val[0]) }
+    : function_call LPAREN args RPAREN                { result = CallNode.new(val[0],val[2]) }
+    | RUN function_call LPAREN args RPAREN            { result = CallNode.new(val[1],val[3],async: true) }
+    | var_or_indirect EQUAL function_call LPAREN args RPAREN     { result = CallNode.new(val[2],val[4],ret:val[0]) }
     ;
 
   args

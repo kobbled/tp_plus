@@ -124,11 +124,18 @@ module TPPlus
     end
 
     def output_functions(options)
-      return "" if @functions.empty?
 
       s = ""
       @functions.each do |k, v|
         s += v.output_program(options)
+      end
+
+      @namespaces.each do |n, nv|
+        if !nv.functions.empty?
+          nv.functions.each do |k, v|
+            s += v.output_program(options)
+          end
+        end
       end
       
       return s
