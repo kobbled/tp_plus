@@ -13,6 +13,7 @@
   - [Functions](#functions)
     - [Call A Function with Return](#call-a-function-with-return)
     - [Multiple Functions with multiple return statements](#multiple-functions-with-multiple-return-statements)
+    - [namespace collections](#namespace-collections)
   - [Motion](#motion)
   - [Positions](#positions)
   - [Function parameters](#function-parameters)
@@ -631,6 +632,86 @@ DEFAULT_GROUP = 1,*,*,*,*;
 
 ```
 
+###  namespace collections
+
+TP+
+```ruby
+namespace Math
+  M_PI := 3.14159
+
+  def arclength(angle, radius) : numreg 
+    return(angle*radius*M_PI/180)
+  end
+
+  def arcangle(length, radius) : numreg
+    return(length/radius*180/M_PI)
+  end
+end
+
+radius := R[1]
+angle  := R[2]
+length := R[3]
+
+radius = 100
+angle = 90
+
+length = Math::arclength(angle, radius)
+angle = Math::arcangle(length, radius)
+```
+
+LS
+```fanuc
+/PROG MATH_ARCANGLE
+/ATTR
+COMMENT = "MATH_ARCANGLE";
+TCD:  STACK_SIZE	= 0,
+      TASK_PRIORITY	= 50,
+      TIME_SLICE	= 0,
+      BUSY_LAMP_OFF	= 0,
+      ABORT_REQUEST	= 0,
+      PAUSE_REQUEST	= 0;
+DEFAULT_GROUP = *,*,*,*,*;
+/MN
+ : R[AR[3]]=(AR[1]/AR[2]*180/3.14159) ;
+ : END ;
+/END
+
+/PROG MATH_ARCLENGTH
+/ATTR
+COMMENT = "MATH_ARCLENGTH";
+TCD:  STACK_SIZE	= 0,
+      TASK_PRIORITY	= 50,
+      TIME_SLICE	= 0,
+      BUSY_LAMP_OFF	= 0,
+      ABORT_REQUEST	= 0,
+      PAUSE_REQUEST	= 0;
+DEFAULT_GROUP = *,*,*,*,*;
+/MN
+ : R[AR[3]]=(AR[1]*AR[2]*3.14159/180) ;
+ : END ;
+/END
+
+/PROG MAIN
+/ATTR
+COMMENT = "MAIN";
+TCD:  STACK_SIZE	= 0,
+      TASK_PRIORITY	= 50,
+      TIME_SLICE	= 0,
+      BUSY_LAMP_OFF	= 0,
+      ABORT_REQUEST	= 0,
+      PAUSE_REQUEST	= 0;
+DEFAULT_GROUP = 1,*,*,*,*;
+/MN
+ :  ;
+ :  ;
+ :  ;
+ : R[1:radius]=100 ;
+ : R[2:angle]=90 ;
+ :  ;
+ : CALL MATH_ARCLENGTH(R[2:angle],R[1:radius],3) ;
+ : CALL MATH_ARCANGLE(R[3:length],R[1:radius],2) ;
+/END
+```
 
 ##  Motion
 
