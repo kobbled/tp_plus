@@ -8,6 +8,8 @@
     - [If-Then Block](#if-then-block)
   - [Select](#select)
   - [Namespaces](#namespaces)
+    - [structs](#structs)
+    - [states](#states)
   - [Functions](#functions)
     - [Call A Function with Return](#call-a-function-with-return)
     - [Multiple Functions with multiple return statements](#multiple-functions-with-multiple-return-statements)
@@ -249,15 +251,202 @@ LS
 ```
 ## Namespaces
 
+### structs
+
 TP+
 ```ruby
+namespace Foo
+  bar := R[1]
+  deligate := DI[1]
+end
+
+namespace struct1
+  CONST1 := 5
+end
+
+namespace struct2
+  CONST1 := 2
+end
+
+if Foo::deligate then
+  Foo::bar = struct1::CONST1
+else
+  Foo::bar = struct2::CONST1
+end
 ```
 
 LS
 ```fanuc
-/PROG example_1
+/PROG TEST
+/ATTR
+COMMENT = "TEST";
+TCD:  STACK_SIZE	= 0,
+      TASK_PRIORITY	= 50,
+      TIME_SLICE	= 0,
+      BUSY_LAMP_OFF	= 0,
+      ABORT_REQUEST	= 0,
+      PAUSE_REQUEST	= 0;
+DEFAULT_GROUP = 1,*,*,*,*;
 /MN
+ : IF (DI[1:Foo deligate]) THEN ;
+ : R[1:Foo bar]=5 ;
+ : ELSE ;
+ : R[1:Foo bar]=2 ;
+ : ENDIF ;
 /END
+```
+
+
+### states
+
+TP+
+```ruby
+namespace Infeed
+  part_present? := DI[2]
+  part_scanning? := DI[3]
+  part_welding? := DI[4]
+  is_weldable?  := F[2]
+end
+
+namespace Alarms
+  gripper        := UALM[1]
+  part_presence  := UALM[2]
+  cannot_weld   := UALM[3]
+end
+
+namespace Perch
+  pickup        := PR[1]
+  scan          := PR[2]
+  weld          := PR[3]
+end
+
+state := R[1]
+loop := F[3]
+
+turn_on(loop)
+
+namespace states
+  PICKUP    := 1
+  SCAN      := 2
+  WELD      := 3
+  DROPOFF   := 4
+end
+
+while loop
+  case state
+  when states::PICKUP
+    pickup_part()
+    if !Infeed::part_present? then
+      raise Alarms::part_presence
+      turn_off(loop)
+    else
+      state = states::SCAN
+      linear_move.to(Perch::scan).at(2000, 'mm/s').term(-1)
+    end
+  when states::SCAN
+    scan_part()
+    if !Infeed::part_scanning? && Infeed::is_weldable? then
+      state = states::WELD
+      linear_move.to(Perch::weld).at(2000, 'mm/s').term(-1)
+    elsif !Infeed::part_scanning? && !Infeed::is_weldable? then
+      raise Alarms::cannot_weld
+      turn_off(loop)
+    end
+  when states::WELD
+    weld_part()
+    if !Infeed::part_welding? then
+      state = states::DROPOFF
+      linear_move.to(Perch::pickup).at(2000, 'mm/s').term(-1)
+    end
+  when states::DROPOFF
+    drop_off_part()
+    if !Infeed::part_present? then
+      #increment counter
+      next_part()
+      state = states::PICKUP
+      linear_move.to(Perch::pickup).at(2000, 'mm/s').term(-1)
+    else
+      raise Alarms::gripper
+      turn_off(loop)
+    end
+  end
+end
+```
+
+LS
+```fanuc
+/PROG MAIN
+/ATTR
+COMMENT = "MAIN";
+TCD:  STACK_SIZE	= 0,
+      TASK_PRIORITY	= 50,
+      TIME_SLICE	= 0,
+      BUSY_LAMP_OFF	= 0,
+      ABORT_REQUEST	= 0,
+      PAUSE_REQUEST	= 0;
+DEFAULT_GROUP = 1,*,*,*,*;
+/MN
+ :  ;
+ :  ;
+ :  ;
+ :  ;
+ : F[3:loop]=(ON) ;
+ :  ;
+ :  ;
+ : LBL[104] ;
+ : IF (!F[3:loop]),JMP LBL[105] ;
+ : SELECT R[1:state]=1,JMP LBL[100] ;
+ :        =2,JMP LBL[101] ;
+ :        =3,JMP LBL[102] ;
+ :        =4,JMP LBL[103] ;
+ :  ;
+ : LBL[100:caselbl1] ;
+ : CALL PICKUP_PART ;
+ : IF (!DI[2:Infeed part_present?]) THEN ;
+ : UALM[2] ;
+ : F[3:loop]=(OFF) ;
+ : ELSE ;
+ : R[1:state]=2 ;
+ : L PR[2:Perch scan] 2000mm/sec FINE ;
+ : ENDIF ;
+ : JMP LBL[106] ;
+ : LBL[101:caselbl2] ;
+ : CALL SCAN_PART ;
+ : IF (!DI[3:Infeed part_scanning?] AND F[2:Infeed is_weldable?]) THEN ;
+ : R[1:state]=3 ;
+ : L PR[3:Perch weld] 2000mm/sec FINE ;
+ : ELSE ;
+ : IF (!DI[3:Infeed part_scanning?] AND !F[2:Infeed is_weldable?]) THEN ;
+ : UALM[3] ;
+ : F[3:loop]=(OFF) ;
+ : ENDIF ;
+ : ENDIF ;
+ :  ;
+ : JMP LBL[106] ;
+ : LBL[102:caselbl3] ;
+ : CALL WELD_PART ;
+ : IF (!DI[4:Infeed part_welding?]) THEN ;
+ : R[1:state]=4 ;
+ : L PR[1:Perch pickup] 2000mm/sec FINE ;
+ : ENDIF ;
+ : JMP LBL[106] ;
+ : LBL[103:caselbl4] ;
+ : CALL DROP_OFF_PART ;
+ : IF (!DI[2:Infeed part_present?]) THEN ;
+ : ! increment counter ;
+ : CALL NEXT_PART ;
+ : R[1:state]=1 ;
+ : L PR[1:Perch pickup] 2000mm/sec FINE ;
+ : ELSE ;
+ : UALM[1] ;
+ : F[3:loop]=(OFF) ;
+ : ENDIF ;
+ : JMP LBL[106] ;
+ : LBL[106:endcase] ;
+ : JMP LBL[104] ;
+ : LBL[105] ;
+/END
+
 ```
 
 ##  Functions
