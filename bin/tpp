@@ -85,8 +85,11 @@ end
 
 output += "/MN\n"
 
+#put guard in to not output the file if there are no instructions
+line_count = 0
 lines.each_line do |line|
   output += " : " + line
+  line_count += 1 if line.strip.tr(';', '').length > 0
 end
 
 if interpreter.pos_section != ""
@@ -99,9 +102,11 @@ output += %(/END\n)
 #write functions to disk
 output += interpreter.output_functions(options)
 
-if options[:output]
-  # write to file
-  File.write(options[:output], output)
-else
-  print output
+if line_count > 0
+  if options[:output]
+    # write to file
+    File.write(options[:output], output)
+  else
+    print output
+  end
 end
