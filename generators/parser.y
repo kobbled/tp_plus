@@ -13,7 +13,8 @@ token WAIT_FOR WAIT_UNTIL TIMEOUT AFTER
 token FANUC_USE COLL_GUARD SET_SKIP_CONDITION NAMESPACE
 token CASE WHEN INDIRECT POSITION
 token EVAL TIMER TIMER_METHOD RAISE ABORT RETURN
-token POSITION_DATA TRUE_FALSE RUN TP_HEADER PAUSE
+token POSITION_DATA TRUE_FALSE RUN PAUSE
+token TP_HEADER TP_APPLICATION_TYPE TP_APPLICATION_MEMBER
 token LPAREN RPAREN COLON COMMA LBRACK RBRACK LBRACE RBRACE
 token LABEL SYSTEM ADDRESS
 token LPOS JPOS
@@ -94,6 +95,7 @@ rule
     | return_statement
     | collguard_statement
     | function
+    | tp_application_definition
     ;
 
   lpos_or_jpos
@@ -112,6 +114,25 @@ rule
   tp_header_value
     : STRING
     | TRUE_FALSE
+    ;
+
+  tp_tool_methods
+    : LBRACE sn tp_tool_attributes sn RBRACE    { result = val[2] }
+    | LBRACE sn RBRACE                       { result = {} }
+    ;
+
+  tp_tool_attributes
+    : tp_tool_attribute                   { result = val[0] }
+    | tp_tool_attributes COMMA sn tp_tool_attribute
+                                       { result = val[0] + val[3] }
+    ;
+
+  tp_tool_attribute
+    : TP_APPLICATION_MEMBER COLON hash_value {result = [ToolApplMem.new(val[0],val[2])]}
+    ;
+    
+  tp_application_definition
+    : TP_APPLICATION_TYPE EQUAL sn tp_tool_methods  { result = ToolApplNode.new(val[0],val[3]) }
     ;
 
   raise
@@ -725,6 +746,7 @@ result = WarningNode.new(MessageNode.new(val[2]), LabelDefinitionNode.new(label)
 
   hash_value
     : STRING
+    | WORD                              
     | hash
     | array
     | optional_sign DIGIT              { val[1] = val[1].to_i * -1 if val[0] == "-"; result = val[1] }
