@@ -14,8 +14,10 @@
     - [Call A Function with Return](#call-a-function-with-return)
     - [Multiple Functions with multiple return statements](#multiple-functions-with-multiple-return-statements)
     - [namespace collections](#namespace-collections)
+    - [functions with positions](#functions-with-positions)
   - [Motion](#motion)
   - [Positions](#positions)
+    - [Inputing Position Data](#inputing-position-data)
   - [Function parameters](#function-parameters)
   - [Arguments](#arguments)
 
@@ -713,6 +715,73 @@ DEFAULT_GROUP = 1,*,*,*,*;
 /END
 ```
 
+### functions with positions
+
+TP+
+```ruby
+namespace Pose
+
+  def goHome()
+    TP_GROUPMASK = "1,*,*,*,*"
+    pHome := P[1]
+    joint_move.to(pHome).at(10, '%').term(-1)
+
+    position_data
+    {
+      'positions' : [
+        {
+          'id' : 1,
+          'comment' : 'Home Position',
+          'mask' :  [{
+            'group' : 1,
+            'uframe' : 0,
+            'utool' : 1,
+            'components' : {
+                'J1' : 127.834,
+                'J2' : 24.311,
+                'J3' : -29.462,
+                'J4' : -110.295,
+                'J5' : 121.424,
+                'J6' : 54.899
+                }
+            }]
+        }
+      ]
+    }
+    end
+  end
+end
+```
+
+LS
+```fanuc
+/PROG POSE_GOHOME
+/ATTR
+COMMENT = "POSE_GOHOME";
+TCD:  STACK_SIZE	= 0,
+      TASK_PRIORITY	= 50,
+      TIME_SLICE	= 0,
+      BUSY_LAMP_OFF	= 0,
+      ABORT_REQUEST	= 0,
+      PAUSE_REQUEST	= 0;
+DEFAULT_GROUP = 1,*,*,*,*;
+/MN
+ : J P[1:pHome] 10% FINE ;
+ :  ;
+/POS
+P[1:"Home Position"]{
+   GP1:
+  UF : 0, UT : 1, 
+  J1 = 127.834 deg, 
+  J2 = 24.311 deg, 
+  J3 = -29.462 deg, 
+  J4 = -110.295 deg, 
+  J5 = 121.424 deg, 
+  J6 = 54.899 deg
+};
+/END
+```
+
 ##  Motion
 
 TP+
@@ -735,6 +804,10 @@ LS
 ```
 
 ##  Positions
+
+### Inputing Position Data
+
+**NOTE** : `uframe`, and `utool` must be added in for each group
 
 TP+
 ```ruby

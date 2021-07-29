@@ -2,14 +2,13 @@ require_relative 'parser'
 
 module TPPlus
   class Interpreter < BaseBlock
-    attr_accessor :line_count, :position_data, :header_data, :header_appl_data
+    attr_accessor :line_count, :header_data, :header_appl_data
     attr_reader :labels, :source_line_count
     def initialize
       super
       
       @line_count    = 0
       @source_line_count = 0
-      @position_data = {}
       @header_data   = {}
       @header_appl_data   = []
       @labels        = {}

@@ -101,6 +101,11 @@ DEFAULT_GROUP = #{interpreter.header_data[:group_mask] || "*,*,*,*,*"};
         output += " : " + line
       end
 
+      if interpreter.pos_section != ""
+        output += "/POS\n"
+        output += interpreter.pos_section
+      end
+
       if prog_options[:output]
         output += %(/END\n)
       else

@@ -1,6 +1,6 @@
 module TPPlus
     class BaseBlock
-      attr_accessor :nodes, :ret_type
+      attr_accessor :nodes, :ret_type, :position_data
       attr_reader :variables, :constants, :namespaces, :functions
 
       def initialize
@@ -11,6 +11,7 @@ module TPPlus
         @variables     = {}
         @constants     = {}
         @ret_type      = {}
+        @position_data = {}
       end
       
       def add_namespace(identifier, block)
