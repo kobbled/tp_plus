@@ -3,6 +3,8 @@
 - [TP+ Examples](#tp-examples)
   - [IO](#io)
   - [Loops](#loops)
+    - [for loop](#for-loop)
+    - [while loop](#while-loop)
     - [looping with a jump label](#looping-with-a-jump-label)
   - [Conditionals](#conditionals)
     - [If-Then Block](#if-then-block)
@@ -15,6 +17,7 @@
     - [Multiple Functions with multiple return statements](#multiple-functions-with-multiple-return-statements)
     - [namespace collections](#namespace-collections)
     - [functions with positions](#functions-with-positions)
+    - [functions with posreg returns](#functions-with-posreg-returns)
   - [Motion](#motion)
   - [Positions](#positions)
     - [Inputing Position Data](#inputing-position-data)
@@ -61,6 +64,8 @@ LS
 
 ##  Loops
 
+### for loop
+
 TP+
 ```ruby
 ```
@@ -69,6 +74,64 @@ LS
 ```fanuc
 /PROG example_1
 /MN
+/END
+```
+### while loop
+
+**..note::** Contains KaBoost Routines
+
+TP+
+```ruby
+number := R[56]
+sum    := R[143]
+
+userclear()
+usershow()
+
+number = userReadInt('enter an Integer')
+sum = 0
+
+while number > 0
+  sum += number
+  number = userReadInt('enter next Integer. 0 to exit.')
+end
+
+print('The total sum is:')
+printnr(&sum)
+
+```
+
+LS
+```fanuc
+/PROG MAIN
+/ATTR
+COMMENT = "MAIN";
+TCD:  STACK_SIZE	= 0,
+      TASK_PRIORITY	= 50,
+      TIME_SLICE	= 0,
+      BUSY_LAMP_OFF	= 0,
+      ABORT_REQUEST	= 0,
+      PAUSE_REQUEST	= 0;
+DEFAULT_GROUP = 1,*,*,*,*;
+/APPL
+/MN
+ :  ;
+ : CALL USERCLEAR ;
+ : CALL USERSHOW ;
+ :  ;
+ : CALL USERREADINT('enter an Integer',56) ;
+ : R[143:sum]=0 ;
+ :  ;
+ : LBL[100] ;
+ : IF R[56:number]<=0,JMP LBL[101] ;
+ : R[143:sum]=R[143:sum]+R[56:number] ;
+ : CALL USERREADINT('enter next Integer. 0 to exit.',56) ;
+ : JMP LBL[100] ;
+ : LBL[101] ;
+ :  ;
+ : CALL PRINT('The total sum is:') ;
+ : CALL PRINTNR(143) ;
+ :  ;
 /END
 ```
 
@@ -779,6 +842,51 @@ P[1:"Home Position"]{
   J5 = 121.424 deg, 
   J6 = 54.899 deg
 };
+/END
+```
+
+### functions with posreg returns
+**..note::** Includes Ka-Boost Methods
+
+TP+
+```ruby
+pr1 := PR[20]
+
+#set robot pose
+pr1.group(1) = Pos::setxyz(500, 500, 0, 90, 0, 180)
+pr1.group(1) = Pos::setcfg('F U T, 0, 0, 0')
+#set rotary pose
+pr1.group(2) = Pos::setjnt2(90, 0)
+
+#no group
+pr1 = Pos::move()
+
+```
+
+LS
+```fanuc
+/PROG MAIN
+/ATTR
+COMMENT = "MAIN";
+TCD:  STACK_SIZE	= 0,
+      TASK_PRIORITY	= 50,
+      TIME_SLICE	= 0,
+      BUSY_LAMP_OFF	= 0,
+      ABORT_REQUEST	= 0,
+      PAUSE_REQUEST	= 0;
+DEFAULT_GROUP = 1,*,*,*,*;
+/APPL
+/MN
+ :  ;
+ : ! set robot pose ;
+ : CALL POS_SETXYZ(500,500,0,90,0,180,20,1) ;
+ : CALL POS_SETCFG('F U T, 0, 0, 0',20,1) ;
+ : ! set rotary pose ;
+ : CALL POS_SETJNT2(90,0,20,2) ;
+ :  ;
+ : ! no group ;
+ : CALL POS_MOVE(20) ;
+ :  ;
 /END
 ```
 

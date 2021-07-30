@@ -20,9 +20,22 @@ module TPPlus
       def args_string(context)
         #look for a return arguement. This will be appened to the arguement
         #list as an address
-        if @ret then arg = ",#{context.get_var(@ret.identifier).id.to_s}" else arg = "" end
+        arg = "" 
 
-        return "" unless @args.any?
+        if @ret then
+          v = context.get_var(@ret.identifier)
+          if v.is_a?(PosregNode)
+            if @ret.is_a?(VarMethodNode) && @ret.method[:group].is_a?(DigitNode)
+              arg = ",#{@ret.method[:group].value.to_s}"
+            end
+          end
+
+          arg = "#{v.id.to_s}" + arg
+        end
+
+        return "" unless @args.any? || arg.length > 0
+
+        arg = "," + arg if @args.any? && @ret
 
         "(" + @args.map {|a| a.eval(context) }.join(",") + arg + ")"
       end
