@@ -4,6 +4,8 @@
   - [IO](#io)
   - [Loops](#loops)
     - [for loop](#for-loop)
+      - [Print a pyramid](#print-a-pyramid)
+      - [Nested Select Statement in For Loop](#nested-select-statement-in-for-loop)
     - [while loop](#while-loop)
     - [looping with a jump label](#looping-with-a-jump-label)
   - [Conditionals](#conditionals)
@@ -66,15 +68,190 @@ LS
 
 ### for loop
 
+#### Print a pyramid
+
 TP+
 ```ruby
+i := R[178]
+j := R[180]
+
+COLUMNS := 6
+
+userclear()
+usershow()
+
+for i in (COLUMNS downto 1)
+  for j in (1 to i)
+    print('* ')
+  end
+  print_line('')
+end
 ```
 
 LS
 ```fanuc
-/PROG example_1
+/PROG TEST
+/ATTR
+COMMENT = "TEST";
+TCD:  STACK_SIZE	= 0,
+      TASK_PRIORITY	= 50,
+      TIME_SLICE	= 0,
+      BUSY_LAMP_OFF	= 0,
+      ABORT_REQUEST	= 0,
+      PAUSE_REQUEST	= 0;
+DEFAULT_GROUP = 1,*,*,*,*;
+/APPL
 /MN
+ :  ;
+ :  ;
+ : CALL USERCLEAR ;
+ : CALL USERSHOW ;
+ :  ;
+ : FOR R[178:i]=6 DOWNTO 1 ;
+ : FOR R[180:j]=1 TO R[178:i] ;
+ : CALL PRINT('* ') ;
+ : ENDFOR ;
+ : CALL PRINT_LINE('') ;
+ : ENDFOR ;
+ :  ;
+ :  ;
 /END
+```
+
+
+#### Nested Select Statement in For Loop
+
+**..note::** contains Ka_Boost Methods
+
+TP+
+```ruby
+i := R[178]
+total := R[192]
+type := R[264]
+axes := R[223]
+
+foo := PR[21]
+
+TP_GROUPMASK = "1,1,1,*,*"
+
+namespace prTypes
+  POSITION  := 1
+  XYZWPR    := 2
+  XYZWPREXT := 6
+  JOINTPOS  := 9
+end
+
+userclear()
+
+# get total number of groups on controller
+total = pos::grplen()
+
+#get current position
+get_linear_position(foo)
+
+for i in (1 to total)
+  type = pos::prtype(&foo, i)
+  axes = pos::axescnt(&foo, i)
+
+  case type
+    when prTypes::POSITION
+      print('Group ')
+      printnr(&i)
+      print_line(' is a Cartesian Pose.')
+    when prTypes::XYZWPR
+      print('Group ')
+      printnr(&i)
+      print_line(' is a Cartesian Pose.')
+    when prTypes::XYZWPREXT
+      print('Group ')
+      printnr(&i)
+      print(' is a Cartesian Pose. with ')
+      printnr(&axes)
+      print(' Extended axes.')
+      print_line('')
+    when prTypes::JOINTPOS
+      print('Group ')
+      printnr(&i)
+      print(' is a Joint Pose. with ')
+      printnr(&axes)
+      print(' axes.')
+      print_line('')
+  end
+end
+
+usershow()
+```
+
+LS
+```fanuc
+/PROG TEST
+/ATTR
+COMMENT = "TEST";
+TCD:  STACK_SIZE	= 0,
+      TASK_PRIORITY	= 50,
+      TIME_SLICE	= 0,
+      BUSY_LAMP_OFF	= 0,
+      ABORT_REQUEST	= 0,
+      PAUSE_REQUEST	= 0;
+DEFAULT_GROUP = 1,1,1,*,*;
+/APPL
+/MN
+ :  ;
+ :  ;
+ :  ;
+ :  ;
+ : CALL USERCLEAR ;
+ :  ;
+ : ! get total number of groups on ;
+ : ! controller ;
+ : CALL POS_GRPLEN(192) ;
+ :  ;
+ : ! get current position ;
+ : PR[21:foo]=LPOS ;
+ :  ;
+ : FOR R[178:i]=1 TO R[192:total] ;
+ : CALL POS_PRTYPE(21,R[178:i],264) ;
+ : CALL POS_AXESCNT(21,R[178:i],223) ;
+ :  ;
+ : SELECT R[264:type]=1,JMP LBL[100] ;
+ :        =2,JMP LBL[101] ;
+ :        =6,JMP LBL[102] ;
+ :        =9,JMP LBL[103] ;
+ :  ;
+ : LBL[100:caselbl1] ;
+ : CALL PRINT('Group ') ;
+ : CALL PRINTNR(178) ;
+ : CALL PRINT_LINE(' is a Cartesian Pose.') ;
+ : JMP LBL[104] ;
+ : LBL[101:caselbl2] ;
+ : CALL PRINT('Group ') ;
+ : CALL PRINTNR(178) ;
+ : CALL PRINT_LINE(' is a Cartesian Pose.') ;
+ : JMP LBL[104] ;
+ : LBL[102:caselbl3] ;
+ : CALL PRINT('Group ') ;
+ : CALL PRINTNR(178) ;
+ : CALL PRINT(' is a Cartesian Pose. with ') ;
+ : CALL PRINTNR(223) ;
+ : CALL PRINT(' Extended axes.') ;
+ : CALL PRINT_LINE('') ;
+ : JMP LBL[104] ;
+ : LBL[103:caselbl4] ;
+ : CALL PRINT('Group ') ;
+ : CALL PRINTNR(178) ;
+ : CALL PRINT(' is a Joint Pose. with ') ;
+ : CALL PRINTNR(223) ;
+ : CALL PRINT(' axes.') ;
+ : CALL PRINT_LINE('') ;
+ : JMP LBL[104] ;
+ : LBL[104:endcase] ;
+ : ENDFOR ;
+ :  ;
+ : CALL USERSHOW ;
+ :  ;
+ :  ;
+/END
+
 ```
 ### while loop
 

@@ -1,7 +1,7 @@
 class TPPlus::Parser
 token ASSIGN AT_SYM COMMENT MESSAGE WARNING JUMP IO_METHOD INPUT OUTPUT
 token NUMREG POSREG VREG SREG TIME_SEGMENT ARG UALM
-token MOVE DOT TO MID AT ACC TERM OFFSET SKIP GROUP COORD 
+token MOVE DOT TO DOWNTO MID AT ACC TERM OFFSET SKIP GROUP COORD 
 token MROT PTH WJNT INC BREAK RTCP FPLIN
 token AP_LD RT_LD CD CR INDEV EV PSPD CTV
 token SEMICOLON NEWLINE STRING
@@ -282,10 +282,12 @@ rule
   elsif_block_condition
     : ELSIF expression THEN block
                       { result = ConditionalBlockNode.new(val[1],val[3],[],[]) }
-  
+
   forloop
     : FOR var IN LPAREN int_or_var TO int_or_var RPAREN block END
-                                       { result = ForNode.new(val[1],val[4],val[6],val[8]) }
+                                       { result = ForNode.new(val[1],val[4],val[6],val[8],val[5]) }
+    | FOR var IN LPAREN int_or_var DOWNTO int_or_var RPAREN block END
+                                       { result = ForNode.new(val[1],val[4],val[6],val[8],val[5]) }
     ;
 
   while_loop

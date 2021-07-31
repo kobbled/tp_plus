@@ -77,6 +77,7 @@ module TPPlus
         "turn_on" => :IO_METHOD,
         "turn_off" => :IO_METHOD,
         "to" => :TO,
+        "downto" => :DOWNTO,
         "unless" => :UNLESS,
         "vision_offset" => :OFFSET,
         "warning" => :WARNING,

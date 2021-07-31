@@ -150,6 +150,18 @@ class TestInterpreter < Test::Unit::TestCase
     "JMP LBL[100] ;\n"
 
   end
+
+  def test_label_in_for_loop_decrement
+    parse("i   := R[1]
+    for i in (10 downto 1)
+        @finlbl1
+    end")
+    
+    assert_prog "FOR R[1:i]=10 DOWNTO 1 ;\n" + 
+    "LBL[100:finlbl1] ;\n" + 
+    "ENDFOR ;\n"
+
+  end
   # ------
 
   def test_duplicate_label_definition
