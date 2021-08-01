@@ -21,6 +21,8 @@
     - [functions with positions](#functions-with-positions)
     - [functions with posreg returns](#functions-with-posreg-returns)
   - [Motion](#motion)
+    - [basic options](#basic-options)
+    - [Touch sensing with robot](#touch-sensing-with-robot)
   - [Positions](#positions)
     - [Inputing Position Data](#inputing-position-data)
   - [Function parameters](#function-parameters)
@@ -396,7 +398,7 @@ end
 TP+
 ```ruby
 foo := R[1]
-foo2:= R[2]
+foo2 := R[2]
 foo3 := DO[1]
 t    := TIMER[1]
 
@@ -868,23 +870,255 @@ DEFAULT_GROUP = 1,*,*,*,*;
 
 ##  Motion
 
+### basic options
+
 TP+
 ```ruby
+
+#make sure you declare a group mask
+TP_GROUPMASK = "1,*,*,*,*"
+
 home := PR[1]
 lpos := PR[2]
+arc1 := PR[3]
+arc2 := PR[4]
 
+p1   := P[1]
+p2   := P[2]
+p3   := P[3]
+p4   := P[4]
 
-linear_move.to(home).at(2000, 'mm/s').term(0)
+FINE := -1
+
+#make sure to specify frame
+use_uframe 1
+use_utool 1
+
+#save current location of the robot
 get_linear_position(lpos)
+
+#basic joint movement
+joint_move.to(home).at(20, '%').term(FINE)
+
+#linear move
+linear_move.to(lpos).at(20, 'mm/s').term(100)
+
+#circular move
+joint_move.to(lpos).at(100, '%').term(FINE)
+circular_move.mid(arc1).to(arc2).at(100, 'mm/s').term(100)
+
+#arc move
+arc_move.to(p1).at(200, 'mm/s').term(FINE)
+arc_move.to(p2).at(200, 'mm/s').term(100)
+arc_move.to(p3).at(200, 'mm/s').term(100)
+arc_move.to(p4).at(200, 'mm/s').term(FINE)
+
+Start_Offset := PR[5]
+Stop_Offset := PR[6]
+FrameOffset := PR[7]
+ToolOffset := PR[8]
+
+pr_num := AR[1]
+#indirect position
+linear_move.to(indirect('posreg', pr_num)).at(2000, 'mm/s').term(0)
+
+#offsets
+linear_move.to(p1).at(100, 'mm/s').term(100).offset(FrameOffset)
+linear_move.to(p2).at(100, 'mm/s').term(100).tool_offset(ToolOffset)
+
+#motion program call
+linear_move.to(p1).at(100, 'mm/s').term(100).
+      time_after(0.0, START_TOOL()).offset(Start_Offset)
+linear_move.to(p2).at(100, 'mm/s').term(100).
+      time_after(0.0, STOP_TOOL()).offset(Stop_Offset)
+
+#run program before reaching pose
+joint_move.to(p1).at(40, '%').term(FINE)
+linear_move.to(p2).at(100, 'mm/s').term(100).
+      time_before(0.5, PREP_NOZZLE())
+
+#coordinated motion
+joint_move.to(p1).at(40, '%').term(FINE)
+linear_move.to(p2).at(400, 'mm/s').term(100).coord
+linear_move.to(p3).at(400, 'mm/s').term(FINE).coord
+
+#Remote TCP
+joint_move.to(p1).at(40, '%').term(FINE)
+linear_move.to(p2).at(400, 'mm/s').term(100).acc(100).rtcp
+
+#move through a 20mm corner distance
+joint_move.to(p1).at(100, '%').term(FINE)
+linear_move.to(p2).at(1000,'mm/s').term(100).acc(100).cd(20)
+linear_move.to(p3).at(1000,'mm/s').term(FINE)
+
+# corner region (radius). Move through 20mm radius
+joint_move.to(p1).at(100, '%').term(FINE)
+linear_move.to(p2).at(1000,'mm/s').corner_region(20)
+linear_move.to(p3).at(1000,'mm/s').term(FINE)
+
+#ellipical corner region (radius)
+linear_move.to(p1).at(1000, 'mm/s').corner_region(5,10)
+
+#extended velocity
+joint_move.to(p1).at(20, '%').term(FINE).simultaneous_ev(50)
+joint_move.to(p2).at(20, '%').term(FINE).independent_ev(50)
+
+#continuous rotation speed
+linear_move.to(p1).at(100, 'mm/s').term(FINE).continuous_rotation_speed(0)
+
+#linear distance
+linear_move.to(p1).at(100, 'mm/s').term(FINE).approach_ld(100)
+linear_move.to(p2).at(100, 'mm/s').term(100).retract_ld(100)
+
+#minimum rotational error
+joint_move.to(p1).at(100, '%').term(FINE)
+joint_move.to(p2).at(100, '%').term(FINE).mrot
+joint_move.to(p3).at(100, '%').term(FINE)
+
+#process speed optimization
+joint_move.to(p1).at(100, '%').term(FINE)
+linear_move.to(p2).at(500, 'mm/s').term(100).acc(120).process_speed(110)  #moves faster
+linear_move.to(p3).at(500, 'mm/s').term(10).acc(50).process_speed(50)  #moves slower
+
+#corner path used if linear distance is satisfied
+linear_move.to(p1).at(1000, 'mm/s').corner_region(50)
+linear_move.to(p2).at(100, 'mm/s').term(FINE).approach_ld(100)
+
+#minimum rotation for wrist axes
+joint_move.to(p1).at(100, '%').term(FINE).minimal_rotation
+linear_move.to(p2).at(400, 'mm/s').term(FINE).acc(100).
+        wrist_joint.
+        mrot
+
+# break motion depending on sensor response
+break_flag := DI[1]
+
+joint_move.to(p1).at(50, '%').term(FINE)
+linear_move.to(p2).at(500, 'mm/s').term(100).break
+wait_until(break_flag).after(300, 'ms')
+linear_move.to(p3).at(500, 'mm/s').term(0)
+
+#move through short motions
+linear_move.to(p1).at(50, 'mm/s').term(100).acc(150).pth
+
 ```
 
-LS
-```fanuc
-/PROG example_1
-/MN
-  : L PR[1:home] 2000mm/sec CNT0 ;
-  : PR[2:lpos]=LPOS ;
-/END
+### Touch sensing with robot
+
+TP+
+```ruby
+namespace touchPose
+  strt := PR[1]
+  search_dist := PR[2]
+  found := PR[3]
+end
+
+namespace sensor
+  signal := DI[1]
+  val    := AI[1]
+  zerod  := DI[2]
+
+  POLLING_RATE := 0.5
+  SAMPLING_TIME := 0.3
+
+  def sample(pin, time) : numreg
+    t := R[150]
+    sum := R[151]
+    inc := R[152]
+    
+    t = 0
+    sum = 0
+    inc = 0
+    while t < time
+      sum += indirect('ai', pin)
+      
+      wait_for(POLLING_RATE, 's')
+      inc += 1
+      t += POLLING_RATE
+    end
+
+    return(sum/inc)
+  end
+end
+
+sensor_reading := R[1]
+i    := R[150]
+
+FINE := -1
+
+#get start position
+get_linear_position(touchPose::strt)
+
+#clear found pose
+pos::clrpr(&touchPose::found)
+
+if !sensor::signal
+    warning('Sensor is not starting on a surface. Check sensor measurement.')
+end
+
+#skip condition when sensor read 0. Setup as a digital pin from sensor.
+set_skip_condition sensor::zerod
+
+i = 0
+@find_zero
+  i += 1
+
+  #offset value. Assuming tool frame is pointing into the surface.
+  case i
+    when 1
+      #initially move down 100mm.
+      pos::clrpr(&touchPose::search_dist)
+      touchPose::search_dist.z = 100
+      
+      #search for touch if not found go back to start of loop
+      #On next iteration move from previous position
+      linear_move.to(touchPose::strt).at(20, 'mm/s').term(FINE).
+          tool_offset(touchPose::search_dist).
+          skip_to(@find_zero)
+
+      #if found jump label
+      jump_to @found_zero
+    when 2
+      #next try moving up 100mm
+      pos::clrpr(&touchPose::search_dist)
+      touchPose::search_dist.z = -100
+
+      #search for touch if not found go back to start of loop
+      #On next iteration move from lpos
+      linear_move.to(touchPose::strt).at(20, 'mm/s').term(FINE).
+          tool_offset(touchPose::search_dist).
+          skip_to(@find_zero, touchPose::strt)
+      
+      jump_to @found_zero
+    when 3
+      #next try moving down 500mm
+      pos::clrpr(&touchPose::search_dist)
+      touchPose::search_dist.z = 500
+
+      #search for touch if not found go back to start of loop
+      #save lpos position
+      linear_move.to(touchPose::strt).at(50, 'mm/s').term(FINE).
+          tool_offset(touchPose::search_dist).
+          skip_to(@find_zero, touchPose::strt)
+      
+      jump_to @found_zero
+    else
+      # raise warning
+      warning('Could not find surface after 4 iterations!')
+  end
+
+jump_to @end
+
+@found_zero
+  get_linear_position(touchPose::found)
+
+  #sample sensor
+  wait_for(100, "ms") # make sure robot isnt moving
+  sensor_reading = sensor::sample(&sensor::val, sensor::SAMPLING_TIME)
+
+jump_to @end
+
+@end
 ```
 
 ##  Positions
