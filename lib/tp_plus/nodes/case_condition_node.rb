@@ -15,6 +15,10 @@ module TPPlus
         "#{@label.eval(context)} ;\n#{block(context)}JMP LBL[#{end_label}] ;\n"
       end
 
+      def get_block
+        @block
+      end
+
       def is_jump_label(context)
         if @block[0].is_a?(Nodes::JumpNode)
           return @block[0].eval(context)

@@ -11,6 +11,10 @@ module TPPlus
         @final_label ||= context.next_label
       end
 
+      def get_conditions
+        return( @conditions.append(@else_condition))
+      end
+
       def first_condition(context)
         #split off first condition as it is
         #formatted differently than proceeding conditions

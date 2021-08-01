@@ -99,6 +99,12 @@ module TPPlus
         find_warnings(nodes.get_block, warnings)
       end
 
+      if nodes.is_a?(Nodes::CaseNode)
+        nodes.get_conditions.each do |c|
+          find_warnings(c.get_block, warnings)
+        end
+      end
+
       if nodes.is_a?(Nodes::ConditionalNode)
         find_warnings(nodes.get_true_block, warnings)
         find_warnings(nodes.get_false_block, warnings)
