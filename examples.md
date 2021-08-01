@@ -24,9 +24,12 @@
     - [basic options](#basic-options)
     - [Touch sensing with robot](#touch-sensing-with-robot)
   - [Positions](#positions)
+    - [Assigning posregs](#assigning-posregs)
     - [Inputing Position Data](#inputing-position-data)
   - [Function parameters](#function-parameters)
   - [Arguments](#arguments)
+  - [Timers](#timers)
+  - [wait statments](#wait-statments)
 
 <!-- /TOC -->
 
@@ -1123,6 +1126,79 @@ jump_to @end
 
 ##  Positions
 
+### Assigning posregs
+
+TP+
+```ruby
+foo := PR[1]
+bar := PR[2]
+
+#assign full position
+foo = bar
+foo = Pos::setxyz(500, 500, 0, 90, 0, 180) #Ka-Boost method
+
+#assign a axis
+foo.x = 5
+foo.y = 10
+foo.z = 4
+foo.w = 0
+foo.p = -90
+foo.r = 90
+
+foo.x = bar.x + 10
+foo.x = indirect('pr', 5) + 5
+
+#assign specific group
+foo.group(1) = bar.group(1)
+foo.group(2).x += 180
+foo.group(2).y += 90
+
+foo.group(1) = Pos::setxyz(500, 500, 0, 90, 0, 180) #Ka-Boost method
+foo.group(2) = Pos::setjnt6(0, 20) #Ka-Boost method
+```
+
+LS
+```fanuc
+/PROG TEST
+/ATTR
+COMMENT = "TEST";
+TCD:  STACK_SIZE	= 0,
+      TASK_PRIORITY	= 50,
+      TIME_SLICE	= 0,
+      BUSY_LAMP_OFF	= 0,
+      ABORT_REQUEST	= 0,
+      PAUSE_REQUEST	= 0;
+DEFAULT_GROUP = 1,*,*,*,*;
+/APPL
+/MN
+ :  ;
+ : ! assign full position ;
+ : PR[1:foo]=PR[2:bar] ;
+ : CALL POS_SETXYZ(500,500,0,90,0,180,1) ;
+ : ! Ka-Boost method ;
+ :  ;
+ : ! assign a axis ;
+ : PR[1,1:foo]=5 ;
+ : PR[1,2:foo]=10 ;
+ : PR[1,3:foo]=4 ;
+ : PR[1,4:foo]=0 ;
+ : PR[1,5:foo]=(-90) ;
+ : PR[1,6:foo]=90 ;
+ :  ;
+ : PR[1,1:foo]=PR[2,1:bar]+10 ;
+ : PR[1,1:foo]=PR[5]+5 ;
+ :  ;
+ : ! assign specific group ;
+ : PR[GP1:1:foo]=PR[GP1:2:bar] ;
+ : PR[GP2:1,1:foo]=PR[GP2:1,1:foo]+180 ;
+ : PR[GP2:1,2:foo]=PR[GP2:1,2:foo]+90 ;
+ :  ;
+ : CALL POS_SETXYZ(500,500,0,90,0,180,1,1) ;
+ : ! Ka-Boost method ;
+ : CALL POS_SETJNT6(0,20,1,2) ;
+ : ! Ka-Boost method ;
+/END
+```
 ### Inputing Position Data
 
 **NOTE** : `uframe`, and `utool` must be added in for each group
@@ -1261,4 +1337,100 @@ LS
  : L PR[1:poo1] 100mm/sec FINE Offset,PR[AR[2]] ;
 /END
 ```
+
+## Timers
+
+TP+
+```ruby
+my_timer := TIMER[1]
+
+start my_timer
+stop  my_timer
+reset my_timer
+# restart short-cut
+restart my_timer
+```
+
+LS
+```fanuc
+/PROG TEST
+/ATTR
+COMMENT = "TEST";
+TCD:  STACK_SIZE	= 0,
+      TASK_PRIORITY	= 50,
+      TIME_SLICE	= 0,
+      BUSY_LAMP_OFF	= 0,
+      ABORT_REQUEST	= 0,
+      PAUSE_REQUEST	= 0;
+DEFAULT_GROUP = 1,*,*,*,*;
+/APPL
+/MN
+ :  ;
+ : TIMER[1]=START ;
+ : TIMER[1]=STOP ;
+ : TIMER[1]=RESET ;
+ : ! restart short-cut ;
+ : TIMER[1]=STOP ;
+ : TIMER[1]=RESET ;
+ : TIMER[1]=START ;
+/END
+```
+
+## wait statments
+
+TP+
+```ruby
+foo := R[1]
+
+# automatic WAIT time-unit conversion
+wait_for(1, 's')
+wait_for(100, 'ms')
+
+# wait_until for expression conditions
+wait_until(foo>3)
+
+# wait timeouts
+wait_until(foo>3).timeout_to(@bar)
+
+# automatically set $WAITTMOUT
+wait_until(foo>3).timeout_to(@bar).after(5,'s')
+
+@bar
+```
+
+LS
+```fanuc
+/PROG TEST
+/ATTR
+COMMENT = "TEST";
+TCD:  STACK_SIZE	= 0,
+      TASK_PRIORITY	= 50,
+      TIME_SLICE	= 0,
+      BUSY_LAMP_OFF	= 0,
+      ABORT_REQUEST	= 0,
+      PAUSE_REQUEST	= 0;
+DEFAULT_GROUP = 1,*,*,*,*;
+/APPL
+/MN
+ :  ;
+ : ! automatic WAIT time-unit ;
+ : ! conversion ;
+ : WAIT 1.00(sec) ;
+ : WAIT .10(sec) ;
+ :  ;
+ : ! wait_until for expression ;
+ : ! conditions ;
+ : WAIT (R[1:foo]>3) ;
+ :  ;
+ : ! wait timeouts ;
+ : WAIT (R[1:foo]>3) TIMEOUT,LBL[100] ;
+ :  ;
+ : ! automatically set $WAITTMOUT ;
+ : $WAITTMOUT=(500) ;
+ : WAIT (R[1:foo]>3) TIMEOUT,LBL[100] ;
+ :  ;
+ : LBL[100:bar] ;
+/END
+```
+
 
