@@ -11,6 +11,7 @@
   - [Conditionals](#conditionals)
     - [If-Then Block](#if-then-block)
   - [Select](#select)
+  - [Inline Statments](#inline-statments)
   - [Namespaces](#namespaces)
     - [structs](#structs)
     - [states](#states)
@@ -30,6 +31,9 @@
   - [Arguments](#arguments)
   - [Timers](#timers)
   - [wait statments](#wait-statments)
+  - [Misc Statments](#misc-statments)
+    - [collision guard](#collision-guard)
+    - [tool application headers](#tool-application-headers)
 
 <!-- /TOC -->
 
@@ -444,6 +448,62 @@ LS
  : LBL[103:endcase] ;
 /END
 ```
+
+## Inline Statments
+
+TP+
+```ruby
+foo := R[1]
+bar := R[2]
+flg := F[1]
+@lbl 
+
+jump_to @lbl if foo==1
+jump_to @lbl unless foo==1
+jump_to @lbl unless flg
+
+foo=2 if foo==1
+turn_on foo if bar < 10
+
+prog() if foo >= 5
+prog() unless foo
+
+if foo >= (bar-1) && foo <= (bar+1) 
+  bar = 2
+end
+
+```
+
+LS
+```fanuc
+/PROG TEST
+/ATTR
+COMMENT = "TEST";
+TCD:  STACK_SIZE	= 0,
+      TASK_PRIORITY	= 50,
+      TIME_SLICE	= 0,
+      BUSY_LAMP_OFF	= 0,
+      ABORT_REQUEST	= 0,
+      PAUSE_REQUEST	= 0;
+DEFAULT_GROUP = 1,*,*,*,*;
+/APPL
+/MN
+ : LBL[100:lbl] ;
+ :  ;
+ : IF R[1:foo]=1,JMP LBL[100] ;
+ : IF R[1:foo]<>1,JMP LBL[100] ;
+ : IF (!F[1:flg]),JMP LBL[100] ;
+ :  ;
+ : IF (R[1:foo]=1),R[1:foo]=(2) ;
+ : IF (R[2:bar]<10),R[1:foo]=(ON) ;
+ :  ;
+ : IF R[1:foo]>=5,CALL PROG ;
+ : IF (!R[1:foo]),CALL PROG ;
+ :  ;
+ : IF (R[1:foo]>=(R[2:bar]-1) AND R[1:foo]<=(R[2:bar]+1)),R[2:bar]=(2) ;
+/END
+```
+
 ## Namespaces
 
 ### structs
@@ -1430,6 +1490,122 @@ DEFAULT_GROUP = 1,*,*,*,*;
  : WAIT (R[1:foo]>3) TIMEOUT,LBL[100] ;
  :  ;
  : LBL[100:bar] ;
+/END
+```
+## Misc Statments
+
+### MNU Access
+
+TP+
+```ruby
+foo := R[1]
+
+#adjust payload
+use_payload(1,group(1))
+use_payload(foo.group(2))
+
+#jog override
+use_override 50
+use_override foo
+
+#set frames
+use_uframe foo
+use_utool foo
+
+```
+
+LS
+```fanuc
+/PROG TEST
+/ATTR
+COMMENT = "TEST";
+TCD:  STACK_SIZE	= 0,
+      TASK_PRIORITY	= 50,
+      TIME_SLICE	= 0,
+      BUSY_LAMP_OFF	= 0,
+      ABORT_REQUEST	= 0,
+      PAUSE_REQUEST	= 0;
+DEFAULT_GROUP = 1,*,*,*,*;
+/APPL
+/MN
+ :  ;
+ : ! adjust payload ;
+ : PAYLOAD[GP1:1] ;
+ : PAYLOAD[GP2:R[1:foo]] ;
+ :  ;
+ : ! jog override ;
+ : OVERRIDE=50% ;
+ : OVERRIDE=R[1:foo] ;
+ :  ;
+ : ! set frames ;
+ : UFRAME_NUM=R[1:foo] ;
+ : UTOOL_NUM=R[1:foo] ;
+/END
+```
+
+### collision guard
+
+TP+
+```ruby
+foo := R[1]
+colguard_on 
+adjust_colguard
+adjust_colguard 80
+colguard_off
+```
+
+LS
+```fanuc
+/PROG TEST
+/ATTR
+COMMENT = "TEST";
+TCD:  STACK_SIZE	= 0,
+      TASK_PRIORITY	= 50,
+      TIME_SLICE	= 0,
+      BUSY_LAMP_OFF	= 0,
+      ABORT_REQUEST	= 0,
+      PAUSE_REQUEST	= 0;
+DEFAULT_GROUP = 1,*,*,*,*;
+/APPL
+/MN
+ : COL DETECT ON ;
+ : COL GUARD ADJUST ;
+ : COL GUARD ADJUST 80 ;
+ : COL DETECT OFF ;
+/END
+```
+
+### tool application headers
+
+TP+
+```ruby
+PAINT_PROCESS = {
+  DEFAULT_USER_FRAME : 1,
+  DEFAULT_TOOL_FRAME : 1,
+  START_DELAY        : 0,
+  TRACKING_PROCESS   : no
+}
+```
+
+LS
+```fanuc
+/PROG TEST
+/ATTR
+COMMENT = "TEST";
+TCD:  STACK_SIZE	= 0,
+      TASK_PRIORITY	= 50,
+      TIME_SLICE	= 0,
+      BUSY_LAMP_OFF	= 0,
+      ABORT_REQUEST	= 0,
+      PAUSE_REQUEST	= 0;
+DEFAULT_GROUP = 1,*,*,*,*;
+/APPL
+PAINT_PROCESS ;
+  DEFAULT_USER_FRAME : 1 ;
+  DEFAULT_TOOL_FRAME : 1 ;
+  START_DELAY : 0 ;
+  TRACKING_PROCESS : no ;
+/MN
 /END
 ```
 
