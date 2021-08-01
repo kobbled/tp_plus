@@ -177,8 +177,14 @@ rule
     : LABEL { result = val[0] }
     ;
 
+  group_statement
+    : GROUP LPAREN integer RPAREN { result = val[2] }
+    ;
+  
   use_statement
     : FANUC_USE indirectable           { result = UseNode.new(val[0],val[1]) }
+    | FANUC_USE LPAREN indirectable RPAREN  { result = UseNode.new(val[0],val[2]) }
+    | FANUC_USE LPAREN indirectable COMMA group_statement RPAREN  { result = UseNode.new(val[0],val[2],val[4]) }
     ;
 
   collguard_statement

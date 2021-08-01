@@ -451,6 +451,11 @@ LBL[105] ;\n), @interpreter.list_warnings
     assert_prog "PAYLOAD[R[1:foo]] ;\n"
   end
 
+  def test_group_payload
+    parse("foo := R[1]\nuse_payload(1,group(1))\nuse_payload(foo,group(2))")
+    assert_prog "PAYLOAD[GP1:1] ;\n" + "PAYLOAD[GP2:R[1:foo]] ;\n"
+  end
+
   def test_nested_conditionals
     parse("foo := R[1]\nif foo==1\nif foo==2\nfoo=3\nelse\nfoo=4\nend\nend")
     assert_prog "IF R[1:foo]<>1,JMP LBL[100] ;\nIF R[1:foo]<>2,JMP LBL[101] ;\nR[1:foo]=3 ;\nJMP LBL[102] ;\nLBL[101] ;\nR[1:foo]=4 ;\nLBL[102] ;\nLBL[100] ;\n"
