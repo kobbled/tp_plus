@@ -1843,6 +1843,15 @@ foo = &foo")
     assert_prog "R[1:foo]=1 ;\n"
   end
 
+  def test_namespaced_address_assignment
+    parse(" namespace a 
+foo := R[5]
+end
+foo := R[1]
+foo = &a::foo")
+    assert_prog "R[1:foo]=5 ;\n"
+  end
+
   def test_invalid_address_throws_error
     parse("foo := R[1]\nfoo = &bar")
     assert_raise(RuntimeError) do

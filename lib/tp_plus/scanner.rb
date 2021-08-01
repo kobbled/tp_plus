@@ -222,7 +222,6 @@ module TPPlus
             self.next
           elsif isLetter?(@ch)
             tok = :ADDRESS
-            lit = self.scanIdentifier
           else
             tok = :ILLEGAL
           end

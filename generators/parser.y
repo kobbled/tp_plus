@@ -692,7 +692,7 @@ rule
     ;
 
   address
-    : ADDRESS                            { result = AddressNode.new(val[0]) }
+    : ADDRESS var                       { result = AddressNode.new(val[1]) }
     ;
 
   comment

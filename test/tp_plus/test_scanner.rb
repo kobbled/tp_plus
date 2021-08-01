@@ -563,7 +563,8 @@ class TestScanner < Test::Unit::TestCase
 
   def test_address
     @scanner.scan_setup "&foo"
-    assert_token :ADDRESS, "foo"
+    assert_tok :ADDRESS
+    assert_token :WORD, "foo"
   end
 
   def test_linear_position
