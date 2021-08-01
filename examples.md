@@ -134,7 +134,7 @@ foo := PR[21]
 
 TP_GROUPMASK = "1,1,1,*,*"
 
-namespace prTypes
+namespace PRTypes
   POSITION  := 1
   XYZWPR    := 2
   XYZWPREXT := 6
@@ -154,22 +154,22 @@ for i in (1 to total)
   axes = pos::axescnt(&foo, i)
 
   case type
-    when prTypes::POSITION
+    when PRTypes::POSITION
       print('Group ')
       printnr(&i)
       print_line(' is a Cartesian Pose.')
-    when prTypes::XYZWPR
+    when PRTypes::XYZWPR
       print('Group ')
       printnr(&i)
       print_line(' is a Cartesian Pose.')
-    when prTypes::XYZWPREXT
+    when PRTypes::XYZWPREXT
       print('Group ')
       printnr(&i)
       print(' is a Cartesian Pose. with ')
       printnr(&axes)
       print(' Extended axes.')
       print_line('')
-    when prTypes::JOINTPOS
+    when PRTypes::JOINTPOS
       print('Group ')
       printnr(&i)
       print(' is a Joint Pose. with ')
@@ -390,59 +390,6 @@ else
 end
 ```
 
-LS
-```fanuc
-/PROG example_1
-/MN
- :  ;
- : ! if with no else ;
- :  ;
- : IF (R[1:foo]=1) THEN ;
- : ! do something ;
- : DO[33:pin1]=ON ;
- : ENDIF ;
- :  ;
- : ! if else block ;
- :  ;
- : IF ($SCR.$NUM_GROUP>1) THEN ;
- : ! true block ;
- : DO[33:pin1]=ON ;
- : ELSE ;
- : ! false block ;
- : DO[33:pin1]=OFF ;
- : ENDIF ;
- :  ;
- : ! else if block ;
- :  ;
- : IF (R[1:foo]=1) THEN ;
- : ! true block ;
- : DO[33:pin1]=ON ;
- : ELSE ;
- : IF (R[1:foo]=2) THEN ;
- : ! false block ;
- : DO[34:pin2]=ON ;
- : ENDIF ;
- : ENDIF ;
- :  ;
- :  ;
- : ! else if - else block ;
- :  ;
- : IF (R[1:foo]=1) THEN ;
- : ! true block ;
- : DO[33:pin1]=ON ;
- : ELSE ;
- : IF (R[1:foo]=2) THEN ;
- : ! false block ;
- : DO[34:pin2]=ON ;
- : ELSE ;
- : DO[33:pin1]=OFF ;
- : DO[34:pin2]=OFF ;
- : ENDIF ;
- : ENDIF ;
- :  ;
-/END
-```
-
 
 ##  Select
 
@@ -616,82 +563,6 @@ while loop
 end
 ```
 
-LS
-```fanuc
-/PROG MAIN
-/ATTR
-COMMENT = "MAIN";
-TCD:  STACK_SIZE	= 0,
-      TASK_PRIORITY	= 50,
-      TIME_SLICE	= 0,
-      BUSY_LAMP_OFF	= 0,
-      ABORT_REQUEST	= 0,
-      PAUSE_REQUEST	= 0;
-DEFAULT_GROUP = 1,*,*,*,*;
-/MN
- :  ;
- :  ;
- :  ;
- :  ;
- : F[3:loop]=(ON) ;
- :  ;
- :  ;
- : LBL[104] ;
- : IF (!F[3:loop]),JMP LBL[105] ;
- : SELECT R[1:state]=1,JMP LBL[100] ;
- :        =2,JMP LBL[101] ;
- :        =3,JMP LBL[102] ;
- :        =4,JMP LBL[103] ;
- :  ;
- : LBL[100:caselbl1] ;
- : CALL PICKUP_PART ;
- : IF (!DI[2:Infeed part_present?]) THEN ;
- : UALM[2] ;
- : F[3:loop]=(OFF) ;
- : ELSE ;
- : R[1:state]=2 ;
- : L PR[2:Perch scan] 2000mm/sec FINE ;
- : ENDIF ;
- : JMP LBL[106] ;
- : LBL[101:caselbl2] ;
- : CALL SCAN_PART ;
- : IF (!DI[3:Infeed part_scanning?] AND F[2:Infeed is_weldable?]) THEN ;
- : R[1:state]=3 ;
- : L PR[3:Perch weld] 2000mm/sec FINE ;
- : ELSE ;
- : IF (!DI[3:Infeed part_scanning?] AND !F[2:Infeed is_weldable?]) THEN ;
- : UALM[3] ;
- : F[3:loop]=(OFF) ;
- : ENDIF ;
- : ENDIF ;
- :  ;
- : JMP LBL[106] ;
- : LBL[102:caselbl3] ;
- : CALL WELD_PART ;
- : IF (!DI[4:Infeed part_welding?]) THEN ;
- : R[1:state]=4 ;
- : L PR[1:Perch pickup] 2000mm/sec FINE ;
- : ENDIF ;
- : JMP LBL[106] ;
- : LBL[103:caselbl4] ;
- : CALL DROP_OFF_PART ;
- : IF (!DI[2:Infeed part_present?]) THEN ;
- : ! increment counter ;
- : CALL NEXT_PART ;
- : R[1:state]=1 ;
- : L PR[1:Perch pickup] 2000mm/sec FINE ;
- : ELSE ;
- : UALM[1] ;
- : F[3:loop]=(OFF) ;
- : ENDIF ;
- : JMP LBL[106] ;
- : LBL[106:endcase] ;
- : JMP LBL[104] ;
- : LBL[105] ;
-/END
-
-```
-
 ##  Functions
 
 **NOTE::** Currently in development
@@ -800,78 +671,6 @@ while i < MAX_PROPIGATION
   end
   i += INCREMENTS
 end
-```
-
-LS
-```fanuc
-/PROG DIVIDE_SEQUENCE
-/ATTR
-COMMENT = "DIVIDE_SEQUENCE";
-TCD:  STACK_SIZE	= 0,
-      TASK_PRIORITY	= 50,
-      TIME_SLICE	= 0,
-      BUSY_LAMP_OFF	= 0,
-      ABORT_REQUEST	= 0,
-      PAUSE_REQUEST	= 0;
-DEFAULT_GROUP = *,*,*,*,*;
-/MN
- : IF (AR[2]<1) THEN ;
- : R[AR[3]]=AR[1] ;
- : END ;
- : ENDIF ;
- :  ;
- : R[AR[3]]=AR[1]/AR[2] ;
- : END ;
-/END
-
-/PROG LINEAR_SEQUENCE
-/ATTR
-COMMENT = "LINEAR_SEQUENCE";
-TCD:  STACK_SIZE	= 0,
-      TASK_PRIORITY	= 50,
-      TIME_SLICE	= 0,
-      BUSY_LAMP_OFF	= 0,
-      ABORT_REQUEST	= 0,
-      PAUSE_REQUEST	= 0;
-DEFAULT_GROUP = *,*,*,*,*;
-/MN
- : R[AR[3]]=(AR[1]*AR[2]+100) ;
- : END ;
-/END
-
-/PROG MAIN
-/ATTR
-COMMENT = "MAIN";
-TCD:  STACK_SIZE	= 0,
-      TASK_PRIORITY	= 50,
-      TIME_SLICE	= 0,
-      BUSY_LAMP_OFF	= 0,
-      ABORT_REQUEST	= 0,
-      PAUSE_REQUEST	= 0;
-DEFAULT_GROUP = 1,*,*,*,*;
-/MN
- :  ;
- : R[3:i]=0 ;
- : LBL[100] ;
- : IF R[3:i]>=30,JMP LBL[101] ;
- : ! inital seed ;
- : R[1:sum]=1 ;
- : R[4:j]=0 ;
- : LBL[102] ;
- : IF (R[4:j]>=20),JMP LBL[103] ;
- : CALL DIVIDE_SEQUENCE(R[1:sum],R[4:j],1) ;
- : CALL LINEAR_SEQUENCE(R[1:sum],R[3:i],1) ;
- :  ;
- : R[4:j]=R[4:j]+1 ;
- : JMP LBL[102] ;
- : LBL[103] ;
- : R[3:i]=R[3:i]+5 ;
- : JMP LBL[100] ;
- : LBL[101] ;
- :  ;
- :  ;
-/END
-
 ```
 
 ###  namespace collections
