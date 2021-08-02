@@ -14,7 +14,7 @@ token FANUC_USE COLL_GUARD SET_SKIP_CONDITION NAMESPACE
 token CASE WHEN INDIRECT POSITION
 token EVAL TIMER TIMER_METHOD RAISE ABORT RETURN
 token POSITION_DATA TRUE_FALSE RUN PAUSE
-token TP_HEADER TP_APPLICATION_TYPE TP_APPLICATION_MEMBER
+token TP_HEADER TP_APPLICATION_TYPE
 token LPAREN RPAREN COLON COMMA LBRACK RBRACK LBRACE RBRACE
 token LABEL SYSTEM ADDRESS
 token LPOS JPOS
@@ -128,7 +128,7 @@ rule
     ;
 
   tp_tool_attribute
-    : TP_APPLICATION_MEMBER COLON hash_value {result = [ToolApplMem.new(val[0],val[2])]}
+    : WORD COLON hash_value {result = [ToolApplMem.new(val[0],val[2])]}
     ;
     
   tp_application_definition
@@ -518,8 +518,8 @@ rule
 
   var_method_modifier
     : DOT swallow_newlines WORD        { result = { method: val[2] } }
-    | DOT swallow_newlines GROUP LPAREN integer RPAREN
-                                       { result = { group: val[4] } }
+    | DOT swallow_newlines group_statement
+                                       { result = { group: val[2] } }
     ;
   
   var_system

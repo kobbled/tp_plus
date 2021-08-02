@@ -2145,6 +2145,30 @@ foo = &a::foo")
     "COL DETECT OFF ;\n"
   end
 
+  def test_tool_application_header
+    parse("PAINT_PROCESS = {
+      DEFAULT_USER_FRAME : 1,
+      DEFAULT_TOOL_FRAME : 1,
+      START_DELAY        : 0,
+      TRACKING_PROCESS   : no
+    }")
+
+    assert_prog ""
+
+    output = "/APPL\n"
+    @interpreter.header_appl_data.each do |n|
+      output += n.write(@interpreter)
+    end
+
+    assert_equal %(/APPL
+PAINT_PROCESS ;
+  DEFAULT_USER_FRAME : 1 ;
+  DEFAULT_TOOL_FRAME : 1 ;
+  START_DELAY : 0 ;
+  TRACKING_PROCESS : no ;
+), output
+  end
+
   def test_function_with_return
     parse("foo := R[1]
       def set_reg(x) : numreg    
