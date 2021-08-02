@@ -469,9 +469,7 @@ turn_on foo if bar < 10
 prog() if foo >= 5
 prog() unless foo
 
-if foo >= (bar-1) && foo <= (bar+1) 
-  bar = 2
-end
+bar = 2 if foo >= (bar-1) && foo <= (bar+1) 
 
 ```
 
@@ -1082,8 +1080,8 @@ namespace sensor
   val    := AI[1]
   zerod  := DI[2]
 
-  POLLING_RATE := 0.5
-  SAMPLING_TIME := 0.3
+  POLLING_RATE := 0.1
+  SAMPLING_TIME := 0.4
 
   def sample(pin, time) : numreg
     t := R[150]
@@ -1215,7 +1213,7 @@ foo.group(2).x += 180
 foo.group(2).y += 90
 
 foo.group(1) = Pos::setxyz(500, 500, 0, 90, 0, 180) #Ka-Boost method
-foo.group(2) = Pos::setjnt6(0, 20) #Ka-Boost method
+foo.group(2) = Pos::setjnt2(0, 20) #Ka-Boost method
 ```
 
 LS
@@ -1503,7 +1501,7 @@ foo := R[1]
 
 #adjust payload
 use_payload(1,group(1))
-use_payload(foo.group(2))
+use_payload(foo,group(2))
 
 #jog override
 use_override 50
