@@ -29,6 +29,7 @@
     - [Inputing Position Data](#inputing-position-data)
   - [Function parameters](#function-parameters)
   - [Arguments](#arguments)
+  - [String Manipulation](#string-manipulation)
   - [Timers](#timers)
   - [wait statments](#wait-statments)
   - [Misc Statments](#misc-statments)
@@ -1394,6 +1395,28 @@ LS
  : ! if AR[2] is a posreg number use ;
  : ! that posreg as the user offset ;
  : L PR[1:poo1] 100mm/sec FINE Offset,PR[AR[2]] ;
+/END
+```
+## String Manipulation
+
+**..note::** Contains KaBoost Routines
+
+TP+
+```ruby
+name := SR[1]
+arg1 := AR[1]
+arg2 := AR[2]
+
+name = Str::set('PROGRAM')
+call name(arg1, arg2)
+```
+
+LS
+```fanuc
+/PROG example_1
+/MN
+  : CALL STR_SET('PROGRAM',1) ;
+  : CALL SR[1:name](AR[1],AR[2]) ;
 /END
 ```
 
