@@ -2170,6 +2170,28 @@ PAINT_PROCESS ;
 ), output
   end
 
+  def test_tool_application_header2
+    parse("LINE_TRACK = {
+      LINE_TRACK_SCHEDULE_NUMBER : 0,
+      LINE_TRACK_BOUNDARY_NUMBER : 0,
+      CONTINUE_TRACK_AT_PROG_END : FALSE
+    }")
+
+    assert_prog ""
+
+    output = "/APPL\n"
+    @interpreter.header_appl_data.each do |n|
+      output += n.write(@interpreter)
+    end
+
+    assert_equal %(/APPL
+LINE_TRACK ;
+  LINE_TRACK_SCHEDULE_NUMBER : 0 ;
+  LINE_TRACK_BOUNDARY_NUMBER : 0 ;
+  CONTINUE_TRACK_AT_PROG_END : FALSE ;
+), output
+  end
+
   def test_function_with_return
     parse("foo := R[1]
       def set_reg(x) : numreg    

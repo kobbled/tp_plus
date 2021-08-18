@@ -99,6 +99,7 @@ module TPPlus
 
         "PAINT_PROCESS" => :TP_APPLICATION_TYPE,
         "AUTO_SINGULARITY_HEADER" => :TP_APPLICATION_TYPE,
+        "LINE_TRACK" => :TP_APPLICATION_TYPE,
 
         "set_skip_condition" => :SET_SKIP_CONDITION,
         "use_payload" => :FANUC_USE,
