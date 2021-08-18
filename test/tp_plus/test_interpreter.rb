@@ -1606,6 +1606,11 @@ end)
     assert_prog "RUN FOO ;\n"
   end
 
+  def test_call_sr
+    parse "name := SR[1]\narg1 := AR[1]\ncall name(arg1)"
+    assert_prog "CALL SR[1:name](AR[1]) ;\n"
+  end
+
   def test_tp_ignore_pause
     parse "TP_IGNORE_PAUSE = true"
     assert_prog ""

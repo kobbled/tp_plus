@@ -65,6 +65,7 @@ module TPPlus
         "restart" => :TIMER_METHOD,
         "return" => :RETURN,
         "run" => :RUN,
+        "call" => :CALL,
         "skip_to" => :SKIP,
         "start" => :TIMER_METHOD,
         "stop" => :TIMER_METHOD,

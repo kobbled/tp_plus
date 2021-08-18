@@ -13,7 +13,7 @@ token WAIT_FOR WAIT_UNTIL TIMEOUT AFTER
 token FANUC_USE COLL_GUARD SET_SKIP_CONDITION NAMESPACE
 token CASE WHEN INDIRECT POSITION
 token EVAL TIMER TIMER_METHOD RAISE ABORT RETURN
-token POSITION_DATA TRUE_FALSE RUN PAUSE
+token POSITION_DATA TRUE_FALSE CALL RUN PAUSE
 token TP_HEADER TP_APPLICATION_TYPE
 token LPAREN RPAREN COLON COMMA LBRACK RBRACK LBRACE RBRACE
 token LABEL SYSTEM ADDRESS
@@ -203,6 +203,7 @@ rule
   program_call
     : function_call LPAREN args RPAREN                { result = CallNode.new(val[0],val[2]) }
     | RUN function_call LPAREN args RPAREN            { result = CallNode.new(val[1],val[3],async: true) }
+    | CALL var LPAREN args RPAREN                     { result = CallNode.new(nil,val[3],str_call:val[1]) }
     | var_or_indirect EQUAL function_call LPAREN args RPAREN     { result = CallNode.new(val[2],val[4],ret:val[0]) }
     ;
 

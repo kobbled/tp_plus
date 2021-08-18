@@ -7,6 +7,7 @@ module TPPlus
         @args = args
         @async = options[:async]
         @ret = options[:ret]
+        @str_var = options[:str_call]
       end
 
       def requires_mixed_logic?(context)
@@ -45,7 +46,13 @@ module TPPlus
       end
 
       def eval(context,options={})
-        "#{async? ? "RUN" : "CALL"} #{@program_name.upcase}#{args_string(context)}"
+        if @str_var
+          @program_name = @str_var.eval(context)
+        else
+          @program_name = @program_name.upcase
+        end
+
+        "#{async? ? "RUN" : "CALL"} #{@program_name}#{args_string(context)}"
       end
     end
   end
