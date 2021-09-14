@@ -77,6 +77,7 @@ module TPPlus
       def eval(context)
         #select statment
         s = "SELECT #{@var.eval(context)}#{first_cond_statement(context)}#{other_conditions(context)}#{else_condition(context)} ;\n"
+        s += "JMP LBL[#{final_label(context)}]"
         #select blocks
         s += blocks(context)
 

@@ -722,7 +722,7 @@ LBL[105] ;\n), @interpreter.list_warnings
 SELECT R[1:foo]=1,JMP LBL[100] ;
        =2,JMP LBL[101] ;
        ELSE,JMP LBL[102] ;
- ;
+JMP LBL[103] ;
 LBL[100:caselbl1] ;
 MESSAGE[foo == 1] ;
 WAIT 1.00(sec) ;
@@ -743,7 +743,7 @@ LBL[103:endcase] ;\n)
     assert_prog %(SELECT R[1:foo]=1,JMP LBL[100] ;
        =2,JMP LBL[101] ;
        =3,JMP LBL[102] ;
- ;
+JMP LBL[103] ;
 LBL[100:caselbl1] ;
 CALL BAR ;
 JMP LBL[103] ;
@@ -762,7 +762,7 @@ LBL[103:endcase] ;\n)
        =2,JMP LBL[101] ;
        =3,JMP LBL[102] ;
        ELSE,JMP LBL[103] ;
- ;
+JMP LBL[104] ;
 LBL[100:caselbl1] ;
 CALL BAR ;
 JMP LBL[104] ;
