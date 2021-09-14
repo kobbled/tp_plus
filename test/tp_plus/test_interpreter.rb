@@ -778,6 +778,72 @@ JMP LBL[104] ;
 LBL[104:endcase] ;\n)
   end
 
+  def test_case_blocks_with_else
+    parse("foo := R[1]
+      bar := R[2]
+      
+      case foo
+      when 1
+          bar = 12345
+          execBar(bar)
+      when 2
+          bar = 54321
+          execBar(bar)
+      else
+        if bar <= 0 then
+          errorBar()
+        end
+      end")
+
+      assert_prog " ;\n" +
+      "SELECT R[1:foo]=1,JMP LBL[100] ;\n" +
+      "       =2,JMP LBL[101] ;\n" +
+      "       ELSE,JMP LBL[102] ;\n" +
+      "JMP LBL[103] ;\n" +
+      "LBL[100:caselbl1] ;\n" +
+      "R[2:bar]=12345 ;\n" +
+      "CALL EXECBAR(R[2:bar]) ;\n" +
+      "JMP LBL[103] ;\n" +
+      "LBL[101:caselbl2] ;\n" +
+      "R[2:bar]=54321 ;\n" +
+      "CALL EXECBAR(R[2:bar]) ;\n" +
+      "JMP LBL[103] ;\n" +
+      "LBL[102:caselbl3] ;\n" +
+      "IF (R[2:bar]<=0) THEN ;\n" +
+      "CALL ERRORBAR ;\n" +
+      "ENDIF ;\n" +
+      "JMP LBL[103] ;\n" +
+      "LBL[103:endcase] ;\n"
+  end
+
+  def test_case_blocks_without_else
+    parse("foo := R[1]
+      bar := R[2]
+      
+      case foo
+      when 1
+          bar = 12345
+          execBar(bar)
+      when 2
+          bar = 54321
+          execBar(bar)
+      end")
+
+      assert_prog " ;\n" +
+      "SELECT R[1:foo]=1,JMP LBL[100] ;\n" +
+      "       =2,JMP LBL[101] ;\n" +
+      "JMP LBL[102] ;\n" +
+      "LBL[100:caselbl1] ;\n" +
+      "R[2:bar]=12345 ;\n" +
+      "CALL EXECBAR(R[2:bar]) ;\n" +
+      "JMP LBL[102] ;\n" +
+      "LBL[101:caselbl2] ;\n" +
+      "R[2:bar]=54321 ;\n" +
+      "CALL EXECBAR(R[2:bar]) ;\n" +
+      "JMP LBL[102] ;\n" +
+      "LBL[102:endcase] ;\n"
+  end
+
   def test_can_use_simple_io_value_as_condition
     parse("foo := UI[5]\n@top\njump_to @top if foo")
     assert_prog "LBL[100:top] ;\nIF (UI[5:foo]),JMP LBL[100] ;\n"
