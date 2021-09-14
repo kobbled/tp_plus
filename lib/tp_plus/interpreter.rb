@@ -101,7 +101,9 @@ module TPPlus
 
       if nodes.is_a?(Nodes::CaseNode)
         nodes.get_conditions.each do |c|
-          find_warnings(c.get_block, warnings)
+          if c
+            find_warnings(c.get_block, warnings)
+          end
         end
       end
 
