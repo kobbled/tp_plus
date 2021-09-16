@@ -2283,4 +2283,49 @@ LINE_TRACK ;
 ), @interpreter.output_functions(options)
   end
 
+
+  def test_function_with_case_statement
+    parse("foo := R[1]
+      bar := R[2]
+      
+      def test()
+        case foo
+        when 1
+          bar = 12345
+          execBar(bar)
+        when 2
+          bar = 54321
+          execBar(bar)
+        else
+          errorBar() if bar <= 0
+        end
+      end")
+      assert_prog " ;\n"
+
+      options = {}
+      options[:output] = false
+      assert_equal %(: ! ------- ;
+: ! test ;
+: ! ------- ;
+ : SELECT R[1:foo]=1,JMP LBL[100] ;
+ :        =2,JMP LBL[101] ;
+ :        ELSE,JMP LBL[102] ;
+ : JMP LBL[103] ;
+ : LBL[100:caselbl1] ;
+ : R[2:bar]=12345 ;
+ : CALL EXECBAR(R[2:bar]) ;
+ : JMP LBL[103] ;
+ : LBL[101:caselbl2] ;
+ : R[2:bar]=54321 ;
+ : CALL EXECBAR(R[2:bar]) ;
+ : JMP LBL[103] ;
+ : LBL[102:caselbl3] ;
+ : IF R[2:bar]<=0,CALL ERRORBAR ;
+ : JMP LBL[103] ;
+ : LBL[103:endcase] ;
+: ! end of test ;
+: ! ------- ;
+), @interpreter.output_functions(options)
+  end
+
 end

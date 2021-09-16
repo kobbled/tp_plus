@@ -330,9 +330,7 @@ rule
 
   case_condition
     : WHEN case_allowed_condition block  
-                                        { @interpreter.increment_case_labels()
-  label = @interpreter.get_case_label()
-  result = CaseConditionNode.new(val[1],LabelDefinitionNode.new(label),val[2]) }
+                                        {result = CaseConditionNode.new(val[1],val[2]) }
     ;
 
   case_allowed_condition
@@ -342,9 +340,7 @@ rule
 
   case_else
     : ELSE block
-                                        { @interpreter.increment_case_labels()
-  label = @interpreter.get_case_label()
-  result = CaseConditionNode.new(nil,LabelDefinitionNode.new(label),val[1]) }
+                                        {result = CaseConditionNode.new(nil,val[1]) }
     |
     ;
 
