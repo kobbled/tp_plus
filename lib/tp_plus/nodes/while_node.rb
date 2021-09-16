@@ -1,7 +1,9 @@
 module TPPlus
   module Nodes
-    class WhileNode < BaseNode
+    class WhileNode < RecursiveNode
       def initialize(condition_node, block)
+        super()
+        
         @condition_node = condition_node
         @block = block.flatten.reject {|n| n.is_a?(TerminatorNode) }
       end

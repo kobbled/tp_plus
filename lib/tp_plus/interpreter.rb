@@ -51,7 +51,7 @@ module TPPlus
         end
       end
 
-      if nodes.is_a?(Nodes::WhileNode) || nodes.is_a?(Nodes::ForNode)
+      if nodes.is_a?(Nodes::RecursiveNode)
         label_recur(nodes.get_block, labels)
       end
 
@@ -95,16 +95,8 @@ module TPPlus
         end
       end
 
-      if nodes.is_a?(Nodes::WhileNode) || nodes.is_a?(Nodes::ForNode)
+      if nodes.is_a?(Nodes::RecursiveNode)
         find_warnings(nodes.get_block, warnings)
-      end
-
-      if nodes.is_a?(Nodes::CaseNode)
-        nodes.get_conditions.each do |c|
-          if c
-            find_warnings(c.get_block, warnings)
-          end
-        end
       end
 
       if nodes.is_a?(Nodes::ConditionalNode)

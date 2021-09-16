@@ -1,7 +1,9 @@
 module TPPlus
   module Nodes
-    class CaseConditionNode < BaseNode
       def initialize(condition, label, block)
+    class CaseConditionNode < RecursiveNode
+        super()
+        
         @condition  = condition
         @label      = label
         @block      = block.flatten.reject {|n| n.is_a?(TerminatorNode) }

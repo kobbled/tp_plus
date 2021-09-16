@@ -1,7 +1,9 @@
 module TPPlus
   module Nodes
-    class ForNode < BaseNode
+    class ForNode < RecursiveNode
       def initialize(var_node, initial_value_node, final_value_node, block, range = 'TO')
+        super()
+        
         @var_node           = var_node
         @initial_value_node = initial_value_node
         @final_value_node   = final_value_node
