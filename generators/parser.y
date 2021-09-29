@@ -19,7 +19,7 @@ token LPAREN RPAREN COLON COMMA LBRACK RBRACK LBRACE RBRACE
 token LABEL SYSTEM ADDRESS
 token LPOS JPOS
 token false
-token FUNCTION OPERATION
+token FUNCTION OPERATION USING
 
 prechigh
   right BANG
@@ -96,6 +96,7 @@ rule
     | collguard_statement
     | function
     | tp_application_definition
+    | using_statement
     ;
 
   lpos_or_jpos
@@ -304,6 +305,16 @@ rule
   int_or_var
     : integer
     | var
+    ;
+
+  word_list
+    : WORD                              { result = [val[0]] }
+    | WORD COMMA WORD                     { result = val[0] << val[2] }
+    |                                  { result = [] }
+    ;
+
+  using_statement
+    : USING word_list           { result = UsingNode.new(val[1])}
     ;
 
   namespace
