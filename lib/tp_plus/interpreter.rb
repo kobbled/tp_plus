@@ -17,16 +17,6 @@ module TPPlus
       @warning_identifiers = 0
     end
 
-    def load_environment(string)
-      scanner = TPPlus::Scanner.new
-      parser = TPPlus::Parser.new(scanner, self)
-      scanner.scan_setup(string)
-      parser.parse
-      eval
-    rescue RuntimeError => e
-      raise "Runtime error in environment on line #{@source_line_count}:\n#{e}"
-    end
-
     def next_label
       @current_label += 1
     end

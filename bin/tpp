@@ -52,7 +52,7 @@ scanner = TPPlus::Scanner.new
 parser = TPPlus::Parser.new(scanner)
 interpreter = parser.interpreter
 if options[:environment]
-  interpreter.load_environment(contents(options[:environment]))
+  interpreter.load_environment(options[:environment])
 end
 
 src = contents(ARGV[0])

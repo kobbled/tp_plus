@@ -1,6 +1,6 @@
 module TPPlus
     class BaseBlock
-      attr_accessor :nodes, :ret_type, :position_data
+      attr_accessor :line_count, :nodes, :ret_type, :position_data
       attr_reader :variables, :constants, :namespaces, :functions
 
       def initialize
@@ -12,6 +12,24 @@ module TPPlus
         @constants     = {}
         @ret_type      = {}
         @position_data = {}
+        @line_count    = 0
+      end
+
+      def load_environment(string)
+        # if string is a file name, get the contents of the file
+        # otherwise assume the string is the contents
+        if string.match('((?:[^/]*/)*)(.tpp)')
+          file = contents(string)
+        else
+          file = string
+        end
+        scanner = TPPlus::Scanner.new
+        parser = TPPlus::Parser.new(scanner, self)
+        scanner.scan_setup(file)
+        parser.parse
+        eval
+      rescue RuntimeError => e
+        raise "Runtime error in environment on line #{@source_line_count}:\n#{e}"
       end
       
       def add_namespace(identifier, block)
