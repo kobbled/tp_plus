@@ -2,7 +2,7 @@ module TPPlus
   class Namespace < BaseBlock
     def initialize(name, block)
       super()
-
+      
       @name       = name.strip
       @nodes      = block
 
@@ -10,7 +10,8 @@ module TPPlus
     end
 
     def define!
-      @nodes.flatten.select {|n| [TPPlus::Nodes::DefinitionNode, TPPlus::Nodes::FunctionNode, TPPlus::Nodes::NamespaceNode].include? n.class }.each do |node|
+      @nodes.flatten.select {|n| [TPPlus::Nodes::DefinitionNode, TPPlus::Nodes::FunctionNode, TPPlus::Nodes::NamespaceNode, TPPlus::Nodes::UsingNode].include? n.class }.each do |node|
+        @nd = node
         node.eval(self)
       end
     end
@@ -53,6 +54,14 @@ module TPPlus
       raise "Variable (#{identifier}) not defined within namespace #{@name}" if @variables[identifier.to_sym].nil?
 
       @variables[identifier.to_sym]
+    end
+
+    def eval
+      #use to evaluate imports
+      @nodes.flatten.select {|n| [TPPlus::Nodes::DefinitionNode, TPPlus::Nodes::NamespaceNode].include? n.class }.each do |node|
+        @nd = node
+        node.eval(self)
+      end
     end
 
   end
