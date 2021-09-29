@@ -3,6 +3,9 @@ require_relative '../lib/tp_plus'
 require 'optparse'
 
 options = {}
+#make options global ** PATCH ** for options access in nodes
+$global_options = options
+
 OptionParser.new do |opts|
   opts.banner = "Usage: tpp [options] filename"
 
