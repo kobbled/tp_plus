@@ -11,7 +11,11 @@ module TPPlus
       end
 
       def eval(context)
-        s = @value.eval(context)
+        if @value.is_a?(Nodes::FrameNode)
+          s = context.get_var(@value.identifier).id.to_s
+        else
+          s = @value.eval(context)
+        end
         if @method.has_key?(:group)
           s = "GP#{@method[:group].eval(context)}:#{s}"
         end

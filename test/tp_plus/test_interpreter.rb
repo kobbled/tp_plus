@@ -441,6 +441,16 @@ LBL[105] ;\n), @interpreter.list_warnings
     assert_prog "UTOOL_NUM=R[1:foo] ;\n"
   end
 
+  def test_use_uframe_frame
+    parse("foo := UFRAME[1]\nuse_uframe 1")
+    assert_prog "UFRAME_NUM=1 ;\n"
+  end
+
+  def test_use_utool_tool
+    parse("foo := UTOOL[2]\nuse_utool 2")
+    assert_prog "UTOOL_NUM=2 ;\n"
+  end
+
   def test_payload
     parse("use_payload 1")
     assert_prog "PAYLOAD[1] ;\n"
@@ -908,9 +918,20 @@ LBL[104:endcase] ;\n)
     assert_prog "UFRAME[R[1:bar]]=PR[1:foo] ;\n"
   end
 
+  def test_fanuc_set_uframe
+    parse("foo := PR[1]\nbar := UFRAME[2]\nbar=foo")
+    assert_prog "UFRAME[2]=PR[1:foo] ;\n"
+  end
+
+
   def test_fanuc_set_utool_with_reg
     parse("foo := PR[1]\nbar := R[1]\nindirect('utool',bar)=foo")
     assert_prog "UTOOL[R[1:bar]]=PR[1:foo] ;\n"
+  end
+
+  def test_fanuc_set_utool
+    parse("foo := PR[1]\nbar := UTOOL[2]\nbar=foo")
+    assert_prog "UTOOL[2]=PR[1:foo] ;\n"
   end
 
   def test_set_skip_condition

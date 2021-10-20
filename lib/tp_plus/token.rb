@@ -126,6 +126,9 @@ module TPPlus
         "AR" => :ARG,
         "TIMER" => :TIMER,
         "UALM" => :UALM,
+        "UTOOL" => :TOOLREG,
+        "UFRAME" => :FRAMEREG,
+
 
         "SIN" => :OPERATION,
         "COS" => :OPERATION,

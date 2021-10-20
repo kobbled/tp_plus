@@ -1,6 +1,6 @@
 class TPPlus::Parser
 token ASSIGN AT_SYM COMMENT MESSAGE WARNING JUMP IO_METHOD INPUT OUTPUT
-token NUMREG POSREG VREG SREG TIME_SEGMENT ARG UALM
+token NUMREG POSREG VREG SREG TIME_SEGMENT ARG UALM TOOLREG FRAMEREG
 token MOVE DOT TO DOWNTO MID AT ACC TERM OFFSET SKIP GROUP COORD 
 token MROT PTH WJNT INC BREAK RTCP FPLIN
 token AP_LD RT_LD CD CR INDEV EV PSPD CTV
@@ -653,6 +653,7 @@ rule
     | timer
     | ualm
     | sreg
+    | framereg
     ;
 
 
@@ -690,6 +691,15 @@ rule
 
   output
     : OUTPUT LBRACK DIGIT RBRACK             { result = IONode.new(val[0], val[2].to_i) }
+    ;
+
+  frametype
+    : TOOLREG    { result = val[0] }
+    | FRAMEREG   { result = val[0] }
+    ;
+
+  framereg
+    : frametype LBRACK DIGIT RBRACK             { result = FrameNode.new(val[0], val[2].to_i) }
     ;
   
 

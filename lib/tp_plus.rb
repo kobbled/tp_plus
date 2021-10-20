@@ -76,6 +76,7 @@ require_relative 'tp_plus/nodes/wait_for_node'
 require_relative 'tp_plus/nodes/wait_until_node'
 require_relative 'tp_plus/nodes/while_node'
 require_relative 'tp_plus/nodes/system_definition_node'
+require_relative 'tp_plus/nodes/frame_node'
 
 require_relative 'tp_plus/base_block'
 require_relative 'tp_plus/interpreter'

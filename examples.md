@@ -21,6 +21,7 @@
     - [namespace collections](#namespace-collections)
     - [functions with positions](#functions-with-positions)
     - [functions with posreg returns](#functions-with-posreg-returns)
+  - [Frames](#frames)
   - [Motion](#motion)
     - [basic options](#basic-options)
     - [Touch sensing with robot](#touch-sensing-with-robot)
@@ -929,6 +930,51 @@ DEFAULT_GROUP = 1,*,*,*,*;
  : CALL POS_MOVE(20) ;
  :  ;
 /END
+```
+
+## Frames
+
+TP+
+```ruby
+frame := UFRAME[1]
+tool := UTOOL[2]
+temp_frame := PR[5]
+offst := PR[6]
+
+use_uframe frame
+use_utool tool
+
+#copy frame to posreg
+temp_frame = frame
+
+#set offet amount
+Pos::clrpr(&offst, 1)
+offst.z = 100
+
+#get offset frame
+temp_frame = Pos::mult(&temp_frame, &offst)
+
+#set new frame
+frame = temp_frame
+```
+
+LS
+```fanuc
+ : UFRAME_NUM=1 ;
+ : UTOOL_NUM=2 ;
+ :  ;
+ : ! copy frame to posreg ;
+ : PR[5:temp_frame]=UFRAME[1] ;
+ :  ;
+ : ! set offet amount ;
+ : CALL POS_CLRPR(6,1) ;
+ : PR[6,3:offst]=100 ;
+ :  ;
+ : ! get offset frame ;
+ : CALL POS_MULT(5,6,5) ;
+ :  ;
+ : ! set new frame ;
+ : UFRAME[1]=PR[5:temp_frame] ;
 ```
 
 ##  Motion
