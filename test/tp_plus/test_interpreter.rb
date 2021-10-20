@@ -442,12 +442,12 @@ LBL[105] ;\n), @interpreter.list_warnings
   end
 
   def test_use_uframe_frame
-    parse("foo := UFRAME[1]\nuse_uframe 1")
+    parse("foo := UFRAME[1]\nuse_uframe foo")
     assert_prog "UFRAME_NUM=1 ;\n"
   end
 
   def test_use_utool_tool
-    parse("foo := UTOOL[2]\nuse_utool 2")
+    parse("foo := UTOOL[2]\nuse_utool foo")
     assert_prog "UTOOL_NUM=2 ;\n"
   end
 
