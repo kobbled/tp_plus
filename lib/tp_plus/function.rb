@@ -1,7 +1,7 @@
 module TPPlus
   class Function < Namespace
-    attr_accessor :RETURN_NAME
     def initialize(name, args, block, ret_type = '', vars = {}, consts = {})
+
       super(name, block)
 
       @args       = args

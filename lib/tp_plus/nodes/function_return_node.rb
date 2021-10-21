@@ -8,8 +8,6 @@ module TPPlus
         @return_register = {}
       end
 
-      RETURN_NAME = 'ret'
-
       def eval(context)
         if context.ret_type
           @ret_type = context.ret_type

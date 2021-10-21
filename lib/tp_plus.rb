@@ -1,5 +1,8 @@
 module TPPlus
 end
+#globals
+RETURN_NAME = 'ret'
+
 # base nodes
 require_relative 'tp_plus/nodes/base_node'
 require_relative 'tp_plus/nodes/recursive_node'
