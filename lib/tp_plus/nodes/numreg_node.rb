@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class NumregNode < BaseNode
+    class NumregNode < RegNode
       attr_accessor :comment
       attr_reader :id
       def initialize(id)

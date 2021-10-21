@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class VisionRegisterNode < BaseNode
+    class VisionRegisterNode < RegNode
       attr_accessor :comment
       attr_reader :id
       def initialize(id)

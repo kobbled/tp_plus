@@ -3,6 +3,8 @@ end
 # base nodes
 require_relative 'tp_plus/nodes/base_node'
 require_relative 'tp_plus/nodes/recursive_node'
+require_relative 'tp_plus/nodes/reg_node'
+require_relative 'tp_plus/nodes/const_node'
 # derived nodes
 require_relative 'tp_plus/nodes/abort_node'
 require_relative 'tp_plus/nodes/acc_node'

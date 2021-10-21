@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class PositionNode < BaseNode
+    class PositionNode < RegNode
       attr_accessor :comment
       attr_reader :id
       def initialize(id)

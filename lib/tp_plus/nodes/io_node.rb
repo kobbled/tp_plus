@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class IONode < BaseNode
+    class IONode < RegNode
       attr_accessor :comment
       attr_reader :id
       def initialize(type, id)

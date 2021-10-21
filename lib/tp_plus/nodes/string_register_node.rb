@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class StringRegisterNode < BaseNode
+    class StringRegisterNode < RegNode
       attr_accessor :comment
       attr_reader :id
       def initialize(id)
