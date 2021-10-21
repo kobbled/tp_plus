@@ -215,7 +215,12 @@ module TPPlus
         when "*"
           tok = :STAR
         when "/"
-          tok = :SLASH
+          if @ch == "/"
+            tok = :DIV
+            self.next
+          else
+            tok = :SLASH
+          end
         when "&"
           if @ch == "&"
             tok = :AND
