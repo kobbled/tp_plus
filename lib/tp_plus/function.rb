@@ -1,19 +1,16 @@
 module TPPlus
   class Function < Namespace
-    def initialize(name, args, block, ret_type = '', vars = {}, consts = {})
 
+    def initialize(name, args, block, ret_type = '', vars = {})
       super(name, block)
 
       @args       = args
       #passing by ref will expose local scope of the function to global
-      @variables  = vars.clone
-      @constants  = consts.clone
+      @variables = vars.clone
       @current_arg = 0
       @ret_type = ret_type
       @ret_register = {}
     end
-
-    RETURN_NAME = 'ret'
 
     def eval
       scanner = TPPlus::Scanner.new
@@ -29,12 +26,7 @@ module TPPlus
       interpreter = @parser.interpreter
 
       # copy variables & constants to interpreter
-      @variables.each do |k,v|
-        interpreter.add_var(k, v)
-      end
-      @constants.each do |k,v|
-        interpreter.add_constant(k, v)
-      end
+      add_parent_nodes(interpreter)
 
       interpreter.nodes = @nodes
     end

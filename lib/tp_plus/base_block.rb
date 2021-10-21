@@ -31,18 +31,41 @@ module TPPlus
       rescue RuntimeError => e
         raise "Runtime error in environment on line #{@source_line_count}:\n#{e}"
       end
+
+      def get_parent_imports(nodes)
+        parent_nodes = {}
+        nodes.each do |n|
+          if n.is_a?(TPPlus::Nodes::UsingNode)
+            n.mods.each do |m|
+              if get_namespace(m)
+                parent_nodes[m] = get_namespace(m)
+              elsif get_function(m)
+                parent_nodes[m] = get_function(m)
+              elsif get_var_or_const(m)
+                parent_nodes[m] = get_var_or_const(m)
+              end
+            end
+          end
+        end
+
+        parent_nodes
+      end
       
       def add_namespace(identifier, block)
+        pass_nodes = get_parent_imports(block)
+
         if @namespaces[identifier.to_sym].nil?
-          @namespaces[identifier.to_sym] = TPPlus::Namespace.new("#{@name} #{identifier}", block)
+          @namespaces[identifier.to_sym] = TPPlus::Namespace.new("#{@name} #{identifier}", block, vars=pass_nodes)
         else
           @namespaces[identifier.to_sym].reopen!(block)
         end
       end
 
       def add_function(name, args, block, ret_type = '')
+        pass_nodes = get_parent_imports(block)
+
         if @functions[name.to_sym].nil?
-          @functions[name.to_sym] = TPPlus::Function.new(name, args, block, ret_type=ret_type, vars=@variables, consts=@constants)
+          @functions[name.to_sym] = TPPlus::Function.new(name, args, block, ret_type=ret_type, vars=pass_nodes)
           @functions[name.to_sym].eval
         end
       end
@@ -70,6 +93,16 @@ module TPPlus
         raise "Variable (#{identifier}) not defined" if @variables[identifier.to_sym].nil?
   
         @variables[identifier.to_sym]
+      end
+
+      def get_var_or_const(identifier)
+        raise "Variable (#{identifier}) not defined" if @variables[identifier.to_sym].nil? && @constants[identifier.to_sym].nil?
+        
+        if @variables[identifier.to_sym]
+          return @variables[identifier.to_sym]
+        end
+
+        return @constants[identifier.to_sym]
       end
   
       def get_namespace(identifier)

@@ -1174,7 +1174,9 @@ Foo::Bar::baz = 2)
 
   def test_reopen_namespace
     parse "namespace Foo\nbar := R[1]\nend\nnamespace Foo\nbaz := R[2]\nend\nFoo::bar = 1\nFoo::baz = 2"
-    assert_prog "R[1:Foo bar]=1 ;\nR[2:Foo baz]=2 ;\n"
+    assert_raise(RuntimeError) do
+      @interpreter.eval
+    end
   end
 
   def test_eval
@@ -2315,6 +2317,7 @@ LINE_TRACK ;
       bar := R[2]
       
       def test()
+        using foo, bar
         case foo
         when 1
           bar = 12345
@@ -2333,6 +2336,7 @@ LINE_TRACK ;
       assert_equal %(: ! ------- ;
 : ! test ;
 : ! ------- ;
+ :  ;
  : SELECT R[1:foo]=1,JMP LBL[100] ;
  :        =2,JMP LBL[101] ;
  :        ELSE,JMP LBL[102] ;
@@ -2349,6 +2353,154 @@ LINE_TRACK ;
  : IF R[2:bar]<=0,CALL ERRORBAR ;
  : JMP LBL[103] ;
  : LBL[103:endcase] ;
+: ! end of test ;
+: ! ------- ;
+), @interpreter.output_functions(options)
+  end
+
+  def test_namespace_scoping
+    parse("namespace ns1
+      VAL1 := 1
+      VAL2 := 2
+    end
+    
+    namespace ns2
+      VAL1 := 3.14
+      VAL2 := 2.72
+    end
+    
+    namespace ns3
+      using ns1, ns2
+    
+      def test()
+        using ns1
+    
+        bar := R[15]
+        bar = ns1::VAL2
+      end
+    
+      def test2()
+        using ns2
+    
+        foo := R[20]
+        foo = ns2::VAL1
+        
+      end
+    end
+    
+    foo := R[1]
+    foo = ns1::VAL1
+    
+    bar := R[2]
+    foo = ns2::VAL2")
+      assert_prog " ;\n" + " ;\n" + " ;\n" + "R[1:foo]=1 ;\n" + " ;\n" + "R[1:foo]=2.72 ;\n"
+      options = {}
+      options[:output] = false
+      assert_equal %(: ! ------- ;
+: ! ns3_test ;
+: ! ------- ;
+ :  ;
+ :  ;
+ : R[15:bar]=2 ;
+: ! end of ns3_test ;
+: ! ------- ;
+: ! ------- ;
+: ! ns3_test2 ;
+: ! ------- ;
+ :  ;
+ :  ;
+ : R[20:foo]=3.14 ;
+ :  ;
+: ! end of ns3_test2 ;
+: ! ------- ;
+), @interpreter.output_functions(options)
+  end
+
+  def test_namespace_scoping_function
+    parse("namespace ns1
+      VAL1 := 'Hello'
+    
+      def test2() : numreg
+        return(5)
+      end
+    end
+    
+    def test()
+      using ns1
+      foo := R[1]
+      foostr := SR[2]
+    
+      foostr = Str::set(ns1::VAL1)
+      foo = ns3::test2()
+    end")
+      assert_prog " ;\n"
+      options = {}
+      options[:output] = false
+      assert_equal %(: ! ------- ;
+: ! test ;
+: ! ------- ;
+ :  ;
+ :  ;
+ : CALL STR_SET('Hello',2) ;
+ : CALL NS3_TEST2(1) ;
+: ! end of test ;
+: ! ------- ;
+: ! ------- ;
+: ! ns1_test2 ;
+: ! ------- ;
+ : R[AR[1]]=5 ;
+ : END ;
+: ! end of ns1_test2 ;
+: ! ------- ;
+), @interpreter.output_functions(options)
+  end
+
+
+  def test_scoping_constants
+    parse("CONST1 := 1
+      CONST2 := 0.5
+      
+      def test()
+        using CONST1, CONST2
+      
+        foo := R[1]
+      
+        foo = CONST1
+        foo = CONST2
+      end")
+      assert_prog " ;\n"
+      options = {}
+      options[:output] = false
+      assert_equal %(: ! ------- ;
+: ! test ;
+: ! ------- ;
+ :  ;
+ :  ;
+ :  ;
+ : R[1:foo]=1 ;
+ : R[1:foo]=0.5 ;
+: ! end of test ;
+: ! ------- ;
+), @interpreter.output_functions(options)
+  end
+
+  def test_scoping_posreg
+    parse("pfoo := PR[5]
+
+      def test()
+        using pfoo
+        
+        test::posreg(&pfoo)
+      end")
+      assert_prog " ;\n"
+      options = {}
+      options[:output] = false
+      assert_equal %(: ! ------- ;
+: ! test ;
+: ! ------- ;
+ :  ;
+ :  ;
+ : CALL TEST_POSREG(5) ;
 : ! end of test ;
 : ! ------- ;
 ), @interpreter.output_functions(options)

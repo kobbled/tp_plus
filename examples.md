@@ -13,6 +13,7 @@
   - [Select](#select)
   - [Inline Statments](#inline-statments)
   - [Namespaces](#namespaces)
+    - [Namespace scoping](#namespace-scoping)
     - [structs](#structs)
     - [states](#states)
   - [Functions](#functions)
@@ -509,6 +510,49 @@ DEFAULT_GROUP = 1,*,*,*,*;
 ```
 
 ## Namespaces
+
+### Namespace scoping
+
+namespaces, variables, constants, and functions must be scoped into
+functions and namespaces with the "using" keyword, and the name of the
+identifier.
+
+TP+
+```ruby
+namespace ns1
+  VAL1 := 1
+  VAL2 := 2
+end
+
+namespace ns2
+  VAL1 := 3.14
+  VAL2 := 2.72
+end
+
+namespace ns3
+  using ns1
+  
+  VAL1 := 'Hello'
+
+  def test2() : numreg
+    using ns1
+    return(ns1::VAL1 + 5)
+  end
+end
+
+def test()
+  using ns1, ns2, ns3
+  foo := R[1]
+  bar := R[2]
+  foostr := SR[3]
+
+  foo = ns2::VAL1
+  bar = ns2::VAL2
+
+  foostr = Str::set(ns3::VAL1)
+  foo = ns3::test2()
+end
+```
 
 ### structs
 
@@ -1134,6 +1178,9 @@ namespace sensor
   SAMPLING_TIME := 0.4
 
   def sample(pin, time) : numreg
+    
+    using POLLING_RATE, SAMPLING_TIME
+
     t := R[150]
     sum := R[151]
     inc := R[152]
@@ -1367,7 +1414,6 @@ P[1:""]{
 };
 /END
 ```
-
 
 ##  Function parameters
 
