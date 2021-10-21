@@ -308,9 +308,13 @@ rule
     ;
 
   word_list
-    : WORD                              { result = [val[0]] }
-    | WORD COMMA WORD                     { result = val[0] << val[2] }
-    |                                  { result = [] }
+    : word_tuple                             { result = val }
+    | word_list word_tuple                   { result = val[0] << val[1] }
+    ;
+  
+  word_tuple
+    : COMMA WORD                     { result = val[1] }
+    | WORD                              { result = val[0] }
     ;
 
   using_statement
