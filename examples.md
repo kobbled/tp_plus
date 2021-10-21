@@ -29,6 +29,9 @@
     - [Assigning posregs](#assigning-posregs)
     - [Inputing Position Data](#inputing-position-data)
   - [Function parameters](#function-parameters)
+  - [Math](#math)
+    - [Functions](#functions)
+    - [Matrix Math](#matrix-math)
   - [Arguments](#arguments)
   - [String Manipulation](#string-manipulation)
   - [Timers](#timers)
@@ -1389,6 +1392,93 @@ LS
  : ! pass ar2 and foo2 by value ;
  : CALL FUNC01(1,AR[2],3,R[4:foo2]) ;
 /END
+```
+
+## Math
+
+### Functions
+
+LS
+```ruby
+foo := R[1]
+val := R[2]
+val2 := R[2]
+
+val = 90
+
+#trig
+foo = SIN[val]
+foo = COS[val]
+foo = TAN[val]
+foo = ATAN[val]
+foo = ACOS[val]
+foo = ASIN[val]
+
+val = 1
+val2 = 2
+foo = ATAN2[val, val2]
+
+#logrithms
+val = 1
+foo = LN[val]
+foo = EXP[val]
+
+#exponentials
+  #power
+val = 2
+val2 = 4
+val2 = LN[val2]
+val = val*val2
+val2 = EXP[val]
+  #or with kaboost
+val = Mth::pow(val2, val)
+
+val = 2
+foo = SQRT[val]
+
+#integer math
+val = -1
+foo = ABS[val]
+val = 5.5
+foo = TRUNC[val]
+foo = ROUND[val]
+
+ret := R[3]
+val = 20
+val2 = 2
+ret = val % val2 # modulus operator
+ret = val // val2 #integer division
+```
+
+### Matrix Math
+
+LS
+```ruby
+#matrix math
+#with ka-boost
+pr1 := PR[1]
+pr2 := PR[2]
+
+pr1 = Pos::mult(&pr1, &pr2)
+pr1 = Pos::inv(&pr1)
+
+pr1 = Pos::cross(&pr1, &pr2)
+pr1 = Pos::dot(&pr1, &pr2)
+
+pr2 = Pos::slcmult(&pr1, 10)
+pr2 = Pos::slcdiv(&pr1, 2)
+
+#convert pose to cartesian representation
+tool := UTOOL[1]
+pr1 = tool
+pr1 = Pos::cnvcart(&pr1)
+
+#create a frame
+pr3 := PR[3]
+prFrame := PR[4]
+frame := UFRAME[1]
+prFrame = Pos::frame(&pr1, &pr2, &pr3)
+frame = prFrame
 ```
 
 ##  Arguments
