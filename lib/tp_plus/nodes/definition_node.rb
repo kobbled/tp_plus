@@ -8,7 +8,7 @@ module TPPlus
       end
 
       def eval(context)
-        if @assignable.is_a?(DigitNode) || @assignable.is_a?(RealNode)
+        if @assignable.is_a?(DigitNode) || @assignable.is_a?(RealNode) || @assignable.is_a?(StringNode)
           raise "Constants must be defined with all CAPS" unless @identifier.upcase == @identifier
 
           context.add_constant(@identifier, @assignable)

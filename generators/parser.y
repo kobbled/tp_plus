@@ -649,6 +649,7 @@ rule
     | vreg
     | number
     | signed_number
+    | string
     | argument
     | timer
     | ualm
