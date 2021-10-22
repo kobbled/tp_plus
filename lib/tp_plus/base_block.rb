@@ -38,11 +38,11 @@ module TPPlus
           if n.is_a?(TPPlus::Nodes::UsingNode)
             n.mods.each do |m|
               if get_namespace(m)
-                parent_nodes[m] = get_namespace(m)
+                parent_nodes[m.to_sym] = get_namespace(m)
               elsif get_function(m)
-                parent_nodes[m] = get_function(m)
+                parent_nodes[m.to_sym] = get_function(m)
               elsif get_var_or_const(m)
-                parent_nodes[m] = get_var_or_const(m)
+                parent_nodes[m.to_sym] = get_var_or_const(m)
               end
             end
           end
