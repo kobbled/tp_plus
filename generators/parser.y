@@ -98,6 +98,7 @@ rule
     | tp_application_definition
     | using_statement
     | import_statement
+    | compile_statement
     ;
 
   lpos_or_jpos
@@ -322,6 +323,10 @@ rule
     : USING word_list           { result = UsingNode.new(val[1])}
     ;
 
+  compile_statement
+    : COMPILE IMPORT word_list         { result = ImportNode.new(val[2],compile: true)}
+    ;
+  
   import_statement
     : IMPORT word_list           { result = ImportNode.new(val[1])}
     ;

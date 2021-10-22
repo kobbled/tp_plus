@@ -115,6 +115,7 @@ module TPPlus
         "def" => :FUNCTION,
         "using" => :USING,
         "import" => :IMPORT,
+        "compile" => :COMPILE
       }
 
 
