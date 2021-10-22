@@ -6,6 +6,9 @@ options = {}
 #make options global ** PATCH ** for options access in nodes
 $global_options = options
 
+#flag for printing functions
+options[:function_print] = true
+
 #list ofr include directories
 options[:include] = []
 

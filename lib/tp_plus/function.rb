@@ -10,6 +10,7 @@ module TPPlus
       @current_arg = 0
       @ret_type = ret_type
       @ret_register = {}
+      @print_status = $global_options[:function_print]
     end
 
     def eval
@@ -70,6 +71,8 @@ module TPPlus
 
       #list warning messages
       lines += interpreter.list_warnings
+
+      return output = "" if !@print_status
 
       if prog_options[:output]
         output = %(/PROG #{@name.upcase}

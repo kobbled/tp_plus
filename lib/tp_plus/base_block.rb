@@ -36,6 +36,10 @@ module TPPlus
         #get contents of file
         file = contents(filepath)
         
+        #turn off function_print flag. This gets taged in each function
+        #constructor as whether or not to print the function
+        swap_flag = $global_options[:function_print]
+        $global_options[:function_print] = compileTF
         
         scanner = TPPlus::Scanner.new
         parser = TPPlus::Parser.new(scanner, self)
@@ -43,6 +47,8 @@ module TPPlus
         parser.parse
         eval
         
+        #restore global function_print status
+        $global_options[:function_print] = swap_flag
       rescue RuntimeError => e
         raise "Could not load import #{filepath}:\n#{e}"
       end
