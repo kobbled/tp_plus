@@ -1048,7 +1048,7 @@ namespace Sense
     run Sense::read()
 
     #determine serch vector
-    Pos::clrpr(&ofst, 1)
+    Pos::clrpr(&ofst)
     if measure > 0
       ofst.z = -1*tool::SEARCH_DIST
     else
@@ -1084,7 +1084,7 @@ use_utool tool
 temp_frame = frame
 
 #set offet amount
-Pos::clrpr(&offst, 1)
+Pos::clrpr(&offst)
 offst.z = 100
 
 #get offset frame
