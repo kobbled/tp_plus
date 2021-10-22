@@ -23,11 +23,16 @@ module TPPlus
         else
           file = string
         end
-        scanner = TPPlus::Scanner.new
-        parser = TPPlus::Parser.new(scanner, self)
-        scanner.scan_setup(file)
-        parser.parse
-        eval
+
+        if self.is_a?(Function)
+          eval
+        else
+          scanner = TPPlus::Scanner.new
+          parser = TPPlus::Parser.new(scanner, self)
+          scanner.scan_setup(file)
+          parser.parse
+          eval
+        end
       rescue RuntimeError => e
         raise "Runtime error in environment on line #{@source_line_count}:\n#{e}"
       end
@@ -58,7 +63,9 @@ module TPPlus
         nodes.each do |n|
           if n.is_a?(TPPlus::Nodes::UsingNode)
             n.mods.each do |m|
-              if get_namespace(m)
+              if m == "env"
+                next
+              elsif get_namespace(m)
                 parent_nodes[m.to_sym] = get_namespace(m)
               elsif get_function(m)
                 parent_nodes[m.to_sym] = get_function(m)

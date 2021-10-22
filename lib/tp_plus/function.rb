@@ -38,6 +38,11 @@ module TPPlus
     end
 
     def set_arguement_registers
+      if !@args
+        @current_arg = 0
+        @args = []
+      end
+
       if return?
         @ret_register = TPPlus::Nodes::FunctionVarNode.new(RETURN_NAME)
         #add to total arguements to be pushed to the interpreter variables
