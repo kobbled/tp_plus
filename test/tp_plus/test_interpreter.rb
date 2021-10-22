@@ -4,6 +4,8 @@ class TestInterpreter < Test::Unit::TestCase
   include TPPlus::Nodes
 
   def setup
+    $global_options = {}
+    
     @scanner = TPPlus::Scanner.new
     @parser  = TPPlus::Parser.new @scanner
     @interpreter = @parser.interpreter
@@ -2292,6 +2294,7 @@ LINE_TRACK ;
   end
 
   def test_function_with_return
+    $global_options[:function_print] = true
     parse("foo := R[1]
       def set_reg(x) : numreg    
         return (x)
@@ -2313,6 +2316,7 @@ LINE_TRACK ;
 
 
   def test_function_with_case_statement
+    $global_options[:function_print] = true
     parse("foo := R[1]
       bar := R[2]
       
@@ -2359,6 +2363,7 @@ LINE_TRACK ;
   end
 
   def test_namespace_scoping
+    $global_options[:function_print] = true
     parse("namespace ns1
       VAL1 := 1
       VAL2 := 2
@@ -2417,6 +2422,7 @@ LINE_TRACK ;
   end
 
   def test_namespace_scoping_function
+    $global_options[:function_print] = true
     parse("namespace ns1
       VAL1 := 'Hello'
     
@@ -2457,6 +2463,7 @@ LINE_TRACK ;
 
 
   def test_scoping_constants
+    $global_options[:function_print] = true
     parse("CONST1 := 1
       CONST2 := 0.5
       
@@ -2485,6 +2492,7 @@ LINE_TRACK ;
   end
 
   def test_scoping_posreg
+    $global_options[:function_print] = true
     parse("pfoo := PR[5]
 
       def test()
