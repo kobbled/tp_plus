@@ -22,6 +22,7 @@
     - [namespace collections](#namespace-collections)
     - [functions with positions](#functions-with-positions)
     - [functions with posreg returns](#functions-with-posreg-returns)
+  - [imports](#imports)
   - [Frames](#frames)
   - [Motion](#motion)
     - [basic options](#basic-options)
@@ -977,6 +978,94 @@ DEFAULT_GROUP = 1,*,*,*,*;
  : CALL POS_MOVE(20) ;
  :  ;
 /END
+```
+## imports
+
+**WARNING** New feature is without unit tesst coverage. There may be issues with usage.
+
+imports outside of current working directory are set with
+```bash
+tpp test.tpp -o "./ls/test.ls" -i "path/to/include/dir"
+```
+
+import names refer to the filenames without the .tpp extension
+
+imports can be chosen to be printed or not with the `compile` keyword infront of the import statement 
+
+**NOTE** : importing the same file in nested files may cause problems as there   are currently no collision guards.
+
+main
+```ruby
+import tool2
+compile import test_import
+
+Sense::findZero()
+```
+
+Replacing the import with a different file with the same struct format can be used to quickly swap configurations.
+
+tool1.tpp
+```ruby
+namespace tool
+  frame := UTOOL[1]
+  read_pin := AI[1]
+  interupt_pin := DI[8]
+  SEARCH_DIST := 10
+  SEARCH_SPEED := 3
+end
+```
+
+`using` keyword still has to be used to pass outside namespaces into the current namespace or function scope.
+
+test_import.tpp
+```ruby
+namespace Sense
+  using tool
+
+  measure := R[1]
+  ulrm    := UALM[1]
+
+  def read()
+    using  measure, tool
+
+    while 0
+      measure = tool::read_pin
+      wait_for(250,'ms')
+    end
+  end
+
+  def findZero()
+    using measure, ulrm, tool
+
+    lpos := PR[1]
+    ofst := PR[2]
+
+    use_utool tool::frame
+
+    #measure current pose
+    get_linear_position(lpos)
+    
+    run Sense::read()
+
+    #determine serch vector
+    Pos::clrpr(&ofst, 1)
+    if measure > 0
+      ofst.z = -1*tool::SEARCH_DIST
+    else
+      ofst.z = 1*tool::SEARCH_DIST
+    end
+    #get tool offset pose
+    ofst = Pos::mult(&lpos, &ofst)
+
+    #search until 
+    set_skip_condition tool::interupt_pin
+    linear_move.to(ofst).at(tool::SEARCH_SPEED, 'mm/s').term(-1).skip_to(@not_zerod)
+
+    return
+    @not_zerod
+      raise ulrm
+  end
+end
 ```
 
 ## Frames
