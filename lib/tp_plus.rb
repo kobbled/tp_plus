@@ -9,6 +9,7 @@ require_relative 'tp_plus/nodes/recursive_node'
 require_relative 'tp_plus/nodes/reg_node'
 require_relative 'tp_plus/nodes/const_node'
 # derived nodes
+require_relative 'tp_plus/nodes/import_node'
 require_relative 'tp_plus/nodes/abort_node'
 require_relative 'tp_plus/nodes/acc_node'
 require_relative 'tp_plus/nodes/argument_node'

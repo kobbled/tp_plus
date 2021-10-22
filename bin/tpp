@@ -6,11 +6,19 @@ options = {}
 #make options global ** PATCH ** for options access in nodes
 $global_options = options
 
+#list ofr include directories
+options[:include] = []
+
 OptionParser.new do |opts|
   opts.banner = "Usage: tpp [options] filename"
 
   opts.on("-e", "--environment <file>", "Require an environment file <file> before parsing") do |e|
     options[:environment] = e
+  end
+
+  opts.on("-i", "--include <folder>", "include folder <folder> for imports") do |i|
+    options[:include].append(i)
+    raise "Include directory #{i}, was not found" unless File.directory?(i)
   end
 
   opts.on("-o", "--output <file>", "Write output to <file>") do |o|
@@ -38,6 +46,13 @@ if options[:output]
     puts "Output filename <#{output_filename}> does not match input filename <#{tpp_filename}>"
     exit
   end
+end
+
+#include current folder directory in includes
+options[:include].append(File.dirname(ARGV[0]))
+#check that include directories exist
+options[:include].each do |i|
+  raise "Include directory #{i}, was not found" unless File.directory?(i)
 end
 
 def contents(filename)

@@ -113,7 +113,8 @@ module TPPlus
         "colguard_off" => :COLL_GUARD,
 
         "def" => :FUNCTION,
-        "using" => :USING
+        "using" => :USING,
+        "import" => :IMPORT,
       }
 
 

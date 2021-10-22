@@ -19,7 +19,7 @@ token LPAREN RPAREN COLON COMMA LBRACK RBRACK LBRACE RBRACE
 token LABEL SYSTEM ADDRESS
 token LPOS JPOS
 token false
-token FUNCTION OPERATION USING
+token FUNCTION OPERATION USING IMPORT COMPILE
 
 prechigh
   right BANG
@@ -97,6 +97,7 @@ rule
     | function
     | tp_application_definition
     | using_statement
+    | import_statement
     ;
 
   lpos_or_jpos
@@ -319,6 +320,10 @@ rule
 
   using_statement
     : USING word_list           { result = UsingNode.new(val[1])}
+    ;
+
+  import_statement
+    : IMPORT word_list           { result = ImportNode.new(val[1])}
     ;
 
   namespace

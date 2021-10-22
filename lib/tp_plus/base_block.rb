@@ -32,6 +32,21 @@ module TPPlus
         raise "Runtime error in environment on line #{@source_line_count}:\n#{e}"
       end
 
+      def load_import(filepath, compileTF)
+        #get contents of file
+        file = contents(filepath)
+        
+        
+        scanner = TPPlus::Scanner.new
+        parser = TPPlus::Parser.new(scanner, self)
+        scanner.scan_setup(file)
+        parser.parse
+        eval
+        
+      rescue RuntimeError => e
+        raise "Could not load import #{filepath}:\n#{e}"
+      end
+
       def get_parent_imports(nodes)
         parent_nodes = {}
         nodes.each do |n|
