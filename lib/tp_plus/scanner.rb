@@ -211,7 +211,12 @@ module TPPlus
         when "+"
           tok = :PLUS
         when "-"
-          tok = :MINUS
+          if @ch == ">"
+            tok = :ARROW
+            self.next
+          else
+            tok = :MINUS
+          end
         when "*"
           tok = :STAR
         when "/"

@@ -20,6 +20,7 @@ token LABEL SYSTEM ADDRESS
 token LPOS JPOS
 token false
 token FUNCTION OPERATION USING IMPORT COMPILE
+token ARROW POSEATTR CONFIGATTR JPOSATTR COORDATTR ORIENTATTR CONFIGATTR
 
 prechigh
   right BANG
@@ -99,6 +100,7 @@ rule
     | using_statement
     | import_statement
     | compile_statement
+    | pose_set
     ;
 
   lpos_or_jpos
@@ -558,6 +560,24 @@ rule
 
   var_system_modifer
     : DOT var_system                        { result = val[1] }
+    ;
+
+  pose_set
+    : WORD pose_method_modifier ARROW array   { result = PoseNode.new(val[0],val[1],val[3]) }
+    ;
+
+  pose_method_modifiers
+    : pose_method_modifier              { result = val[0] }
+    | pose_method_modifiers pose_method_modifier
+                                       { result = val[0].merge(val[1]) }
+    ;
+
+  pose_method_modifier
+    : DOT POSEATTR    { result = val[1] }
+    | DOT JPOSATTR    { result = val[1] }
+    | DOT COORDATTR    { result = val[1] }
+    | DOT ORIENTATTR    { result = val[1] }
+    | DOT CONFIGATTR    { result = val[1] }
     ;
 
   namespaces

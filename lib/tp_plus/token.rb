@@ -115,7 +115,13 @@ module TPPlus
         "def" => :FUNCTION,
         "using" => :USING,
         "import" => :IMPORT,
-        "compile" => :COMPILE
+        "compile" => :COMPILE,
+
+        "pose" => :POSEATTR,
+        "jpos" => :JPOSATTR,
+        "xyz" => :COORDATTR,
+        "orient" => :ORIENTATTR,
+        "config" => :CONFIGATTR
       }
 
 
