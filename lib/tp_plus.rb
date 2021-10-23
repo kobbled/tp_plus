@@ -8,6 +8,10 @@ require_relative 'tp_plus/nodes/base_node'
 require_relative 'tp_plus/nodes/recursive_node'
 require_relative 'tp_plus/nodes/reg_node'
 require_relative 'tp_plus/nodes/const_node'
+
+#positions
+require_relative 'tp_plus/motion/pose_set'
+
 # derived nodes
 require_relative 'tp_plus/nodes/import_node'
 require_relative 'tp_plus/nodes/abort_node'
@@ -83,6 +87,7 @@ require_relative 'tp_plus/nodes/wait_until_node'
 require_relative 'tp_plus/nodes/while_node'
 require_relative 'tp_plus/nodes/system_definition_node'
 require_relative 'tp_plus/nodes/frame_node'
+require_relative 'tp_plus/nodes/pose_node'
 
 require_relative 'tp_plus/base_block'
 require_relative 'tp_plus/interpreter'
