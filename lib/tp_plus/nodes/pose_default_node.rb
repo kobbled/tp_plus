@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class PoseNode < BaseNode
+    class PoseDefaultNode < BaseNode
       def initialize(var, position)
         @var = var
         @position = position
@@ -22,7 +22,7 @@ module TPPlus
           options[:group] = 1
         end
 
-        context.pose_list.set_pose(@var.identifier.to_sym, type, options)
+        context.pose_list.set_default(type, options)
         
         nil
       end
