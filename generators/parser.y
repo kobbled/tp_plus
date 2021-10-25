@@ -526,7 +526,7 @@ rule
                                            ExpressionNode.new(val[0],"/",val[3])
                                          )
                                        }
-    | DEFAULTPOS var_method_modifiers ARROW array   { result = PoseNode.new(val[1],val[3]) }
+    | DEFAULTPOS var_method_modifiers ARROW array   { result = PoseDefaultNode.new(val[1],val[3]) }
     | var_or_indirect ARROW array   { result = PoseNode.new(val[0],val[2]) }
     ;
 
