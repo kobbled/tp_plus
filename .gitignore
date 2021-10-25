@@ -18,3 +18,4 @@ SyncToy*.dat
 *.code-workspace
 .vscode/*
 doc/
+debug/
