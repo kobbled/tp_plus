@@ -38,6 +38,11 @@ class TestInterpreter < Test::Unit::TestCase
     assert_prog ""
   end
 
+  def test_definition_range
+    parse("foo := R[1..5]")
+    assert_prog ""
+  end
+
   def test_multi_define_fails
     parse("foo := R[1]\nfoo := R[2]")
     assert_raise(RuntimeError) do
@@ -48,6 +53,11 @@ class TestInterpreter < Test::Unit::TestCase
   def test_var_usage
     parse("foo := R[1]\nfoo = 1")
     assert_prog "R[1:foo]=1 ;\n"
+  end
+
+  def test_var_range_usage
+    parse("foo := R[1..5]\nfoo1 = 1\nfoo2 = 2\nfoo5 = 5")
+    assert_prog "R[1:foo1]=1 ;\nR[2:foo2]=2 ;\nR[5:foo5]=5 ;\n"
   end
 
   def test_basic_addition
