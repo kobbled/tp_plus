@@ -20,7 +20,7 @@ token LABEL SYSTEM ADDRESS
 token LPOS JPOS
 token false
 token FUNCTION OPERATION USING IMPORT COMPILE
-token ARROW POSEATTR CONFIGATTR JPOSATTR COORDATTR ORIENTATTR CONFIGATTR
+token ARROW DEFAULTPOS POSEATTR
 
 prechigh
   right BANG
@@ -100,7 +100,6 @@ rule
     | using_statement
     | import_statement
     | compile_statement
-    | pose_set
     ;
 
   lpos_or_jpos
@@ -517,6 +516,18 @@ rule
                                            ExpressionNode.new(val[0],"-",val[3])
                                          )
                                        }
+    | var_or_indirect STAR EQUAL expression       { result = AssignmentNode.new(
+                                           val[0],
+                                           ExpressionNode.new(val[0],"*",val[3])
+                                         )
+                                       }
+    | var_or_indirect SLASH EQUAL expression       { result = AssignmentNode.new(
+                                           val[0],
+                                           ExpressionNode.new(val[0],"/",val[3])
+                                         )
+                                       }
+    | DEFAULTPOS var_method_modifiers ARROW array   { result = PoseNode.new(val[1],val[3]) }
+    | var_or_indirect ARROW array   { result = PoseNode.new(val[0],val[2]) }
     ;
 
   var
@@ -540,10 +551,16 @@ rule
                                        { result = val[0].merge(val[1]) }
     ;
 
+  pose_method_modifier
+    : POSEATTR    { result = val[0] }
+    ;
+  
   var_method_modifier
     : DOT swallow_newlines WORD        { result = { method: val[2] } }
     | DOT swallow_newlines group_statement
                                        { result = { group: val[2] } }
+    | DOT swallow_newlines pose_method_modifier
+                                       { result = { pose: val[2] } }
     ;
   
   var_system
@@ -560,24 +577,6 @@ rule
 
   var_system_modifer
     : DOT var_system                        { result = val[1] }
-    ;
-
-  pose_set
-    : WORD pose_method_modifier ARROW array   { result = PoseNode.new(val[0],val[1],val[3]) }
-    ;
-
-  pose_method_modifiers
-    : pose_method_modifier              { result = val[0] }
-    | pose_method_modifiers pose_method_modifier
-                                       { result = val[0].merge(val[1]) }
-    ;
-
-  pose_method_modifier
-    : DOT POSEATTR    { result = val[1] }
-    | DOT JPOSATTR    { result = val[1] }
-    | DOT COORDATTR    { result = val[1] }
-    | DOT ORIENTATTR    { result = val[1] }
-    | DOT CONFIGATTR    { result = val[1] }
     ;
 
   namespaces

@@ -118,10 +118,11 @@ module TPPlus
         "compile" => :COMPILE,
 
         "pose" => :POSEATTR,
-        "jpos" => :JPOSATTR,
-        "xyz" => :COORDATTR,
-        "orient" => :ORIENTATTR,
-        "config" => :CONFIGATTR
+        "joints" => :POSEATTR,
+        "xyz" => :POSEATTR,
+        "orient" => :POSEATTR,
+        "config" => :POSEATTR,
+        "default" => :DEFAULTPOS
       }
 
 
