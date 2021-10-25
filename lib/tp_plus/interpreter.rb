@@ -16,6 +16,7 @@ module TPPlus
       @case_identifiers = 0
       @warning_identifiers = 0
 
+      @pose_list = Motion::Factory::Pose.new
     end
 
     def next_label
@@ -135,6 +136,7 @@ module TPPlus
     def populate_pose_set
       @nodes.select {|n| n.is_a?(Nodes::DefinitionNode) }.each do |n|
         if n.assignable.is_a?(Nodes::PositionNode)
+          @pose_list.add(n.identifier.to_sym)
         end
       end
     end

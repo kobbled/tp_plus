@@ -10,6 +10,8 @@ require_relative 'tp_plus/nodes/reg_node'
 require_relative 'tp_plus/nodes/const_node'
 
 #positions
+require_relative 'tp_plus/motion/pose_templates'
+require_relative 'tp_plus/motion/pose_factory'
 
 # derived nodes
 require_relative 'tp_plus/nodes/import_node'
@@ -87,6 +89,7 @@ require_relative 'tp_plus/nodes/while_node'
 require_relative 'tp_plus/nodes/system_definition_node'
 require_relative 'tp_plus/nodes/frame_node'
 require_relative 'tp_plus/nodes/pose_node'
+require_relative 'tp_plus/nodes/pose_default_node'
 
 require_relative 'tp_plus/base_block'
 require_relative 'tp_plus/interpreter'
