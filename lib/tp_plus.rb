@@ -90,6 +90,7 @@ require_relative 'tp_plus/nodes/system_definition_node'
 require_relative 'tp_plus/nodes/frame_node'
 require_relative 'tp_plus/nodes/pose_node'
 require_relative 'tp_plus/nodes/pose_default_node'
+require_relative 'tp_plus/nodes/batch_reg_node'
 
 require_relative 'tp_plus/base_block'
 require_relative 'tp_plus/interpreter'

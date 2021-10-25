@@ -186,6 +186,8 @@ module TPPlus
     def eval
       s = ""
       last_node = nil
+
+      @nodes = @nodes.flatten
       
       #set a list of declared positions into @pose_list
       populate_pose_set

@@ -5,7 +5,7 @@ token MOVE DOT TO DOWNTO MID AT ACC TERM OFFSET SKIP GROUP COORD
 token MROT PTH WJNT INC BREAK RTCP FPLIN
 token AP_LD RT_LD CD CR INDEV EV PSPD CTV
 token SEMICOLON NEWLINE STRING
-token REAL DIGIT WORD EQUAL
+token REAL DIGIT WORD EQUAL RANGE
 token EEQUAL NOTEQUAL GTE LTE LT GT BANG
 token PLUS MINUS STAR SLASH DIV AND OR MOD
 token IF THEN ELSE ELSIF END UNLESS FOR IN WHILE
@@ -501,7 +501,7 @@ rule
     ;
 
   definition
-    : WORD ASSIGN definable            { result = DefinitionNode.new(val[0],val[2]) }
+    : WORD ASSIGN definable            { result = batch_define(val[0],val[2]) }
     ;
 
   assignment
@@ -674,57 +674,32 @@ rule
     ;
 
   definable
-    : numreg
-    | output
-    | input
-    | posreg
-    | position
-    | vreg
+    : reg
     | number
     | signed_number
     | string
-    | argument
-    | timer
-    | ualm
-    | sreg
     | framereg
     ;
 
-
-  sreg
-    : SREG LBRACK DIGIT RBRACK               { result = StringRegisterNode.new(val[2].to_i) }
+  definable_range
+    : DIGIT RANGE DIGIT      {result = *(val[0].to_i..val[2].to_i)}
+    | DIGIT       { result = val[0].to_i }
     ;
 
-  ualm
-    : UALM LBRACK DIGIT RBRACK               { result = UserAlarmNode.new(val[2].to_i) }
-    ;
+  reg_types
+    : SREG  {result = val[0]}
+    | UALM  {result = val[0]}
+    | TIMER {result = val[0]}
+    | ARG   {result = val[0]}
+    | VREG  {result = val[0]}
+    | POSITION {result = val[0]}
+    | NUMREG {result = val[0]}
+    | POSREG {result = val[0]}
+    | INPUT {result = val[0]}
+    | OUTPUT {result = val[0]}
 
-  timer
-    : TIMER LBRACK DIGIT RBRACK              { result = TimerNode.new(val[2].to_i) }
-    ;
-
-  argument
-    : ARG LBRACK DIGIT RBRACK                { result = ArgumentNode.new(val[2].to_i) }
-    ;
-
-  vreg
-    : VREG LBRACK DIGIT RBRACK               { result = VisionRegisterNode.new(val[2].to_i) }
-    ;
-
-  position
-    : POSITION LBRACK DIGIT RBRACK           { result = PositionNode.new(val[2].to_i) }
-    ;
-
-  numreg
-    : NUMREG LBRACK DIGIT RBRACK             { result = NumregNode.new(val[2].to_i) }
-    ;
-
-  posreg
-    : POSREG LBRACK DIGIT RBRACK             { result = PosregNode.new(val[2].to_i) }
-    ;
-
-  output
-    : OUTPUT LBRACK DIGIT RBRACK             { result = IONode.new(val[0], val[2].to_i) }
+  reg
+    : reg_types LBRACK definable_range RBRACK               { result = batch_create_nodes(val[0], val[2]) }
     ;
 
   frametype
@@ -746,7 +721,7 @@ rule
     ;
 
   input
-    : INPUT LBRACK DIGIT RBRACK              { result = IONode.new(val[0], val[2].to_i) }
+    : INPUT LBRACK definable_range RBRACK              { result = IONode.new(val[0], val[2]) }
     ;
 
   address
