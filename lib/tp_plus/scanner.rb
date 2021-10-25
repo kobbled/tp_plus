@@ -36,6 +36,22 @@ module TPPlus
       end
     end
 
+    def prev
+      if @offset > 0
+        @offset -= 1
+        @ch = @src[@offset]
+        if @ch == "\n"
+          @lineno -= 1
+          @col = 0
+        end
+        @rdOffset -= 1
+        @col -= 1
+      else
+        @offset = 0
+        @ch = 0
+      end
+    end
+
     def isDigit?(ch)
       return false if ch == -1
 
@@ -96,11 +112,15 @@ module TPPlus
       end
       if @ch == '.'
         self.next
-        while self.isDigit?(@ch)
-          self.next
+        if self.isDigit?(@ch)
+          while self.isDigit?(@ch)
+            self.next
+          end
+          return [:REAL, @src[offs,(@offset-offs)].to_f]
+        else
+          self.prev
+          return [:DIGIT, @src[offs,(@offset-offs)].to_i]
         end
-
-        return [:REAL, @src[offs,(@offset-offs)].to_f]
       else
         return [:DIGIT, @src[offs,(@offset-offs)].to_i]
       end
@@ -247,7 +267,10 @@ module TPPlus
         when ";"
           tok = :SEMICOLON
         when "."
-          if self.isDigit?(@ch)
+          if @ch == "."
+            tok = :RANGE
+            self.next
+          elsif self.isDigit?(@ch)
             tok, lit = self.scanReal
           else
             tok = :DOT
