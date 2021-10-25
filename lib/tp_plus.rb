@@ -10,7 +10,6 @@ require_relative 'tp_plus/nodes/reg_node'
 require_relative 'tp_plus/nodes/const_node'
 
 #positions
-require_relative 'tp_plus/motion/pose_set'
 
 # derived nodes
 require_relative 'tp_plus/nodes/import_node'

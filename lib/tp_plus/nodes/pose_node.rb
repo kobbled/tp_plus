@@ -8,8 +8,6 @@ module TPPlus
       end
 
       def eval(context)
-        context.pose_set.update(@id, @modifier, @position)
-        ""
       end
     end
   end

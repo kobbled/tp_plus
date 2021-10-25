@@ -2,7 +2,7 @@ require_relative 'parser'
 
 module TPPlus
   class Interpreter < BaseBlock
-    attr_accessor :line_count, :header_data, :header_appl_data, :pose_set
+    attr_accessor :line_count, :header_data, :header_appl_data, :pose_list
     attr_reader :labels, :source_line_count
     def initialize
       super
@@ -16,7 +16,6 @@ module TPPlus
       @case_identifiers = 0
       @warning_identifiers = 0
 
-      @pose_set = Motion::PoseSet.new()
     end
 
     def next_label
@@ -136,7 +135,6 @@ module TPPlus
     def populate_pose_set
       @nodes.select {|n| n.is_a?(Nodes::DefinitionNode) }.each do |n|
         if n.assignable.is_a?(Nodes::PositionNode)
-          @pose_set.push(n.identifier)
         end
       end
     end
@@ -187,7 +185,7 @@ module TPPlus
       s = ""
       last_node = nil
       
-      #set a list of declared positions into @pose_set
+      #set a list of declared positions into @pose_list
       populate_pose_set
 
       define_labels
