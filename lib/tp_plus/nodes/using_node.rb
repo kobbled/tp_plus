@@ -14,7 +14,7 @@ module TPPlus
           end
         end
 
-        ""
+        nil
       end
       
     end

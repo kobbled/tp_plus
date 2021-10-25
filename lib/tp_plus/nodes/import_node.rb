@@ -27,7 +27,7 @@ module TPPlus
           context.load_import(find_file(f), compile?)
         end
 
-        ""
+        nil
       end
     end
   end
