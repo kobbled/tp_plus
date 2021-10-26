@@ -45,6 +45,13 @@ module TPPlus
       end
 
       def eval(context,options={})
+        if @identifier.is_a?(VarNode) && @assignable.is_a?(VarNode)
+          if @assignable.target_node(context).is_a?(PositionNode) && @identifier.target_node(context).is_a?(PositionNode)
+            context.pose_list.copy_pose(@identifier.target_node(context).comment, @assignable.target_node(context).comment)
+            return nil
+          end
+        end
+
         "#{identifier_string(context)}=#{assignable_string(context,options)}"
       end
     end

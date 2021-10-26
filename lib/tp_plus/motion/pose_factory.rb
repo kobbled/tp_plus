@@ -299,6 +299,15 @@ module TPPlus
             end
           end
 
+          def copy_pose(lval, rval)
+            raise "pose factory #{self} does not have a pose named #{key}" unless @poses.key?(lval.to_sym)
+            raise "pose factory #{self} does not have a pose named #{key}" unless @poses.key?(rval.to_sym)
+            
+            @poses[rval.to_sym].groups.each do |k, v|
+              @poses[lval.to_sym].groups[k] = v.clone
+            end
+          end
+
           def eval
             template = ERB.new(File.read(TEMPLATE_FILE), nil, '-')
             
