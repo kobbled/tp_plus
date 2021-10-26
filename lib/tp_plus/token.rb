@@ -122,7 +122,8 @@ module TPPlus
         "xyz" => :POSEATTR,
         "orient" => :POSEATTR,
         "config" => :POSEATTR,
-        "default" => :DEFAULTPOS
+        "default" => :DEFAULTPOS,
+        "reverse" => :POSEREVERSE
       }
 
 

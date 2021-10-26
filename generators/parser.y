@@ -20,7 +20,7 @@ token LABEL SYSTEM ADDRESS
 token LPOS JPOS
 token false
 token FUNCTION OPERATION USING IMPORT COMPILE
-token ARROW DEFAULTPOS POSEATTR
+token ARROW DEFAULTPOS POSEATTR POSEREVERSE
 
 prechigh
   right BANG
@@ -68,6 +68,7 @@ rule
     | namespace
     #| assignment
     | motion_statement
+    | position_assignment
     #| jump
     #| io_method
     | label_definition
@@ -526,8 +527,17 @@ rule
                                            ExpressionNode.new(val[0],"/",val[3])
                                          )
                                        }
-    | DEFAULTPOS var_method_modifiers ARROW array   { result = PoseDefaultNode.new(val[1],val[3]) }
+    ;
+
+  position_assignment
+    : DEFAULTPOS var_method_modifiers ARROW array   { result = PoseDefaultNode.new(val[1],val[3]) }
     | var_or_indirect ARROW array   { result = PoseNode.new(val[0],val[2]) }
+    | assignable_range EQUAL assignable_range {result = PoseAssignNode.new(val[0], val[2])}
+    | assignable_range EQUAL LPAREN assignable_range RPAREN pose_range_modifiers {result = PoseAssignNode.new(val[0], val[3], val[5])}
+    ;
+
+  assignable_range
+    : var RANGE var  {result = {start: val[0], end: val[2]}}
     ;
 
   var
@@ -553,6 +563,16 @@ rule
 
   pose_method_modifier
     : POSEATTR    { result = val[0] }
+    ;
+
+  pose_range_modifiers
+    : pose_range_modifier                      { result = val[0] }
+    | pose_range_modifiers pose_range_modifier
+                                              { result = val[0].merge(val[1]) }
+    ;
+  
+  pose_range_modifier
+    : DOT swallow_newlines POSEREVERSE   { result = {mod: val[2]} }
     ;
   
   var_method_modifier
