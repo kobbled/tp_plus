@@ -28,8 +28,8 @@
     - [basic options](#basic-options)
     - [Touch sensing with robot](#touch-sensing-with-robot)
   - [Positions](#positions)
+    - [Setting positions](#setting-positions)
     - [Assigning posregs](#assigning-posregs)
-    - [Inputing Position Data](#inputing-position-data)
   - [Function parameters](#function-parameters)
   - [Math](#math)
     - [Functions](#functions)
@@ -1371,6 +1371,135 @@ jump_to @end
 
 ##  Positions
 
+### Setting positions
+
+**..note::** This section is currently in development, and replacing the old method.
+
+Current modifiers are:
+
+* pose
+* joints
+* xyz
+* orient
+* config
+
+A default pose named `default` must be specified in full before
+setting position variables
+
+Frames can be changed with the `use_utool` and `use_uframe` keywords.
+
+
+TP+
+```ruby
+TP_GROUPMASK = "1,1,1,*,*"
+TP_COMMENT = "test prog"
+
+p := P[1..6]
+
+tool := UTOOL[5]
+frame := UFRAME[3]
+
+use_utool tool
+use_uframe frame
+
+default.group(1).pose -> [0,0,0,90,0,-90]
+default.group(1).config -> ['F', 'U', 'T', 0, 0, 0]
+default.group(2).joints -> [90,0]
+default.group(3).joints -> [[500,'mm']]
+
+#apprach
+p1.group(1).pose -> [0,50,0,0,0,0]
+#start
+p2.group(1).xyz -> [0,50,100]
+#move circle
+p3.group(1).xyz -> [50,0,100]
+p3.group(2).joints -> [90,90]
+
+use_utool 1
+use_uframe 1
+
+p4.group(1).xyz -> [0,-50,100]
+p4.group(2).joints -> [90,180]
+
+p5.group(1).xyz -> [-50,0,100]
+p5.group(1).orient -> [0,0,0]
+p5.group(2).joints -> [90,-90]
+
+p6.group(1).joints -> [0. 20, 90, 0 ,0 ,0]
+```
+
+LS
+```fanuc
+/POS
+P[1:"p1"]{
+   GP1:
+  UF : 3, UT : 5,  CONFIG : 'F U T, 0, 0, 0',
+  X = 0.000 mm, Y = 50.000 mm, Z = 0.000 mm,
+  W = 90.000 deg, P = 0.000 deg, R = -90.000 deg
+   GP2:
+  UF : 3, UT : 5,
+  J1 = 90.000 deg,
+  J2 = 0.000 deg
+     GP3:
+  UF : 3, UT : 5,
+  J1 = 500.000 mm
+  };
+P[2:"p2"]{
+   GP1:
+  UF : 3, UT : 5,  CONFIG : 'F U T, 0, 0, 0',
+  X = 0.000 mm, Y = 50.000 mm, Z = 100.000 mm,
+  W = 90.000 deg, P = 0.000 deg, R = -90.000 deg
+   GP2:
+  UF : 3, UT : 5,
+  J1 = 90.000 deg,
+  J2 = 0.000 deg
+     GP3:
+  UF : 3, UT : 5,
+  J1 = 500.000 mm
+  };
+P[3:"p3"]{
+   GP1:
+  UF : 3, UT : 5,  CONFIG : 'F U T, 0, 0, 0',
+  X = 50.000 mm, Y = 0.000 mm, Z = 100.000 mm,
+  W = 90.000 deg, P = 0.000 deg, R = -90.000 deg
+   GP2:
+  UF : 3, UT : 5,
+  J1 = 90.000 deg,
+  J2 = 90.000 deg
+     GP3:
+  UF : 3, UT : 5,
+  J1 = 500.000 mm
+  };
+P[4:"p4"]{
+   GP1:
+  UF : 1, UT : 1,  CONFIG : 'F U T, 0, 0, 0',
+  X = 0.000 mm, Y = -50.000 mm, Z = 100.000 mm,
+  W = 90.000 deg, P = 0.000 deg, R = -90.000 deg
+   GP2:
+  UF : 1, UT : 1,
+  J1 = 90.000 deg,
+  J2 = 180.000 deg
+     GP3:
+  UF : 1, UT : 1,
+  J1 = 500.000 mm
+  };
+P[5:"p5"]{
+   GP1:
+  UF : 1, UT : 1,  CONFIG : 'F U T, 0, 0, 0',
+  X = -50.000 mm, Y = 0.000 mm, Z = 100.000 mm,
+  W = 90.000 deg, P = 0.000 deg, R = -90.000 deg
+   GP2:
+  UF : 1, UT : 1,
+  J1 = 90.000 deg,
+  J2 = -90.000 deg
+     GP3:
+  UF : 1, UT : 1,
+  J1 = 500.000 mm
+  };
+/END
+```
+
+
 ### Assigning posregs
 
 TP+
@@ -1442,65 +1571,6 @@ DEFAULT_GROUP = 1,*,*,*,*;
  : ! Ka-Boost method ;
  : CALL POS_SETJNT6(0,20,1,2) ;
  : ! Ka-Boost method ;
-/END
-```
-### Inputing Position Data
-
-**NOTE** : `uframe`, and `utool` must be added in for each group
-
-TP+
-```ruby
-position_data
-{
-  'positions' : [
-    {
-      'id' : 1,
-      'mask' :  [{
-        'group' : 1,
-        'uframe' : 5,
-        'utool' : 2,
-        'config' : {
-            'flip' : false,
-            'up'   : true,
-            'top'  : true,
-            'turn_counts' : [0,0,0]
-            },
-        'components' : {
-            'x' : -.590,
-            'y' : -29.400,
-            'z' : 1304.471,
-            'w' : 78.512,
-            'p' : 89.786,
-            'r' : -11.595
-            }
-        },
-        {
-        'group' : 2,
-        'uframe' : 5,
-        'utool' : 2,
-        'components' : {
-            'J1' : 0.00
-            }
-        }]
-    }
-  ]
-}
-end
-```
-
-LS
-```fanuc
-/PROG example_1
-/POS
-P[1:""]{
-   GP1:
-  UF : 5, UT : 2,  CONFIG : 'N U T, 0, 0, 0',
-  X = -0.59 mm, Y = -29.4 mm, Z = 1304.471 mm,
-  W = 78.512 deg, P = 89.786 deg, R = -11.595 deg
-   GP2:
-  UF : 5, UT : 2, 
-  J1 = 0.0 deg
-};
 /END
 ```
 
