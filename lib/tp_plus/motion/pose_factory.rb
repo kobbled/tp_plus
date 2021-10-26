@@ -77,6 +77,11 @@ module TPPlus
             if rep
               set_pose(rep)
             end
+            if config.empty?
+              set_config(Motion::HashTemplate::CONFIG.clone)
+            else
+              set_config(config)
+            end
           end
 
           def set_pose(pose)
@@ -255,7 +260,12 @@ module TPPlus
           end
 
           def set_pose(id, type, options={})
-            raise 'Must set default pose before setting individual positions.' unless (@default_pose.groups.length > 0)
+            unless (@default_pose.groups.length > 0)
+              opt = {}
+              opt[:components] = [0,0,0,0,0,0]
+              set_default(Motion::Types::POSE, opt)
+              warn 'default position not set! May give unintended results! Check position data before running!'
+            end
 
             pose = @poses[id]
 
@@ -320,10 +330,18 @@ module TPPlus
             if options.is_a?(Hash)
               if options.key?(:components)
                 #add in components or a config
-                pose.add_group_pose(@current_frame, @current_tool, type, options[:components], options[:group])
+                if options[:group]
+                  pose.add_group_pose(@current_frame, @current_tool, type, options[:components], options[:group])
+                else
+                  pose.add_group_pose(@current_frame, @current_tool, type, options[:components])
+                end
               else
-                pose.add_group_pose(@current_frame, @current_tool, type, [], options[:group])
-              end
+                if options[:group]
+                  pose.add_group_pose(@current_frame, @current_tool, type, [], options[:group])
+                else
+                  pose.add_group_pose(@current_frame, @current_tool, type, [])
+                end
+                end
             else
               pose.add_group(@current_frame, @current_tool, type)
             end

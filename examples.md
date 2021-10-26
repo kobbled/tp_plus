@@ -876,33 +876,14 @@ TP+
 namespace Pose
 
   def goHome()
-    TP_GROUPMASK = "1,*,*,*,*"
     pHome := P[1]
-    joint_move.to(pHome).at(10, '%').term(-1)
 
-    position_data
-    {
-      'positions' : [
-        {
-          'id' : 1,
-          'comment' : 'Home Position',
-          'mask' :  [{
-            'group' : 1,
-            'uframe' : 0,
-            'utool' : 1,
-            'components' : {
-                'J1' : 127.834,
-                'J2' : 24.311,
-                'J3' : -29.462,
-                'J4' : -110.295,
-                'J5' : 121.424,
-                'J6' : 54.899
-                }
-            }]
-        }
-      ]
-    }
-    end
+    use_uframe 0
+    use_utool 1
+
+    pHome.joints -> [127.834, 24.311, -29.462, -110.295, 121.424, 54.899]
+
+    joint_move.to(pHome).at(10, '%').term(-1)
   end
 end
 ```
