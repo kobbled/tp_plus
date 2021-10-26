@@ -29,6 +29,7 @@
     - [Touch sensing with robot](#touch-sensing-with-robot)
   - [Positions](#positions)
     - [Setting positions](#setting-positions)
+      - [Position Assignment](#position-assignment)
     - [Assigning posregs](#assigning-posregs)
   - [Function parameters](#function-parameters)
   - [Math](#math)
@@ -1498,6 +1499,30 @@ P[5:"p5"]{
   };
 /END
 ```
+
+#### Position Assignment
+
+Ranges can be assigned using
+
+TP+
+```ruby
+p := P[1..6]
+
+p1..p3 = p4..p6
+
+```
+
+Modifier for range assignment currently are:
+
+TP+
+```ruby
+p := P[1..6]
+
+p1..p3 = (p4..p6).reverse
+
+```
+
+Including brackets around the range before the modifier is manditory.
 
 
 ### Assigning posregs
