@@ -36,7 +36,7 @@ module TPPlus
 
       module GroupCreator
         class Creator
-          attr_reader :group, :components, :config
+          attr_reader :group, :components, :config, :uframe, :utool
           def initialize(id, frame, tool, rep = [], config = [])
             @group = id
             @uframe = frame
@@ -47,6 +47,16 @@ module TPPlus
 
           def set_pose(pose)
             @components = pose
+            nil
+          end
+
+          def set_frame(f)
+            @uframe = f
+            nil
+          end
+
+          def set_tool(f)
+            @utool = f
             nil
           end
 
@@ -126,7 +136,7 @@ module TPPlus
             @components = []
             pose.each do |x|
               if x.is_a?(Array)
-                if x.length < 2
+                if x.length > 1
                   raise "unspecified unit for measure #{x[1]}" unless (x[1] == 'deg') || (x[1] == 'mm') 
                   @components.append([x[0], x[1]])
                 else
@@ -222,7 +232,11 @@ module TPPlus
 
       module Factory
         class Pose
-          attr_reader :poses
+          include ERB::Util
+          attr_accessor :poses
+
+          TEMPLATE_FILE = File.join(File.dirname(__FILE__),"templates/ls.erb")
+
           def initialize(frame = 0, tool = 0, start = 1)
             @current_id = start
             @current_frame = frame
@@ -269,10 +283,26 @@ module TPPlus
 
           def set_tool(tool)
             @current_tool = tool
+            if !@default_pose.groups.empty?
+              @default_pose.groups.each do |k,v|
+                v.set_tool(tool)
+              end
+            end
           end
 
           def set_frame(frame)
             @current_frame = frame
+            if !@default_pose.groups.empty?
+              @default_pose.groups.each do |k,v|
+                v.set_frame(frame)
+              end
+            end
+          end
+
+          def eval
+            template = ERB.new(File.read(TEMPLATE_FILE), nil, '-')
+            
+            template.result(binding)
           end
 
           private

@@ -39,10 +39,10 @@ factory.set_pose(:p4, TPPlus::Motion::Types::JOINTS, group: 2, components: [90,1
 config = TPPlus::Motion::HashTemplate::CONFIG.clone
 factory.set_default(TPPlus::Motion::Types::POSE, group: 1, components: [0,100,100,0,0,0])
 factory.set_default(TPPlus::Motion::Types::CONFIG, group: 1, components: config)
-factory.set_default(TPPlus::Motion::Types::JOINTS, group: 2, components: [0,0])
+factory.set_default(TPPlus::Motion::Types::JOINTS, group: 2, components: [[0,'mm']])
+factory.set_default(TPPlus::Motion::Types::JOINTS, group: 3, components: [0,0])
 
 factory.set_pose(:p5, TPPlus::Motion::Types::ORIENT, group: 1, components: [180,180,0])
-
 factory.set_pose(:p6, TPPlus::Motion::Types::JOINTS, group: 1, components: [90,120,0,-90,90,0])
 
 puts factory

@@ -116,6 +116,9 @@ end
 if interpreter.pos_section != ""
   output += "/POS\n"
   output += interpreter.pos_section
+elsif (interpreter.pose_list)
+  output += "/POS\n"
+  output += interpreter.pose_list.eval
 end
 
 output += %(/END\n)
