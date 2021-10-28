@@ -17,7 +17,7 @@ module TPPlus
                 #merge the absent components with default components
                 comp_list_merge = comp_list1.clone
                 if comp_list1.length < comp_list2.length
-                    comp_list_merge = (comp_list1 << comp_list2[comp_list1.length..]).flatten
+                    comp_list_merge = (comp_list1 << comp_list2[comp_list1.length..-1]).flatten
                 end
 
                 comp_list_merge
@@ -28,7 +28,7 @@ module TPPlus
                 #merge the absent components with default components
                 comp_list_merge = comp_list1.clone
                 if comp_list1.length < comp_list2.length
-                    comp_list_merge = (comp_list2[..comp_list1.length-1] << comp_list1).flatten
+                    comp_list_merge = (comp_list2[0..comp_list1.length-1] << comp_list1).flatten
                 end
 
                 comp_list_merge
