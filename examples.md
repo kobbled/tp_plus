@@ -1365,8 +1365,13 @@ Current modifiers are:
 * orient
 * config
 
-A default pose named `default` must be specified in full before
-setting position variables
+A default pose named `default` should be specified in full before
+setting position variables, or else the default pose of 
+```
+default.group(1).pose -> [0,0,0,0,0,0]
+default.group(1).config -> ['N', 'B', 'D', 0, 0, 0]
+```
+will be used
 
 Frames can be changed with the `use_utool` and `use_uframe` keywords.
 

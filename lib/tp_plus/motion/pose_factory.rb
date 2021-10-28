@@ -319,6 +319,12 @@ module TPPlus
           end
 
           def eval
+            @poses.each do |k, v|
+              if v.groups.empty?
+                @poses.delete(k)
+              end
+            end
+
             template = ERB.new(File.read(TEMPLATE_FILE), nil, '-')
             
             template.result(binding)
