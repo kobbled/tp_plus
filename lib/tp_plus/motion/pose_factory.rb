@@ -277,11 +277,11 @@ module TPPlus
             #merge components and default components together. Transform default components to a list
             case type
             when Motion::Types::POSE, Motion::Types::COORD
-              options[:components] = Utilities.merge_components(options[:components], @default_pose.groups[options[:group]].components.values)
+              options[:components] = Utilities.merge_components(options[:components], pose.groups[options[:group]].components.values)
             when Motion::Types::JOINTS
-              options[:components] = Utilities.merge_components(options[:components], @default_pose.groups[options[:group]].components)
+              options[:components] = Utilities.merge_components(options[:components], pose.groups[options[:group]].components)
             when Motion::Types::ORIENT
-              options[:components] = Utilities.merge_components_back(options[:components], @default_pose.groups[options[:group]].components.values)
+              options[:components] = Utilities.merge_components_back(options[:components], pose.groups[options[:group]].components.values)
             end
 
             add_group(pose, type, options)
