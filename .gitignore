@@ -11,8 +11,6 @@ doc/*
 log/*
 pkg/*
 .idea/*
-*.output
-lib/tp_plus/parser.rb
 SyncToy*.dat
 *.swp
 *.code-workspace
