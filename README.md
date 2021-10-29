@@ -45,7 +45,7 @@ In a command prompt, or git shell run
 git fetch && git pull
 rake
 ```
-** WARNING ** : Make sure you run `rake` after git pull to update the racc parser, as this compilation is not tracked in the repo.
+**WARNING** : Make sure you run `rake` after git pull to update the racc parser, as this compilation is not tracked in the repo.
 
 Usage
 -----

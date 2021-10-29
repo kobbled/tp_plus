@@ -10,8 +10,8 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'ruby-prof', '~> 0.15'
   spec.add_development_dependency 'rdoc'
 
-  spec.authors                   = ["Jay Strybis"]
-  spec.email                     = ['jay.strybis@gmail.com']
+  spec.authors                   = ["Jay Strybis", "Matt Dewar"]
+  spec.email                     = ['mattpdewar@gmail.com']
 
   spec.name                      = 'tp_plus'
   spec.description               = %q{TP+}
