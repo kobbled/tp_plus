@@ -502,6 +502,7 @@ rule
     ;
 
   definition
+    : WORD ASSIGN definable            { result = RegDefinitionNode.new(val[0], val[2]) }
     ;
 
   assignment
