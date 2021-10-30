@@ -502,7 +502,6 @@ rule
     ;
 
   definition
-    : WORD ASSIGN definable            { result = batch_define(val[0],val[2]) }
     ;
 
   assignment
@@ -537,7 +536,7 @@ rule
     ;
 
   assignable_range
-    : var RANGE var  {result = {start: val[0], end: val[2]}}
+    : var RANGE var  {result = RangeNode.new(val[0], val[2])}
     ;
 
   var
@@ -702,8 +701,8 @@ rule
     ;
 
   definable_range
-    : DIGIT RANGE DIGIT      {result = *(val[0].to_i..val[2].to_i)}
-    | DIGIT       { result = val[0].to_i }
+    : DIGIT RANGE DIGIT      {result = RangeNode.new(val[0].to_i, val[2].to_i)}
+    | DIGIT       { result = RangeNode.new(val[0].to_i, val[0].to_i)}
     ;
 
   reg_types
@@ -719,7 +718,7 @@ rule
     | OUTPUT {result = val[0]}
 
   reg
-    : reg_types LBRACK definable_range RBRACK               { result = batch_create_nodes(val[0], val[2]) }
+    : reg_types LBRACK definable_range RBRACK               { val[2].setType(val[0]) ; result = val[2] }
     ;
 
   frametype
@@ -738,10 +737,6 @@ rule
     | OPERATION LBRACK var_or_indirect COMMA var_or_indirect RBRACK   { result = OperationNode.new(val[0], val[2], val[4]) }
     | OPERATION LBRACK signed_number RBRACK       {  result = OperationNode.new(val[0], val[2], nil) }
     | OPERATION LBRACK number RBRACK       {  result = OperationNode.new(val[0], val[2], nil) }
-    ;
-
-  input
-    : INPUT LBRACK definable_range RBRACK              { result = IONode.new(val[0], val[2]) }
     ;
 
   address
