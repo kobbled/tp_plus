@@ -22,7 +22,9 @@ module TPPlus
           options[:group] = 1
         end
 
-        context.pose_list.set_pose(@var.identifier.to_sym, type, options)
+        if context.pose_list.poses.length > 0
+          context.pose_list.set_pose(@var.identifier.to_sym, type, options)
+        end
         
         nil
       end

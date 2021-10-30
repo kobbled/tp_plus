@@ -101,9 +101,9 @@ DEFAULT_GROUP = #{interpreter.header_data[:group_mask] || "*,*,*,*,*"};
         output += " : " + line
       end
 
-      if interpreter.pos_section != ""
+      if (self.pose_list.poses.length > 0)
         output += "/POS\n"
-        output += interpreter.pos_section
+        output += self.pose_list.eval
       end
 
       if prog_options[:output]

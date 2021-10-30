@@ -267,6 +267,8 @@ module TPPlus
               warn 'default position not set! May give unintended results! Check position data before running!'
             end
 
+            raise "pose identifier does not exist" unless @poses.has_key?(id)
+
             pose = @poses[id]
 
             #copy default into pose if no groups have been set
