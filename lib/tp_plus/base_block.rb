@@ -1,6 +1,6 @@
 module TPPlus
     class BaseBlock
-      attr_accessor :line_count, :nodes, :ret_type, :position_data
+      attr_accessor :line_count, :nodes, :ret_type, :position_data, :pose_list
       attr_reader :variables, :constants, :namespaces, :functions
 
       def initialize
@@ -13,6 +13,8 @@ module TPPlus
         @ret_type      = {}
         @position_data = {}
         @line_count    = 0
+
+        @pose_list = Motion::Factory::Pose.new
       end
 
       def load_environment(string)
@@ -149,6 +151,11 @@ module TPPlus
         false
       end
 
+      def add_pose(node)
+        if node.assignable.is_a?(Nodes::PositionNode)
+          @pose_list.add(node.identifier.to_sym)
+        end
+      end
 
       def eval
         pass

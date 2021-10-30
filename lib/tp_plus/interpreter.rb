@@ -2,7 +2,7 @@ require_relative 'parser'
 
 module TPPlus
   class Interpreter < BaseBlock
-    attr_accessor :line_count, :header_data, :header_appl_data, :pose_list
+    attr_accessor :line_count, :header_data, :header_appl_data
     attr_reader :labels, :source_line_count
     def initialize
       super
@@ -15,8 +15,6 @@ module TPPlus
       @current_label = 99
       @case_identifiers = 0
       @warning_identifiers = 0
-
-      @pose_list = Motion::Factory::Pose.new
     end
 
     def next_label
