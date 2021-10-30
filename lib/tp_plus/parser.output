@@ -16,9 +16,7 @@ state 455 contains 1 shift/reduce conflicts
 
 rule 135 (case_allowed_statement) never reduced
 rule 136 (case_allowed_statement) never reduced
-rule 290 (input) never reduced
 useless nonterminal case_allowed_statement
-useless nonterminal input
 
 -------- Grammar --------
 
@@ -311,37 +309,36 @@ rule 286 operation: OPERATION LBRACK var_or_indirect RBRACK
 rule 287 operation: OPERATION LBRACK var_or_indirect COMMA var_or_indirect RBRACK
 rule 288 operation: OPERATION LBRACK signed_number RBRACK
 rule 289 operation: OPERATION LBRACK number RBRACK
-rule 290 input: INPUT LBRACK definable_range RBRACK
-rule 291 address: ADDRESS var
-rule 292 comment: COMMENT
-rule 293 message: MESSAGE LPAREN STRING RPAREN
-rule 294 warning: WARNING LPAREN STRING RPAREN
-rule 295 terminator: NEWLINE
-rule 296 terminator: comment optional_newline
-rule 297 terminator: false
-rule 298 terminator: 
-rule 299 swallow_newlines: NEWLINE
-rule 300 swallow_newlines: 
-rule 301 position_data: POSITION_DATA sn hash sn END
-rule 302 sn: swallow_newlines
-rule 303 hash: LBRACE sn hash_attributes sn RBRACE
-rule 304 hash: LBRACE sn RBRACE
-rule 305 hash_attributes: hash_attribute
-rule 306 hash_attributes: hash_attributes COMMA sn hash_attribute
-rule 307 hash_attribute: STRING COLON hash_value
-rule 308 hash_value: STRING
-rule 309 hash_value: WORD
-rule 310 hash_value: hash
-rule 311 hash_value: array
-rule 312 hash_value: optional_sign DIGIT
-rule 313 hash_value: optional_sign REAL
-rule 314 hash_value: TRUE_FALSE
-rule 315 optional_sign: sign
-rule 316 optional_sign: 
-rule 317 array: LBRACK sn array_values sn RBRACK
-rule 318 array_values: array_value
-rule 319 array_values: array_values COMMA sn array_value
-rule 320 array_value: hash_value
+rule 290 address: ADDRESS var
+rule 291 comment: COMMENT
+rule 292 message: MESSAGE LPAREN STRING RPAREN
+rule 293 warning: WARNING LPAREN STRING RPAREN
+rule 294 terminator: NEWLINE
+rule 295 terminator: comment optional_newline
+rule 296 terminator: false
+rule 297 terminator: 
+rule 298 swallow_newlines: NEWLINE
+rule 299 swallow_newlines: 
+rule 300 position_data: POSITION_DATA sn hash sn END
+rule 301 sn: swallow_newlines
+rule 302 hash: LBRACE sn hash_attributes sn RBRACE
+rule 303 hash: LBRACE sn RBRACE
+rule 304 hash_attributes: hash_attribute
+rule 305 hash_attributes: hash_attributes COMMA sn hash_attribute
+rule 306 hash_attribute: STRING COLON hash_value
+rule 307 hash_value: STRING
+rule 308 hash_value: WORD
+rule 309 hash_value: hash
+rule 310 hash_value: array
+rule 311 hash_value: optional_sign DIGIT
+rule 312 hash_value: optional_sign REAL
+rule 313 hash_value: TRUE_FALSE
+rule 314 optional_sign: sign
+rule 315 optional_sign: 
+rule 316 array: LBRACK sn array_values sn RBRACK
+rule 317 array_values: array_value
+rule 318 array_values: array_values COMMA sn array_value
+rule 319 array_value: hash_value
 
 ------- Symbols -------
 
@@ -361,19 +358,19 @@ rule 320 array_value: hash_value
     on left : 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42
   terminator (131)
     on right: 3 4
-    on left : 295 296 297 298
+    on left : 294 295 296 297
   block (132)
     on right: 101 102 103 107 111 112 113 114 124 125 126 130 133 144
     on left : 5
   optional_newline (133)
-    on right: 296
+    on right: 295
     on left : 6 7
   comment (134)
-    on right: 8 296
-    on left : 292
+    on right: 8 295
+    on left : 291
   message (135)
     on right: 9
-    on left : 293
+    on left : 292
   definition (136)
     on right: 10
     on left : 193
@@ -391,7 +388,7 @@ rule 320 array_value: hash_value
     on left : 192
   address (141)
     on right: 15 86 230
-    on left : 291
+    on left : 290
   conditional (142)
     on right: 16
     on left : 101 102
@@ -427,7 +424,7 @@ rule 320 array_value: hash_value
     on left : 56
   position_data (153)
     on right: 27
-    on left : 301
+    on left : 300
   raise (154)
     on right: 28
     on left : 55
@@ -442,7 +439,7 @@ rule 320 array_value: hash_value
     on left : 45
   warning (158)
     on right: 32
-    on left : 294
+    on left : 293
   var_system (159)
     on right: 33 99 223 252
     on left : 218 219
@@ -477,8 +474,8 @@ rule 320 array_value: hash_value
     on right: 54
     on left : 49 50
   sn (170)
-    on right: 49 50 52 54 301 303 304 306 317 319
-    on left : 302
+    on right: 49 50 52 54 300 302 303 305 316 318
+    on left : 301
   tp_tool_attributes (171)
     on right: 49 52
     on left : 51 52
@@ -486,8 +483,8 @@ rule 320 array_value: hash_value
     on right: 51 52
     on left : 53
   hash_value (173)
-    on right: 53 307 320
-    on left : 308 309 310 311 312 313 314
+    on right: 53 306 319
+    on left : 307 308 309 310 311 312 313
   indirectable (174)
     on right: 58 65 68 69 70 190 256 257
     on left : 181 182
@@ -504,8 +501,8 @@ rule 320 array_value: hash_value
     on right: 63
     on left : 65
   swallow_newlines (179)
-    on right: 64 65 127 146 147 152 153 154 155 156 157 158 159 160 214 215 216 217 302
-    on left : 299 300
+    on right: 64 65 127 146 147 152 153 154 155 156 157 158 159 160 214 215 216 217 301
+    on left : 298 299
   label (180)
     on right: 64 100 158 192
     on left : 66
@@ -531,7 +528,7 @@ rule 320 array_value: hash_value
     on right: 75 76 77 78 80
     on left : 79 80 81
   var (188)
-    on right: 77 84 97 112 113 116 127 132 177 179 182 184 188 203 250 260 291
+    on right: 77 84 97 112 113 116 127 132 177 179 182 184 188 203 250 260 290
     on left : 204 205
   arg (189)
     on right: 79 80
@@ -642,8 +639,8 @@ rule 320 array_value: hash_value
     on right: 199 207 210 257
     on left : 209 210
   array (225)
-    on right: 199 200 311
-    on left : 317
+    on right: 199 200 310
+    on left : 316
   assignable_range (226)
     on right: 201 202
     on left : 203
@@ -696,7 +693,7 @@ rule 320 array_value: hash_value
     on right: 254
     on left : 255
   sign (243)
-    on right: 258 259 260 315
+    on right: 258 259 260 314
     on left : 261
   reg (244)
     on right: 265
@@ -705,7 +702,7 @@ rule 320 array_value: hash_value
     on right: 269
     on left : 285
   definable_range (246)
-    on right: 282 290
+    on right: 282
     on left : 270 271
   reg_types (247)
     on right: 282
@@ -713,27 +710,24 @@ rule 320 array_value: hash_value
   frametype (248)
     on right: 285
     on left : 283 284
-  input (249)
-    on right: 
-    on left : 290
-  hash (250)
-    on right: 301 310
-    on left : 303 304
-  hash_attributes (251)
-    on right: 303 306
-    on left : 305 306
-  hash_attribute (252)
-    on right: 305 306
-    on left : 307
-  optional_sign (253)
-    on right: 312 313
-    on left : 315 316
-  array_values (254)
-    on right: 317 319
-    on left : 318 319
-  array_value (255)
-    on right: 318 319
-    on left : 320
+  hash (249)
+    on right: 300 309
+    on left : 302 303
+  hash_attributes (250)
+    on right: 302 305
+    on left : 304 305
+  hash_attribute (251)
+    on right: 304 305
+    on left : 306
+  optional_sign (252)
+    on right: 311 312
+    on left : 314 315
+  array_values (253)
+    on right: 316 318
+    on left : 317 318
+  array_value (254)
+    on right: 317 318
+    on left : 319
 
 **Terminals, with rules where they appear
 
@@ -741,12 +735,12 @@ rule 320 array_value: hash_value
   error (1) 
   ASSIGN (2) 193
   AT_SYM (3) 
-  COMMENT (4) 292
-  MESSAGE (5) 293
-  WARNING (6) 294
+  COMMENT (4) 291
+  MESSAGE (5) 292
+  WARNING (6) 293
   JUMP (7) 100
   IO_METHOD (8) 94 95 96
-  INPUT (9) 280 290
+  INPUT (9) 280
   OUTPUT (10) 281
   NUMREG (11) 278
   POSREG (12) 279
@@ -785,11 +779,11 @@ rule 320 array_value: hash_value
   PSPD (45) 174
   CTV (46) 175
   SEMICOLON (47) 
-  NEWLINE (48) 5 6 45 295 299
-  STRING (49) 47 57 58 65 93 96 190 191 256 257 293 294 307 308
-  REAL (50) 259 263 313
-  DIGIT (51) 178 258 264 270 271 285 312
-  WORD (52) 53 73 74 90 119 120 124 125 126 193 206 207 215 218 219 226 309
+  NEWLINE (48) 5 6 45 294 298
+  STRING (49) 47 57 58 65 93 96 190 191 256 257 292 293 306 307
+  REAL (50) 259 263 312
+  DIGIT (51) 178 258 264 270 271 285 311
+  WORD (52) 53 73 74 90 119 120 124 125 126 193 206 207 215 218 219 226 308
   EQUAL (53) 46 54 78 194 195 196 197 198 201 202
   RANGE (54) 203 270
   EEQUAL (55) 233
@@ -811,7 +805,7 @@ rule 320 array_value: hash_value
   THEN (71) 103 111
   ELSE (72) 133 144
   ELSIF (73) 107 111
-  END (74) 101 102 103 112 113 114 124 125 126 127 301
+  END (74) 101 102 103 112 113 114 124 125 126 127 300
   UNLESS (75) 102 139
   FOR (76) 112 113
   IN (77) 112 113
@@ -834,27 +828,27 @@ rule 320 array_value: hash_value
   RAISE (94) 55
   ABORT (95) 35
   RETURN (96) 91 92
-  POSITION_DATA (97) 301
-  TRUE_FALSE (98) 48 314
+  POSITION_DATA (97) 300
+  TRUE_FALSE (98) 48 313
   CALL (99) 77
   RUN (100) 76
   PAUSE (101) 34
   TP_HEADER (102) 46
   TP_APPLICATION_TYPE (103) 54
-  LPAREN (104) 43 44 58 59 60 61 64 65 67 69 70 75 76 77 78 91 95 96 112 113 125 126 146 147 152 153 154 155 156 157 158 160 202 255 256 257 293 294
-  RPAREN (105) 43 44 58 59 60 61 64 65 67 69 70 75 76 77 78 91 95 96 112 113 125 126 146 147 152 153 154 155 156 157 158 160 202 255 256 257 293 294
-  COLON (106) 53 126 226 307
-  COMMA (107) 52 58 65 70 80 88 96 119 151 157 179 190 256 257 287 306 319
-  LBRACK (108) 219 282 285 286 287 288 289 290 317
-  RBRACK (109) 219 282 285 286 287 288 289 290 317
-  LBRACE (110) 49 50 303 304
-  RBRACE (111) 49 50 303 304
+  LPAREN (104) 43 44 58 59 60 61 64 65 67 69 70 75 76 77 78 91 95 96 112 113 125 126 146 147 152 153 154 155 156 157 158 160 202 255 256 257 292 293
+  RPAREN (105) 43 44 58 59 60 61 64 65 67 69 70 75 76 77 78 91 95 96 112 113 125 126 146 147 152 153 154 155 156 157 158 160 202 255 256 257 292 293
+  COLON (106) 53 126 226 306
+  COMMA (107) 52 58 65 70 80 88 96 119 151 157 179 190 256 257 287 305 318
+  LBRACK (108) 219 282 285 286 287 288 289 316
+  RBRACK (109) 219 282 285 286 287 288 289 316
+  LBRACE (110) 49 50 302 303
+  RBRACE (111) 49 50 302 303
   LABEL (112) 66
   SYSTEM (113) 218 219
-  ADDRESS (114) 291
+  ADDRESS (114) 290
   LPOS (115) 43
   JPOS (116) 44
-  false (117) 297
+  false (117) 296
   FUNCTION (118) 125 126
   OPERATION (119) 286 287 288 289
   USING (120) 121
@@ -1074,11 +1068,11 @@ state 3
    3) statements : statement _ terminator
 
   COMMENT       shift, and go to state 89
-  COMMENT       [reduce using rule 298 (terminator)]
+  COMMENT       [reduce using rule 297 (terminator)]
   NEWLINE       shift, and go to state 96
-  NEWLINE       [reduce using rule 298 (terminator)]
+  NEWLINE       [reduce using rule 297 (terminator)]
   false         shift, and go to state 98
-  $default      reduce using rule 298 (terminator)
+  $default      reduce using rule 297 (terminator)
 
   terminator    go to state 95
   comment       go to state 97
@@ -1921,7 +1915,7 @@ state 87
 
 state 88
 
- 291) address : ADDRESS _ var
+ 290) address : ADDRESS _ var
 
   WORD          shift, and go to state 106
 
@@ -1933,31 +1927,31 @@ state 88
 
 state 89
 
- 292) comment : COMMENT _
+ 291) comment : COMMENT _
 
-  $default      reduce using rule 292 (comment)
+  $default      reduce using rule 291 (comment)
 
 
 state 90
 
- 293) message : MESSAGE _ LPAREN STRING RPAREN
+ 292) message : MESSAGE _ LPAREN STRING RPAREN
 
   LPAREN        shift, and go to state 185
 
 
 state 91
 
- 294) warning : WARNING _ LPAREN STRING RPAREN
+ 293) warning : WARNING _ LPAREN STRING RPAREN
 
   LPAREN        shift, and go to state 186
 
 
 state 92
 
- 301) position_data : POSITION_DATA _ sn hash sn END
+ 300) position_data : POSITION_DATA _ sn hash sn END
 
   NEWLINE       shift, and go to state 187
-  $default      reduce using rule 300 (swallow_newlines)
+  $default      reduce using rule 299 (swallow_newlines)
 
   sn            go to state 188
   swallow_newlines  go to state 189
@@ -1973,11 +1967,11 @@ state 94
    4) statements : statements statement _ terminator
 
   COMMENT       shift, and go to state 89
-  COMMENT       [reduce using rule 298 (terminator)]
+  COMMENT       [reduce using rule 297 (terminator)]
   NEWLINE       shift, and go to state 96
-  NEWLINE       [reduce using rule 298 (terminator)]
+  NEWLINE       [reduce using rule 297 (terminator)]
   false         shift, and go to state 98
-  $default      reduce using rule 298 (terminator)
+  $default      reduce using rule 297 (terminator)
 
   terminator    go to state 191
   comment       go to state 97
@@ -1991,14 +1985,14 @@ state 95
 
 state 96
 
- 295) terminator : NEWLINE _
+ 294) terminator : NEWLINE _
 
-  $default      reduce using rule 295 (terminator)
+  $default      reduce using rule 294 (terminator)
 
 
 state 97
 
- 296) terminator : comment _ optional_newline
+ 295) terminator : comment _ optional_newline
 
   NEWLINE       shift, and go to state 192
   NEWLINE       [reduce using rule 7 (optional_newline)]
@@ -2008,9 +2002,9 @@ state 97
 
 state 98
 
- 297) terminator : false _
+ 296) terminator : false _
 
-  $default      reduce using rule 297 (terminator)
+  $default      reduce using rule 296 (terminator)
 
 
 state 99
@@ -2061,7 +2055,7 @@ state 102
   54) tp_application_definition : TP_APPLICATION_TYPE EQUAL _ sn tp_tool_methods
 
   NEWLINE       shift, and go to state 187
-  $default      reduce using rule 300 (swallow_newlines)
+  $default      reduce using rule 299 (swallow_newlines)
 
   sn            go to state 199
   swallow_newlines  go to state 189
@@ -2519,7 +2513,7 @@ state 143
  217) var_method_modifier : DOT _ swallow_newlines pose_method_modifier
 
   NEWLINE       shift, and go to state 187
-  $default      reduce using rule 300 (swallow_newlines)
+  $default      reduce using rule 299 (swallow_newlines)
 
   swallow_newlines  go to state 247
 
@@ -2927,7 +2921,7 @@ state 176
  127) case_statement : CASE var _ swallow_newlines case_conditions case_else END
 
   NEWLINE       shift, and go to state 187
-  $default      reduce using rule 300 (swallow_newlines)
+  $default      reduce using rule 299 (swallow_newlines)
 
   swallow_newlines  go to state 282
 
@@ -3007,7 +3001,7 @@ state 179
  147) motion_statement : MOVE DOT _ swallow_newlines MID LPAREN var_or_indirect RPAREN DOT swallow_newlines TO LPAREN var_or_indirect RPAREN motion_modifiers
 
   NEWLINE       shift, and go to state 187
-  $default      reduce using rule 300 (swallow_newlines)
+  $default      reduce using rule 299 (swallow_newlines)
 
   swallow_newlines  go to state 285
 
@@ -3059,35 +3053,35 @@ state 183
 
 state 184
 
- 291) address : ADDRESS var _
+ 290) address : ADDRESS var _
 
-  $default      reduce using rule 291 (address)
+  $default      reduce using rule 290 (address)
 
 
 state 185
 
- 293) message : MESSAGE LPAREN _ STRING RPAREN
+ 292) message : MESSAGE LPAREN _ STRING RPAREN
 
   STRING        shift, and go to state 295
 
 
 state 186
 
- 294) warning : WARNING LPAREN _ STRING RPAREN
+ 293) warning : WARNING LPAREN _ STRING RPAREN
 
   STRING        shift, and go to state 296
 
 
 state 187
 
- 299) swallow_newlines : NEWLINE _
+ 298) swallow_newlines : NEWLINE _
 
-  $default      reduce using rule 299 (swallow_newlines)
+  $default      reduce using rule 298 (swallow_newlines)
 
 
 state 188
 
- 301) position_data : POSITION_DATA sn _ hash sn END
+ 300) position_data : POSITION_DATA sn _ hash sn END
 
   LBRACE        shift, and go to state 298
 
@@ -3095,9 +3089,9 @@ state 188
 
 state 189
 
- 302) sn : swallow_newlines _
+ 301) sn : swallow_newlines _
 
-  $default      reduce using rule 302 (sn)
+  $default      reduce using rule 301 (sn)
 
 
 state 190
@@ -3122,9 +3116,9 @@ state 192
 
 state 193
 
- 296) terminator : comment optional_newline _
+ 295) terminator : comment optional_newline _
 
-  $default      reduce using rule 296 (terminator)
+  $default      reduce using rule 295 (terminator)
 
 
 state 194
@@ -3911,10 +3905,10 @@ state 266
 
 state 267
 
- 317) array : LBRACK _ sn array_values sn RBRACK
+ 316) array : LBRACK _ sn array_values sn RBRACK
 
   NEWLINE       shift, and go to state 187
-  $default      reduce using rule 300 (swallow_newlines)
+  $default      reduce using rule 299 (swallow_newlines)
 
   swallow_newlines  go to state 189
   sn            go to state 328
@@ -4285,35 +4279,35 @@ state 294
 
 state 295
 
- 293) message : MESSAGE LPAREN STRING _ RPAREN
+ 292) message : MESSAGE LPAREN STRING _ RPAREN
 
   RPAREN        shift, and go to state 356
 
 
 state 296
 
- 294) warning : WARNING LPAREN STRING _ RPAREN
+ 293) warning : WARNING LPAREN STRING _ RPAREN
 
   RPAREN        shift, and go to state 357
 
 
 state 297
 
- 301) position_data : POSITION_DATA sn hash _ sn END
+ 300) position_data : POSITION_DATA sn hash _ sn END
 
   NEWLINE       shift, and go to state 187
-  $default      reduce using rule 300 (swallow_newlines)
+  $default      reduce using rule 299 (swallow_newlines)
 
   sn            go to state 358
   swallow_newlines  go to state 189
 
 state 298
 
- 303) hash : LBRACE _ sn hash_attributes sn RBRACE
- 304) hash : LBRACE _ sn RBRACE
+ 302) hash : LBRACE _ sn hash_attributes sn RBRACE
+ 303) hash : LBRACE _ sn RBRACE
 
   NEWLINE       shift, and go to state 187
-  $default      reduce using rule 300 (swallow_newlines)
+  $default      reduce using rule 299 (swallow_newlines)
 
   swallow_newlines  go to state 189
   sn            go to state 359
@@ -4338,7 +4332,7 @@ state 301
   50) tp_tool_methods : LBRACE _ sn RBRACE
 
   NEWLINE       shift, and go to state 187
-  $default      reduce using rule 300 (swallow_newlines)
+  $default      reduce using rule 299 (swallow_newlines)
 
   sn            go to state 360
   swallow_newlines  go to state 189
@@ -4668,7 +4662,7 @@ state 327
 
 state 328
 
- 317) array : LBRACK sn _ array_values sn RBRACK
+ 316) array : LBRACK sn _ array_values sn RBRACK
 
   STRING        shift, and go to state 376
   WORD          shift, and go to state 377
@@ -4676,7 +4670,7 @@ state 328
   TRUE_FALSE    shift, and go to state 381
   LBRACK        shift, and go to state 267
   LBRACE        shift, and go to state 298
-  $default      reduce using rule 316 (optional_sign)
+  $default      reduce using rule 315 (optional_sign)
 
   hash          go to state 378
   array         go to state 379
@@ -5047,29 +5041,29 @@ state 355
 
 state 356
 
- 293) message : MESSAGE LPAREN STRING RPAREN _
+ 292) message : MESSAGE LPAREN STRING RPAREN _
 
-  $default      reduce using rule 293 (message)
+  $default      reduce using rule 292 (message)
 
 
 state 357
 
- 294) warning : WARNING LPAREN STRING RPAREN _
+ 293) warning : WARNING LPAREN STRING RPAREN _
 
-  $default      reduce using rule 294 (warning)
+  $default      reduce using rule 293 (warning)
 
 
 state 358
 
- 301) position_data : POSITION_DATA sn hash sn _ END
+ 300) position_data : POSITION_DATA sn hash sn _ END
 
   END           shift, and go to state 411
 
 
 state 359
 
- 303) hash : LBRACE sn _ hash_attributes sn RBRACE
- 304) hash : LBRACE sn _ RBRACE
+ 302) hash : LBRACE sn _ hash_attributes sn RBRACE
+ 303) hash : LBRACE sn _ RBRACE
 
   STRING        shift, and go to state 415
   RBRACE        shift, and go to state 413
@@ -5101,7 +5095,7 @@ state 362
   61) wait_statement : WAIT_UNTIL LPAREN expression RPAREN DOT _ wait_modifier DOT wait_modifier
 
   NEWLINE       shift, and go to state 187
-  $default      reduce using rule 300 (swallow_newlines)
+  $default      reduce using rule 299 (swallow_newlines)
 
   wait_modifier  go to state 421
   timeout_modifier  go to state 422
@@ -5216,36 +5210,36 @@ state 375
 
 state 376
 
- 308) hash_value : STRING _
+ 307) hash_value : STRING _
 
-  $default      reduce using rule 308 (hash_value)
+  $default      reduce using rule 307 (hash_value)
 
 
 state 377
 
- 309) hash_value : WORD _
+ 308) hash_value : WORD _
 
-  $default      reduce using rule 309 (hash_value)
+  $default      reduce using rule 308 (hash_value)
 
 
 state 378
 
- 310) hash_value : hash _
+ 309) hash_value : hash _
 
-  $default      reduce using rule 310 (hash_value)
+  $default      reduce using rule 309 (hash_value)
 
 
 state 379
 
- 311) hash_value : array _
+ 310) hash_value : array _
 
-  $default      reduce using rule 311 (hash_value)
+  $default      reduce using rule 310 (hash_value)
 
 
 state 380
 
- 312) hash_value : optional_sign _ DIGIT
- 313) hash_value : optional_sign _ REAL
+ 311) hash_value : optional_sign _ DIGIT
+ 312) hash_value : optional_sign _ REAL
 
   REAL          shift, and go to state 433
   DIGIT         shift, and go to state 432
@@ -5253,42 +5247,42 @@ state 380
 
 state 381
 
- 314) hash_value : TRUE_FALSE _
+ 313) hash_value : TRUE_FALSE _
 
-  $default      reduce using rule 314 (hash_value)
+  $default      reduce using rule 313 (hash_value)
 
 
 state 382
 
- 315) optional_sign : sign _
+ 314) optional_sign : sign _
 
-  $default      reduce using rule 315 (optional_sign)
+  $default      reduce using rule 314 (optional_sign)
 
 
 state 383
 
- 317) array : LBRACK sn array_values _ sn RBRACK
- 319) array_values : array_values _ COMMA sn array_value
+ 316) array : LBRACK sn array_values _ sn RBRACK
+ 318) array_values : array_values _ COMMA sn array_value
 
   NEWLINE       shift, and go to state 187
   COMMA         shift, and go to state 435
-  $default      reduce using rule 300 (swallow_newlines)
+  $default      reduce using rule 299 (swallow_newlines)
 
   swallow_newlines  go to state 189
   sn            go to state 434
 
 state 384
 
- 318) array_values : array_value _
+ 317) array_values : array_value _
 
-  $default      reduce using rule 318 (array_values)
+  $default      reduce using rule 317 (array_values)
 
 
 state 385
 
- 320) array_value : hash_value _
+ 319) array_value : hash_value _
 
-  $default      reduce using rule 320 (array_value)
+  $default      reduce using rule 319 (array_value)
 
 
 state 386
@@ -5553,40 +5547,40 @@ state 410
 
 state 411
 
- 301) position_data : POSITION_DATA sn hash sn END _
+ 300) position_data : POSITION_DATA sn hash sn END _
 
-  $default      reduce using rule 301 (position_data)
+  $default      reduce using rule 300 (position_data)
 
 
 state 412
 
- 303) hash : LBRACE sn hash_attributes _ sn RBRACE
- 306) hash_attributes : hash_attributes _ COMMA sn hash_attribute
+ 302) hash : LBRACE sn hash_attributes _ sn RBRACE
+ 305) hash_attributes : hash_attributes _ COMMA sn hash_attribute
 
   NEWLINE       shift, and go to state 187
   COMMA         shift, and go to state 458
-  $default      reduce using rule 300 (swallow_newlines)
+  $default      reduce using rule 299 (swallow_newlines)
 
   swallow_newlines  go to state 189
   sn            go to state 457
 
 state 413
 
- 304) hash : LBRACE sn RBRACE _
+ 303) hash : LBRACE sn RBRACE _
 
-  $default      reduce using rule 304 (hash)
+  $default      reduce using rule 303 (hash)
 
 
 state 414
 
- 305) hash_attributes : hash_attribute _
+ 304) hash_attributes : hash_attribute _
 
-  $default      reduce using rule 305 (hash_attributes)
+  $default      reduce using rule 304 (hash_attributes)
 
 
 state 415
 
- 307) hash_attribute : STRING _ COLON hash_value
+ 306) hash_attribute : STRING _ COLON hash_value
 
   COLON         shift, and go to state 459
 
@@ -5598,7 +5592,7 @@ state 416
 
   NEWLINE       shift, and go to state 187
   COMMA         shift, and go to state 461
-  $default      reduce using rule 300 (swallow_newlines)
+  $default      reduce using rule 299 (swallow_newlines)
 
   sn            go to state 460
   swallow_newlines  go to state 189
@@ -5714,31 +5708,31 @@ state 431
 
 state 432
 
- 312) hash_value : optional_sign DIGIT _
+ 311) hash_value : optional_sign DIGIT _
 
-  $default      reduce using rule 312 (hash_value)
+  $default      reduce using rule 311 (hash_value)
 
 
 state 433
 
- 313) hash_value : optional_sign REAL _
+ 312) hash_value : optional_sign REAL _
 
-  $default      reduce using rule 313 (hash_value)
+  $default      reduce using rule 312 (hash_value)
 
 
 state 434
 
- 317) array : LBRACK sn array_values sn _ RBRACK
+ 316) array : LBRACK sn array_values sn _ RBRACK
 
   RBRACK        shift, and go to state 469
 
 
 state 435
 
- 319) array_values : array_values COMMA _ sn array_value
+ 318) array_values : array_values COMMA _ sn array_value
 
   NEWLINE       shift, and go to state 187
-  $default      reduce using rule 300 (swallow_newlines)
+  $default      reduce using rule 299 (swallow_newlines)
 
   swallow_newlines  go to state 189
   sn            go to state 470
@@ -5909,7 +5903,7 @@ state 454
  214) pose_range_modifier : DOT _ swallow_newlines POSEREVERSE
 
   NEWLINE       shift, and go to state 187
-  $default      reduce using rule 300 (swallow_newlines)
+  $default      reduce using rule 299 (swallow_newlines)
 
   swallow_newlines  go to state 481
 
@@ -5937,24 +5931,24 @@ state 456
 
 state 457
 
- 303) hash : LBRACE sn hash_attributes sn _ RBRACE
+ 302) hash : LBRACE sn hash_attributes sn _ RBRACE
 
   RBRACE        shift, and go to state 483
 
 
 state 458
 
- 306) hash_attributes : hash_attributes COMMA _ sn hash_attribute
+ 305) hash_attributes : hash_attributes COMMA _ sn hash_attribute
 
   NEWLINE       shift, and go to state 187
-  $default      reduce using rule 300 (swallow_newlines)
+  $default      reduce using rule 299 (swallow_newlines)
 
   swallow_newlines  go to state 189
   sn            go to state 484
 
 state 459
 
- 307) hash_attribute : STRING COLON _ hash_value
+ 306) hash_attribute : STRING COLON _ hash_value
 
   STRING        shift, and go to state 376
   WORD          shift, and go to state 377
@@ -5962,7 +5956,7 @@ state 459
   TRUE_FALSE    shift, and go to state 381
   LBRACK        shift, and go to state 267
   LBRACE        shift, and go to state 298
-  $default      reduce using rule 316 (optional_sign)
+  $default      reduce using rule 315 (optional_sign)
 
   hash_value    go to state 485
   hash          go to state 378
@@ -5982,7 +5976,7 @@ state 461
   52) tp_tool_attributes : tp_tool_attributes COMMA _ sn tp_tool_attribute
 
   NEWLINE       shift, and go to state 187
-  $default      reduce using rule 300 (swallow_newlines)
+  $default      reduce using rule 299 (swallow_newlines)
 
   sn            go to state 487
   swallow_newlines  go to state 189
@@ -5997,7 +5991,7 @@ state 462
   TRUE_FALSE    shift, and go to state 381
   LBRACK        shift, and go to state 267
   LBRACE        shift, and go to state 298
-  $default      reduce using rule 316 (optional_sign)
+  $default      reduce using rule 315 (optional_sign)
 
   hash_value    go to state 488
   hash          go to state 378
@@ -6010,7 +6004,7 @@ state 463
   61) wait_statement : WAIT_UNTIL LPAREN expression RPAREN DOT wait_modifier DOT _ wait_modifier
 
   NEWLINE       shift, and go to state 187
-  $default      reduce using rule 300 (swallow_newlines)
+  $default      reduce using rule 299 (swallow_newlines)
 
   wait_modifier  go to state 489
   timeout_modifier  go to state 422
@@ -6054,14 +6048,14 @@ state 468
 
 state 469
 
- 317) array : LBRACK sn array_values sn RBRACK _
+ 316) array : LBRACK sn array_values sn RBRACK _
 
-  $default      reduce using rule 317 (array)
+  $default      reduce using rule 316 (array)
 
 
 state 470
 
- 319) array_values : array_values COMMA sn _ array_value
+ 318) array_values : array_values COMMA sn _ array_value
 
   STRING        shift, and go to state 376
   WORD          shift, and go to state 377
@@ -6069,7 +6063,7 @@ state 470
   TRUE_FALSE    shift, and go to state 381
   LBRACK        shift, and go to state 267
   LBRACE        shift, and go to state 298
-  $default      reduce using rule 316 (optional_sign)
+  $default      reduce using rule 315 (optional_sign)
 
   hash          go to state 378
   array         go to state 379
@@ -6171,14 +6165,14 @@ state 482
 
 state 483
 
- 303) hash : LBRACE sn hash_attributes sn RBRACE _
+ 302) hash : LBRACE sn hash_attributes sn RBRACE _
 
-  $default      reduce using rule 303 (hash)
+  $default      reduce using rule 302 (hash)
 
 
 state 484
 
- 306) hash_attributes : hash_attributes COMMA sn _ hash_attribute
+ 305) hash_attributes : hash_attributes COMMA sn _ hash_attribute
 
   STRING        shift, and go to state 415
 
@@ -6186,9 +6180,9 @@ state 484
 
 state 485
 
- 307) hash_attribute : STRING COLON hash_value _
+ 306) hash_attribute : STRING COLON hash_value _
 
-  $default      reduce using rule 307 (hash_attribute)
+  $default      reduce using rule 306 (hash_attribute)
 
 
 state 486
@@ -6247,9 +6241,9 @@ state 491
 
 state 492
 
- 319) array_values : array_values COMMA sn array_value _
+ 318) array_values : array_values COMMA sn array_value _
 
-  $default      reduce using rule 319 (array_values)
+  $default      reduce using rule 318 (array_values)
 
 
 state 493
@@ -6319,7 +6313,7 @@ state 500
  160) motion_modifier : DOT _ swallow_newlines single_argument_motion_modifiers LPAREN int_or_var RPAREN
 
   NEWLINE       shift, and go to state 187
-  $default      reduce using rule 300 (swallow_newlines)
+  $default      reduce using rule 299 (swallow_newlines)
 
   swallow_newlines  go to state 511
 
@@ -6328,7 +6322,7 @@ state 501
  147) motion_statement : MOVE DOT swallow_newlines MID LPAREN var_or_indirect RPAREN DOT _ swallow_newlines TO LPAREN var_or_indirect RPAREN motion_modifiers
 
   NEWLINE       shift, and go to state 187
-  $default      reduce using rule 300 (swallow_newlines)
+  $default      reduce using rule 299 (swallow_newlines)
 
   swallow_newlines  go to state 512
 
@@ -6341,9 +6335,9 @@ state 502
 
 state 503
 
- 306) hash_attributes : hash_attributes COMMA sn hash_attribute _
+ 305) hash_attributes : hash_attributes COMMA sn hash_attribute _
 
-  $default      reduce using rule 306 (hash_attributes)
+  $default      reduce using rule 305 (hash_attributes)
 
 
 state 504

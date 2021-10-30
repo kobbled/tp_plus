@@ -37,7 +37,7 @@ class TestParser < Test::Unit::TestCase
 
   def test_numreg_definition
     parse("foo := R[1]")
-    assert_node_type DefinitionNode, last_node
+    assert_node_type RegDefinitionNode, last_node
   end
 
   def test_assignment
@@ -148,7 +148,7 @@ class TestParser < Test::Unit::TestCase
 
   def test_position_definition
     parse("foo := P[1]")
-    assert_node_type DefinitionNode, last_node
+    assert_node_type RegDefinitionNode, last_node
   end
 
   def test_uframe_assignment
@@ -253,7 +253,7 @@ class TestParser < Test::Unit::TestCase
 
   def test_can_define_input
     parse("foo := UI[1]")
-    assert_node_type DefinitionNode, last_node
+    assert_node_type RegDefinitionNode, last_node
   end
 
   def test_can_inline_conditional_just_io_value
@@ -268,12 +268,12 @@ class TestParser < Test::Unit::TestCase
 
   def test_constant_definition
     parse("FOO := 5\nfoo := R[1]\nfoo = FOO")
-    assert_node_type DefinitionNode, @interpreter.nodes.first
+    assert_node_type RegDefinitionNode, @interpreter.nodes.first
   end
 
   def test_defining_arg_as_var
     parse("arg_1 := AR[1]")
-    assert_node_type DefinitionNode, last_node
+    assert_node_type RegDefinitionNode, last_node
   end
 
   def test_set_skip_condition
@@ -469,8 +469,7 @@ end)
   def test_ualm_definition
     parse "foo := UALM[1]"
     n = last_node
-    assert_node_type DefinitionNode, n
-    assert_node_type UserAlarmNode, n.assignable
+    assert_node_type RegDefinitionNode, n
   end
 
   def test_raise
