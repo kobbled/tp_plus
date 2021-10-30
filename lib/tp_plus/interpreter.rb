@@ -131,14 +131,6 @@ module TPPlus
       return s
     end
 
-    def populate_pose_set
-      @nodes.select {|n| n.is_a?(Nodes::DefinitionNode) }.each do |n|
-        if n.assignable.is_a?(Nodes::PositionNode)
-          @pose_list.add(n.identifier.to_sym)
-        end
-      end
-    end
-
     def pos_section
       return "" if @position_data.empty?
       return "" if @position_data[:positions].empty?
@@ -184,11 +176,16 @@ module TPPlus
     def eval
       s = ""
       last_node = nil
-
-      @nodes = @nodes.flatten
       
       #set a list of declared positions into @pose_list
-      populate_pose_set
+      #populate_pose_set
+      @nodes.each_with_index do |n, index|
+        if n.is_a?(TPPlus::Nodes::RegDefinitionNode)
+          @nodes[index] = n.eval(self) 
+        end
+      end
+
+      @nodes = @nodes.flatten
 
       define_labels
 
