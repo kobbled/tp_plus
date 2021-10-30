@@ -14,7 +14,14 @@ module TPPlus
       # copy variables & constants to interpreter
       add_parent_nodes(self)
 
-      @nodes.flatten.select {|n| [TPPlus::Nodes::DefinitionNode, TPPlus::Nodes::FunctionNode, TPPlus::Nodes::NamespaceNode, TPPlus::Nodes::UsingNode].include? n.class }.each do |node|
+      @nodes.each_with_index do |n, index|
+        if n.is_a?(TPPlus::Nodes::RegDefinitionNode)
+          @nodes[index] = n.eval(self) 
+          @nodes = @nodes.flatten
+        end
+      end
+
+      @nodes.flatten.select {|n| [TPPlus::Nodes::DefinitionNode, TPPlus::Nodes::PoseNode, TPPlus::Nodes::FunctionNode, TPPlus::Nodes::NamespaceNode, TPPlus::Nodes::UsingNode].include? n.class }.each do |node|
         @nd = node
         node.eval(self)
       end
@@ -79,7 +86,7 @@ module TPPlus
 
     def eval
       #use to evaluate imports
-      @nodes.flatten.select {|n| [TPPlus::Nodes::DefinitionNode, TPPlus::Nodes::NamespaceNode].include? n.class }.each do |node|
+      @nodes.flatten.select {|n| [TPPlus::Nodes::DefinitionNode, TPPlus::Nodes::PoseNode, TPPlus::Nodes::NamespaceNode].include? n.class }.each do |node|
         @nd = node
         node.eval(self)
       end
