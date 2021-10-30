@@ -1,13 +1,18 @@
 module TPPlus
   module Nodes
     class DigitNode < ConstNode
-      attr_reader :value
+      attr_reader :value, :name
       def initialize(value)
         @value = value
+        @name = ''
       end
 
       def requires_mixed_logic?(context)
         false
+      end
+
+      def setName(name)
+        @name = name
       end
 
       def eval(context, options={})

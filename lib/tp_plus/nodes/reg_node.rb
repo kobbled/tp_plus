@@ -8,6 +8,10 @@ module TPPlus
         @id = id
         @comment = ""
       end
+
+      def setName(name)
+        @comment = name
+      end
     end
   end
 end
