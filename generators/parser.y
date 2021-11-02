@@ -538,6 +538,7 @@ rule
 
   assignable_range
     : var RANGE var  {result = RangeNode.new(val[0], val[2])}
+    | var {result = RangeNode.new(val[0], val[0])}
     ;
 
   var

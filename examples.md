@@ -1498,6 +1498,27 @@ p1..p3 = p4..p6
 
 ```
 
+A range can be assigned a single pose with
+
+TP+
+```ruby
+p := P[1..6]
+
+p2..p6 = p1
+
+```
+
+The rval range can be less than the lval range, where the unassociated poses will be assigned the last pose in the lval
+range.
+
+TP+
+```ruby
+p := P[1..6]
+
+p1..p4 = p5..p6
+
+```
+
 Modifier for range assignment currently are:
 
 TP+

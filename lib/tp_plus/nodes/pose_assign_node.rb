@@ -13,6 +13,12 @@ module TPPlus
         array1 = @range1.name_range
         array2 = @range2.name_range
 
+        #make array2 the same size as array1 filling the empty indicies with
+        #the last item in array2. Zip will be able to interleave the two arrays
+        #now. This makes it possible to fill a pose range with one pose.
+        li = array2[-1]
+        array2.fill(array2.size..array1.size - 1) { li }
+
         if @options
           if @options[:mod] == 'reverse'
             array2 = array2.reverse()
