@@ -323,7 +323,8 @@ module TPPlus
           def eval
             @poses.each do |k, v|
               if v.groups.empty?
-                @poses.delete(k)
+                #copy defauly pose for poses unspecified
+                v = copy_default(v)
               end
             end
 
