@@ -7,6 +7,10 @@ module TPPlus
         @assignable = assignable
       end
 
+      def get_number
+        @assignable.id
+      end
+
       def eval(context)
         if @assignable.is_a?(ConstNode) || @assignable.is_a?(StringNode)
           raise "Constants must be defined with all CAPS" unless @identifier.upcase == @identifier

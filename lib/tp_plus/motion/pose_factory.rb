@@ -254,7 +254,7 @@ module TPPlus
             obj = PoseCreator::Pose.new
             pose = obj.add(id, no)
             @poses[id] = pose
-            @current_id += 1
+            @current_id = no + 1
 
             nil
           end

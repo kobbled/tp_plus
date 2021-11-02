@@ -153,7 +153,7 @@ module TPPlus
 
       def add_pose(node)
         if node.assignable.is_a?(Nodes::PositionNode)
-          @pose_list.add(node.identifier.to_sym)
+          @pose_list.add(node.identifier.to_sym, node.get_number)
         end
       end
 
