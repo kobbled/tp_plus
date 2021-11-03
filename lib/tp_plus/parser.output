@@ -11,9 +11,9 @@ state 272 contains 1 shift/reduce conflicts
 state 279 contains 1 shift/reduce conflicts
 state 290 contains 1 shift/reduce conflicts
 state 307 contains 14 shift/reduce conflicts
-state 336 contains 1 shift/reduce conflicts
-state 409 contains 1 shift/reduce conflicts
-state 455 contains 1 shift/reduce conflicts
+state 339 contains 1 shift/reduce conflicts
+state 412 contains 1 shift/reduce conflicts
+state 458 contains 1 shift/reduce conflicts
 
 rule 135 (case_allowed_statement) never reduced
 rule 136 (case_allowed_statement) never reduced
@@ -232,504 +232,507 @@ rule 208 var_without_namespaces: WORD var_method_modifiers
 rule 209 var_with_namespaces: namespaces var_without_namespaces
 rule 210 var_method_modifiers: var_method_modifier
 rule 211 var_method_modifiers: var_method_modifiers var_method_modifier
-rule 212 pose_method_modifier: POSEATTR
-rule 213 pose_range_modifiers: pose_range_modifier
-rule 214 pose_range_modifiers: pose_range_modifiers pose_range_modifier
-rule 215 pose_range_modifier: DOT swallow_newlines POSEREVERSE
-rule 216 var_method_modifier: DOT swallow_newlines WORD
-rule 217 var_method_modifier: DOT swallow_newlines group_statement
-rule 218 var_method_modifier: DOT swallow_newlines pose_method_modifier
-rule 219 var_system: SYSTEM WORD var_system_modifers
-rule 220 var_system: SYSTEM WORD LBRACK integer RBRACK var_system_modifers
-rule 221 var_system_modifers: var_system_modifer
-rule 222 var_system_modifers: var_system_modifers var_system_modifer
-rule 223 var_system_modifers: 
-rule 224 var_system_modifer: DOT var_system
-rule 225 namespaces: ns
-rule 226 namespaces: namespaces ns
-rule 227 ns: WORD COLON COLON
-rule 228 expression: unary_expression
-rule 229 expression: binary_expression
-rule 230 unary_expression: factor
-rule 231 unary_expression: address
-rule 232 unary_expression: BANG factor
-rule 233 binary_expression: expression operator expression
-rule 234 operator: EEQUAL
-rule 235 operator: NOTEQUAL
-rule 236 operator: LT
-rule 237 operator: GT
-rule 238 operator: GTE
-rule 239 operator: LTE
-rule 240 operator: PLUS
-rule 241 operator: MINUS
-rule 242 operator: OR
-rule 243 operator: STAR
-rule 244 operator: SLASH
-rule 245 operator: DIV
-rule 246 operator: MOD
-rule 247 operator: AND
-rule 248 factor: number
-rule 249 factor: signed_number
-rule 250 factor: operation
-rule 251 factor: var
-rule 252 factor: signed_var
-rule 253 factor: var_system
-rule 254 factor: indirect_thing
-rule 255 factor: paren_expr
-rule 256 paren_expr: LPAREN expression RPAREN
-rule 257 indirect_thing: INDIRECT LPAREN STRING COMMA indirectable RPAREN
-rule 258 indirect_thing: INDIRECT LPAREN STRING COMMA indirectable RPAREN var_method_modifiers
-rule 259 signed_number: sign DIGIT
-rule 260 signed_number: sign REAL
-rule 261 signed_var: sign var
-rule 262 sign: MINUS
-rule 263 number: integer
-rule 264 number: REAL
-rule 265 integer: DIGIT
-rule 266 definable: reg
-rule 267 definable: number
-rule 268 definable: signed_number
-rule 269 definable: string
-rule 270 definable: framereg
-rule 271 definable_range: DIGIT RANGE DIGIT
-rule 272 definable_range: DIGIT
-rule 273 reg_types: SREG
-rule 274 reg_types: UALM
-rule 275 reg_types: TIMER
-rule 276 reg_types: ARG
-rule 277 reg_types: VREG
-rule 278 reg_types: POSITION
-rule 279 reg_types: NUMREG
-rule 280 reg_types: POSREG
-rule 281 reg_types: INPUT
-rule 282 reg_types: OUTPUT
-rule 283 reg: reg_types LBRACK definable_range RBRACK
-rule 284 frametype: TOOLREG
-rule 285 frametype: FRAMEREG
-rule 286 framereg: frametype LBRACK DIGIT RBRACK
-rule 287 operation: OPERATION LBRACK var_or_indirect RBRACK
-rule 288 operation: OPERATION LBRACK var_or_indirect COMMA var_or_indirect RBRACK
-rule 289 operation: OPERATION LBRACK signed_number RBRACK
-rule 290 operation: OPERATION LBRACK number RBRACK
-rule 291 address: ADDRESS var
-rule 292 comment: COMMENT
-rule 293 message: MESSAGE LPAREN STRING RPAREN
-rule 294 warning: WARNING LPAREN STRING RPAREN
-rule 295 terminator: NEWLINE
-rule 296 terminator: comment optional_newline
-rule 297 terminator: false
-rule 298 terminator: 
-rule 299 swallow_newlines: NEWLINE
-rule 300 swallow_newlines: 
-rule 301 position_data: POSITION_DATA sn hash sn END
-rule 302 sn: swallow_newlines
-rule 303 hash: LBRACE sn hash_attributes sn RBRACE
-rule 304 hash: LBRACE sn RBRACE
-rule 305 hash_attributes: hash_attribute
-rule 306 hash_attributes: hash_attributes COMMA sn hash_attribute
-rule 307 hash_attribute: STRING COLON hash_value
-rule 308 hash_value: STRING
-rule 309 hash_value: WORD
-rule 310 hash_value: hash
-rule 311 hash_value: array
-rule 312 hash_value: optional_sign DIGIT
-rule 313 hash_value: optional_sign REAL
-rule 314 hash_value: TRUE_FALSE
-rule 315 optional_sign: sign
-rule 316 optional_sign: 
-rule 317 array: LBRACK sn array_values sn RBRACK
-rule 318 array_values: array_value
-rule 319 array_values: array_values COMMA sn array_value
-rule 320 array_value: hash_value
+rule 212 pose_range_modifiers: pose_range_modifier
+rule 213 pose_range_modifiers: pose_range_modifiers pose_range_modifier
+rule 214 pose_range_modifier: DOT swallow_newlines POSEREVERSE
+rule 215 coord_system: SPHERE
+rule 216 coord_system: POLAR
+rule 217 var_method_modifier: DOT swallow_newlines WORD
+rule 218 var_method_modifier: DOT swallow_newlines group_statement
+rule 219 var_method_modifier: DOT swallow_newlines POSEATTR
+rule 220 var_method_modifier: DOT swallow_newlines OFFSET
+rule 221 var_method_modifier: DOT swallow_newlines coord_system
+rule 222 var_system: SYSTEM WORD var_system_modifers
+rule 223 var_system: SYSTEM WORD LBRACK integer RBRACK var_system_modifers
+rule 224 var_system_modifers: var_system_modifer
+rule 225 var_system_modifers: var_system_modifers var_system_modifer
+rule 226 var_system_modifers: 
+rule 227 var_system_modifer: DOT var_system
+rule 228 namespaces: ns
+rule 229 namespaces: namespaces ns
+rule 230 ns: WORD COLON COLON
+rule 231 expression: unary_expression
+rule 232 expression: binary_expression
+rule 233 unary_expression: factor
+rule 234 unary_expression: address
+rule 235 unary_expression: BANG factor
+rule 236 binary_expression: expression operator expression
+rule 237 operator: EEQUAL
+rule 238 operator: NOTEQUAL
+rule 239 operator: LT
+rule 240 operator: GT
+rule 241 operator: GTE
+rule 242 operator: LTE
+rule 243 operator: PLUS
+rule 244 operator: MINUS
+rule 245 operator: OR
+rule 246 operator: STAR
+rule 247 operator: SLASH
+rule 248 operator: DIV
+rule 249 operator: MOD
+rule 250 operator: AND
+rule 251 factor: number
+rule 252 factor: signed_number
+rule 253 factor: operation
+rule 254 factor: var
+rule 255 factor: signed_var
+rule 256 factor: var_system
+rule 257 factor: indirect_thing
+rule 258 factor: paren_expr
+rule 259 paren_expr: LPAREN expression RPAREN
+rule 260 indirect_thing: INDIRECT LPAREN STRING COMMA indirectable RPAREN
+rule 261 indirect_thing: INDIRECT LPAREN STRING COMMA indirectable RPAREN var_method_modifiers
+rule 262 signed_number: sign DIGIT
+rule 263 signed_number: sign REAL
+rule 264 signed_var: sign var
+rule 265 sign: MINUS
+rule 266 number: integer
+rule 267 number: REAL
+rule 268 integer: DIGIT
+rule 269 definable: reg
+rule 270 definable: number
+rule 271 definable: signed_number
+rule 272 definable: string
+rule 273 definable: framereg
+rule 274 definable_range: DIGIT RANGE DIGIT
+rule 275 definable_range: DIGIT
+rule 276 reg_types: SREG
+rule 277 reg_types: UALM
+rule 278 reg_types: TIMER
+rule 279 reg_types: ARG
+rule 280 reg_types: VREG
+rule 281 reg_types: POSITION
+rule 282 reg_types: NUMREG
+rule 283 reg_types: POSREG
+rule 284 reg_types: INPUT
+rule 285 reg_types: OUTPUT
+rule 286 reg: reg_types LBRACK definable_range RBRACK
+rule 287 frametype: TOOLREG
+rule 288 frametype: FRAMEREG
+rule 289 framereg: frametype LBRACK DIGIT RBRACK
+rule 290 operation: OPERATION LBRACK var_or_indirect RBRACK
+rule 291 operation: OPERATION LBRACK var_or_indirect COMMA var_or_indirect RBRACK
+rule 292 operation: OPERATION LBRACK signed_number RBRACK
+rule 293 operation: OPERATION LBRACK number RBRACK
+rule 294 address: ADDRESS var
+rule 295 comment: COMMENT
+rule 296 message: MESSAGE LPAREN STRING RPAREN
+rule 297 warning: WARNING LPAREN STRING RPAREN
+rule 298 terminator: NEWLINE
+rule 299 terminator: comment optional_newline
+rule 300 terminator: false
+rule 301 terminator: 
+rule 302 swallow_newlines: NEWLINE
+rule 303 swallow_newlines: 
+rule 304 position_data: POSITION_DATA sn hash sn END
+rule 305 sn: swallow_newlines
+rule 306 hash: LBRACE sn hash_attributes sn RBRACE
+rule 307 hash: LBRACE sn RBRACE
+rule 308 hash_attributes: hash_attribute
+rule 309 hash_attributes: hash_attributes COMMA sn hash_attribute
+rule 310 hash_attribute: STRING COLON hash_value
+rule 311 hash_value: STRING
+rule 312 hash_value: WORD
+rule 313 hash_value: hash
+rule 314 hash_value: array
+rule 315 hash_value: optional_sign DIGIT
+rule 316 hash_value: optional_sign REAL
+rule 317 hash_value: TRUE_FALSE
+rule 318 optional_sign: sign
+rule 319 optional_sign: 
+rule 320 array: LBRACK sn array_values sn RBRACK
+rule 321 array_values: array_value
+rule 322 array_values: array_values COMMA sn array_value
+rule 323 array_value: hash_value
 
 ------- Symbols -------
 
 **Nonterminals, with rules where they appear
 
-  $start (127)
+  $start (129)
     on right: 
     on left : 
-  program (128)
+  program (130)
     on right: 
     on left : 1 2
-  statements (129)
+  statements (131)
     on right: 1 4 5
     on left : 3 4
-  statement (130)
+  statement (132)
     on right: 3 4
     on left : 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42
-  terminator (131)
+  terminator (133)
     on right: 3 4
-    on left : 295 296 297 298
-  block (132)
+    on left : 298 299 300 301
+  block (134)
     on right: 101 102 103 107 111 112 113 114 124 125 126 130 133 144
     on left : 5
-  optional_newline (133)
-    on right: 296
+  optional_newline (135)
+    on right: 299
     on left : 6 7
-  comment (134)
-    on right: 8 296
-    on left : 292
-  message (135)
+  comment (136)
+    on right: 8 299
+    on left : 295
+  message (137)
     on right: 9
-    on left : 293
-  definition (136)
+    on left : 296
+  definition (138)
     on right: 10
     on left : 193
-  namespace (137)
+  namespace (139)
     on right: 11
     on left : 124
-  motion_statement (138)
+  motion_statement (140)
     on right: 12
     on left : 146 147
-  position_assignment (139)
+  position_assignment (141)
     on right: 13
     on left : 199 200 201 202
-  label_definition (140)
+  label_definition (142)
     on right: 14
     on left : 192
-  address (141)
-    on right: 15 86 231
-    on left : 291
-  conditional (142)
+  address (143)
+    on right: 15 86 234
+    on left : 294
+  conditional (144)
     on right: 16
     on left : 101 102
-  inline_conditional (143)
+  inline_conditional (145)
     on right: 17
     on left : 137 138 139
-  conditional_block (144)
+  conditional_block (146)
     on right: 18
     on left : 103
-  forloop (145)
+  forloop (147)
     on right: 19
     on left : 112 113
-  while_loop (146)
+  while_loop (148)
     on right: 20
     on left : 114
-  use_statement (147)
+  use_statement (149)
     on right: 21
     on left : 68 69 70
-  set_skip_statement (148)
+  set_skip_statement (150)
     on right: 22
     on left : 72
-  wait_statement (149)
+  wait_statement (151)
     on right: 23
     on left : 58 59 60 61
-  case_statement (150)
+  case_statement (152)
     on right: 24
     on left : 127
-  fanuc_eval (151)
+  fanuc_eval (153)
     on right: 25
     on left : 57
-  timer_method (152)
+  timer_method (154)
     on right: 26
     on left : 56
-  position_data (153)
+  position_data (155)
     on right: 27
-    on left : 301
-  raise (154)
+    on left : 304
+  raise (156)
     on right: 28
     on left : 55
-  tp_header_definition (155)
+  tp_header_definition (157)
     on right: 29
     on left : 46
-  lpos_or_jpos (156)
+  lpos_or_jpos (158)
     on right: 30
     on left : 43 44
-  empty_stmt (157)
+  empty_stmt (159)
     on right: 31
     on left : 45
-  warning (158)
+  warning (160)
     on right: 32
-    on left : 294
-  var_system (159)
-    on right: 33 99 224 253
-    on left : 219 220
-  return_statement (160)
+    on left : 297
+  var_system (161)
+    on right: 33 99 227 256
+    on left : 222 223
+  return_statement (162)
     on right: 36
     on left : 91 92
-  collguard_statement (161)
+  collguard_statement (163)
     on right: 37
     on left : 71
-  function (162)
+  function (164)
     on right: 38
     on left : 125 126
-  tp_application_definition (163)
+  tp_application_definition (165)
     on right: 39
     on left : 54
-  using_statement (164)
+  using_statement (166)
     on right: 40
     on left : 121
-  import_statement (165)
+  import_statement (167)
     on right: 41
     on left : 123
-  compile_statement (166)
+  compile_statement (168)
     on right: 42
     on left : 122
-  var_or_indirect (167)
-    on right: 43 44 55 56 78 94 95 96 146 147 156 194 195 196 197 198 200 287 288
+  var_or_indirect (169)
+    on right: 43 44 55 56 78 94 95 96 146 147 156 194 195 196 197 198 200 290 291
     on left : 97 98 99
-  tp_header_value (168)
+  tp_header_value (170)
     on right: 46
     on left : 47 48
-  tp_tool_methods (169)
+  tp_tool_methods (171)
     on right: 54
     on left : 49 50
-  sn (170)
-    on right: 49 50 52 54 301 303 304 306 317 319
-    on left : 302
-  tp_tool_attributes (171)
+  sn (172)
+    on right: 49 50 52 54 304 306 307 309 320 322
+    on left : 305
+  tp_tool_attributes (173)
     on right: 49 52
     on left : 51 52
-  tp_tool_attribute (172)
+  tp_tool_attribute (174)
     on right: 51 52
     on left : 53
-  hash_value (173)
-    on right: 53 307 320
-    on left : 308 309 310 311 312 313 314
-  indirectable (174)
-    on right: 58 65 68 69 70 190 257 258
+  hash_value (175)
+    on right: 53 310 323
+    on left : 311 312 313 314 315 316 317
+  indirectable (176)
+    on right: 58 65 68 69 70 190 260 261
     on left : 181 182
-  expression (175)
-    on right: 59 60 61 72 91 101 102 103 107 111 114 138 139 194 195 196 197 198 233 256
-    on left : 228 229
-  wait_modifier (176)
+  expression (177)
+    on right: 59 60 61 72 91 101 102 103 107 111 114 138 139 194 195 196 197 198 236 259
+    on left : 231 232
+  wait_modifier (178)
     on right: 60 61
     on left : 62 63
-  timeout_modifier (177)
+  timeout_modifier (179)
     on right: 62
     on left : 64
-  after_modifier (178)
+  after_modifier (180)
     on right: 63
     on left : 65
-  swallow_newlines (179)
-    on right: 64 65 127 146 147 152 153 154 155 156 157 158 159 160 215 216 217 218 302
-    on left : 299 300
-  label (180)
+  swallow_newlines (181)
+    on right: 64 65 127 146 147 152 153 154 155 156 157 158 159 160 214 217 218 219 220 221 305
+    on left : 302 303
+  label (182)
     on right: 64 100 158 192
     on left : 66
-  group_statement (181)
-    on right: 70 217
+  group_statement (183)
+    on right: 70 218
     on left : 67
-  integer (182)
-    on right: 67 115 176 220 263
-    on left : 265
-  optional_arg (183)
+  integer (184)
+    on right: 67 115 176 223 266
+    on left : 268
+  optional_arg (185)
     on right: 71
     on left : 183 184 185
-  function_call (184)
+  function_call (186)
     on right: 75 76 78
     on left : 73 74
-  namespaces (185)
-    on right: 74 209 226
-    on left : 225 226
-  program_call (186)
+  namespaces (187)
+    on right: 74 209 229
+    on left : 228 229
+  program_call (188)
     on right: 135 143 186
     on left : 75 76 77 78
-  args (187)
+  args (189)
     on right: 75 76 77 78 80
     on left : 79 80 81
-  var (188)
-    on right: 77 84 97 112 113 116 127 132 177 179 182 184 188 203 204 251 261 291
+  var (190)
+    on right: 77 84 97 112 113 116 127 132 177 179 182 184 188 203 204 254 264 294
     on left : 205 206
-  arg (189)
+  arg (191)
     on right: 79 80
     on left : 82 83 84 85 86
-  number (190)
-    on right: 82 96 131 181 183 189 248 267 290
-    on left : 263 264
-  signed_number (191)
-    on right: 83 249 268 289
-    on left : 259 260
-  string (192)
-    on right: 85 269
+  number (192)
+    on right: 82 96 131 181 183 189 251 270 293
+    on left : 266 267
+  signed_number (193)
+    on right: 83 252 271 292
+    on left : 262 263
+  string (194)
+    on right: 85 272
     on left : 93
-  program_vars (193)
+  program_vars (195)
     on right: 88 125 126
     on left : 87 88 89
-  program_var (194)
+  program_var (196)
     on right: 87 88
     on left : 90
-  io_method (195)
+  io_method (197)
     on right: 142 187
     on left : 94 95 96
-  indirect_thing (196)
-    on right: 98 254
-    on left : 257 258
-  jump (197)
+  indirect_thing (198)
+    on right: 98 257
+    on left : 260 261
+  jump (199)
     on right: 136 140
     on left : 100
-  elsif_conditions (198)
+  elsif_conditions (200)
     on right: 101 105
     on left : 104 105 106
-  else_block (199)
+  else_block (201)
     on right: 101 102 103
     on left : 144 145
-  elsif_block (200)
+  elsif_block (202)
     on right: 103 109
     on left : 108 109 110
-  elsif_condition (201)
+  elsif_condition (203)
     on right: 104 105
     on left : 107
-  elsif_block_condition (202)
+  elsif_block_condition (204)
     on right: 108 109
     on left : 111
-  int_or_var (203)
+  int_or_var (205)
     on right: 112 113 153 160
     on left : 115 116
-  word_list (204)
+  word_list (206)
     on right: 118 121 122 123
     on left : 117 118
-  word_tuple (205)
+  word_tuple (207)
     on right: 117 118
     on left : 119 120
-  case_conditions (206)
+  case_conditions (208)
     on right: 127 129
     on left : 128 129
-  case_else (207)
+  case_else (209)
     on right: 127
     on left : 133 134
-  case_condition (208)
+  case_condition (210)
     on right: 128 129
     on left : 130
-  case_allowed_condition (209)
+  case_allowed_condition (211)
     on right: 130
     on left : 131 132
-  case_allowed_statement (210)
+  case_allowed_statement (212)
     on right: 
     on left : 135 136
-  inlineable (211)
+  inlineable (213)
     on right: 137 138 139
     on left : 140 141 142 143
-  assignment (212)
+  assignment (214)
     on right: 141
     on left : 194 195 196 197 198
-  motion_modifiers (213)
+  motion_modifiers (215)
     on right: 146 147 149
     on left : 148 149
-  motion_modifier (214)
+  motion_modifier (216)
     on right: 148 149
     on left : 152 153 154 155 156 157 158 159 160
-  motion_arguements (215)
+  motion_arguements (217)
     on right: 154
     on left : 150 151
-  valid_terminations (216)
+  valid_terminations (218)
     on right: 150 151 155
     on left : 176 177 178
-  speed (217)
+  speed (219)
     on right: 152
     on left : 190 191
-  time (218)
+  time (220)
     on right: 157
     on left : 188 189
-  time_seg_actions (219)
+  time_seg_actions (221)
     on right: 157
     on left : 186 187
-  optional_lpos_arg (220)
+  optional_lpos_arg (222)
     on right: 158
     on left : 179 180
-  valid_motion_statements (221)
+  valid_motion_statements (223)
     on right: 159
     on left : 161 162 163 164 165 166 167 168
-  single_argument_motion_modifiers (222)
+  single_argument_motion_modifiers (224)
     on right: 160
     on left : 169 170 171 172 173 174 175
-  definable (223)
+  definable (225)
     on right: 193
-    on left : 266 267 268 269 270
-  var_method_modifiers (224)
-    on right: 199 208 211 258
+    on left : 269 270 271 272 273
+  var_method_modifiers (226)
+    on right: 199 208 211 261
     on left : 210 211
-  array (225)
-    on right: 199 200 311
-    on left : 317
-  assignable_range (226)
+  array (227)
+    on right: 199 200 314
+    on left : 320
+  assignable_range (228)
     on right: 201 202
     on left : 203 204
-  pose_range_modifiers (227)
-    on right: 202 214
-    on left : 213 214
-  var_without_namespaces (228)
+  pose_range_modifiers (229)
+    on right: 202 213
+    on left : 212 213
+  var_without_namespaces (230)
     on right: 205 209
     on left : 207 208
-  var_with_namespaces (229)
+  var_with_namespaces (231)
     on right: 206
     on left : 209
-  var_method_modifier (230)
+  var_method_modifier (232)
     on right: 210 211
-    on left : 216 217 218
-  pose_method_modifier (231)
-    on right: 218
-    on left : 212
-  pose_range_modifier (232)
-    on right: 213 214
-    on left : 215
-  var_system_modifers (233)
-    on right: 219 220 222
-    on left : 221 222 223
-  var_system_modifer (234)
-    on right: 221 222
-    on left : 224
-  ns (235)
-    on right: 225 226
+    on left : 217 218 219 220 221
+  pose_range_modifier (233)
+    on right: 212 213
+    on left : 214
+  coord_system (234)
+    on right: 221
+    on left : 215 216
+  var_system_modifers (235)
+    on right: 222 223 225
+    on left : 224 225 226
+  var_system_modifer (236)
+    on right: 224 225
     on left : 227
-  unary_expression (236)
-    on right: 228
-    on left : 230 231 232
-  binary_expression (237)
-    on right: 229
-    on left : 233
-  factor (238)
-    on right: 230 232
-    on left : 248 249 250 251 252 253 254 255
-  operator (239)
-    on right: 233
-    on left : 234 235 236 237 238 239 240 241 242 243 244 245 246 247
-  operation (240)
-    on right: 250
-    on left : 287 288 289 290
-  signed_var (241)
-    on right: 252
-    on left : 261
-  paren_expr (242)
+  ns (237)
+    on right: 228 229
+    on left : 230
+  unary_expression (238)
+    on right: 231
+    on left : 233 234 235
+  binary_expression (239)
+    on right: 232
+    on left : 236
+  factor (240)
+    on right: 233 235
+    on left : 251 252 253 254 255 256 257 258
+  operator (241)
+    on right: 236
+    on left : 237 238 239 240 241 242 243 244 245 246 247 248 249 250
+  operation (242)
+    on right: 253
+    on left : 290 291 292 293
+  signed_var (243)
     on right: 255
-    on left : 256
-  sign (243)
-    on right: 259 260 261 315
-    on left : 262
-  reg (244)
-    on right: 266
-    on left : 283
-  framereg (245)
-    on right: 270
+    on left : 264
+  paren_expr (244)
+    on right: 258
+    on left : 259
+  sign (245)
+    on right: 262 263 264 318
+    on left : 265
+  reg (246)
+    on right: 269
     on left : 286
-  definable_range (246)
-    on right: 283
-    on left : 271 272
-  reg_types (247)
-    on right: 283
-    on left : 273 274 275 276 277 278 279 280 281 282
-  frametype (248)
+  framereg (247)
+    on right: 273
+    on left : 289
+  definable_range (248)
     on right: 286
-    on left : 284 285
-  hash (249)
-    on right: 301 310
-    on left : 303 304
-  hash_attributes (250)
-    on right: 303 306
-    on left : 305 306
-  hash_attribute (251)
-    on right: 305 306
-    on left : 307
-  optional_sign (252)
-    on right: 312 313
-    on left : 315 316
-  array_values (253)
-    on right: 317 319
+    on left : 274 275
+  reg_types (249)
+    on right: 286
+    on left : 276 277 278 279 280 281 282 283 284 285
+  frametype (250)
+    on right: 289
+    on left : 287 288
+  hash (251)
+    on right: 304 313
+    on left : 306 307
+  hash_attributes (252)
+    on right: 306 309
+    on left : 308 309
+  hash_attribute (253)
+    on right: 308 309
+    on left : 310
+  optional_sign (254)
+    on right: 315 316
     on left : 318 319
-  array_value (254)
-    on right: 318 319
-    on left : 320
+  array_values (255)
+    on right: 320 322
+    on left : 321 322
+  array_value (256)
+    on right: 321 322
+    on left : 323
 
 **Terminals, with rules where they appear
 
@@ -737,31 +740,31 @@ rule 320 array_value: hash_value
   error (1) 
   ASSIGN (2) 193
   AT_SYM (3) 
-  COMMENT (4) 292
-  MESSAGE (5) 293
-  WARNING (6) 294
+  COMMENT (4) 295
+  MESSAGE (5) 296
+  WARNING (6) 297
   JUMP (7) 100
   IO_METHOD (8) 94 95 96
-  INPUT (9) 281
-  OUTPUT (10) 282
-  NUMREG (11) 279
-  POSREG (12) 280
-  VREG (13) 277
-  SREG (14) 273
+  INPUT (9) 284
+  OUTPUT (10) 285
+  NUMREG (11) 282
+  POSREG (12) 283
+  VREG (13) 280
+  SREG (14) 276
   TIME_SEGMENT (15) 157
-  ARG (16) 276
-  UALM (17) 274
-  TOOLREG (18) 284
-  FRAMEREG (19) 285
+  ARG (16) 279
+  UALM (17) 277
+  TOOLREG (18) 287
+  FRAMEREG (19) 288
   MOVE (20) 146 147
-  DOT (21) 60 61 146 147 152 153 154 155 156 157 158 159 160 215 216 217 218 224
+  DOT (21) 60 61 146 147 152 153 154 155 156 157 158 159 160 214 217 218 219 220 221 227
   TO (22) 112 146 147
   DOWNTO (23) 113
   MID (24) 147
   AT (25) 152
   ACC (26) 153
   TERM (27) 155
-  OFFSET (28) 156
+  OFFSET (28) 156 220
   SKIP (29) 158
   GROUP (30) 67
   COORD (31) 161
@@ -781,33 +784,33 @@ rule 320 array_value: hash_value
   PSPD (45) 174
   CTV (46) 175
   SEMICOLON (47) 
-  NEWLINE (48) 5 6 45 295 299
-  STRING (49) 47 57 58 65 93 96 190 191 257 258 293 294 307 308
-  REAL (50) 260 264 313
-  DIGIT (51) 178 259 265 271 272 286 312
-  WORD (52) 53 73 74 90 119 120 124 125 126 193 207 208 216 219 220 227 309
+  NEWLINE (48) 5 6 45 298 302
+  STRING (49) 47 57 58 65 93 96 190 191 260 261 296 297 310 311
+  REAL (50) 263 267 316
+  DIGIT (51) 178 262 268 274 275 289 315
+  WORD (52) 53 73 74 90 119 120 124 125 126 193 207 208 217 222 223 230 312
   EQUAL (53) 46 54 78 194 195 196 197 198 201 202
-  RANGE (54) 203 271
-  EEQUAL (55) 234
-  NOTEQUAL (56) 235
-  GTE (57) 238
-  LTE (58) 239
-  LT (59) 236
-  GT (60) 237
-  BANG (61) 232
-  PLUS (62) 195 240
-  MINUS (63) 178 196 241 262
-  STAR (64) 197 243
-  SLASH (65) 198 244
-  DIV (66) 245
-  AND (67) 247
-  OR (68) 242
-  MOD (69) 246
+  RANGE (54) 203 274
+  EEQUAL (55) 237
+  NOTEQUAL (56) 238
+  GTE (57) 241
+  LTE (58) 242
+  LT (59) 239
+  GT (60) 240
+  BANG (61) 235
+  PLUS (62) 195 243
+  MINUS (63) 178 196 244 265
+  STAR (64) 197 246
+  SLASH (65) 198 247
+  DIV (66) 248
+  AND (67) 250
+  OR (68) 245
+  MOD (69) 249
   IF (70) 101 103 138
   THEN (71) 103 111
   ELSE (72) 133 144
   ELSIF (73) 107 111
-  END (74) 101 102 103 112 113 114 124 125 126 127 301
+  END (74) 101 102 103 112 113 114 124 125 126 127 304
   UNLESS (75) 102 139
   FOR (76) 112 113
   IN (77) 112 113
@@ -822,44 +825,46 @@ rule 320 array_value: hash_value
   NAMESPACE (86) 124
   CASE (87) 127
   WHEN (88) 130
-  INDIRECT (89) 257 258
-  POSITION (90) 278
+  INDIRECT (89) 260 261
+  POSITION (90) 281
   EVAL (91) 57
-  TIMER (92) 275
+  TIMER (92) 278
   TIMER_METHOD (93) 56
   RAISE (94) 55
   ABORT (95) 35
   RETURN (96) 91 92
-  POSITION_DATA (97) 301
-  TRUE_FALSE (98) 48 314
+  POSITION_DATA (97) 304
+  TRUE_FALSE (98) 48 317
   CALL (99) 77
   RUN (100) 76
   PAUSE (101) 34
   TP_HEADER (102) 46
   TP_APPLICATION_TYPE (103) 54
-  LPAREN (104) 43 44 58 59 60 61 64 65 67 69 70 75 76 77 78 91 95 96 112 113 125 126 146 147 152 153 154 155 156 157 158 160 202 256 257 258 293 294
-  RPAREN (105) 43 44 58 59 60 61 64 65 67 69 70 75 76 77 78 91 95 96 112 113 125 126 146 147 152 153 154 155 156 157 158 160 202 256 257 258 293 294
-  COLON (106) 53 126 227 307
-  COMMA (107) 52 58 65 70 80 88 96 119 151 157 179 190 257 258 288 306 319
-  LBRACK (108) 220 283 286 287 288 289 290 317
-  RBRACK (109) 220 283 286 287 288 289 290 317
-  LBRACE (110) 49 50 303 304
-  RBRACE (111) 49 50 303 304
+  LPAREN (104) 43 44 58 59 60 61 64 65 67 69 70 75 76 77 78 91 95 96 112 113 125 126 146 147 152 153 154 155 156 157 158 160 202 259 260 261 296 297
+  RPAREN (105) 43 44 58 59 60 61 64 65 67 69 70 75 76 77 78 91 95 96 112 113 125 126 146 147 152 153 154 155 156 157 158 160 202 259 260 261 296 297
+  COLON (106) 53 126 230 310
+  COMMA (107) 52 58 65 70 80 88 96 119 151 157 179 190 260 261 291 309 322
+  LBRACK (108) 223 286 289 290 291 292 293 320
+  RBRACK (109) 223 286 289 290 291 292 293 320
+  LBRACE (110) 49 50 306 307
+  RBRACE (111) 49 50 306 307
   LABEL (112) 66
-  SYSTEM (113) 219 220
-  ADDRESS (114) 291
+  SYSTEM (113) 222 223
+  ADDRESS (114) 294
   LPOS (115) 43
   JPOS (116) 44
-  false (117) 297
+  false (117) 300
   FUNCTION (118) 125 126
-  OPERATION (119) 287 288 289 290
+  OPERATION (119) 290 291 292 293
   USING (120) 121
   IMPORT (121) 122 123
   COMPILE (122) 122
   ARROW (123) 199 200
   DEFAULTPOS (124) 199
-  POSEATTR (125) 212
-  POSEREVERSE (126) 215
+  POSEATTR (125) 219
+  POSEREVERSE (126) 214
+  SPHERE (127) 215
+  POLAR (128) 216
 
 --------- State ---------
 
@@ -1070,11 +1075,11 @@ state 3
    3) statements : statement _ terminator
 
   COMMENT       shift, and go to state 89
-  COMMENT       [reduce using rule 298 (terminator)]
+  COMMENT       [reduce using rule 301 (terminator)]
   NEWLINE       shift, and go to state 96
-  NEWLINE       [reduce using rule 298 (terminator)]
+  NEWLINE       [reduce using rule 301 (terminator)]
   false         shift, and go to state 98
-  $default      reduce using rule 298 (terminator)
+  $default      reduce using rule 301 (terminator)
 
   terminator    go to state 95
   comment       go to state 97
@@ -1510,7 +1515,7 @@ state 53
  193) definition : WORD _ ASSIGN definable
  207) var_without_namespaces : WORD _
  208) var_without_namespaces : WORD _ var_method_modifiers
- 227) ns : WORD _ COLON COLON
+ 230) ns : WORD _ COLON COLON
 
   ASSIGN        shift, and go to state 140
   DOT           shift, and go to state 143
@@ -1525,7 +1530,7 @@ state 54
 
   74) function_call : namespaces _ WORD
  209) var_with_namespaces : namespaces _ var_without_namespaces
- 226) namespaces : namespaces _ ns
+ 229) namespaces : namespaces _ ns
 
   WORD          shift, and go to state 145
 
@@ -1896,30 +1901,30 @@ state 84
 
 state 85
 
- 219) var_system : SYSTEM _ WORD var_system_modifers
- 220) var_system : SYSTEM _ WORD LBRACK integer RBRACK var_system_modifers
+ 222) var_system : SYSTEM _ WORD var_system_modifers
+ 223) var_system : SYSTEM _ WORD LBRACK integer RBRACK var_system_modifers
 
   WORD          shift, and go to state 182
 
 
 state 86
 
- 225) namespaces : ns _
+ 228) namespaces : ns _
 
-  $default      reduce using rule 225 (namespaces)
+  $default      reduce using rule 228 (namespaces)
 
 
 state 87
 
- 257) indirect_thing : INDIRECT _ LPAREN STRING COMMA indirectable RPAREN
- 258) indirect_thing : INDIRECT _ LPAREN STRING COMMA indirectable RPAREN var_method_modifiers
+ 260) indirect_thing : INDIRECT _ LPAREN STRING COMMA indirectable RPAREN
+ 261) indirect_thing : INDIRECT _ LPAREN STRING COMMA indirectable RPAREN var_method_modifiers
 
   LPAREN        shift, and go to state 183
 
 
 state 88
 
- 291) address : ADDRESS _ var
+ 294) address : ADDRESS _ var
 
   WORD          shift, and go to state 106
 
@@ -1931,31 +1936,31 @@ state 88
 
 state 89
 
- 292) comment : COMMENT _
+ 295) comment : COMMENT _
 
-  $default      reduce using rule 292 (comment)
+  $default      reduce using rule 295 (comment)
 
 
 state 90
 
- 293) message : MESSAGE _ LPAREN STRING RPAREN
+ 296) message : MESSAGE _ LPAREN STRING RPAREN
 
   LPAREN        shift, and go to state 185
 
 
 state 91
 
- 294) warning : WARNING _ LPAREN STRING RPAREN
+ 297) warning : WARNING _ LPAREN STRING RPAREN
 
   LPAREN        shift, and go to state 186
 
 
 state 92
 
- 301) position_data : POSITION_DATA _ sn hash sn END
+ 304) position_data : POSITION_DATA _ sn hash sn END
 
   NEWLINE       shift, and go to state 187
-  $default      reduce using rule 300 (swallow_newlines)
+  $default      reduce using rule 303 (swallow_newlines)
 
   sn            go to state 188
   swallow_newlines  go to state 189
@@ -1971,11 +1976,11 @@ state 94
    4) statements : statements statement _ terminator
 
   COMMENT       shift, and go to state 89
-  COMMENT       [reduce using rule 298 (terminator)]
+  COMMENT       [reduce using rule 301 (terminator)]
   NEWLINE       shift, and go to state 96
-  NEWLINE       [reduce using rule 298 (terminator)]
+  NEWLINE       [reduce using rule 301 (terminator)]
   false         shift, and go to state 98
-  $default      reduce using rule 298 (terminator)
+  $default      reduce using rule 301 (terminator)
 
   terminator    go to state 191
   comment       go to state 97
@@ -1989,14 +1994,14 @@ state 95
 
 state 96
 
- 295) terminator : NEWLINE _
+ 298) terminator : NEWLINE _
 
-  $default      reduce using rule 295 (terminator)
+  $default      reduce using rule 298 (terminator)
 
 
 state 97
 
- 296) terminator : comment _ optional_newline
+ 299) terminator : comment _ optional_newline
 
   NEWLINE       shift, and go to state 192
   NEWLINE       [reduce using rule 7 (optional_newline)]
@@ -2006,9 +2011,9 @@ state 97
 
 state 98
 
- 297) terminator : false _
+ 300) terminator : false _
 
-  $default      reduce using rule 297 (terminator)
+  $default      reduce using rule 300 (terminator)
 
 
 state 99
@@ -2059,7 +2064,7 @@ state 102
   54) tp_application_definition : TP_APPLICATION_TYPE EQUAL _ sn tp_tool_methods
 
   NEWLINE       shift, and go to state 187
-  $default      reduce using rule 300 (swallow_newlines)
+  $default      reduce using rule 303 (swallow_newlines)
 
   sn            go to state 199
   swallow_newlines  go to state 189
@@ -2089,7 +2094,7 @@ state 106
 
  207) var_without_namespaces : WORD _
  208) var_without_namespaces : WORD _ var_method_modifiers
- 227) ns : WORD _ COLON COLON
+ 230) ns : WORD _ COLON COLON
 
   DOT           shift, and go to state 143
   COLON         shift, and go to state 144
@@ -2101,7 +2106,7 @@ state 106
 state 107
 
  209) var_with_namespaces : namespaces _ var_without_namespaces
- 226) namespaces : namespaces _ ns
+ 229) namespaces : namespaces _ ns
 
   WORD          shift, and go to state 106
 
@@ -2217,23 +2222,23 @@ state 115
 
 state 116
 
- 263) number : integer _
+ 266) number : integer _
 
-  $default      reduce using rule 263 (number)
+  $default      reduce using rule 266 (number)
 
 
 state 117
 
- 264) number : REAL _
+ 267) number : REAL _
 
-  $default      reduce using rule 264 (number)
+  $default      reduce using rule 267 (number)
 
 
 state 118
 
- 265) integer : DIGIT _
+ 268) integer : DIGIT _
 
-  $default      reduce using rule 265 (integer)
+  $default      reduce using rule 268 (integer)
 
 
 state 119
@@ -2260,7 +2265,7 @@ state 121
 state 122
 
   72) set_skip_statement : SET_SKIP_CONDITION expression _
- 233) binary_expression : expression _ operator expression
+ 236) binary_expression : expression _ operator expression
 
   EEQUAL        shift, and go to state 204
   NOTEQUAL      shift, and go to state 205
@@ -2282,35 +2287,35 @@ state 122
 
 state 123
 
- 228) expression : unary_expression _
+ 231) expression : unary_expression _
 
-  $default      reduce using rule 228 (expression)
+  $default      reduce using rule 231 (expression)
 
 
 state 124
 
- 229) expression : binary_expression _
+ 232) expression : binary_expression _
 
-  $default      reduce using rule 229 (expression)
+  $default      reduce using rule 232 (expression)
 
 
 state 125
 
- 230) unary_expression : factor _
+ 233) unary_expression : factor _
 
-  $default      reduce using rule 230 (unary_expression)
+  $default      reduce using rule 233 (unary_expression)
 
 
 state 126
 
- 231) unary_expression : address _
+ 234) unary_expression : address _
 
-  $default      reduce using rule 231 (unary_expression)
+  $default      reduce using rule 234 (unary_expression)
 
 
 state 127
 
- 232) unary_expression : BANG _ factor
+ 235) unary_expression : BANG _ factor
 
   REAL          shift, and go to state 117
   DIGIT         shift, and go to state 118
@@ -2339,63 +2344,63 @@ state 127
 
 state 128
 
- 248) factor : number _
-
-  $default      reduce using rule 248 (factor)
-
-
-state 129
-
- 249) factor : signed_number _
-
-  $default      reduce using rule 249 (factor)
-
-
-state 130
-
- 250) factor : operation _
-
-  $default      reduce using rule 250 (factor)
-
-
-state 131
-
- 251) factor : var _
+ 251) factor : number _
 
   $default      reduce using rule 251 (factor)
 
 
-state 132
+state 129
 
- 252) factor : signed_var _
+ 252) factor : signed_number _
 
   $default      reduce using rule 252 (factor)
 
 
-state 133
+state 130
 
- 253) factor : var_system _
+ 253) factor : operation _
 
   $default      reduce using rule 253 (factor)
 
 
-state 134
+state 131
 
- 254) factor : indirect_thing _
+ 254) factor : var _
 
   $default      reduce using rule 254 (factor)
 
 
-state 135
+state 132
 
- 255) factor : paren_expr _
+ 255) factor : signed_var _
 
   $default      reduce using rule 255 (factor)
 
 
+state 133
+
+ 256) factor : var_system _
+
+  $default      reduce using rule 256 (factor)
+
+
+state 134
+
+ 257) factor : indirect_thing _
+
+  $default      reduce using rule 257 (factor)
+
+
+state 135
+
+ 258) factor : paren_expr _
+
+  $default      reduce using rule 258 (factor)
+
+
 state 136
 
- 256) paren_expr : LPAREN _ expression RPAREN
+ 259) paren_expr : LPAREN _ expression RPAREN
 
   REAL          shift, and go to state 117
   DIGIT         shift, and go to state 118
@@ -2430,9 +2435,9 @@ state 136
 
 state 137
 
- 259) signed_number : sign _ DIGIT
- 260) signed_number : sign _ REAL
- 261) signed_var : sign _ var
+ 262) signed_number : sign _ DIGIT
+ 263) signed_number : sign _ REAL
+ 264) signed_var : sign _ var
 
   REAL          shift, and go to state 221
   DIGIT         shift, and go to state 220
@@ -2446,17 +2451,17 @@ state 137
 
 state 138
 
- 262) sign : MINUS _
+ 265) sign : MINUS _
 
-  $default      reduce using rule 262 (sign)
+  $default      reduce using rule 265 (sign)
 
 
 state 139
 
- 287) operation : OPERATION _ LBRACK var_or_indirect RBRACK
- 288) operation : OPERATION _ LBRACK var_or_indirect COMMA var_or_indirect RBRACK
- 289) operation : OPERATION _ LBRACK signed_number RBRACK
- 290) operation : OPERATION _ LBRACK number RBRACK
+ 290) operation : OPERATION _ LBRACK var_or_indirect RBRACK
+ 291) operation : OPERATION _ LBRACK var_or_indirect COMMA var_or_indirect RBRACK
+ 292) operation : OPERATION _ LBRACK signed_number RBRACK
+ 293) operation : OPERATION _ LBRACK number RBRACK
 
   LBRACK        shift, and go to state 223
 
@@ -2512,18 +2517,20 @@ state 142
 
 state 143
 
- 216) var_method_modifier : DOT _ swallow_newlines WORD
- 217) var_method_modifier : DOT _ swallow_newlines group_statement
- 218) var_method_modifier : DOT _ swallow_newlines pose_method_modifier
+ 217) var_method_modifier : DOT _ swallow_newlines WORD
+ 218) var_method_modifier : DOT _ swallow_newlines group_statement
+ 219) var_method_modifier : DOT _ swallow_newlines POSEATTR
+ 220) var_method_modifier : DOT _ swallow_newlines OFFSET
+ 221) var_method_modifier : DOT _ swallow_newlines coord_system
 
   NEWLINE       shift, and go to state 187
-  $default      reduce using rule 300 (swallow_newlines)
+  $default      reduce using rule 303 (swallow_newlines)
 
   swallow_newlines  go to state 247
 
 state 144
 
- 227) ns : WORD COLON _ COLON
+ 230) ns : WORD COLON _ COLON
 
   COLON         shift, and go to state 248
 
@@ -2533,7 +2540,7 @@ state 145
   74) function_call : namespaces WORD _
  207) var_without_namespaces : WORD _
  208) var_without_namespaces : WORD _ var_method_modifiers
- 227) ns : WORD _ COLON COLON
+ 230) ns : WORD _ COLON COLON
 
   DOT           shift, and go to state 143
   COLON         shift, and go to state 144
@@ -2552,9 +2559,9 @@ state 146
 
 state 147
 
- 226) namespaces : namespaces ns _
+ 229) namespaces : namespaces ns _
 
-  $default      reduce using rule 226 (namespaces)
+  $default      reduce using rule 229 (namespaces)
 
 
 state 148
@@ -2586,7 +2593,7 @@ state 148
 state 149
 
   73) function_call : WORD _
- 227) ns : WORD _ COLON COLON
+ 230) ns : WORD _ COLON COLON
 
   COLON         shift, and go to state 144
   $default      reduce using rule 73 (function_call)
@@ -2595,7 +2602,7 @@ state 149
 state 150
 
   74) function_call : namespaces _ WORD
- 226) namespaces : namespaces _ ns
+ 229) namespaces : namespaces _ ns
 
   WORD          shift, and go to state 256
 
@@ -2771,7 +2778,7 @@ state 164
 
  101) conditional : IF expression _ block elsif_conditions else_block END
  103) conditional_block : IF expression _ THEN block elsif_block else_block END
- 233) binary_expression : expression _ operator expression
+ 236) binary_expression : expression _ operator expression
 
   NEWLINE       shift, and go to state 271
   EEQUAL        shift, and go to state 204
@@ -2796,7 +2803,7 @@ state 164
 state 165
 
  102) conditional : UNLESS expression _ block else_block END
- 233) binary_expression : expression _ operator expression
+ 236) binary_expression : expression _ operator expression
 
   NEWLINE       shift, and go to state 271
   EEQUAL        shift, and go to state 204
@@ -2828,7 +2835,7 @@ state 166
 state 167
 
  114) while_loop : WHILE expression _ block END
- 233) binary_expression : expression _ operator expression
+ 236) binary_expression : expression _ operator expression
 
   NEWLINE       shift, and go to state 271
   EEQUAL        shift, and go to state 204
@@ -2925,7 +2932,7 @@ state 176
  127) case_statement : CASE var _ swallow_newlines case_conditions case_else END
 
   NEWLINE       shift, and go to state 187
-  $default      reduce using rule 300 (swallow_newlines)
+  $default      reduce using rule 303 (swallow_newlines)
 
   swallow_newlines  go to state 282
 
@@ -3005,7 +3012,7 @@ state 179
  147) motion_statement : MOVE DOT _ swallow_newlines MID LPAREN var_or_indirect RPAREN DOT swallow_newlines TO LPAREN var_or_indirect RPAREN motion_modifiers
 
   NEWLINE       shift, and go to state 187
-  $default      reduce using rule 300 (swallow_newlines)
+  $default      reduce using rule 303 (swallow_newlines)
 
   swallow_newlines  go to state 285
 
@@ -3036,56 +3043,56 @@ state 181
 
 state 182
 
- 219) var_system : SYSTEM WORD _ var_system_modifers
- 220) var_system : SYSTEM WORD _ LBRACK integer RBRACK var_system_modifers
+ 222) var_system : SYSTEM WORD _ var_system_modifers
+ 223) var_system : SYSTEM WORD _ LBRACK integer RBRACK var_system_modifers
 
   DOT           shift, and go to state 293
-  DOT           [reduce using rule 223 (var_system_modifers)]
+  DOT           [reduce using rule 226 (var_system_modifers)]
   LBRACK        shift, and go to state 291
-  $default      reduce using rule 223 (var_system_modifers)
+  $default      reduce using rule 226 (var_system_modifers)
 
   var_system_modifers  go to state 290
   var_system_modifer  go to state 292
 
 state 183
 
- 257) indirect_thing : INDIRECT LPAREN _ STRING COMMA indirectable RPAREN
- 258) indirect_thing : INDIRECT LPAREN _ STRING COMMA indirectable RPAREN var_method_modifiers
+ 260) indirect_thing : INDIRECT LPAREN _ STRING COMMA indirectable RPAREN
+ 261) indirect_thing : INDIRECT LPAREN _ STRING COMMA indirectable RPAREN var_method_modifiers
 
   STRING        shift, and go to state 294
 
 
 state 184
 
- 291) address : ADDRESS var _
+ 294) address : ADDRESS var _
 
-  $default      reduce using rule 291 (address)
+  $default      reduce using rule 294 (address)
 
 
 state 185
 
- 293) message : MESSAGE LPAREN _ STRING RPAREN
+ 296) message : MESSAGE LPAREN _ STRING RPAREN
 
   STRING        shift, and go to state 295
 
 
 state 186
 
- 294) warning : WARNING LPAREN _ STRING RPAREN
+ 297) warning : WARNING LPAREN _ STRING RPAREN
 
   STRING        shift, and go to state 296
 
 
 state 187
 
- 299) swallow_newlines : NEWLINE _
+ 302) swallow_newlines : NEWLINE _
 
-  $default      reduce using rule 299 (swallow_newlines)
+  $default      reduce using rule 302 (swallow_newlines)
 
 
 state 188
 
- 301) position_data : POSITION_DATA sn _ hash sn END
+ 304) position_data : POSITION_DATA sn _ hash sn END
 
   LBRACE        shift, and go to state 298
 
@@ -3093,9 +3100,9 @@ state 188
 
 state 189
 
- 302) sn : swallow_newlines _
+ 305) sn : swallow_newlines _
 
-  $default      reduce using rule 302 (sn)
+  $default      reduce using rule 305 (sn)
 
 
 state 190
@@ -3120,9 +3127,9 @@ state 192
 
 state 193
 
- 296) terminator : comment optional_newline _
+ 299) terminator : comment optional_newline _
 
-  $default      reduce using rule 296 (terminator)
+  $default      reduce using rule 299 (terminator)
 
 
 state 194
@@ -3180,7 +3187,7 @@ state 201
   59) wait_statement : WAIT_UNTIL LPAREN expression _ RPAREN
   60) wait_statement : WAIT_UNTIL LPAREN expression _ RPAREN DOT wait_modifier
   61) wait_statement : WAIT_UNTIL LPAREN expression _ RPAREN DOT wait_modifier DOT wait_modifier
- 233) binary_expression : expression _ operator expression
+ 236) binary_expression : expression _ operator expression
 
   EEQUAL        shift, and go to state 204
   NOTEQUAL      shift, and go to state 205
@@ -3211,7 +3218,7 @@ state 202
 
 state 203
 
- 233) binary_expression : expression operator _ expression
+ 236) binary_expression : expression operator _ expression
 
   REAL          shift, and go to state 117
   DIGIT         shift, and go to state 118
@@ -3246,113 +3253,113 @@ state 203
 
 state 204
 
- 234) operator : EEQUAL _
-
-  $default      reduce using rule 234 (operator)
-
-
-state 205
-
- 235) operator : NOTEQUAL _
-
-  $default      reduce using rule 235 (operator)
-
-
-state 206
-
- 236) operator : LT _
-
-  $default      reduce using rule 236 (operator)
-
-
-state 207
-
- 237) operator : GT _
+ 237) operator : EEQUAL _
 
   $default      reduce using rule 237 (operator)
 
 
-state 208
+state 205
 
- 238) operator : GTE _
+ 238) operator : NOTEQUAL _
 
   $default      reduce using rule 238 (operator)
 
 
-state 209
+state 206
 
- 239) operator : LTE _
+ 239) operator : LT _
 
   $default      reduce using rule 239 (operator)
 
 
-state 210
+state 207
 
- 240) operator : PLUS _
+ 240) operator : GT _
 
   $default      reduce using rule 240 (operator)
 
 
-state 211
+state 208
 
- 241) operator : MINUS _
+ 241) operator : GTE _
 
   $default      reduce using rule 241 (operator)
 
 
-state 212
+state 209
 
- 242) operator : OR _
+ 242) operator : LTE _
 
   $default      reduce using rule 242 (operator)
 
 
-state 213
+state 210
 
- 243) operator : STAR _
+ 243) operator : PLUS _
 
   $default      reduce using rule 243 (operator)
 
 
-state 214
+state 211
 
- 244) operator : SLASH _
+ 244) operator : MINUS _
 
   $default      reduce using rule 244 (operator)
 
 
-state 215
+state 212
 
- 245) operator : DIV _
+ 245) operator : OR _
 
   $default      reduce using rule 245 (operator)
 
 
-state 216
+state 213
 
- 246) operator : MOD _
+ 246) operator : STAR _
 
   $default      reduce using rule 246 (operator)
 
 
-state 217
+state 214
 
- 247) operator : AND _
+ 247) operator : SLASH _
 
   $default      reduce using rule 247 (operator)
 
 
+state 215
+
+ 248) operator : DIV _
+
+  $default      reduce using rule 248 (operator)
+
+
+state 216
+
+ 249) operator : MOD _
+
+  $default      reduce using rule 249 (operator)
+
+
+state 217
+
+ 250) operator : AND _
+
+  $default      reduce using rule 250 (operator)
+
+
 state 218
 
- 232) unary_expression : BANG factor _
+ 235) unary_expression : BANG factor _
 
-  $default      reduce using rule 232 (unary_expression)
+  $default      reduce using rule 235 (unary_expression)
 
 
 state 219
 
- 233) binary_expression : expression _ operator expression
- 256) paren_expr : LPAREN expression _ RPAREN
+ 236) binary_expression : expression _ operator expression
+ 259) paren_expr : LPAREN expression _ RPAREN
 
   EEQUAL        shift, and go to state 204
   NOTEQUAL      shift, and go to state 205
@@ -3374,31 +3381,31 @@ state 219
 
 state 220
 
- 259) signed_number : sign DIGIT _
+ 262) signed_number : sign DIGIT _
 
-  $default      reduce using rule 259 (signed_number)
+  $default      reduce using rule 262 (signed_number)
 
 
 state 221
 
- 260) signed_number : sign REAL _
+ 263) signed_number : sign REAL _
 
-  $default      reduce using rule 260 (signed_number)
+  $default      reduce using rule 263 (signed_number)
 
 
 state 222
 
- 261) signed_var : sign var _
+ 264) signed_var : sign var _
 
-  $default      reduce using rule 261 (signed_var)
+  $default      reduce using rule 264 (signed_var)
 
 
 state 223
 
- 287) operation : OPERATION LBRACK _ var_or_indirect RBRACK
- 288) operation : OPERATION LBRACK _ var_or_indirect COMMA var_or_indirect RBRACK
- 289) operation : OPERATION LBRACK _ signed_number RBRACK
- 290) operation : OPERATION LBRACK _ number RBRACK
+ 290) operation : OPERATION LBRACK _ var_or_indirect RBRACK
+ 291) operation : OPERATION LBRACK _ var_or_indirect COMMA var_or_indirect RBRACK
+ 292) operation : OPERATION LBRACK _ signed_number RBRACK
+ 293) operation : OPERATION LBRACK _ number RBRACK
 
   REAL          shift, and go to state 117
   DIGIT         shift, and go to state 118
@@ -3436,8 +3443,8 @@ state 225
 
 state 226
 
- 259) signed_number : sign _ DIGIT
- 260) signed_number : sign _ REAL
+ 262) signed_number : sign _ DIGIT
+ 263) signed_number : sign _ REAL
 
   REAL          shift, and go to state 221
   DIGIT         shift, and go to state 220
@@ -3445,133 +3452,133 @@ state 226
 
 state 227
 
- 266) definable : reg _
-
-  $default      reduce using rule 266 (definable)
-
-
-state 228
-
- 267) definable : number _
-
-  $default      reduce using rule 267 (definable)
-
-
-state 229
-
- 268) definable : signed_number _
-
-  $default      reduce using rule 268 (definable)
-
-
-state 230
-
- 269) definable : string _
+ 269) definable : reg _
 
   $default      reduce using rule 269 (definable)
 
 
-state 231
+state 228
 
- 270) definable : framereg _
+ 270) definable : number _
 
   $default      reduce using rule 270 (definable)
 
 
+state 229
+
+ 271) definable : signed_number _
+
+  $default      reduce using rule 271 (definable)
+
+
+state 230
+
+ 272) definable : string _
+
+  $default      reduce using rule 272 (definable)
+
+
+state 231
+
+ 273) definable : framereg _
+
+  $default      reduce using rule 273 (definable)
+
+
 state 232
 
- 273) reg_types : SREG _
-
-  $default      reduce using rule 273 (reg_types)
-
-
-state 233
-
- 274) reg_types : UALM _
-
-  $default      reduce using rule 274 (reg_types)
-
-
-state 234
-
- 275) reg_types : TIMER _
-
-  $default      reduce using rule 275 (reg_types)
-
-
-state 235
-
- 276) reg_types : ARG _
+ 276) reg_types : SREG _
 
   $default      reduce using rule 276 (reg_types)
 
 
-state 236
+state 233
 
- 277) reg_types : VREG _
+ 277) reg_types : UALM _
 
   $default      reduce using rule 277 (reg_types)
 
 
-state 237
+state 234
 
- 278) reg_types : POSITION _
+ 278) reg_types : TIMER _
 
   $default      reduce using rule 278 (reg_types)
 
 
-state 238
+state 235
 
- 279) reg_types : NUMREG _
+ 279) reg_types : ARG _
 
   $default      reduce using rule 279 (reg_types)
 
 
-state 239
+state 236
 
- 280) reg_types : POSREG _
+ 280) reg_types : VREG _
 
   $default      reduce using rule 280 (reg_types)
 
 
-state 240
+state 237
 
- 281) reg_types : INPUT _
+ 281) reg_types : POSITION _
 
   $default      reduce using rule 281 (reg_types)
 
 
-state 241
+state 238
 
- 282) reg_types : OUTPUT _
+ 282) reg_types : NUMREG _
 
   $default      reduce using rule 282 (reg_types)
 
 
+state 239
+
+ 283) reg_types : POSREG _
+
+  $default      reduce using rule 283 (reg_types)
+
+
+state 240
+
+ 284) reg_types : INPUT _
+
+  $default      reduce using rule 284 (reg_types)
+
+
+state 241
+
+ 285) reg_types : OUTPUT _
+
+  $default      reduce using rule 285 (reg_types)
+
+
 state 242
 
- 283) reg : reg_types _ LBRACK definable_range RBRACK
+ 286) reg : reg_types _ LBRACK definable_range RBRACK
 
   LBRACK        shift, and go to state 312
 
 
 state 243
 
- 284) frametype : TOOLREG _
+ 287) frametype : TOOLREG _
 
-  $default      reduce using rule 284 (frametype)
+  $default      reduce using rule 287 (frametype)
 
 
 state 244
 
- 285) frametype : FRAMEREG _
+ 288) frametype : FRAMEREG _
 
-  $default      reduce using rule 285 (frametype)
+  $default      reduce using rule 288 (frametype)
 
 
 state 245
 
- 286) framereg : frametype _ LBRACK DIGIT RBRACK
+ 289) framereg : frametype _ LBRACK DIGIT RBRACK
 
   LBRACK        shift, and go to state 313
 
@@ -3585,22 +3592,27 @@ state 246
 
 state 247
 
- 216) var_method_modifier : DOT swallow_newlines _ WORD
- 217) var_method_modifier : DOT swallow_newlines _ group_statement
- 218) var_method_modifier : DOT swallow_newlines _ pose_method_modifier
+ 217) var_method_modifier : DOT swallow_newlines _ WORD
+ 218) var_method_modifier : DOT swallow_newlines _ group_statement
+ 219) var_method_modifier : DOT swallow_newlines _ POSEATTR
+ 220) var_method_modifier : DOT swallow_newlines _ OFFSET
+ 221) var_method_modifier : DOT swallow_newlines _ coord_system
 
+  OFFSET        shift, and go to state 320
   GROUP         shift, and go to state 314
-  WORD          shift, and go to state 316
-  POSEATTR      shift, and go to state 315
+  WORD          shift, and go to state 317
+  POSEATTR      shift, and go to state 319
+  SPHERE        shift, and go to state 315
+  POLAR         shift, and go to state 316
 
-  group_statement  go to state 317
-  pose_method_modifier  go to state 318
+  group_statement  go to state 318
+  coord_system  go to state 321
 
 state 248
 
- 227) ns : WORD COLON COLON _
+ 230) ns : WORD COLON COLON _
 
-  $default      reduce using rule 227 (ns)
+  $default      reduce using rule 230 (ns)
 
 
 state 249
@@ -3608,8 +3620,8 @@ state 249
   75) program_call : function_call LPAREN args _ RPAREN
   80) args : args _ COMMA arg
 
-  RPAREN        shift, and go to state 319
-  COMMA         shift, and go to state 320
+  RPAREN        shift, and go to state 322
+  COMMA         shift, and go to state 323
 
 
 state 250
@@ -3657,7 +3669,7 @@ state 255
 state 256
 
   74) function_call : namespaces WORD _
- 227) ns : WORD _ COLON COLON
+ 230) ns : WORD _ COLON COLON
 
   COLON         shift, and go to state 144
   $default      reduce using rule 74 (function_call)
@@ -3675,7 +3687,7 @@ state 257
   ADDRESS       shift, and go to state 88
   $default      reduce using rule 81 (args)
 
-  args          go to state 321
+  args          go to state 324
   arg           go to state 250
   number        go to state 251
   signed_number  go to state 252
@@ -3701,7 +3713,7 @@ state 258
   ADDRESS       shift, and go to state 88
   $default      reduce using rule 81 (args)
 
-  args          go to state 322
+  args          go to state 325
   arg           go to state 250
   number        go to state 251
   signed_number  go to state 252
@@ -3720,7 +3732,7 @@ state 259
   73) function_call : WORD _
  207) var_without_namespaces : WORD _
  208) var_without_namespaces : WORD _ var_method_modifiers
- 227) ns : WORD _ COLON COLON
+ 230) ns : WORD _ COLON COLON
 
   DOT           shift, and go to state 143
   COLON         shift, and go to state 144
@@ -3734,13 +3746,13 @@ state 260
 
   78) program_call : var_or_indirect EQUAL function_call _ LPAREN args RPAREN
 
-  LPAREN        shift, and go to state 323
+  LPAREN        shift, and go to state 326
 
 
 state 261
 
  194) assignment : var_or_indirect EQUAL expression _
- 233) binary_expression : expression _ operator expression
+ 236) binary_expression : expression _ operator expression
 
   EEQUAL        shift, and go to state 204
   NOTEQUAL      shift, and go to state 205
@@ -3775,7 +3787,7 @@ state 262
   ADDRESS       shift, and go to state 88
   OPERATION     shift, and go to state 139
 
-  expression    go to state 324
+  expression    go to state 327
   var_without_namespaces  go to state 83
   var_with_namespaces  go to state 84
   namespaces    go to state 107
@@ -3810,7 +3822,7 @@ state 263
   ADDRESS       shift, and go to state 88
   OPERATION     shift, and go to state 139
 
-  expression    go to state 325
+  expression    go to state 328
   var_without_namespaces  go to state 83
   var_with_namespaces  go to state 84
   namespaces    go to state 107
@@ -3845,7 +3857,7 @@ state 264
   ADDRESS       shift, and go to state 88
   OPERATION     shift, and go to state 139
 
-  expression    go to state 326
+  expression    go to state 329
   var_without_namespaces  go to state 83
   var_with_namespaces  go to state 84
   namespaces    go to state 107
@@ -3880,7 +3892,7 @@ state 265
   ADDRESS       shift, and go to state 88
   OPERATION     shift, and go to state 139
 
-  expression    go to state 327
+  expression    go to state 330
   var_without_namespaces  go to state 83
   var_with_namespaces  go to state 84
   namespaces    go to state 107
@@ -3909,18 +3921,18 @@ state 266
 
 state 267
 
- 317) array : LBRACK _ sn array_values sn RBRACK
+ 320) array : LBRACK _ sn array_values sn RBRACK
 
   NEWLINE       shift, and go to state 187
-  $default      reduce using rule 300 (swallow_newlines)
+  $default      reduce using rule 303 (swallow_newlines)
 
   swallow_newlines  go to state 189
-  sn            go to state 328
+  sn            go to state 331
 
 state 268
 
   91) return_statement : RETURN LPAREN expression _ RPAREN
- 233) binary_expression : expression _ operator expression
+ 236) binary_expression : expression _ operator expression
 
   EEQUAL        shift, and go to state 204
   NOTEQUAL      shift, and go to state 205
@@ -3936,7 +3948,7 @@ state 268
   AND           shift, and go to state 217
   OR            shift, and go to state 212
   MOD           shift, and go to state 216
-  RPAREN        shift, and go to state 329
+  RPAREN        shift, and go to state 332
 
   operator      go to state 203
 
@@ -3945,8 +3957,8 @@ state 269
   95) io_method : IO_METHOD LPAREN var_or_indirect _ RPAREN
   96) io_method : IO_METHOD LPAREN var_or_indirect _ COMMA number COMMA STRING RPAREN
 
-  RPAREN        shift, and go to state 330
-  COMMA         shift, and go to state 331
+  RPAREN        shift, and go to state 333
+  COMMA         shift, and go to state 334
 
 
 state 270
@@ -4003,7 +4015,7 @@ state 271
   DEFAULTPOS    shift, and go to state 81
 
   statement     go to state 3
-  statements    go to state 332
+  statements    go to state 335
   comment       go to state 4
   message       go to state 5
   definition    go to state 6
@@ -4057,12 +4069,12 @@ state 272
 
  101) conditional : IF expression block _ elsif_conditions else_block END
 
-  ELSIF         shift, and go to state 335
+  ELSIF         shift, and go to state 338
   ELSIF         [reduce using rule 106 (elsif_conditions)]
   $default      reduce using rule 106 (elsif_conditions)
 
-  elsif_conditions  go to state 333
-  elsif_condition  go to state 334
+  elsif_conditions  go to state 336
+  elsif_condition  go to state 337
 
 state 273
 
@@ -4070,30 +4082,30 @@ state 273
 
   NEWLINE       shift, and go to state 271
 
-  block         go to state 336
+  block         go to state 339
 
 state 274
 
  102) conditional : UNLESS expression block _ else_block END
 
-  ELSE          shift, and go to state 338
+  ELSE          shift, and go to state 341
   $default      reduce using rule 145 (else_block)
 
-  else_block    go to state 337
+  else_block    go to state 340
 
 state 275
 
  112) forloop : FOR var IN _ LPAREN int_or_var TO int_or_var RPAREN block END
  113) forloop : FOR var IN _ LPAREN int_or_var DOWNTO int_or_var RPAREN block END
 
-  LPAREN        shift, and go to state 339
+  LPAREN        shift, and go to state 342
 
 
 state 276
 
  114) while_loop : WHILE expression block _ END
 
-  END           shift, and go to state 340
+  END           shift, and go to state 343
 
 
 state 277
@@ -4126,7 +4138,7 @@ state 280
 
  124) namespace : NAMESPACE WORD block _ END
 
-  END           shift, and go to state 341
+  END           shift, and go to state 344
 
 
 state 281
@@ -4134,25 +4146,25 @@ state 281
  125) function : FUNCTION WORD LPAREN _ program_vars RPAREN block END
  126) function : FUNCTION WORD LPAREN _ program_vars RPAREN COLON WORD block END
 
-  WORD          shift, and go to state 344
+  WORD          shift, and go to state 347
   $default      reduce using rule 89 (program_vars)
 
-  program_var   go to state 342
-  program_vars  go to state 343
+  program_var   go to state 345
+  program_vars  go to state 346
 
 state 282
 
  127) case_statement : CASE var swallow_newlines _ case_conditions case_else END
 
-  WHEN          shift, and go to state 347
+  WHEN          shift, and go to state 350
 
-  case_conditions  go to state 345
-  case_condition  go to state 346
+  case_conditions  go to state 348
+  case_condition  go to state 349
 
 state 283
 
  138) inline_conditional : inlineable IF expression _
- 233) binary_expression : expression _ operator expression
+ 236) binary_expression : expression _ operator expression
 
   EEQUAL        shift, and go to state 204
   NOTEQUAL      shift, and go to state 205
@@ -4175,7 +4187,7 @@ state 283
 state 284
 
  139) inline_conditional : inlineable UNLESS expression _
- 233) binary_expression : expression _ operator expression
+ 236) binary_expression : expression _ operator expression
 
   EEQUAL        shift, and go to state 204
   NOTEQUAL      shift, and go to state 205
@@ -4200,8 +4212,8 @@ state 285
  146) motion_statement : MOVE DOT swallow_newlines _ TO LPAREN var_or_indirect RPAREN motion_modifiers
  147) motion_statement : MOVE DOT swallow_newlines _ MID LPAREN var_or_indirect RPAREN DOT swallow_newlines TO LPAREN var_or_indirect RPAREN motion_modifiers
 
-  TO            shift, and go to state 348
-  MID           shift, and go to state 349
+  TO            shift, and go to state 351
+  MID           shift, and go to state 352
 
 
 state 286
@@ -4210,7 +4222,7 @@ state 286
 
   LBRACK        shift, and go to state 267
 
-  array         go to state 350
+  array         go to state 353
 
 state 287
 
@@ -4225,7 +4237,7 @@ state 288
 
   WORD          shift, and go to state 106
 
-  assignable_range  go to state 351
+  assignable_range  go to state 354
   var           go to state 289
   var_without_namespaces  go to state 83
   var_with_namespaces  go to state 84
@@ -4243,80 +4255,80 @@ state 289
 
 state 290
 
- 219) var_system : SYSTEM WORD var_system_modifers _
- 222) var_system_modifers : var_system_modifers _ var_system_modifer
+ 222) var_system : SYSTEM WORD var_system_modifers _
+ 225) var_system_modifers : var_system_modifers _ var_system_modifer
 
   DOT           shift, and go to state 293
-  DOT           [reduce using rule 219 (var_system)]
-  $default      reduce using rule 219 (var_system)
+  DOT           [reduce using rule 222 (var_system)]
+  $default      reduce using rule 222 (var_system)
 
-  var_system_modifer  go to state 352
+  var_system_modifer  go to state 355
 
 state 291
 
- 220) var_system : SYSTEM WORD LBRACK _ integer RBRACK var_system_modifers
+ 223) var_system : SYSTEM WORD LBRACK _ integer RBRACK var_system_modifers
 
   DIGIT         shift, and go to state 118
 
-  integer       go to state 353
+  integer       go to state 356
 
 state 292
 
- 221) var_system_modifers : var_system_modifer _
+ 224) var_system_modifers : var_system_modifer _
 
-  $default      reduce using rule 221 (var_system_modifers)
+  $default      reduce using rule 224 (var_system_modifers)
 
 
 state 293
 
- 224) var_system_modifer : DOT _ var_system
+ 227) var_system_modifer : DOT _ var_system
 
   SYSTEM        shift, and go to state 85
 
-  var_system    go to state 354
+  var_system    go to state 357
 
 state 294
 
- 257) indirect_thing : INDIRECT LPAREN STRING _ COMMA indirectable RPAREN
- 258) indirect_thing : INDIRECT LPAREN STRING _ COMMA indirectable RPAREN var_method_modifiers
+ 260) indirect_thing : INDIRECT LPAREN STRING _ COMMA indirectable RPAREN
+ 261) indirect_thing : INDIRECT LPAREN STRING _ COMMA indirectable RPAREN var_method_modifiers
 
-  COMMA         shift, and go to state 355
+  COMMA         shift, and go to state 358
 
 
 state 295
 
- 293) message : MESSAGE LPAREN STRING _ RPAREN
+ 296) message : MESSAGE LPAREN STRING _ RPAREN
 
-  RPAREN        shift, and go to state 356
+  RPAREN        shift, and go to state 359
 
 
 state 296
 
- 294) warning : WARNING LPAREN STRING _ RPAREN
+ 297) warning : WARNING LPAREN STRING _ RPAREN
 
-  RPAREN        shift, and go to state 357
+  RPAREN        shift, and go to state 360
 
 
 state 297
 
- 301) position_data : POSITION_DATA sn hash _ sn END
+ 304) position_data : POSITION_DATA sn hash _ sn END
 
   NEWLINE       shift, and go to state 187
-  $default      reduce using rule 300 (swallow_newlines)
+  $default      reduce using rule 303 (swallow_newlines)
 
-  sn            go to state 358
+  sn            go to state 361
   swallow_newlines  go to state 189
 
 state 298
 
- 303) hash : LBRACE _ sn hash_attributes sn RBRACE
- 304) hash : LBRACE _ sn RBRACE
+ 306) hash : LBRACE _ sn hash_attributes sn RBRACE
+ 307) hash : LBRACE _ sn RBRACE
 
   NEWLINE       shift, and go to state 187
-  $default      reduce using rule 300 (swallow_newlines)
+  $default      reduce using rule 303 (swallow_newlines)
 
   swallow_newlines  go to state 189
-  sn            go to state 359
+  sn            go to state 362
 
 state 299
 
@@ -4338,9 +4350,9 @@ state 301
   50) tp_tool_methods : LBRACE _ sn RBRACE
 
   NEWLINE       shift, and go to state 187
-  $default      reduce using rule 300 (swallow_newlines)
+  $default      reduce using rule 303 (swallow_newlines)
 
-  sn            go to state 360
+  sn            go to state 363
   swallow_newlines  go to state 189
 
 state 302
@@ -4354,7 +4366,7 @@ state 303
 
   58) wait_statement : WAIT_FOR LPAREN indirectable COMMA _ STRING RPAREN
 
-  STRING        shift, and go to state 361
+  STRING        shift, and go to state 364
 
 
 state 304
@@ -4363,7 +4375,7 @@ state 304
   60) wait_statement : WAIT_UNTIL LPAREN expression RPAREN _ DOT wait_modifier
   61) wait_statement : WAIT_UNTIL LPAREN expression RPAREN _ DOT wait_modifier DOT wait_modifier
 
-  DOT           shift, and go to state 362
+  DOT           shift, and go to state 365
   $default      reduce using rule 59 (wait_statement)
 
 
@@ -4380,133 +4392,154 @@ state 306
 
   GROUP         shift, and go to state 314
 
-  group_statement  go to state 363
+  group_statement  go to state 366
 
 state 307
 
- 233) binary_expression : expression _ operator expression
- 233) binary_expression : expression operator expression _
+ 236) binary_expression : expression _ operator expression
+ 236) binary_expression : expression operator expression _
 
   EEQUAL        shift, and go to state 204
-  EEQUAL        [reduce using rule 233 (binary_expression)]
+  EEQUAL        [reduce using rule 236 (binary_expression)]
   NOTEQUAL      shift, and go to state 205
-  NOTEQUAL      [reduce using rule 233 (binary_expression)]
+  NOTEQUAL      [reduce using rule 236 (binary_expression)]
   GTE           shift, and go to state 208
-  GTE           [reduce using rule 233 (binary_expression)]
+  GTE           [reduce using rule 236 (binary_expression)]
   LTE           shift, and go to state 209
-  LTE           [reduce using rule 233 (binary_expression)]
+  LTE           [reduce using rule 236 (binary_expression)]
   LT            shift, and go to state 206
-  LT            [reduce using rule 233 (binary_expression)]
+  LT            [reduce using rule 236 (binary_expression)]
   GT            shift, and go to state 207
-  GT            [reduce using rule 233 (binary_expression)]
+  GT            [reduce using rule 236 (binary_expression)]
   PLUS          shift, and go to state 210
-  PLUS          [reduce using rule 233 (binary_expression)]
+  PLUS          [reduce using rule 236 (binary_expression)]
   MINUS         shift, and go to state 211
-  MINUS         [reduce using rule 233 (binary_expression)]
+  MINUS         [reduce using rule 236 (binary_expression)]
   STAR          shift, and go to state 213
-  STAR          [reduce using rule 233 (binary_expression)]
+  STAR          [reduce using rule 236 (binary_expression)]
   SLASH         shift, and go to state 214
-  SLASH         [reduce using rule 233 (binary_expression)]
+  SLASH         [reduce using rule 236 (binary_expression)]
   DIV           shift, and go to state 215
-  DIV           [reduce using rule 233 (binary_expression)]
+  DIV           [reduce using rule 236 (binary_expression)]
   AND           shift, and go to state 217
-  AND           [reduce using rule 233 (binary_expression)]
+  AND           [reduce using rule 236 (binary_expression)]
   OR            shift, and go to state 212
-  OR            [reduce using rule 233 (binary_expression)]
+  OR            [reduce using rule 236 (binary_expression)]
   MOD           shift, and go to state 216
-  MOD           [reduce using rule 233 (binary_expression)]
-  $default      reduce using rule 233 (binary_expression)
+  MOD           [reduce using rule 236 (binary_expression)]
+  $default      reduce using rule 236 (binary_expression)
 
   operator      go to state 203
 
 state 308
 
- 256) paren_expr : LPAREN expression RPAREN _
+ 259) paren_expr : LPAREN expression RPAREN _
 
-  $default      reduce using rule 256 (paren_expr)
+  $default      reduce using rule 259 (paren_expr)
 
 
 state 309
 
- 287) operation : OPERATION LBRACK var_or_indirect _ RBRACK
- 288) operation : OPERATION LBRACK var_or_indirect _ COMMA var_or_indirect RBRACK
+ 290) operation : OPERATION LBRACK var_or_indirect _ RBRACK
+ 291) operation : OPERATION LBRACK var_or_indirect _ COMMA var_or_indirect RBRACK
 
-  COMMA         shift, and go to state 365
-  RBRACK        shift, and go to state 364
+  COMMA         shift, and go to state 368
+  RBRACK        shift, and go to state 367
 
 
 state 310
 
- 289) operation : OPERATION LBRACK signed_number _ RBRACK
+ 292) operation : OPERATION LBRACK signed_number _ RBRACK
 
-  RBRACK        shift, and go to state 366
+  RBRACK        shift, and go to state 369
 
 
 state 311
 
- 290) operation : OPERATION LBRACK number _ RBRACK
+ 293) operation : OPERATION LBRACK number _ RBRACK
 
-  RBRACK        shift, and go to state 367
+  RBRACK        shift, and go to state 370
 
 
 state 312
 
- 283) reg : reg_types LBRACK _ definable_range RBRACK
+ 286) reg : reg_types LBRACK _ definable_range RBRACK
 
-  DIGIT         shift, and go to state 368
+  DIGIT         shift, and go to state 371
 
-  definable_range  go to state 369
+  definable_range  go to state 372
 
 state 313
 
- 286) framereg : frametype LBRACK _ DIGIT RBRACK
+ 289) framereg : frametype LBRACK _ DIGIT RBRACK
 
-  DIGIT         shift, and go to state 370
+  DIGIT         shift, and go to state 373
 
 
 state 314
 
   67) group_statement : GROUP _ LPAREN integer RPAREN
 
-  LPAREN        shift, and go to state 371
+  LPAREN        shift, and go to state 374
 
 
 state 315
 
- 212) pose_method_modifier : POSEATTR _
+ 215) coord_system : SPHERE _
 
-  $default      reduce using rule 212 (pose_method_modifier)
+  $default      reduce using rule 215 (coord_system)
 
 
 state 316
 
- 216) var_method_modifier : DOT swallow_newlines WORD _
+ 216) coord_system : POLAR _
 
-  $default      reduce using rule 216 (var_method_modifier)
+  $default      reduce using rule 216 (coord_system)
 
 
 state 317
 
- 217) var_method_modifier : DOT swallow_newlines group_statement _
+ 217) var_method_modifier : DOT swallow_newlines WORD _
 
   $default      reduce using rule 217 (var_method_modifier)
 
 
 state 318
 
- 218) var_method_modifier : DOT swallow_newlines pose_method_modifier _
+ 218) var_method_modifier : DOT swallow_newlines group_statement _
 
   $default      reduce using rule 218 (var_method_modifier)
 
 
 state 319
 
+ 219) var_method_modifier : DOT swallow_newlines POSEATTR _
+
+  $default      reduce using rule 219 (var_method_modifier)
+
+
+state 320
+
+ 220) var_method_modifier : DOT swallow_newlines OFFSET _
+
+  $default      reduce using rule 220 (var_method_modifier)
+
+
+state 321
+
+ 221) var_method_modifier : DOT swallow_newlines coord_system _
+
+  $default      reduce using rule 221 (var_method_modifier)
+
+
+state 322
+
   75) program_call : function_call LPAREN args RPAREN _
 
   $default      reduce using rule 75 (program_call)
 
 
-state 320
+state 323
 
   80) args : args COMMA _ arg
 
@@ -4517,51 +4550,7 @@ state 320
   MINUS         shift, and go to state 138
   ADDRESS       shift, and go to state 88
 
-  arg           go to state 372
-  number        go to state 251
-  signed_number  go to state 252
-  var           go to state 253
-  string        go to state 254
-  address       go to state 255
-  var_without_namespaces  go to state 83
-  var_with_namespaces  go to state 84
-  namespaces    go to state 107
-  ns            go to state 86
-  sign          go to state 226
-  integer       go to state 116
-
-state 321
-
-  76) program_call : RUN function_call LPAREN args _ RPAREN
-  80) args : args _ COMMA arg
-
-  RPAREN        shift, and go to state 373
-  COMMA         shift, and go to state 320
-
-
-state 322
-
-  77) program_call : CALL var LPAREN args _ RPAREN
-  80) args : args _ COMMA arg
-
-  RPAREN        shift, and go to state 374
-  COMMA         shift, and go to state 320
-
-
-state 323
-
-  78) program_call : var_or_indirect EQUAL function_call LPAREN _ args RPAREN
-
-  STRING        shift, and go to state 224
-  REAL          shift, and go to state 117
-  DIGIT         shift, and go to state 118
-  WORD          shift, and go to state 106
-  MINUS         shift, and go to state 138
-  ADDRESS       shift, and go to state 88
-  $default      reduce using rule 81 (args)
-
-  args          go to state 375
-  arg           go to state 250
+  arg           go to state 375
   number        go to state 251
   signed_number  go to state 252
   var           go to state 253
@@ -4576,8 +4565,52 @@ state 323
 
 state 324
 
+  76) program_call : RUN function_call LPAREN args _ RPAREN
+  80) args : args _ COMMA arg
+
+  RPAREN        shift, and go to state 376
+  COMMA         shift, and go to state 323
+
+
+state 325
+
+  77) program_call : CALL var LPAREN args _ RPAREN
+  80) args : args _ COMMA arg
+
+  RPAREN        shift, and go to state 377
+  COMMA         shift, and go to state 323
+
+
+state 326
+
+  78) program_call : var_or_indirect EQUAL function_call LPAREN _ args RPAREN
+
+  STRING        shift, and go to state 224
+  REAL          shift, and go to state 117
+  DIGIT         shift, and go to state 118
+  WORD          shift, and go to state 106
+  MINUS         shift, and go to state 138
+  ADDRESS       shift, and go to state 88
+  $default      reduce using rule 81 (args)
+
+  args          go to state 378
+  arg           go to state 250
+  number        go to state 251
+  signed_number  go to state 252
+  var           go to state 253
+  string        go to state 254
+  address       go to state 255
+  var_without_namespaces  go to state 83
+  var_with_namespaces  go to state 84
+  namespaces    go to state 107
+  ns            go to state 86
+  sign          go to state 226
+  integer       go to state 116
+
+state 327
+
  195) assignment : var_or_indirect PLUS EQUAL expression _
- 233) binary_expression : expression _ operator expression
+ 236) binary_expression : expression _ operator expression
 
   EEQUAL        shift, and go to state 204
   NOTEQUAL      shift, and go to state 205
@@ -4597,10 +4630,10 @@ state 324
 
   operator      go to state 203
 
-state 325
+state 328
 
  196) assignment : var_or_indirect MINUS EQUAL expression _
- 233) binary_expression : expression _ operator expression
+ 236) binary_expression : expression _ operator expression
 
   EEQUAL        shift, and go to state 204
   NOTEQUAL      shift, and go to state 205
@@ -4620,10 +4653,10 @@ state 325
 
   operator      go to state 203
 
-state 326
+state 329
 
  197) assignment : var_or_indirect STAR EQUAL expression _
- 233) binary_expression : expression _ operator expression
+ 236) binary_expression : expression _ operator expression
 
   EEQUAL        shift, and go to state 204
   NOTEQUAL      shift, and go to state 205
@@ -4643,10 +4676,10 @@ state 326
 
   operator      go to state 203
 
-state 327
+state 330
 
  198) assignment : var_or_indirect SLASH EQUAL expression _
- 233) binary_expression : expression _ operator expression
+ 236) binary_expression : expression _ operator expression
 
   EEQUAL        shift, and go to state 204
   NOTEQUAL      shift, and go to state 205
@@ -4666,51 +4699,51 @@ state 327
 
   operator      go to state 203
 
-state 328
+state 331
 
- 317) array : LBRACK sn _ array_values sn RBRACK
+ 320) array : LBRACK sn _ array_values sn RBRACK
 
-  STRING        shift, and go to state 376
-  WORD          shift, and go to state 377
+  STRING        shift, and go to state 379
+  WORD          shift, and go to state 380
   MINUS         shift, and go to state 138
-  TRUE_FALSE    shift, and go to state 381
+  TRUE_FALSE    shift, and go to state 384
   LBRACK        shift, and go to state 267
   LBRACE        shift, and go to state 298
-  $default      reduce using rule 316 (optional_sign)
+  $default      reduce using rule 319 (optional_sign)
 
-  hash          go to state 378
-  array         go to state 379
-  optional_sign  go to state 380
-  sign          go to state 382
-  array_values  go to state 383
-  array_value   go to state 384
-  hash_value    go to state 385
+  hash          go to state 381
+  array         go to state 382
+  optional_sign  go to state 383
+  sign          go to state 385
+  array_values  go to state 386
+  array_value   go to state 387
+  hash_value    go to state 388
 
-state 329
+state 332
 
   91) return_statement : RETURN LPAREN expression RPAREN _
 
   $default      reduce using rule 91 (return_statement)
 
 
-state 330
+state 333
 
   95) io_method : IO_METHOD LPAREN var_or_indirect RPAREN _
 
   $default      reduce using rule 95 (io_method)
 
 
-state 331
+state 334
 
   96) io_method : IO_METHOD LPAREN var_or_indirect COMMA _ number COMMA STRING RPAREN
 
   REAL          shift, and go to state 117
   DIGIT         shift, and go to state 118
 
-  number        go to state 386
+  number        go to state 389
   integer       go to state 116
 
-state 332
+state 335
 
    4) statements : statements _ statement terminator
    5) block : NEWLINE statements _
@@ -4808,26 +4841,26 @@ state 332
   var_with_namespaces  go to state 84
   ns            go to state 86
 
-state 333
+state 336
 
  101) conditional : IF expression block elsif_conditions _ else_block END
  105) elsif_conditions : elsif_conditions _ elsif_condition
 
-  ELSE          shift, and go to state 338
-  ELSIF         shift, and go to state 335
+  ELSE          shift, and go to state 341
+  ELSIF         shift, and go to state 338
   $default      reduce using rule 145 (else_block)
 
-  else_block    go to state 387
-  elsif_condition  go to state 388
+  else_block    go to state 390
+  elsif_condition  go to state 391
 
-state 334
+state 337
 
  104) elsif_conditions : elsif_condition _
 
   $default      reduce using rule 104 (elsif_conditions)
 
 
-state 335
+state 338
 
  107) elsif_condition : ELSIF _ expression block
 
@@ -4842,7 +4875,7 @@ state 335
   ADDRESS       shift, and go to state 88
   OPERATION     shift, and go to state 139
 
-  expression    go to state 389
+  expression    go to state 392
   var_without_namespaces  go to state 83
   var_with_namespaces  go to state 84
   namespaces    go to state 107
@@ -4862,33 +4895,33 @@ state 335
   sign          go to state 137
   integer       go to state 116
 
-state 336
+state 339
 
  103) conditional_block : IF expression THEN block _ elsif_block else_block END
 
-  ELSIF         shift, and go to state 392
+  ELSIF         shift, and go to state 395
   ELSIF         [reduce using rule 110 (elsif_block)]
   $default      reduce using rule 110 (elsif_block)
 
-  elsif_block   go to state 390
-  elsif_block_condition  go to state 391
+  elsif_block   go to state 393
+  elsif_block_condition  go to state 394
 
-state 337
+state 340
 
  102) conditional : UNLESS expression block else_block _ END
 
-  END           shift, and go to state 393
+  END           shift, and go to state 396
 
 
-state 338
+state 341
 
  144) else_block : ELSE _ block
 
   NEWLINE       shift, and go to state 271
 
-  block         go to state 394
+  block         go to state 397
 
-state 339
+state 342
 
  112) forloop : FOR var IN LPAREN _ int_or_var TO int_or_var RPAREN block END
  113) forloop : FOR var IN LPAREN _ int_or_var DOWNTO int_or_var RPAREN block END
@@ -4896,72 +4929,72 @@ state 339
   DIGIT         shift, and go to state 118
   WORD          shift, and go to state 106
 
-  int_or_var    go to state 395
-  integer       go to state 396
-  var           go to state 397
+  int_or_var    go to state 398
+  integer       go to state 399
+  var           go to state 400
   var_without_namespaces  go to state 83
   var_with_namespaces  go to state 84
   namespaces    go to state 107
   ns            go to state 86
 
-state 340
+state 343
 
  114) while_loop : WHILE expression block END _
 
   $default      reduce using rule 114 (while_loop)
 
 
-state 341
+state 344
 
  124) namespace : NAMESPACE WORD block END _
 
   $default      reduce using rule 124 (namespace)
 
 
-state 342
+state 345
 
   87) program_vars : program_var _
 
   $default      reduce using rule 87 (program_vars)
 
 
-state 343
+state 346
 
   88) program_vars : program_vars _ COMMA program_var
  125) function : FUNCTION WORD LPAREN program_vars _ RPAREN block END
  126) function : FUNCTION WORD LPAREN program_vars _ RPAREN COLON WORD block END
 
-  RPAREN        shift, and go to state 399
-  COMMA         shift, and go to state 398
+  RPAREN        shift, and go to state 402
+  COMMA         shift, and go to state 401
 
 
-state 344
+state 347
 
   90) program_var : WORD _
 
   $default      reduce using rule 90 (program_var)
 
 
-state 345
+state 348
 
  127) case_statement : CASE var swallow_newlines case_conditions _ case_else END
  129) case_conditions : case_conditions _ case_condition
 
-  ELSE          shift, and go to state 402
-  WHEN          shift, and go to state 347
+  ELSE          shift, and go to state 405
+  WHEN          shift, and go to state 350
   $default      reduce using rule 134 (case_else)
 
-  case_else     go to state 400
-  case_condition  go to state 401
+  case_else     go to state 403
+  case_condition  go to state 404
 
-state 346
+state 349
 
  128) case_conditions : case_condition _
 
   $default      reduce using rule 128 (case_conditions)
 
 
-state 347
+state 350
 
  130) case_condition : WHEN _ case_allowed_condition block
 
@@ -4969,68 +5002,68 @@ state 347
   DIGIT         shift, and go to state 118
   WORD          shift, and go to state 106
 
-  case_allowed_condition  go to state 403
-  number        go to state 404
-  var           go to state 405
+  case_allowed_condition  go to state 406
+  number        go to state 407
+  var           go to state 408
   var_without_namespaces  go to state 83
   var_with_namespaces  go to state 84
   namespaces    go to state 107
   ns            go to state 86
   integer       go to state 116
 
-state 348
+state 351
 
  146) motion_statement : MOVE DOT swallow_newlines TO _ LPAREN var_or_indirect RPAREN motion_modifiers
 
-  LPAREN        shift, and go to state 406
+  LPAREN        shift, and go to state 409
 
 
-state 349
+state 352
 
  147) motion_statement : MOVE DOT swallow_newlines MID _ LPAREN var_or_indirect RPAREN DOT swallow_newlines TO LPAREN var_or_indirect RPAREN motion_modifiers
 
-  LPAREN        shift, and go to state 407
+  LPAREN        shift, and go to state 410
 
 
-state 350
+state 353
 
  199) position_assignment : DEFAULTPOS var_method_modifiers ARROW array _
 
   $default      reduce using rule 199 (position_assignment)
 
 
-state 351
+state 354
 
  202) position_assignment : assignable_range EQUAL LPAREN assignable_range _ RPAREN pose_range_modifiers
 
-  RPAREN        shift, and go to state 408
-
-
-state 352
-
- 222) var_system_modifers : var_system_modifers var_system_modifer _
-
-  $default      reduce using rule 222 (var_system_modifers)
-
-
-state 353
-
- 220) var_system : SYSTEM WORD LBRACK integer _ RBRACK var_system_modifers
-
-  RBRACK        shift, and go to state 409
-
-
-state 354
-
- 224) var_system_modifer : DOT var_system _
-
-  $default      reduce using rule 224 (var_system_modifer)
+  RPAREN        shift, and go to state 411
 
 
 state 355
 
- 257) indirect_thing : INDIRECT LPAREN STRING COMMA _ indirectable RPAREN
- 258) indirect_thing : INDIRECT LPAREN STRING COMMA _ indirectable RPAREN var_method_modifiers
+ 225) var_system_modifers : var_system_modifers var_system_modifer _
+
+  $default      reduce using rule 225 (var_system_modifers)
+
+
+state 356
+
+ 223) var_system : SYSTEM WORD LBRACK integer _ RBRACK var_system_modifers
+
+  RBRACK        shift, and go to state 412
+
+
+state 357
+
+ 227) var_system_modifer : DOT var_system _
+
+  $default      reduce using rule 227 (var_system_modifer)
+
+
+state 358
+
+ 260) indirect_thing : INDIRECT LPAREN STRING COMMA _ indirectable RPAREN
+ 261) indirect_thing : INDIRECT LPAREN STRING COMMA _ indirectable RPAREN var_method_modifiers
 
   REAL          shift, and go to state 117
   DIGIT         shift, and go to state 118
@@ -5042,89 +5075,89 @@ state 355
   var_with_namespaces  go to state 84
   namespaces    go to state 107
   ns            go to state 86
-  indirectable  go to state 410
+  indirectable  go to state 413
   integer       go to state 116
-
-state 356
-
- 293) message : MESSAGE LPAREN STRING RPAREN _
-
-  $default      reduce using rule 293 (message)
-
-
-state 357
-
- 294) warning : WARNING LPAREN STRING RPAREN _
-
-  $default      reduce using rule 294 (warning)
-
-
-state 358
-
- 301) position_data : POSITION_DATA sn hash sn _ END
-
-  END           shift, and go to state 411
-
 
 state 359
 
- 303) hash : LBRACE sn _ hash_attributes sn RBRACE
- 304) hash : LBRACE sn _ RBRACE
+ 296) message : MESSAGE LPAREN STRING RPAREN _
 
-  STRING        shift, and go to state 415
-  RBRACE        shift, and go to state 413
+  $default      reduce using rule 296 (message)
 
-  hash_attributes  go to state 412
-  hash_attribute  go to state 414
 
 state 360
+
+ 297) warning : WARNING LPAREN STRING RPAREN _
+
+  $default      reduce using rule 297 (warning)
+
+
+state 361
+
+ 304) position_data : POSITION_DATA sn hash sn _ END
+
+  END           shift, and go to state 414
+
+
+state 362
+
+ 306) hash : LBRACE sn _ hash_attributes sn RBRACE
+ 307) hash : LBRACE sn _ RBRACE
+
+  STRING        shift, and go to state 418
+  RBRACE        shift, and go to state 416
+
+  hash_attributes  go to state 415
+  hash_attribute  go to state 417
+
+state 363
 
   49) tp_tool_methods : LBRACE sn _ tp_tool_attributes sn RBRACE
   50) tp_tool_methods : LBRACE sn _ RBRACE
 
-  WORD          shift, and go to state 419
-  RBRACE        shift, and go to state 417
+  WORD          shift, and go to state 422
+  RBRACE        shift, and go to state 420
 
-  tp_tool_attributes  go to state 416
-  tp_tool_attribute  go to state 418
+  tp_tool_attributes  go to state 419
+  tp_tool_attribute  go to state 421
 
-state 361
+state 364
 
   58) wait_statement : WAIT_FOR LPAREN indirectable COMMA STRING _ RPAREN
 
-  RPAREN        shift, and go to state 420
+  RPAREN        shift, and go to state 423
 
 
-state 362
+state 365
 
   60) wait_statement : WAIT_UNTIL LPAREN expression RPAREN DOT _ wait_modifier
   61) wait_statement : WAIT_UNTIL LPAREN expression RPAREN DOT _ wait_modifier DOT wait_modifier
 
   NEWLINE       shift, and go to state 187
-  $default      reduce using rule 300 (swallow_newlines)
+  $default      reduce using rule 303 (swallow_newlines)
 
-  wait_modifier  go to state 421
-  timeout_modifier  go to state 422
-  after_modifier  go to state 423
-  swallow_newlines  go to state 424
+  wait_modifier  go to state 424
+  timeout_modifier  go to state 425
+  after_modifier  go to state 426
+  swallow_newlines  go to state 427
 
-state 363
+state 366
 
   70) use_statement : FANUC_USE LPAREN indirectable COMMA group_statement _ RPAREN
 
-  RPAREN        shift, and go to state 425
+  RPAREN        shift, and go to state 428
 
 
-state 364
+state 367
 
- 287) operation : OPERATION LBRACK var_or_indirect RBRACK _
+ 290) operation : OPERATION LBRACK var_or_indirect RBRACK _
 
-  $default      reduce using rule 287 (operation)
+  $default      reduce using rule 290 (operation)
 
 
-state 365
+state 368
 
- 288) operation : OPERATION LBRACK var_or_indirect COMMA _ var_or_indirect RBRACK
+ 291) operation : OPERATION LBRACK var_or_indirect COMMA _ var_or_indirect RBRACK
 
   WORD          shift, and go to state 106
   INDIRECT      shift, and go to state 87
@@ -5137,185 +5170,185 @@ state 365
   var_with_namespaces  go to state 84
   namespaces    go to state 107
   ns            go to state 86
-  var_or_indirect  go to state 426
-
-state 366
-
- 289) operation : OPERATION LBRACK signed_number RBRACK _
-
-  $default      reduce using rule 289 (operation)
-
-
-state 367
-
- 290) operation : OPERATION LBRACK number RBRACK _
-
-  $default      reduce using rule 290 (operation)
-
-
-state 368
-
- 271) definable_range : DIGIT _ RANGE DIGIT
- 272) definable_range : DIGIT _
-
-  RANGE         shift, and go to state 427
-  $default      reduce using rule 272 (definable_range)
-
+  var_or_indirect  go to state 429
 
 state 369
 
- 283) reg : reg_types LBRACK definable_range _ RBRACK
+ 292) operation : OPERATION LBRACK signed_number RBRACK _
 
-  RBRACK        shift, and go to state 428
+  $default      reduce using rule 292 (operation)
 
 
 state 370
 
- 286) framereg : frametype LBRACK DIGIT _ RBRACK
+ 293) operation : OPERATION LBRACK number RBRACK _
 
-  RBRACK        shift, and go to state 429
+  $default      reduce using rule 293 (operation)
 
 
 state 371
+
+ 274) definable_range : DIGIT _ RANGE DIGIT
+ 275) definable_range : DIGIT _
+
+  RANGE         shift, and go to state 430
+  $default      reduce using rule 275 (definable_range)
+
+
+state 372
+
+ 286) reg : reg_types LBRACK definable_range _ RBRACK
+
+  RBRACK        shift, and go to state 431
+
+
+state 373
+
+ 289) framereg : frametype LBRACK DIGIT _ RBRACK
+
+  RBRACK        shift, and go to state 432
+
+
+state 374
 
   67) group_statement : GROUP LPAREN _ integer RPAREN
 
   DIGIT         shift, and go to state 118
 
-  integer       go to state 430
+  integer       go to state 433
 
-state 372
+state 375
 
   80) args : args COMMA arg _
 
   $default      reduce using rule 80 (args)
 
 
-state 373
+state 376
 
   76) program_call : RUN function_call LPAREN args RPAREN _
 
   $default      reduce using rule 76 (program_call)
 
 
-state 374
+state 377
 
   77) program_call : CALL var LPAREN args RPAREN _
 
   $default      reduce using rule 77 (program_call)
 
 
-state 375
+state 378
 
   78) program_call : var_or_indirect EQUAL function_call LPAREN args _ RPAREN
   80) args : args _ COMMA arg
 
-  RPAREN        shift, and go to state 431
-  COMMA         shift, and go to state 320
-
-
-state 376
-
- 308) hash_value : STRING _
-
-  $default      reduce using rule 308 (hash_value)
-
-
-state 377
-
- 309) hash_value : WORD _
-
-  $default      reduce using rule 309 (hash_value)
-
-
-state 378
-
- 310) hash_value : hash _
-
-  $default      reduce using rule 310 (hash_value)
+  RPAREN        shift, and go to state 434
+  COMMA         shift, and go to state 323
 
 
 state 379
 
- 311) hash_value : array _
+ 311) hash_value : STRING _
 
   $default      reduce using rule 311 (hash_value)
 
 
 state 380
 
- 312) hash_value : optional_sign _ DIGIT
- 313) hash_value : optional_sign _ REAL
+ 312) hash_value : WORD _
 
-  REAL          shift, and go to state 433
-  DIGIT         shift, and go to state 432
+  $default      reduce using rule 312 (hash_value)
 
 
 state 381
 
- 314) hash_value : TRUE_FALSE _
+ 313) hash_value : hash _
 
-  $default      reduce using rule 314 (hash_value)
+  $default      reduce using rule 313 (hash_value)
 
 
 state 382
 
- 315) optional_sign : sign _
+ 314) hash_value : array _
 
-  $default      reduce using rule 315 (optional_sign)
+  $default      reduce using rule 314 (hash_value)
 
 
 state 383
 
- 317) array : LBRACK sn array_values _ sn RBRACK
- 319) array_values : array_values _ COMMA sn array_value
+ 315) hash_value : optional_sign _ DIGIT
+ 316) hash_value : optional_sign _ REAL
 
-  NEWLINE       shift, and go to state 187
-  COMMA         shift, and go to state 435
-  $default      reduce using rule 300 (swallow_newlines)
+  REAL          shift, and go to state 436
+  DIGIT         shift, and go to state 435
 
-  swallow_newlines  go to state 189
-  sn            go to state 434
 
 state 384
 
- 318) array_values : array_value _
+ 317) hash_value : TRUE_FALSE _
 
-  $default      reduce using rule 318 (array_values)
+  $default      reduce using rule 317 (hash_value)
 
 
 state 385
 
- 320) array_value : hash_value _
+ 318) optional_sign : sign _
 
-  $default      reduce using rule 320 (array_value)
+  $default      reduce using rule 318 (optional_sign)
 
 
 state 386
 
-  96) io_method : IO_METHOD LPAREN var_or_indirect COMMA number _ COMMA STRING RPAREN
+ 320) array : LBRACK sn array_values _ sn RBRACK
+ 322) array_values : array_values _ COMMA sn array_value
 
-  COMMA         shift, and go to state 436
+  NEWLINE       shift, and go to state 187
+  COMMA         shift, and go to state 438
+  $default      reduce using rule 303 (swallow_newlines)
 
+  swallow_newlines  go to state 189
+  sn            go to state 437
 
 state 387
 
- 101) conditional : IF expression block elsif_conditions else_block _ END
+ 321) array_values : array_value _
 
-  END           shift, and go to state 437
+  $default      reduce using rule 321 (array_values)
 
 
 state 388
+
+ 323) array_value : hash_value _
+
+  $default      reduce using rule 323 (array_value)
+
+
+state 389
+
+  96) io_method : IO_METHOD LPAREN var_or_indirect COMMA number _ COMMA STRING RPAREN
+
+  COMMA         shift, and go to state 439
+
+
+state 390
+
+ 101) conditional : IF expression block elsif_conditions else_block _ END
+
+  END           shift, and go to state 440
+
+
+state 391
 
  105) elsif_conditions : elsif_conditions elsif_condition _
 
   $default      reduce using rule 105 (elsif_conditions)
 
 
-state 389
+state 392
 
  107) elsif_condition : ELSIF expression _ block
- 233) binary_expression : expression _ operator expression
+ 236) binary_expression : expression _ operator expression
 
   NEWLINE       shift, and go to state 271
   EEQUAL        shift, and go to state 204
@@ -5333,29 +5366,29 @@ state 389
   OR            shift, and go to state 212
   MOD           shift, and go to state 216
 
-  block         go to state 438
+  block         go to state 441
   operator      go to state 203
 
-state 390
+state 393
 
  103) conditional_block : IF expression THEN block elsif_block _ else_block END
  109) elsif_block : elsif_block _ elsif_block_condition
 
-  ELSE          shift, and go to state 338
-  ELSIF         shift, and go to state 392
+  ELSE          shift, and go to state 341
+  ELSIF         shift, and go to state 395
   $default      reduce using rule 145 (else_block)
 
-  else_block    go to state 439
-  elsif_block_condition  go to state 440
+  else_block    go to state 442
+  elsif_block_condition  go to state 443
 
-state 391
+state 394
 
  108) elsif_block : elsif_block_condition _
 
   $default      reduce using rule 108 (elsif_block)
 
 
-state 392
+state 395
 
  111) elsif_block_condition : ELSIF _ expression THEN block
 
@@ -5370,7 +5403,7 @@ state 392
   ADDRESS       shift, and go to state 88
   OPERATION     shift, and go to state 139
 
-  expression    go to state 441
+  expression    go to state 444
   var_without_namespaces  go to state 83
   var_with_namespaces  go to state 84
   namespaces    go to state 107
@@ -5390,106 +5423,106 @@ state 392
   sign          go to state 137
   integer       go to state 116
 
-state 393
+state 396
 
  102) conditional : UNLESS expression block else_block END _
 
   $default      reduce using rule 102 (conditional)
 
 
-state 394
+state 397
 
  144) else_block : ELSE block _
 
   $default      reduce using rule 144 (else_block)
 
 
-state 395
+state 398
 
  112) forloop : FOR var IN LPAREN int_or_var _ TO int_or_var RPAREN block END
  113) forloop : FOR var IN LPAREN int_or_var _ DOWNTO int_or_var RPAREN block END
 
-  TO            shift, and go to state 442
-  DOWNTO        shift, and go to state 443
+  TO            shift, and go to state 445
+  DOWNTO        shift, and go to state 446
 
 
-state 396
+state 399
 
  115) int_or_var : integer _
 
   $default      reduce using rule 115 (int_or_var)
 
 
-state 397
+state 400
 
  116) int_or_var : var _
 
   $default      reduce using rule 116 (int_or_var)
 
 
-state 398
+state 401
 
   88) program_vars : program_vars COMMA _ program_var
 
-  WORD          shift, and go to state 344
+  WORD          shift, and go to state 347
 
-  program_var   go to state 444
+  program_var   go to state 447
 
-state 399
+state 402
 
  125) function : FUNCTION WORD LPAREN program_vars RPAREN _ block END
  126) function : FUNCTION WORD LPAREN program_vars RPAREN _ COLON WORD block END
 
   NEWLINE       shift, and go to state 271
-  COLON         shift, and go to state 446
+  COLON         shift, and go to state 449
 
-  block         go to state 445
+  block         go to state 448
 
-state 400
+state 403
 
  127) case_statement : CASE var swallow_newlines case_conditions case_else _ END
 
-  END           shift, and go to state 447
+  END           shift, and go to state 450
 
 
-state 401
+state 404
 
  129) case_conditions : case_conditions case_condition _
 
   $default      reduce using rule 129 (case_conditions)
 
 
-state 402
+state 405
 
  133) case_else : ELSE _ block
 
   NEWLINE       shift, and go to state 271
 
-  block         go to state 448
+  block         go to state 451
 
-state 403
+state 406
 
  130) case_condition : WHEN case_allowed_condition _ block
 
   NEWLINE       shift, and go to state 271
 
-  block         go to state 449
+  block         go to state 452
 
-state 404
+state 407
 
  131) case_allowed_condition : number _
 
   $default      reduce using rule 131 (case_allowed_condition)
 
 
-state 405
+state 408
 
  132) case_allowed_condition : var _
 
   $default      reduce using rule 132 (case_allowed_condition)
 
 
-state 406
+state 409
 
  146) motion_statement : MOVE DOT swallow_newlines TO LPAREN _ var_or_indirect RPAREN motion_modifiers
 
@@ -5500,13 +5533,13 @@ state 406
   var           go to state 104
   indirect_thing  go to state 62
   var_system    go to state 105
-  var_or_indirect  go to state 450
+  var_or_indirect  go to state 453
   var_without_namespaces  go to state 83
   var_with_namespaces  go to state 84
   namespaces    go to state 107
   ns            go to state 86
 
-state 407
+state 410
 
  147) motion_statement : MOVE DOT swallow_newlines MID LPAREN _ var_or_indirect RPAREN DOT swallow_newlines TO LPAREN var_or_indirect RPAREN motion_modifiers
 
@@ -5517,271 +5550,271 @@ state 407
   var           go to state 104
   indirect_thing  go to state 62
   var_system    go to state 105
-  var_or_indirect  go to state 451
+  var_or_indirect  go to state 454
   var_without_namespaces  go to state 83
   var_with_namespaces  go to state 84
   namespaces    go to state 107
   ns            go to state 86
 
-state 408
+state 411
 
  202) position_assignment : assignable_range EQUAL LPAREN assignable_range RPAREN _ pose_range_modifiers
 
-  DOT           shift, and go to state 454
+  DOT           shift, and go to state 457
 
-  pose_range_modifiers  go to state 452
-  pose_range_modifier  go to state 453
-
-state 409
-
- 220) var_system : SYSTEM WORD LBRACK integer RBRACK _ var_system_modifers
-
-  DOT           shift, and go to state 293
-  DOT           [reduce using rule 223 (var_system_modifers)]
-  $default      reduce using rule 223 (var_system_modifers)
-
-  var_system_modifers  go to state 455
-  var_system_modifer  go to state 292
-
-state 410
-
- 257) indirect_thing : INDIRECT LPAREN STRING COMMA indirectable _ RPAREN
- 258) indirect_thing : INDIRECT LPAREN STRING COMMA indirectable _ RPAREN var_method_modifiers
-
-  RPAREN        shift, and go to state 456
-
-
-state 411
-
- 301) position_data : POSITION_DATA sn hash sn END _
-
-  $default      reduce using rule 301 (position_data)
-
+  pose_range_modifiers  go to state 455
+  pose_range_modifier  go to state 456
 
 state 412
 
- 303) hash : LBRACE sn hash_attributes _ sn RBRACE
- 306) hash_attributes : hash_attributes _ COMMA sn hash_attribute
+ 223) var_system : SYSTEM WORD LBRACK integer RBRACK _ var_system_modifers
 
-  NEWLINE       shift, and go to state 187
-  COMMA         shift, and go to state 458
-  $default      reduce using rule 300 (swallow_newlines)
+  DOT           shift, and go to state 293
+  DOT           [reduce using rule 226 (var_system_modifers)]
+  $default      reduce using rule 226 (var_system_modifers)
 
-  swallow_newlines  go to state 189
-  sn            go to state 457
+  var_system_modifers  go to state 458
+  var_system_modifer  go to state 292
 
 state 413
 
- 304) hash : LBRACE sn RBRACE _
+ 260) indirect_thing : INDIRECT LPAREN STRING COMMA indirectable _ RPAREN
+ 261) indirect_thing : INDIRECT LPAREN STRING COMMA indirectable _ RPAREN var_method_modifiers
 
-  $default      reduce using rule 304 (hash)
+  RPAREN        shift, and go to state 459
 
 
 state 414
 
- 305) hash_attributes : hash_attribute _
+ 304) position_data : POSITION_DATA sn hash sn END _
 
-  $default      reduce using rule 305 (hash_attributes)
+  $default      reduce using rule 304 (position_data)
 
 
 state 415
 
- 307) hash_attribute : STRING _ COLON hash_value
+ 306) hash : LBRACE sn hash_attributes _ sn RBRACE
+ 309) hash_attributes : hash_attributes _ COMMA sn hash_attribute
 
-  COLON         shift, and go to state 459
+  NEWLINE       shift, and go to state 187
+  COMMA         shift, and go to state 461
+  $default      reduce using rule 303 (swallow_newlines)
 
+  swallow_newlines  go to state 189
+  sn            go to state 460
 
 state 416
+
+ 307) hash : LBRACE sn RBRACE _
+
+  $default      reduce using rule 307 (hash)
+
+
+state 417
+
+ 308) hash_attributes : hash_attribute _
+
+  $default      reduce using rule 308 (hash_attributes)
+
+
+state 418
+
+ 310) hash_attribute : STRING _ COLON hash_value
+
+  COLON         shift, and go to state 462
+
+
+state 419
 
   49) tp_tool_methods : LBRACE sn tp_tool_attributes _ sn RBRACE
   52) tp_tool_attributes : tp_tool_attributes _ COMMA sn tp_tool_attribute
 
   NEWLINE       shift, and go to state 187
-  COMMA         shift, and go to state 461
-  $default      reduce using rule 300 (swallow_newlines)
+  COMMA         shift, and go to state 464
+  $default      reduce using rule 303 (swallow_newlines)
 
-  sn            go to state 460
+  sn            go to state 463
   swallow_newlines  go to state 189
 
-state 417
+state 420
 
   50) tp_tool_methods : LBRACE sn RBRACE _
 
   $default      reduce using rule 50 (tp_tool_methods)
 
 
-state 418
+state 421
 
   51) tp_tool_attributes : tp_tool_attribute _
 
   $default      reduce using rule 51 (tp_tool_attributes)
 
 
-state 419
+state 422
 
   53) tp_tool_attribute : WORD _ COLON hash_value
 
-  COLON         shift, and go to state 462
+  COLON         shift, and go to state 465
 
 
-state 420
+state 423
 
   58) wait_statement : WAIT_FOR LPAREN indirectable COMMA STRING RPAREN _
 
   $default      reduce using rule 58 (wait_statement)
 
 
-state 421
+state 424
 
   60) wait_statement : WAIT_UNTIL LPAREN expression RPAREN DOT wait_modifier _
   61) wait_statement : WAIT_UNTIL LPAREN expression RPAREN DOT wait_modifier _ DOT wait_modifier
 
-  DOT           shift, and go to state 463
+  DOT           shift, and go to state 466
   $default      reduce using rule 60 (wait_statement)
 
 
-state 422
+state 425
 
   62) wait_modifier : timeout_modifier _
 
   $default      reduce using rule 62 (wait_modifier)
 
 
-state 423
+state 426
 
   63) wait_modifier : after_modifier _
 
   $default      reduce using rule 63 (wait_modifier)
 
 
-state 424
+state 427
 
   64) timeout_modifier : swallow_newlines _ TIMEOUT LPAREN label RPAREN
   65) after_modifier : swallow_newlines _ AFTER LPAREN indirectable COMMA STRING RPAREN
 
-  TIMEOUT       shift, and go to state 464
-  AFTER         shift, and go to state 465
+  TIMEOUT       shift, and go to state 467
+  AFTER         shift, and go to state 468
 
 
-state 425
+state 428
 
   70) use_statement : FANUC_USE LPAREN indirectable COMMA group_statement RPAREN _
 
   $default      reduce using rule 70 (use_statement)
 
 
-state 426
-
- 288) operation : OPERATION LBRACK var_or_indirect COMMA var_or_indirect _ RBRACK
-
-  RBRACK        shift, and go to state 466
-
-
-state 427
-
- 271) definable_range : DIGIT RANGE _ DIGIT
-
-  DIGIT         shift, and go to state 467
-
-
-state 428
-
- 283) reg : reg_types LBRACK definable_range RBRACK _
-
-  $default      reduce using rule 283 (reg)
-
-
 state 429
 
- 286) framereg : frametype LBRACK DIGIT RBRACK _
+ 291) operation : OPERATION LBRACK var_or_indirect COMMA var_or_indirect _ RBRACK
 
-  $default      reduce using rule 286 (framereg)
+  RBRACK        shift, and go to state 469
 
 
 state 430
 
-  67) group_statement : GROUP LPAREN integer _ RPAREN
+ 274) definable_range : DIGIT RANGE _ DIGIT
 
-  RPAREN        shift, and go to state 468
+  DIGIT         shift, and go to state 470
 
 
 state 431
+
+ 286) reg : reg_types LBRACK definable_range RBRACK _
+
+  $default      reduce using rule 286 (reg)
+
+
+state 432
+
+ 289) framereg : frametype LBRACK DIGIT RBRACK _
+
+  $default      reduce using rule 289 (framereg)
+
+
+state 433
+
+  67) group_statement : GROUP LPAREN integer _ RPAREN
+
+  RPAREN        shift, and go to state 471
+
+
+state 434
 
   78) program_call : var_or_indirect EQUAL function_call LPAREN args RPAREN _
 
   $default      reduce using rule 78 (program_call)
 
 
-state 432
-
- 312) hash_value : optional_sign DIGIT _
-
-  $default      reduce using rule 312 (hash_value)
-
-
-state 433
-
- 313) hash_value : optional_sign REAL _
-
-  $default      reduce using rule 313 (hash_value)
-
-
-state 434
-
- 317) array : LBRACK sn array_values sn _ RBRACK
-
-  RBRACK        shift, and go to state 469
-
-
 state 435
 
- 319) array_values : array_values COMMA _ sn array_value
+ 315) hash_value : optional_sign DIGIT _
 
-  NEWLINE       shift, and go to state 187
-  $default      reduce using rule 300 (swallow_newlines)
+  $default      reduce using rule 315 (hash_value)
 
-  swallow_newlines  go to state 189
-  sn            go to state 470
 
 state 436
 
-  96) io_method : IO_METHOD LPAREN var_or_indirect COMMA number COMMA _ STRING RPAREN
+ 316) hash_value : optional_sign REAL _
 
-  STRING        shift, and go to state 471
+  $default      reduce using rule 316 (hash_value)
 
 
 state 437
+
+ 320) array : LBRACK sn array_values sn _ RBRACK
+
+  RBRACK        shift, and go to state 472
+
+
+state 438
+
+ 322) array_values : array_values COMMA _ sn array_value
+
+  NEWLINE       shift, and go to state 187
+  $default      reduce using rule 303 (swallow_newlines)
+
+  swallow_newlines  go to state 189
+  sn            go to state 473
+
+state 439
+
+  96) io_method : IO_METHOD LPAREN var_or_indirect COMMA number COMMA _ STRING RPAREN
+
+  STRING        shift, and go to state 474
+
+
+state 440
 
  101) conditional : IF expression block elsif_conditions else_block END _
 
   $default      reduce using rule 101 (conditional)
 
 
-state 438
+state 441
 
  107) elsif_condition : ELSIF expression block _
 
   $default      reduce using rule 107 (elsif_condition)
 
 
-state 439
+state 442
 
  103) conditional_block : IF expression THEN block elsif_block else_block _ END
 
-  END           shift, and go to state 472
+  END           shift, and go to state 475
 
 
-state 440
+state 443
 
  109) elsif_block : elsif_block elsif_block_condition _
 
   $default      reduce using rule 109 (elsif_block)
 
 
-state 441
+state 444
 
  111) elsif_block_condition : ELSIF expression _ THEN block
- 233) binary_expression : expression _ operator expression
+ 236) binary_expression : expression _ operator expression
 
   EEQUAL        shift, and go to state 204
   NOTEQUAL      shift, and go to state 205
@@ -5797,438 +5830,438 @@ state 441
   AND           shift, and go to state 217
   OR            shift, and go to state 212
   MOD           shift, and go to state 216
-  THEN          shift, and go to state 473
+  THEN          shift, and go to state 476
 
   operator      go to state 203
 
-state 442
+state 445
 
  112) forloop : FOR var IN LPAREN int_or_var TO _ int_or_var RPAREN block END
 
   DIGIT         shift, and go to state 118
   WORD          shift, and go to state 106
 
-  int_or_var    go to state 474
-  integer       go to state 396
-  var           go to state 397
+  int_or_var    go to state 477
+  integer       go to state 399
+  var           go to state 400
   var_without_namespaces  go to state 83
   var_with_namespaces  go to state 84
   namespaces    go to state 107
   ns            go to state 86
 
-state 443
+state 446
 
  113) forloop : FOR var IN LPAREN int_or_var DOWNTO _ int_or_var RPAREN block END
 
   DIGIT         shift, and go to state 118
   WORD          shift, and go to state 106
 
-  int_or_var    go to state 475
-  integer       go to state 396
-  var           go to state 397
+  int_or_var    go to state 478
+  integer       go to state 399
+  var           go to state 400
   var_without_namespaces  go to state 83
   var_with_namespaces  go to state 84
   namespaces    go to state 107
   ns            go to state 86
 
-state 444
+state 447
 
   88) program_vars : program_vars COMMA program_var _
 
   $default      reduce using rule 88 (program_vars)
 
 
-state 445
+state 448
 
  125) function : FUNCTION WORD LPAREN program_vars RPAREN block _ END
 
-  END           shift, and go to state 476
+  END           shift, and go to state 479
 
 
-state 446
+state 449
 
  126) function : FUNCTION WORD LPAREN program_vars RPAREN COLON _ WORD block END
 
-  WORD          shift, and go to state 477
+  WORD          shift, and go to state 480
 
 
-state 447
+state 450
 
  127) case_statement : CASE var swallow_newlines case_conditions case_else END _
 
   $default      reduce using rule 127 (case_statement)
 
 
-state 448
+state 451
 
  133) case_else : ELSE block _
 
   $default      reduce using rule 133 (case_else)
 
 
-state 449
+state 452
 
  130) case_condition : WHEN case_allowed_condition block _
 
   $default      reduce using rule 130 (case_condition)
 
 
-state 450
+state 453
 
  146) motion_statement : MOVE DOT swallow_newlines TO LPAREN var_or_indirect _ RPAREN motion_modifiers
 
-  RPAREN        shift, and go to state 478
-
-
-state 451
-
- 147) motion_statement : MOVE DOT swallow_newlines MID LPAREN var_or_indirect _ RPAREN DOT swallow_newlines TO LPAREN var_or_indirect RPAREN motion_modifiers
-
-  RPAREN        shift, and go to state 479
-
-
-state 452
-
- 202) position_assignment : assignable_range EQUAL LPAREN assignable_range RPAREN pose_range_modifiers _
- 214) pose_range_modifiers : pose_range_modifiers _ pose_range_modifier
-
-  DOT           shift, and go to state 454
-  $default      reduce using rule 202 (position_assignment)
-
-  pose_range_modifier  go to state 480
-
-state 453
-
- 213) pose_range_modifiers : pose_range_modifier _
-
-  $default      reduce using rule 213 (pose_range_modifiers)
+  RPAREN        shift, and go to state 481
 
 
 state 454
 
- 215) pose_range_modifier : DOT _ swallow_newlines POSEREVERSE
+ 147) motion_statement : MOVE DOT swallow_newlines MID LPAREN var_or_indirect _ RPAREN DOT swallow_newlines TO LPAREN var_or_indirect RPAREN motion_modifiers
 
-  NEWLINE       shift, and go to state 187
-  $default      reduce using rule 300 (swallow_newlines)
+  RPAREN        shift, and go to state 482
 
-  swallow_newlines  go to state 481
 
 state 455
 
- 220) var_system : SYSTEM WORD LBRACK integer RBRACK var_system_modifers _
- 222) var_system_modifers : var_system_modifers _ var_system_modifer
+ 202) position_assignment : assignable_range EQUAL LPAREN assignable_range RPAREN pose_range_modifiers _
+ 213) pose_range_modifiers : pose_range_modifiers _ pose_range_modifier
 
-  DOT           shift, and go to state 293
-  DOT           [reduce using rule 220 (var_system)]
-  $default      reduce using rule 220 (var_system)
+  DOT           shift, and go to state 457
+  $default      reduce using rule 202 (position_assignment)
 
-  var_system_modifer  go to state 352
+  pose_range_modifier  go to state 483
 
 state 456
 
- 257) indirect_thing : INDIRECT LPAREN STRING COMMA indirectable RPAREN _
- 258) indirect_thing : INDIRECT LPAREN STRING COMMA indirectable RPAREN _ var_method_modifiers
+ 212) pose_range_modifiers : pose_range_modifier _
 
-  DOT           shift, and go to state 143
-  $default      reduce using rule 257 (indirect_thing)
+  $default      reduce using rule 212 (pose_range_modifiers)
 
-  var_method_modifier  go to state 142
-  var_method_modifiers  go to state 482
 
 state 457
 
- 303) hash : LBRACE sn hash_attributes sn _ RBRACE
+ 214) pose_range_modifier : DOT _ swallow_newlines POSEREVERSE
 
-  RBRACE        shift, and go to state 483
+  NEWLINE       shift, and go to state 187
+  $default      reduce using rule 303 (swallow_newlines)
 
+  swallow_newlines  go to state 484
 
 state 458
 
- 306) hash_attributes : hash_attributes COMMA _ sn hash_attribute
+ 223) var_system : SYSTEM WORD LBRACK integer RBRACK var_system_modifers _
+ 225) var_system_modifers : var_system_modifers _ var_system_modifer
 
-  NEWLINE       shift, and go to state 187
-  $default      reduce using rule 300 (swallow_newlines)
+  DOT           shift, and go to state 293
+  DOT           [reduce using rule 223 (var_system)]
+  $default      reduce using rule 223 (var_system)
 
-  swallow_newlines  go to state 189
-  sn            go to state 484
+  var_system_modifer  go to state 355
 
 state 459
 
- 307) hash_attribute : STRING COLON _ hash_value
+ 260) indirect_thing : INDIRECT LPAREN STRING COMMA indirectable RPAREN _
+ 261) indirect_thing : INDIRECT LPAREN STRING COMMA indirectable RPAREN _ var_method_modifiers
 
-  STRING        shift, and go to state 376
-  WORD          shift, and go to state 377
-  MINUS         shift, and go to state 138
-  TRUE_FALSE    shift, and go to state 381
-  LBRACK        shift, and go to state 267
-  LBRACE        shift, and go to state 298
-  $default      reduce using rule 316 (optional_sign)
+  DOT           shift, and go to state 143
+  $default      reduce using rule 260 (indirect_thing)
 
-  hash_value    go to state 485
-  hash          go to state 378
-  array         go to state 379
-  optional_sign  go to state 380
-  sign          go to state 382
+  var_method_modifier  go to state 142
+  var_method_modifiers  go to state 485
 
 state 460
 
-  49) tp_tool_methods : LBRACE sn tp_tool_attributes sn _ RBRACE
+ 306) hash : LBRACE sn hash_attributes sn _ RBRACE
 
   RBRACE        shift, and go to state 486
 
 
 state 461
 
-  52) tp_tool_attributes : tp_tool_attributes COMMA _ sn tp_tool_attribute
+ 309) hash_attributes : hash_attributes COMMA _ sn hash_attribute
 
   NEWLINE       shift, and go to state 187
-  $default      reduce using rule 300 (swallow_newlines)
+  $default      reduce using rule 303 (swallow_newlines)
 
-  sn            go to state 487
   swallow_newlines  go to state 189
+  sn            go to state 487
 
 state 462
 
-  53) tp_tool_attribute : WORD COLON _ hash_value
+ 310) hash_attribute : STRING COLON _ hash_value
 
-  STRING        shift, and go to state 376
-  WORD          shift, and go to state 377
+  STRING        shift, and go to state 379
+  WORD          shift, and go to state 380
   MINUS         shift, and go to state 138
-  TRUE_FALSE    shift, and go to state 381
+  TRUE_FALSE    shift, and go to state 384
   LBRACK        shift, and go to state 267
   LBRACE        shift, and go to state 298
-  $default      reduce using rule 316 (optional_sign)
+  $default      reduce using rule 319 (optional_sign)
 
   hash_value    go to state 488
-  hash          go to state 378
-  array         go to state 379
-  optional_sign  go to state 380
-  sign          go to state 382
+  hash          go to state 381
+  array         go to state 382
+  optional_sign  go to state 383
+  sign          go to state 385
 
 state 463
+
+  49) tp_tool_methods : LBRACE sn tp_tool_attributes sn _ RBRACE
+
+  RBRACE        shift, and go to state 489
+
+
+state 464
+
+  52) tp_tool_attributes : tp_tool_attributes COMMA _ sn tp_tool_attribute
+
+  NEWLINE       shift, and go to state 187
+  $default      reduce using rule 303 (swallow_newlines)
+
+  sn            go to state 490
+  swallow_newlines  go to state 189
+
+state 465
+
+  53) tp_tool_attribute : WORD COLON _ hash_value
+
+  STRING        shift, and go to state 379
+  WORD          shift, and go to state 380
+  MINUS         shift, and go to state 138
+  TRUE_FALSE    shift, and go to state 384
+  LBRACK        shift, and go to state 267
+  LBRACE        shift, and go to state 298
+  $default      reduce using rule 319 (optional_sign)
+
+  hash_value    go to state 491
+  hash          go to state 381
+  array         go to state 382
+  optional_sign  go to state 383
+  sign          go to state 385
+
+state 466
 
   61) wait_statement : WAIT_UNTIL LPAREN expression RPAREN DOT wait_modifier DOT _ wait_modifier
 
   NEWLINE       shift, and go to state 187
-  $default      reduce using rule 300 (swallow_newlines)
+  $default      reduce using rule 303 (swallow_newlines)
 
-  wait_modifier  go to state 489
-  timeout_modifier  go to state 422
-  after_modifier  go to state 423
-  swallow_newlines  go to state 424
-
-state 464
-
-  64) timeout_modifier : swallow_newlines TIMEOUT _ LPAREN label RPAREN
-
-  LPAREN        shift, and go to state 490
-
-
-state 465
-
-  65) after_modifier : swallow_newlines AFTER _ LPAREN indirectable COMMA STRING RPAREN
-
-  LPAREN        shift, and go to state 491
-
-
-state 466
-
- 288) operation : OPERATION LBRACK var_or_indirect COMMA var_or_indirect RBRACK _
-
-  $default      reduce using rule 288 (operation)
-
+  wait_modifier  go to state 492
+  timeout_modifier  go to state 425
+  after_modifier  go to state 426
+  swallow_newlines  go to state 427
 
 state 467
 
- 271) definable_range : DIGIT RANGE DIGIT _
+  64) timeout_modifier : swallow_newlines TIMEOUT _ LPAREN label RPAREN
 
-  $default      reduce using rule 271 (definable_range)
+  LPAREN        shift, and go to state 493
 
 
 state 468
+
+  65) after_modifier : swallow_newlines AFTER _ LPAREN indirectable COMMA STRING RPAREN
+
+  LPAREN        shift, and go to state 494
+
+
+state 469
+
+ 291) operation : OPERATION LBRACK var_or_indirect COMMA var_or_indirect RBRACK _
+
+  $default      reduce using rule 291 (operation)
+
+
+state 470
+
+ 274) definable_range : DIGIT RANGE DIGIT _
+
+  $default      reduce using rule 274 (definable_range)
+
+
+state 471
 
   67) group_statement : GROUP LPAREN integer RPAREN _
 
   $default      reduce using rule 67 (group_statement)
 
 
-state 469
+state 472
 
- 317) array : LBRACK sn array_values sn RBRACK _
+ 320) array : LBRACK sn array_values sn RBRACK _
 
-  $default      reduce using rule 317 (array)
+  $default      reduce using rule 320 (array)
 
 
-state 470
+state 473
 
- 319) array_values : array_values COMMA sn _ array_value
+ 322) array_values : array_values COMMA sn _ array_value
 
-  STRING        shift, and go to state 376
-  WORD          shift, and go to state 377
+  STRING        shift, and go to state 379
+  WORD          shift, and go to state 380
   MINUS         shift, and go to state 138
-  TRUE_FALSE    shift, and go to state 381
+  TRUE_FALSE    shift, and go to state 384
   LBRACK        shift, and go to state 267
   LBRACE        shift, and go to state 298
-  $default      reduce using rule 316 (optional_sign)
+  $default      reduce using rule 319 (optional_sign)
 
-  hash          go to state 378
-  array         go to state 379
-  optional_sign  go to state 380
-  sign          go to state 382
-  array_value   go to state 492
-  hash_value    go to state 385
+  hash          go to state 381
+  array         go to state 382
+  optional_sign  go to state 383
+  sign          go to state 385
+  array_value   go to state 495
+  hash_value    go to state 388
 
-state 471
+state 474
 
   96) io_method : IO_METHOD LPAREN var_or_indirect COMMA number COMMA STRING _ RPAREN
 
-  RPAREN        shift, and go to state 493
+  RPAREN        shift, and go to state 496
 
 
-state 472
+state 475
 
  103) conditional_block : IF expression THEN block elsif_block else_block END _
 
   $default      reduce using rule 103 (conditional_block)
 
 
-state 473
+state 476
 
  111) elsif_block_condition : ELSIF expression THEN _ block
 
   NEWLINE       shift, and go to state 271
 
-  block         go to state 494
+  block         go to state 497
 
-state 474
+state 477
 
  112) forloop : FOR var IN LPAREN int_or_var TO int_or_var _ RPAREN block END
 
-  RPAREN        shift, and go to state 495
+  RPAREN        shift, and go to state 498
 
 
-state 475
+state 478
 
  113) forloop : FOR var IN LPAREN int_or_var DOWNTO int_or_var _ RPAREN block END
 
-  RPAREN        shift, and go to state 496
+  RPAREN        shift, and go to state 499
 
 
-state 476
+state 479
 
  125) function : FUNCTION WORD LPAREN program_vars RPAREN block END _
 
   $default      reduce using rule 125 (function)
 
 
-state 477
+state 480
 
  126) function : FUNCTION WORD LPAREN program_vars RPAREN COLON WORD _ block END
 
   NEWLINE       shift, and go to state 271
 
-  block         go to state 497
-
-state 478
-
- 146) motion_statement : MOVE DOT swallow_newlines TO LPAREN var_or_indirect RPAREN _ motion_modifiers
-
-  DOT           shift, and go to state 500
-
-  motion_modifiers  go to state 498
-  motion_modifier  go to state 499
-
-state 479
-
- 147) motion_statement : MOVE DOT swallow_newlines MID LPAREN var_or_indirect RPAREN _ DOT swallow_newlines TO LPAREN var_or_indirect RPAREN motion_modifiers
-
-  DOT           shift, and go to state 501
-
-
-state 480
-
- 214) pose_range_modifiers : pose_range_modifiers pose_range_modifier _
-
-  $default      reduce using rule 214 (pose_range_modifiers)
-
+  block         go to state 500
 
 state 481
 
- 215) pose_range_modifier : DOT swallow_newlines _ POSEREVERSE
+ 146) motion_statement : MOVE DOT swallow_newlines TO LPAREN var_or_indirect RPAREN _ motion_modifiers
 
-  POSEREVERSE   shift, and go to state 502
+  DOT           shift, and go to state 503
 
+  motion_modifiers  go to state 501
+  motion_modifier  go to state 502
 
 state 482
 
- 211) var_method_modifiers : var_method_modifiers _ var_method_modifier
- 258) indirect_thing : INDIRECT LPAREN STRING COMMA indirectable RPAREN var_method_modifiers _
+ 147) motion_statement : MOVE DOT swallow_newlines MID LPAREN var_or_indirect RPAREN _ DOT swallow_newlines TO LPAREN var_or_indirect RPAREN motion_modifiers
 
-  DOT           shift, and go to state 143
-  $default      reduce using rule 258 (indirect_thing)
+  DOT           shift, and go to state 504
 
-  var_method_modifier  go to state 246
 
 state 483
 
- 303) hash : LBRACE sn hash_attributes sn RBRACE _
+ 213) pose_range_modifiers : pose_range_modifiers pose_range_modifier _
 
-  $default      reduce using rule 303 (hash)
+  $default      reduce using rule 213 (pose_range_modifiers)
 
 
 state 484
 
- 306) hash_attributes : hash_attributes COMMA sn _ hash_attribute
+ 214) pose_range_modifier : DOT swallow_newlines _ POSEREVERSE
 
-  STRING        shift, and go to state 415
+  POSEREVERSE   shift, and go to state 505
 
-  hash_attribute  go to state 503
 
 state 485
 
- 307) hash_attribute : STRING COLON hash_value _
+ 211) var_method_modifiers : var_method_modifiers _ var_method_modifier
+ 261) indirect_thing : INDIRECT LPAREN STRING COMMA indirectable RPAREN var_method_modifiers _
 
-  $default      reduce using rule 307 (hash_attribute)
+  DOT           shift, and go to state 143
+  $default      reduce using rule 261 (indirect_thing)
 
+  var_method_modifier  go to state 246
 
 state 486
+
+ 306) hash : LBRACE sn hash_attributes sn RBRACE _
+
+  $default      reduce using rule 306 (hash)
+
+
+state 487
+
+ 309) hash_attributes : hash_attributes COMMA sn _ hash_attribute
+
+  STRING        shift, and go to state 418
+
+  hash_attribute  go to state 506
+
+state 488
+
+ 310) hash_attribute : STRING COLON hash_value _
+
+  $default      reduce using rule 310 (hash_attribute)
+
+
+state 489
 
   49) tp_tool_methods : LBRACE sn tp_tool_attributes sn RBRACE _
 
   $default      reduce using rule 49 (tp_tool_methods)
 
 
-state 487
+state 490
 
   52) tp_tool_attributes : tp_tool_attributes COMMA sn _ tp_tool_attribute
 
-  WORD          shift, and go to state 419
+  WORD          shift, and go to state 422
 
-  tp_tool_attribute  go to state 504
+  tp_tool_attribute  go to state 507
 
-state 488
+state 491
 
   53) tp_tool_attribute : WORD COLON hash_value _
 
   $default      reduce using rule 53 (tp_tool_attribute)
 
 
-state 489
+state 492
 
   61) wait_statement : WAIT_UNTIL LPAREN expression RPAREN DOT wait_modifier DOT wait_modifier _
 
   $default      reduce using rule 61 (wait_statement)
 
 
-state 490
+state 493
 
   64) timeout_modifier : swallow_newlines TIMEOUT LPAREN _ label RPAREN
 
   LABEL         shift, and go to state 49
 
-  label         go to state 505
+  label         go to state 508
 
-state 491
+state 494
 
   65) after_modifier : swallow_newlines AFTER LPAREN _ indirectable COMMA STRING RPAREN
 
@@ -6236,7 +6269,7 @@ state 491
   DIGIT         shift, and go to state 118
   WORD          shift, and go to state 106
 
-  indirectable  go to state 506
+  indirectable  go to state 509
   number        go to state 114
   var           go to state 115
   var_without_namespaces  go to state 83
@@ -6245,68 +6278,68 @@ state 491
   ns            go to state 86
   integer       go to state 116
 
-state 492
+state 495
 
- 319) array_values : array_values COMMA sn array_value _
+ 322) array_values : array_values COMMA sn array_value _
 
-  $default      reduce using rule 319 (array_values)
+  $default      reduce using rule 322 (array_values)
 
 
-state 493
+state 496
 
   96) io_method : IO_METHOD LPAREN var_or_indirect COMMA number COMMA STRING RPAREN _
 
   $default      reduce using rule 96 (io_method)
 
 
-state 494
+state 497
 
  111) elsif_block_condition : ELSIF expression THEN block _
 
   $default      reduce using rule 111 (elsif_block_condition)
 
 
-state 495
+state 498
 
  112) forloop : FOR var IN LPAREN int_or_var TO int_or_var RPAREN _ block END
 
   NEWLINE       shift, and go to state 271
 
-  block         go to state 507
+  block         go to state 510
 
-state 496
+state 499
 
  113) forloop : FOR var IN LPAREN int_or_var DOWNTO int_or_var RPAREN _ block END
 
   NEWLINE       shift, and go to state 271
 
-  block         go to state 508
+  block         go to state 511
 
-state 497
+state 500
 
  126) function : FUNCTION WORD LPAREN program_vars RPAREN COLON WORD block _ END
 
-  END           shift, and go to state 509
+  END           shift, and go to state 512
 
 
-state 498
+state 501
 
  146) motion_statement : MOVE DOT swallow_newlines TO LPAREN var_or_indirect RPAREN motion_modifiers _
  149) motion_modifiers : motion_modifiers _ motion_modifier
 
-  DOT           shift, and go to state 500
+  DOT           shift, and go to state 503
   $default      reduce using rule 146 (motion_statement)
 
-  motion_modifier  go to state 510
+  motion_modifier  go to state 513
 
-state 499
+state 502
 
  148) motion_modifiers : motion_modifier _
 
   $default      reduce using rule 148 (motion_modifiers)
 
 
-state 500
+state 503
 
  152) motion_modifier : DOT _ swallow_newlines AT LPAREN speed RPAREN
  153) motion_modifier : DOT _ swallow_newlines ACC LPAREN int_or_var RPAREN
@@ -6319,83 +6352,83 @@ state 500
  160) motion_modifier : DOT _ swallow_newlines single_argument_motion_modifiers LPAREN int_or_var RPAREN
 
   NEWLINE       shift, and go to state 187
-  $default      reduce using rule 300 (swallow_newlines)
+  $default      reduce using rule 303 (swallow_newlines)
 
-  swallow_newlines  go to state 511
+  swallow_newlines  go to state 514
 
-state 501
+state 504
 
  147) motion_statement : MOVE DOT swallow_newlines MID LPAREN var_or_indirect RPAREN DOT _ swallow_newlines TO LPAREN var_or_indirect RPAREN motion_modifiers
 
   NEWLINE       shift, and go to state 187
-  $default      reduce using rule 300 (swallow_newlines)
+  $default      reduce using rule 303 (swallow_newlines)
 
-  swallow_newlines  go to state 512
+  swallow_newlines  go to state 515
 
-state 502
+state 505
 
- 215) pose_range_modifier : DOT swallow_newlines POSEREVERSE _
+ 214) pose_range_modifier : DOT swallow_newlines POSEREVERSE _
 
-  $default      reduce using rule 215 (pose_range_modifier)
-
-
-state 503
-
- 306) hash_attributes : hash_attributes COMMA sn hash_attribute _
-
-  $default      reduce using rule 306 (hash_attributes)
+  $default      reduce using rule 214 (pose_range_modifier)
 
 
-state 504
+state 506
+
+ 309) hash_attributes : hash_attributes COMMA sn hash_attribute _
+
+  $default      reduce using rule 309 (hash_attributes)
+
+
+state 507
 
   52) tp_tool_attributes : tp_tool_attributes COMMA sn tp_tool_attribute _
 
   $default      reduce using rule 52 (tp_tool_attributes)
 
 
-state 505
+state 508
 
   64) timeout_modifier : swallow_newlines TIMEOUT LPAREN label _ RPAREN
 
-  RPAREN        shift, and go to state 513
-
-
-state 506
-
-  65) after_modifier : swallow_newlines AFTER LPAREN indirectable _ COMMA STRING RPAREN
-
-  COMMA         shift, and go to state 514
-
-
-state 507
-
- 112) forloop : FOR var IN LPAREN int_or_var TO int_or_var RPAREN block _ END
-
-  END           shift, and go to state 515
-
-
-state 508
-
- 113) forloop : FOR var IN LPAREN int_or_var DOWNTO int_or_var RPAREN block _ END
-
-  END           shift, and go to state 516
+  RPAREN        shift, and go to state 516
 
 
 state 509
+
+  65) after_modifier : swallow_newlines AFTER LPAREN indirectable _ COMMA STRING RPAREN
+
+  COMMA         shift, and go to state 517
+
+
+state 510
+
+ 112) forloop : FOR var IN LPAREN int_or_var TO int_or_var RPAREN block _ END
+
+  END           shift, and go to state 518
+
+
+state 511
+
+ 113) forloop : FOR var IN LPAREN int_or_var DOWNTO int_or_var RPAREN block _ END
+
+  END           shift, and go to state 519
+
+
+state 512
 
  126) function : FUNCTION WORD LPAREN program_vars RPAREN COLON WORD block END _
 
   $default      reduce using rule 126 (function)
 
 
-state 510
+state 513
 
  149) motion_modifiers : motion_modifiers motion_modifier _
 
   $default      reduce using rule 149 (motion_modifiers)
 
 
-state 511
+state 514
 
  152) motion_modifier : DOT swallow_newlines _ AT LPAREN speed RPAREN
  153) motion_modifier : DOT swallow_newlines _ ACC LPAREN int_or_var RPAREN
@@ -6407,317 +6440,317 @@ state 511
  159) motion_modifier : DOT swallow_newlines _ valid_motion_statements
  160) motion_modifier : DOT swallow_newlines _ single_argument_motion_modifiers LPAREN int_or_var RPAREN
 
-  TIME_SEGMENT  shift, and go to state 522
-  AT            shift, and go to state 517
-  ACC           shift, and go to state 518
-  TERM          shift, and go to state 520
-  OFFSET        shift, and go to state 521
-  SKIP          shift, and go to state 523
-  COORD         shift, and go to state 526
-  MROT          shift, and go to state 527
-  PTH           shift, and go to state 528
-  WJNT          shift, and go to state 530
-  INC           shift, and go to state 529
-  BREAK         shift, and go to state 531
-  RTCP          shift, and go to state 532
-  FPLIN         shift, and go to state 533
-  AP_LD         shift, and go to state 538
-  RT_LD         shift, and go to state 537
-  CD            shift, and go to state 534
-  CR            shift, and go to state 519
-  INDEV         shift, and go to state 536
-  EV            shift, and go to state 535
-  PSPD          shift, and go to state 539
-  CTV           shift, and go to state 540
+  TIME_SEGMENT  shift, and go to state 525
+  AT            shift, and go to state 520
+  ACC           shift, and go to state 521
+  TERM          shift, and go to state 523
+  OFFSET        shift, and go to state 524
+  SKIP          shift, and go to state 526
+  COORD         shift, and go to state 529
+  MROT          shift, and go to state 530
+  PTH           shift, and go to state 531
+  WJNT          shift, and go to state 533
+  INC           shift, and go to state 532
+  BREAK         shift, and go to state 534
+  RTCP          shift, and go to state 535
+  FPLIN         shift, and go to state 536
+  AP_LD         shift, and go to state 541
+  RT_LD         shift, and go to state 540
+  CD            shift, and go to state 537
+  CR            shift, and go to state 522
+  INDEV         shift, and go to state 539
+  EV            shift, and go to state 538
+  PSPD          shift, and go to state 542
+  CTV           shift, and go to state 543
 
-  valid_motion_statements  go to state 524
-  single_argument_motion_modifiers  go to state 525
+  valid_motion_statements  go to state 527
+  single_argument_motion_modifiers  go to state 528
 
-state 512
+state 515
 
  147) motion_statement : MOVE DOT swallow_newlines MID LPAREN var_or_indirect RPAREN DOT swallow_newlines _ TO LPAREN var_or_indirect RPAREN motion_modifiers
 
-  TO            shift, and go to state 541
+  TO            shift, and go to state 544
 
 
-state 513
+state 516
 
   64) timeout_modifier : swallow_newlines TIMEOUT LPAREN label RPAREN _
 
   $default      reduce using rule 64 (timeout_modifier)
 
 
-state 514
+state 517
 
   65) after_modifier : swallow_newlines AFTER LPAREN indirectable COMMA _ STRING RPAREN
 
-  STRING        shift, and go to state 542
+  STRING        shift, and go to state 545
 
 
-state 515
+state 518
 
  112) forloop : FOR var IN LPAREN int_or_var TO int_or_var RPAREN block END _
 
   $default      reduce using rule 112 (forloop)
 
 
-state 516
+state 519
 
  113) forloop : FOR var IN LPAREN int_or_var DOWNTO int_or_var RPAREN block END _
 
   $default      reduce using rule 113 (forloop)
 
 
-state 517
-
- 152) motion_modifier : DOT swallow_newlines AT _ LPAREN speed RPAREN
-
-  LPAREN        shift, and go to state 543
-
-
-state 518
-
- 153) motion_modifier : DOT swallow_newlines ACC _ LPAREN int_or_var RPAREN
-
-  LPAREN        shift, and go to state 544
-
-
-state 519
-
- 154) motion_modifier : DOT swallow_newlines CR _ LPAREN motion_arguements RPAREN
-
-  LPAREN        shift, and go to state 545
-
-
 state 520
 
- 155) motion_modifier : DOT swallow_newlines TERM _ LPAREN valid_terminations RPAREN
+ 152) motion_modifier : DOT swallow_newlines AT _ LPAREN speed RPAREN
 
   LPAREN        shift, and go to state 546
 
 
 state 521
 
- 156) motion_modifier : DOT swallow_newlines OFFSET _ LPAREN var_or_indirect RPAREN
+ 153) motion_modifier : DOT swallow_newlines ACC _ LPAREN int_or_var RPAREN
 
   LPAREN        shift, and go to state 547
 
 
 state 522
 
- 157) motion_modifier : DOT swallow_newlines TIME_SEGMENT _ LPAREN time COMMA time_seg_actions RPAREN
+ 154) motion_modifier : DOT swallow_newlines CR _ LPAREN motion_arguements RPAREN
 
   LPAREN        shift, and go to state 548
 
 
 state 523
 
- 158) motion_modifier : DOT swallow_newlines SKIP _ LPAREN label optional_lpos_arg RPAREN
+ 155) motion_modifier : DOT swallow_newlines TERM _ LPAREN valid_terminations RPAREN
 
   LPAREN        shift, and go to state 549
 
 
 state 524
 
+ 156) motion_modifier : DOT swallow_newlines OFFSET _ LPAREN var_or_indirect RPAREN
+
+  LPAREN        shift, and go to state 550
+
+
+state 525
+
+ 157) motion_modifier : DOT swallow_newlines TIME_SEGMENT _ LPAREN time COMMA time_seg_actions RPAREN
+
+  LPAREN        shift, and go to state 551
+
+
+state 526
+
+ 158) motion_modifier : DOT swallow_newlines SKIP _ LPAREN label optional_lpos_arg RPAREN
+
+  LPAREN        shift, and go to state 552
+
+
+state 527
+
  159) motion_modifier : DOT swallow_newlines valid_motion_statements _
 
   $default      reduce using rule 159 (motion_modifier)
 
 
-state 525
+state 528
 
  160) motion_modifier : DOT swallow_newlines single_argument_motion_modifiers _ LPAREN int_or_var RPAREN
 
-  LPAREN        shift, and go to state 550
+  LPAREN        shift, and go to state 553
 
 
-state 526
+state 529
 
  161) valid_motion_statements : COORD _
 
   $default      reduce using rule 161 (valid_motion_statements)
 
 
-state 527
+state 530
 
  162) valid_motion_statements : MROT _
 
   $default      reduce using rule 162 (valid_motion_statements)
 
 
-state 528
+state 531
 
  163) valid_motion_statements : PTH _
 
   $default      reduce using rule 163 (valid_motion_statements)
 
 
-state 529
+state 532
 
  164) valid_motion_statements : INC _
 
   $default      reduce using rule 164 (valid_motion_statements)
 
 
-state 530
+state 533
 
  165) valid_motion_statements : WJNT _
 
   $default      reduce using rule 165 (valid_motion_statements)
 
 
-state 531
+state 534
 
  166) valid_motion_statements : BREAK _
 
   $default      reduce using rule 166 (valid_motion_statements)
 
 
-state 532
+state 535
 
  167) valid_motion_statements : RTCP _
 
   $default      reduce using rule 167 (valid_motion_statements)
 
 
-state 533
+state 536
 
  168) valid_motion_statements : FPLIN _
 
   $default      reduce using rule 168 (valid_motion_statements)
 
 
-state 534
+state 537
 
  169) single_argument_motion_modifiers : CD _
 
   $default      reduce using rule 169 (single_argument_motion_modifiers)
 
 
-state 535
+state 538
 
  170) single_argument_motion_modifiers : EV _
 
   $default      reduce using rule 170 (single_argument_motion_modifiers)
 
 
-state 536
+state 539
 
  171) single_argument_motion_modifiers : INDEV _
 
   $default      reduce using rule 171 (single_argument_motion_modifiers)
 
 
-state 537
+state 540
 
  172) single_argument_motion_modifiers : RT_LD _
 
   $default      reduce using rule 172 (single_argument_motion_modifiers)
 
 
-state 538
+state 541
 
  173) single_argument_motion_modifiers : AP_LD _
 
   $default      reduce using rule 173 (single_argument_motion_modifiers)
 
 
-state 539
+state 542
 
  174) single_argument_motion_modifiers : PSPD _
 
   $default      reduce using rule 174 (single_argument_motion_modifiers)
 
 
-state 540
+state 543
 
  175) single_argument_motion_modifiers : CTV _
 
   $default      reduce using rule 175 (single_argument_motion_modifiers)
 
 
-state 541
+state 544
 
  147) motion_statement : MOVE DOT swallow_newlines MID LPAREN var_or_indirect RPAREN DOT swallow_newlines TO _ LPAREN var_or_indirect RPAREN motion_modifiers
 
-  LPAREN        shift, and go to state 551
+  LPAREN        shift, and go to state 554
 
 
-state 542
+state 545
 
   65) after_modifier : swallow_newlines AFTER LPAREN indirectable COMMA STRING _ RPAREN
 
-  RPAREN        shift, and go to state 552
+  RPAREN        shift, and go to state 555
 
 
-state 543
+state 546
 
  152) motion_modifier : DOT swallow_newlines AT LPAREN _ speed RPAREN
 
-  STRING        shift, and go to state 555
+  STRING        shift, and go to state 558
   REAL          shift, and go to state 117
   DIGIT         shift, and go to state 118
   WORD          shift, and go to state 106
 
-  speed         go to state 553
+  speed         go to state 556
   number        go to state 114
   var           go to state 115
-  indirectable  go to state 554
+  indirectable  go to state 557
   var_without_namespaces  go to state 83
   var_with_namespaces  go to state 84
   namespaces    go to state 107
   ns            go to state 86
   integer       go to state 116
 
-state 544
+state 547
 
  153) motion_modifier : DOT swallow_newlines ACC LPAREN _ int_or_var RPAREN
 
   DIGIT         shift, and go to state 118
   WORD          shift, and go to state 106
 
-  integer       go to state 396
-  var           go to state 397
-  int_or_var    go to state 556
+  integer       go to state 399
+  var           go to state 400
+  int_or_var    go to state 559
   var_without_namespaces  go to state 83
   var_with_namespaces  go to state 84
   namespaces    go to state 107
   ns            go to state 86
 
-state 545
+state 548
 
  154) motion_modifier : DOT swallow_newlines CR LPAREN _ motion_arguements RPAREN
 
   DIGIT         shift, and go to state 118
   WORD          shift, and go to state 106
-  MINUS         shift, and go to state 561
+  MINUS         shift, and go to state 564
 
-  valid_terminations  go to state 557
-  motion_arguements  go to state 558
-  integer       go to state 559
-  var           go to state 560
+  valid_terminations  go to state 560
+  motion_arguements  go to state 561
+  integer       go to state 562
+  var           go to state 563
   var_without_namespaces  go to state 83
   var_with_namespaces  go to state 84
   namespaces    go to state 107
   ns            go to state 86
 
-state 546
+state 549
 
  155) motion_modifier : DOT swallow_newlines TERM LPAREN _ valid_terminations RPAREN
 
   DIGIT         shift, and go to state 118
   WORD          shift, and go to state 106
-  MINUS         shift, and go to state 561
+  MINUS         shift, and go to state 564
 
-  valid_terminations  go to state 562
-  integer       go to state 559
-  var           go to state 560
+  valid_terminations  go to state 565
+  integer       go to state 562
+  var           go to state 563
   var_without_namespaces  go to state 83
   var_with_namespaces  go to state 84
   namespaces    go to state 107
   ns            go to state 86
 
-state 547
+state 550
 
  156) motion_modifier : DOT swallow_newlines OFFSET LPAREN _ var_or_indirect RPAREN
 
@@ -6728,13 +6761,13 @@ state 547
   var           go to state 104
   indirect_thing  go to state 62
   var_system    go to state 105
-  var_or_indirect  go to state 563
+  var_or_indirect  go to state 566
   var_without_namespaces  go to state 83
   var_with_namespaces  go to state 84
   namespaces    go to state 107
   ns            go to state 86
 
-state 548
+state 551
 
  157) motion_modifier : DOT swallow_newlines TIME_SEGMENT LPAREN _ time COMMA time_seg_actions RPAREN
 
@@ -6742,39 +6775,39 @@ state 548
   DIGIT         shift, and go to state 118
   WORD          shift, and go to state 106
 
-  time          go to state 564
-  var           go to state 565
-  number        go to state 566
+  time          go to state 567
+  var           go to state 568
+  number        go to state 569
   var_without_namespaces  go to state 83
   var_with_namespaces  go to state 84
   namespaces    go to state 107
   ns            go to state 86
   integer       go to state 116
 
-state 549
+state 552
 
  158) motion_modifier : DOT swallow_newlines SKIP LPAREN _ label optional_lpos_arg RPAREN
 
   LABEL         shift, and go to state 49
 
-  label         go to state 567
+  label         go to state 570
 
-state 550
+state 553
 
  160) motion_modifier : DOT swallow_newlines single_argument_motion_modifiers LPAREN _ int_or_var RPAREN
 
   DIGIT         shift, and go to state 118
   WORD          shift, and go to state 106
 
-  integer       go to state 396
-  var           go to state 397
-  int_or_var    go to state 568
+  integer       go to state 399
+  var           go to state 400
+  int_or_var    go to state 571
   var_without_namespaces  go to state 83
   var_with_namespaces  go to state 84
   namespaces    go to state 107
   ns            go to state 86
 
-state 551
+state 554
 
  147) motion_statement : MOVE DOT swallow_newlines MID LPAREN var_or_indirect RPAREN DOT swallow_newlines TO LPAREN _ var_or_indirect RPAREN motion_modifiers
 
@@ -6785,208 +6818,208 @@ state 551
   var           go to state 104
   indirect_thing  go to state 62
   var_system    go to state 105
-  var_or_indirect  go to state 569
+  var_or_indirect  go to state 572
   var_without_namespaces  go to state 83
   var_with_namespaces  go to state 84
   namespaces    go to state 107
   ns            go to state 86
 
-state 552
+state 555
 
   65) after_modifier : swallow_newlines AFTER LPAREN indirectable COMMA STRING RPAREN _
 
   $default      reduce using rule 65 (after_modifier)
 
 
-state 553
+state 556
 
  152) motion_modifier : DOT swallow_newlines AT LPAREN speed _ RPAREN
 
-  RPAREN        shift, and go to state 570
+  RPAREN        shift, and go to state 573
 
 
-state 554
+state 557
 
  190) speed : indirectable _ COMMA STRING
 
-  COMMA         shift, and go to state 571
+  COMMA         shift, and go to state 574
 
 
-state 555
+state 558
 
  191) speed : STRING _
 
   $default      reduce using rule 191 (speed)
 
 
-state 556
+state 559
 
  153) motion_modifier : DOT swallow_newlines ACC LPAREN int_or_var _ RPAREN
 
-  RPAREN        shift, and go to state 572
+  RPAREN        shift, and go to state 575
 
 
-state 557
+state 560
 
  150) motion_arguements : valid_terminations _
  151) motion_arguements : valid_terminations _ COMMA valid_terminations
 
-  COMMA         shift, and go to state 573
+  COMMA         shift, and go to state 576
   $default      reduce using rule 150 (motion_arguements)
 
 
-state 558
+state 561
 
  154) motion_modifier : DOT swallow_newlines CR LPAREN motion_arguements _ RPAREN
 
-  RPAREN        shift, and go to state 574
+  RPAREN        shift, and go to state 577
 
 
-state 559
+state 562
 
  176) valid_terminations : integer _
 
   $default      reduce using rule 176 (valid_terminations)
 
 
-state 560
+state 563
 
  177) valid_terminations : var _
 
   $default      reduce using rule 177 (valid_terminations)
 
 
-state 561
+state 564
 
  178) valid_terminations : MINUS _ DIGIT
 
-  DIGIT         shift, and go to state 575
-
-
-state 562
-
- 155) motion_modifier : DOT swallow_newlines TERM LPAREN valid_terminations _ RPAREN
-
-  RPAREN        shift, and go to state 576
-
-
-state 563
-
- 156) motion_modifier : DOT swallow_newlines OFFSET LPAREN var_or_indirect _ RPAREN
-
-  RPAREN        shift, and go to state 577
-
-
-state 564
-
- 157) motion_modifier : DOT swallow_newlines TIME_SEGMENT LPAREN time _ COMMA time_seg_actions RPAREN
-
-  COMMA         shift, and go to state 578
+  DIGIT         shift, and go to state 578
 
 
 state 565
+
+ 155) motion_modifier : DOT swallow_newlines TERM LPAREN valid_terminations _ RPAREN
+
+  RPAREN        shift, and go to state 579
+
+
+state 566
+
+ 156) motion_modifier : DOT swallow_newlines OFFSET LPAREN var_or_indirect _ RPAREN
+
+  RPAREN        shift, and go to state 580
+
+
+state 567
+
+ 157) motion_modifier : DOT swallow_newlines TIME_SEGMENT LPAREN time _ COMMA time_seg_actions RPAREN
+
+  COMMA         shift, and go to state 581
+
+
+state 568
 
  188) time : var _
 
   $default      reduce using rule 188 (time)
 
 
-state 566
+state 569
 
  189) time : number _
 
   $default      reduce using rule 189 (time)
 
 
-state 567
+state 570
 
  158) motion_modifier : DOT swallow_newlines SKIP LPAREN label _ optional_lpos_arg RPAREN
 
-  COMMA         shift, and go to state 580
+  COMMA         shift, and go to state 583
   $default      reduce using rule 180 (optional_lpos_arg)
 
-  optional_lpos_arg  go to state 579
+  optional_lpos_arg  go to state 582
 
-state 568
+state 571
 
  160) motion_modifier : DOT swallow_newlines single_argument_motion_modifiers LPAREN int_or_var _ RPAREN
 
-  RPAREN        shift, and go to state 581
+  RPAREN        shift, and go to state 584
 
 
-state 569
+state 572
 
  147) motion_statement : MOVE DOT swallow_newlines MID LPAREN var_or_indirect RPAREN DOT swallow_newlines TO LPAREN var_or_indirect _ RPAREN motion_modifiers
 
-  RPAREN        shift, and go to state 582
+  RPAREN        shift, and go to state 585
 
 
-state 570
+state 573
 
  152) motion_modifier : DOT swallow_newlines AT LPAREN speed RPAREN _
 
   $default      reduce using rule 152 (motion_modifier)
 
 
-state 571
+state 574
 
  190) speed : indirectable COMMA _ STRING
 
-  STRING        shift, and go to state 583
+  STRING        shift, and go to state 586
 
 
-state 572
+state 575
 
  153) motion_modifier : DOT swallow_newlines ACC LPAREN int_or_var RPAREN _
 
   $default      reduce using rule 153 (motion_modifier)
 
 
-state 573
+state 576
 
  151) motion_arguements : valid_terminations COMMA _ valid_terminations
 
   DIGIT         shift, and go to state 118
   WORD          shift, and go to state 106
-  MINUS         shift, and go to state 561
+  MINUS         shift, and go to state 564
 
-  valid_terminations  go to state 584
-  integer       go to state 559
-  var           go to state 560
+  valid_terminations  go to state 587
+  integer       go to state 562
+  var           go to state 563
   var_without_namespaces  go to state 83
   var_with_namespaces  go to state 84
   namespaces    go to state 107
   ns            go to state 86
 
-state 574
+state 577
 
  154) motion_modifier : DOT swallow_newlines CR LPAREN motion_arguements RPAREN _
 
   $default      reduce using rule 154 (motion_modifier)
 
 
-state 575
+state 578
 
  178) valid_terminations : MINUS DIGIT _
 
   $default      reduce using rule 178 (valid_terminations)
 
 
-state 576
+state 579
 
  155) motion_modifier : DOT swallow_newlines TERM LPAREN valid_terminations RPAREN _
 
   $default      reduce using rule 155 (motion_modifier)
 
 
-state 577
+state 580
 
  156) motion_modifier : DOT swallow_newlines OFFSET LPAREN var_or_indirect RPAREN _
 
   $default      reduce using rule 156 (motion_modifier)
 
 
-state 578
+state 581
 
  157) motion_modifier : DOT swallow_newlines TIME_SEGMENT LPAREN time COMMA _ time_seg_actions RPAREN
 
@@ -6999,119 +7032,119 @@ state 578
 
   namespaces    go to state 54
   function_call  go to state 55
-  var_or_indirect  go to state 585
+  var_or_indirect  go to state 588
   var           go to state 104
   indirect_thing  go to state 62
   var_system    go to state 105
-  time_seg_actions  go to state 586
-  program_call  go to state 587
-  io_method     go to state 588
+  time_seg_actions  go to state 589
+  program_call  go to state 590
+  io_method     go to state 591
   var_without_namespaces  go to state 83
   var_with_namespaces  go to state 84
   ns            go to state 86
 
-state 579
+state 582
 
  158) motion_modifier : DOT swallow_newlines SKIP LPAREN label optional_lpos_arg _ RPAREN
 
-  RPAREN        shift, and go to state 589
+  RPAREN        shift, and go to state 592
 
 
-state 580
+state 583
 
  179) optional_lpos_arg : COMMA _ var
 
   WORD          shift, and go to state 106
 
-  var           go to state 590
+  var           go to state 593
   var_without_namespaces  go to state 83
   var_with_namespaces  go to state 84
   namespaces    go to state 107
   ns            go to state 86
 
-state 581
+state 584
 
  160) motion_modifier : DOT swallow_newlines single_argument_motion_modifiers LPAREN int_or_var RPAREN _
 
   $default      reduce using rule 160 (motion_modifier)
 
 
-state 582
+state 585
 
  147) motion_statement : MOVE DOT swallow_newlines MID LPAREN var_or_indirect RPAREN DOT swallow_newlines TO LPAREN var_or_indirect RPAREN _ motion_modifiers
 
-  DOT           shift, and go to state 500
+  DOT           shift, and go to state 503
 
-  motion_modifiers  go to state 591
-  motion_modifier  go to state 499
+  motion_modifiers  go to state 594
+  motion_modifier  go to state 502
 
-state 583
+state 586
 
  190) speed : indirectable COMMA STRING _
 
   $default      reduce using rule 190 (speed)
 
 
-state 584
+state 587
 
  151) motion_arguements : valid_terminations COMMA valid_terminations _
 
   $default      reduce using rule 151 (motion_arguements)
 
 
-state 585
+state 588
 
   78) program_call : var_or_indirect _ EQUAL function_call LPAREN args RPAREN
 
-  EQUAL         shift, and go to state 592
+  EQUAL         shift, and go to state 595
 
 
-state 586
+state 589
 
  157) motion_modifier : DOT swallow_newlines TIME_SEGMENT LPAREN time COMMA time_seg_actions _ RPAREN
 
-  RPAREN        shift, and go to state 593
+  RPAREN        shift, and go to state 596
 
 
-state 587
+state 590
 
  186) time_seg_actions : program_call _
 
   $default      reduce using rule 186 (time_seg_actions)
 
 
-state 588
+state 591
 
  187) time_seg_actions : io_method _
 
   $default      reduce using rule 187 (time_seg_actions)
 
 
-state 589
+state 592
 
  158) motion_modifier : DOT swallow_newlines SKIP LPAREN label optional_lpos_arg RPAREN _
 
   $default      reduce using rule 158 (motion_modifier)
 
 
-state 590
+state 593
 
  179) optional_lpos_arg : COMMA var _
 
   $default      reduce using rule 179 (optional_lpos_arg)
 
 
-state 591
+state 594
 
  147) motion_statement : MOVE DOT swallow_newlines MID LPAREN var_or_indirect RPAREN DOT swallow_newlines TO LPAREN var_or_indirect RPAREN motion_modifiers _
  149) motion_modifiers : motion_modifiers _ motion_modifier
 
-  DOT           shift, and go to state 500
+  DOT           shift, and go to state 503
   $default      reduce using rule 147 (motion_statement)
 
-  motion_modifier  go to state 510
+  motion_modifier  go to state 513
 
-state 592
+state 595
 
   78) program_call : var_or_indirect EQUAL _ function_call LPAREN args RPAREN
 
@@ -7121,7 +7154,7 @@ state 592
   function_call  go to state 260
   ns            go to state 86
 
-state 593
+state 596
 
  157) motion_modifier : DOT swallow_newlines TIME_SEGMENT LPAREN time COMMA time_seg_actions RPAREN _
 
