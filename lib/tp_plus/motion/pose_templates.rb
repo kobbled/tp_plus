@@ -12,6 +12,10 @@ module TPPlus
 
             KEYS = [POSE, JOINTS, COORD, ORIENT, CONFIG]
         end
+
+        module Modifiers
+          OFFSET = :offset
+        end
         
         module HashTemplate
             CONFIG = {

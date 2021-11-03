@@ -580,8 +580,10 @@ rule
     : DOT swallow_newlines WORD        { result = { method: val[2] } }
     | DOT swallow_newlines group_statement
                                        { result = { group: val[2] } }
-    | DOT swallow_newlines pose_method_modifier
+    | DOT swallow_newlines POSEATTR
                                        { result = { pose: val[2] } }
+    | DOT swallow_newlines OFFSET
+                                       { result = { offset: true } }
     ;
   
   var_system

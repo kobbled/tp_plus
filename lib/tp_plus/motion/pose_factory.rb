@@ -248,6 +248,7 @@ module TPPlus
             @current_tool = tool
             @poses = {}
             @default_pose = PoseCreator::Pose.new.add(:default, 0)
+            @last_pose = PoseCreator::Pose.new.add(:last, 0)
           end
 
           def add(id, no = @current_id)
@@ -273,20 +274,24 @@ module TPPlus
 
             #copy default into pose if no groups have been set
             if pose.groups.length == 0
-              pose = copy_default(pose)
+              pose = copy_preset(pose, @default_pose)
+            end
             end
             
             #merge components and default components together. Transform default components to a list
             case type
             when Motion::Types::POSE, Motion::Types::COORD
-              options[:components] = Utilities.merge_components(options[:components], pose.groups[options[:group]].components.values)
-            when Motion::Types::JOINTS
-              options[:components] = Utilities.merge_components(options[:components], pose.groups[options[:group]].components)
+              options[:components] = Utilities.merge_components(options[:components], pose.groups[options[:group]].components.values, options[Motion::Modifiers::OFFSET])
             when Motion::Types::ORIENT
-              options[:components] = Utilities.merge_components_back(options[:components], pose.groups[options[:group]].components.values)
+              options[:components] = Utilities.merge_components_back(options[:components], pose.groups[options[:group]].components.values, options[Motion::Modifiers::OFFSET])
+            when Motion::Types::JOINTS
+              options[:components] = Utilities.merge_components(options[:components], pose.groups[options[:group]].components.transpose[0], options[Motion::Modifiers::OFFSET])
             end
 
             add_group(pose, type, options)
+
+            #set as last pose
+            _ = copy_preset(@last_pose, pose)
           end
 
           def set_default(type, options={})
@@ -324,7 +329,7 @@ module TPPlus
             @poses.each do |k, v|
               if v.groups.empty?
                 #copy defauly pose for poses unspecified
-                v = copy_default(v)
+                v = copy_preset(v, @default_pose)
               end
             end
 
@@ -356,14 +361,15 @@ module TPPlus
             end
           end
 
-          def copy_default(pose)
+          def copy_preset(lval, rval)
             #copy default into pose if no groups have been set
-            @default_pose.groups.each do |k, v|
-              pose.groups[k] = v.clone
+            rval.groups.each do |k, v|
+              lval.groups[k] = v.clone
             end
 
-            pose
+            lval
           end
+          
         end
       end
 
