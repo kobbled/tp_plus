@@ -57,6 +57,27 @@ module TPPlus
 
               comp_list_merge
             end
+
+            def polar_to_cartesian(radius, theta, z)
+              #theta arguement is in degrees
+              [radius*Math.cos(theta * Math::PI/180), radius*Math.sin(theta * Math::PI/180), z]
+            end
+
+            def cartesian_to_polar(x, y, z)
+              #Output as: radius, theta, z
+              [Math.sqrt(x**2 + y**2), Math.atan2(y,x), z]
+            end
+
+            def spherical_to_cartesian(radius, theta, phi)
+              #theta arguement is in degrees
+              [radius*Math.sin(phi * Math::PI/180)*Math.cos(theta * Math::PI/180),
+               radius*Math.sin(phi * Math::PI/180)*Math.sin(theta * Math::PI/180),
+               radius*Math.cos(phi * Math::PI/180)]
+            end
+
+            def cartesian_to_spherical(x, y, z)
+              #Output as: radius, theta, phi
+              [Math.sqrt(x**2 + y**2 + z**2), Math.atan2(y, x), Math.atan2(Math.sqrt(x**2 + y**2), z)]
             end
         end
     end

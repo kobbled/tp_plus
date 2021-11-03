@@ -276,6 +276,27 @@ module TPPlus
             if pose.groups.length == 0
               pose = copy_preset(pose, @default_pose)
             end
+
+            #if an offset pose add to last pose
+            if options.has_key?(Motion::Modifiers::OFFSET)
+              options[Motion::Modifiers::OFFSET] = true
+              pose = copy_preset(pose, @last_pose)
+            else
+              options[Motion::Modifiers::OFFSET] = false
+            end
+
+            #convert coordinate systems
+            if options.has_key?(Motion::Modifiers::SYSTEM)
+              case options[Motion::Modifiers::SYSTEM]
+              when Motion::Modifiers::POLAR
+                # arguement order: Radius, theta (deg), z
+                pol = Utilities.polar_to_cartesian(options[:components][0], options[:components][1], options[:components][2])
+                options[:components] = Utilities.merge_components(pol, options[:components], false)
+              when Motion::Modifiers::SPHERE
+                # arguement order: Radius, theta (deg), phi (deg)
+                sph = Utilities.spherical_to_cartesian(options[:components][0], options[:components][1], options[:components][2])
+                options[:components] = Utilities.merge_components(sph, options[:components], false)
+              end
             end
             
             #merge components and default components together. Transform default components to a list

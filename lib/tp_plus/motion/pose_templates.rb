@@ -15,6 +15,9 @@ module TPPlus
 
         module Modifiers
           OFFSET = :offset
+          SYSTEM = :coord
+          SPHERE = 'sphere'
+          POLAR = 'polar'
         end
         
         module HashTemplate

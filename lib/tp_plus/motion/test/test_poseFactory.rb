@@ -29,20 +29,17 @@ factory.set_default(TPPlus::Motion::Types::JOINTS, group: 2, components: [90,0])
 
 
 factory.set_pose(:p1, TPPlus::Motion::Types::POSE, group: 1, components: [0,50,0])
-factory.set_pose(:p2, TPPlus::Motion::Types::COORD, group: 1, components: [0,50,100])
-factory.set_pose(:p3, TPPlus::Motion::Types::COORD, group: 1, components: [50,0,100])
-factory.set_pose(:p3, TPPlus::Motion::Types::JOINTS, group: 2, components: [90,90])
-factory.set_pose(:p4, TPPlus::Motion::Types::COORD, group: 1, components: [0,-50,100])
-factory.set_pose(:p4, TPPlus::Motion::Types::JOINTS, group: 2, components: [90,180])
+factory.set_pose(:p2, TPPlus::Motion::Types::COORD, group: 1, components: [0,20,10], offset: true)
 
+factory.set_pose(:p3, TPPlus::Motion::Types::ORIENT, group: 1, components: [0,0,90], offset: true)
+factory.set_pose(:p3, TPPlus::Motion::Types::JOINTS, group: 2, components: [0,90], offset: true)
 
-config = TPPlus::Motion::HashTemplate::CONFIG.clone
-factory.set_default(TPPlus::Motion::Types::POSE, group: 1, components: [0,100,100,0,0,0])
-factory.set_default(TPPlus::Motion::Types::CONFIG, group: 1, components: config)
-factory.set_default(TPPlus::Motion::Types::JOINTS, group: 2, components: [[0,'mm']])
-factory.set_default(TPPlus::Motion::Types::JOINTS, group: 3, components: [0,0])
+# config = TPPlus::Motion::HashTemplate::CONFIG.clone
+# factory.set_default(TPPlus::Motion::Types::POSE, group: 1, components: [0,100,100,0,0,0])
+# factory.set_default(TPPlus::Motion::Types::CONFIG, group: 1, components: config)
+# factory.set_default(TPPlus::Motion::Types::JOINTS, group: 2, components: [[0,'mm']])
+# factory.set_default(TPPlus::Motion::Types::JOINTS, group: 3, components: [0,0])
 
-factory.set_pose(:p5, TPPlus::Motion::Types::ORIENT, group: 1, components: [180,180,0])
-factory.set_pose(:p6, TPPlus::Motion::Types::JOINTS, group: 1, components: [90,120,0,-90,90,0])
+factory.set_pose(:p5, TPPlus::Motion::Types::COORD, group: 1, components: [80, 180, 300], coord: 'sphere')
 
 puts factory

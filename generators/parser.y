@@ -21,6 +21,7 @@ token LPOS JPOS
 token false
 token FUNCTION OPERATION USING IMPORT COMPILE
 token ARROW DEFAULTPOS POSEATTR POSEREVERSE
+token SPHERE POLAR
 
 prechigh
   right BANG
@@ -562,10 +563,6 @@ rule
                                        { result = val[0].merge(val[1]) }
     ;
 
-  pose_method_modifier
-    : POSEATTR    { result = val[0] }
-    ;
-
   pose_range_modifiers
     : pose_range_modifier                      { result = val[0] }
     | pose_range_modifiers pose_range_modifier
@@ -574,6 +571,11 @@ rule
   
   pose_range_modifier
     : DOT swallow_newlines POSEREVERSE   { result = {mod: val[2]} }
+    ;
+
+  coord_system
+    : SPHERE        { result = val[0] }
+    | POLAR         { result = val[0] }
     ;
   
   var_method_modifier
@@ -584,6 +586,8 @@ rule
                                        { result = { pose: val[2] } }
     | DOT swallow_newlines OFFSET
                                        { result = { offset: true } }
+    | DOT swallow_newlines coord_system
+                                       { result = { coord: val[2] } }
     ;
   
   var_system
