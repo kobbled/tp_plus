@@ -40,6 +40,6 @@ factory.set_pose(:p3, TPPlus::Motion::Types::JOINTS, group: 2, components: [0,90
 # factory.set_default(TPPlus::Motion::Types::JOINTS, group: 2, components: [[0,'mm']])
 # factory.set_default(TPPlus::Motion::Types::JOINTS, group: 3, components: [0,0])
 
-factory.set_pose(:p5, TPPlus::Motion::Types::COORD, group: 1, components: [80, 180, 300], coord: 'sphere')
+factory.set_pose(:p5, TPPlus::Motion::Types::COORD, group: 1, components: [80, 180, 300], coord: 'polar')
 
 puts factory
