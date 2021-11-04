@@ -533,6 +533,7 @@ rule
   position_assignment
     : DEFAULTPOS var_method_modifiers ARROW array   { result = PoseDefaultNode.new(val[1],val[3]) }
     | var_or_indirect ARROW array   { result = PoseNode.new(val[0],val[2]) }
+    | LPAREN assignable_range RPAREN var_method_modifiers ARROW array   { result = PoseRangeNode.new(val[1],val[3],val[5]) }
     | assignable_range EQUAL assignable_range {result = PoseAssignNode.new(val[0], val[2])}
     | assignable_range EQUAL LPAREN assignable_range RPAREN pose_range_modifiers {result = PoseAssignNode.new(val[0], val[3], val[5])}
     ;
