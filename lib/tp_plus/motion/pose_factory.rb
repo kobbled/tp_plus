@@ -164,11 +164,12 @@ module TPPlus
 
       module Pose
         class Pose
-          attr_reader :id, :comment, :groups
+          attr_reader :id, :comment, :groups, :mods
           def initialize(id, comment)
             @id = id
             @comment = comment
             @groups = {}
+            @mods = {}
           end
 
           def make
@@ -227,6 +228,11 @@ module TPPlus
             
             nil
           end
+
+          def add_modifier(k, v)
+            @mods[k] = v
+          end
+        
         end
 
       end
@@ -289,13 +295,20 @@ module TPPlus
             if options.has_key?(Motion::Modifiers::SYSTEM)
               case options[Motion::Modifiers::SYSTEM]
               when Motion::Modifiers::POLAR
+                unless pose.mods.has_key?(Motion::Modifiers::ORIGIN)
+                  pose.add_modifier(Motion::Modifiers::ORIGIN, [0, 0, 0, 0, 0, 0])
+                end
                 # arguement order: Radius, theta (deg), z
-                pol = Utilities.polar_to_cartesian(options[:components][0], options[:components][1], options[:components][2])
-                options[:components] = Utilities.merge_components(pol, options[:components], false)
+                options[:components] = Utilities.polar_to_cartesian(pose.mods[Motion::Modifiers::ORIGIN], options[:components], options[:method], options.has_key?(Motion::Modifiers::FIX) ? true : false)
               when Motion::Modifiers::SPHERE
+                unless pose.mods.has_key?(Motion::Modifiers::ORIGIN)
+                  pose[Motion::Modifiers::ORIGIN] = [0, 0, 0, 0, 0, 0]
+                end
                 # arguement order: Radius, theta (deg), phi (deg)
-                sph = Utilities.spherical_to_cartesian(options[:components][0], options[:components][1], options[:components][2])
-                options[:components] = Utilities.merge_components(sph, options[:components], false)
+                options[:components] = Utilities.spherical_to_cartesian(pose[Motion::Modifiers::ORIGIN], options[:components], options[:method], options.has_key?(Motion::Modifiers::FIX) ? true : false)
+              when Motion::Modifiers::ORIGIN
+                pose.add_modifier(Motion::Modifiers::ORIGIN, options[:components])
+                return
               end
             end
             

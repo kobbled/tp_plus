@@ -1,3 +1,5 @@
+require_relative 'transform'
+
 module TPPlus
     module Motion
         module Utilities
@@ -58,9 +60,40 @@ module TPPlus
               comp_list_merge
             end
 
-            def polar_to_cartesian(radius, theta, z)
-              #theta arguement is in degrees
-              [radius*Math.cos(theta * Math::PI/180), radius*Math.sin(theta * Math::PI/180), z]
+            def polar_to_cartesian(origin, pose, z_axis, fix_orient = false)
+              #pose ordering (theta, r, z, theta_rot, r_rot, z_rot)
+              #if !fix_orient use orientation to align to surface normal
+              #if fix_orient fix orientation 
+
+              origin_mat = xyzrpw_2_pose(origin)
+
+              case z_axis
+              when 'x'
+                pose_vec =  [pose[2], 0, pose[1]]
+                trans_vec = origin_mat * rotx(pose[0] * Math::PI/180) * transl(pose_vec)
+                
+                if fix_orient
+                  trans_vec = trans_vec * rotx(-1 * pose[0] * Math::PI/180)
+                end
+              when 'y'
+                pose_vec =  [0, pose[2], pose[1]]
+                trans_vec = origin_mat * roty(pose[0] * Math::PI/180) * transl(pose_vec)
+                
+                if fix_orient
+                  trans_vec = trans_vec * roty(-1 * pose[0] * Math::PI/180)
+                end
+              when 'z'
+                pose_vec =  [0, pose[1], pose[2]]
+                trans_vec = origin_mat * rotz(pose[0] * Math::PI/180) * transl(pose_vec)
+                
+                if fix_orient
+                  trans_vec = trans_vec * rotz(-1 * pose[0] * Math::PI/180)
+                end
+              end
+
+              trans_vec = trans_vec * rotz(pose[5]*Math::PI/180) * roty(pose[4]*Math::PI/180) * rotx(pose[3]*Math::PI/180)
+              
+              pose_2_xyzrpw(trans_vec)
             end
 
             def cartesian_to_polar(x, y, z)
@@ -68,11 +101,23 @@ module TPPlus
               [Math.sqrt(x**2 + y**2), Math.atan2(y,x), z]
             end
 
-            def spherical_to_cartesian(radius, theta, phi)
-              #theta arguement is in degrees
-              [radius*Math.sin(phi * Math::PI/180)*Math.cos(theta * Math::PI/180),
-               radius*Math.sin(phi * Math::PI/180)*Math.sin(theta * Math::PI/180),
-               radius*Math.cos(phi * Math::PI/180)]
+            def spherical_to_cartesian(origin, pose, z_axis, fix_orient = false)
+              #pose ordering (theta, rho, z, theta_rot, rho_rot, z_rot)
+              origin_mat = xyzrpw_2_pose(origin)
+
+              case z_axis
+              when 1
+                pose_vec =  [0, 0, pose[2]]
+                trans_vec = origin_mat * rotz(pose[0] * Math::PI/180) * roty(pose[1] * Math::PI/180) * transl(pose_vec)
+              when 2
+                pose_vec =  [0, 0, pose[2]]
+                trans_vec = origin_mat * rotz(pose[0] * Math::PI/180 + Math::PI) * rotx(pose[1] * Math::PI/180) * transl(pose_vec)
+              when 3
+                pose_vec =  [0, pose[2], 0]
+                trans_vec = origin_mat * roty(pose[0] * Math::PI/180) * rotx(pose[1] * Math::PI/180) * transl(pose_vec)
+              end
+              
+              pose_2_xyzrpw(trans_vec)
             end
 
             def cartesian_to_spherical(x, y, z)

@@ -18,6 +18,8 @@ module TPPlus
           SYSTEM = :coord
           SPHERE = 'sphere'
           POLAR = 'polar'
+          ORIGIN = 'origin'
+          FIX = :fix
         end
         
         module HashTemplate

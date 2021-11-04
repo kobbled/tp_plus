@@ -125,7 +125,9 @@ module TPPlus
         "default" => :DEFAULTPOS,
         "reverse" => :POSEREVERSE,
         "sphere" => :SPHERE,
-        "polar" => :POLAR
+        "polar" => :POLAR,
+        "origin" => :ORIGIN,
+        "fix" => :FIX
       }
 
 

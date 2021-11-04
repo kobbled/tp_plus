@@ -21,7 +21,7 @@ token LPOS JPOS
 token false
 token FUNCTION OPERATION USING IMPORT COMPILE
 token ARROW DEFAULTPOS POSEATTR POSEREVERSE
-token SPHERE POLAR
+token SPHERE POLAR ORIGIN FIX
 
 prechigh
   right BANG
@@ -576,6 +576,7 @@ rule
   coord_system
     : SPHERE        { result = val[0] }
     | POLAR         { result = val[0] }
+    | ORIGIN        { result = val[0] }
     ;
   
   var_method_modifier
@@ -588,6 +589,8 @@ rule
                                        { result = { offset: true } }
     | DOT swallow_newlines coord_system
                                        { result = { coord: val[2] } }
+    | DOT swallow_newlines FIX
+                                       { result = { fix: true } }
     ;
   
   var_system
