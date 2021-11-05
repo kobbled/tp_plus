@@ -255,6 +255,7 @@ module TPPlus
             @poses = {}
             @default_pose = PoseCreator::Pose.new.add(:default, 0)
             @last_pose = PoseCreator::Pose.new.add(:last, 0)
+            @last_components = []
           end
 
           def add(id, no = @current_id)
@@ -293,6 +294,18 @@ module TPPlus
 
             #convert coordinate systems
             if options.has_key?(Motion::Modifiers::SYSTEM)
+              #copy pose in coordinate system to use for offsetting
+              if options[Motion::Modifiers::OFFSET] == true
+                case type
+                when Motion::Types::POSE, Motion::Types::COORD
+                  options[:components] = Utilities.merge_components(options[:components], @last_pose_sys, options[Motion::Modifiers::OFFSET])
+                when Motion::Types::ORIENT
+                  options[:components] = Utilities.merge_components_back(options[:components], @last_pose_sys, options[Motion::Modifiers::OFFSET])
+                end
+              end
+
+              @last_pose_sys = options[:components]
+
               case options[Motion::Modifiers::SYSTEM]
               when Motion::Modifiers::POLAR
                 unless pose.mods.has_key?(Motion::Modifiers::ORIGIN)
@@ -315,11 +328,11 @@ module TPPlus
             #merge components and default components together. Transform default components to a list
             case type
             when Motion::Types::POSE, Motion::Types::COORD
-              options[:components] = Utilities.merge_components(options[:components], pose.groups[options[:group]].components.values, options[Motion::Modifiers::OFFSET])
+              options[:components] = Utilities.merge_components(options[:components], pose.groups[options[:group]].components.values, options[Motion::Modifiers::OFFSET] && !options.has_key?(Motion::Modifiers::SYSTEM) )
             when Motion::Types::ORIENT
-              options[:components] = Utilities.merge_components_back(options[:components], pose.groups[options[:group]].components.values, options[Motion::Modifiers::OFFSET])
+              options[:components] = Utilities.merge_components_back(options[:components], pose.groups[options[:group]].components.values, options[Motion::Modifiers::OFFSET] && !options.has_key?(Motion::Modifiers::SYSTEM) )
             when Motion::Types::JOINTS
-              options[:components] = Utilities.merge_components(options[:components], pose.groups[options[:group]].components.transpose[0], options[Motion::Modifiers::OFFSET])
+              options[:components] = Utilities.merge_components(options[:components], pose.groups[options[:group]].components.transpose[0], options[Motion::Modifiers::OFFSET] && !options.has_key?(Motion::Modifiers::SYSTEM) )
             end
 
             add_group(pose, type, options)
