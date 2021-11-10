@@ -287,7 +287,7 @@ module TPPlus
             #if an offset pose add to last pose
             if options.has_key?(Motion::Modifiers::OFFSET)
               options[Motion::Modifiers::OFFSET] = true
-              pose = copy_preset(pose, @last_pose)
+              pose = copy_preset(pose, @last_pose, options[:group])
             else
               options[Motion::Modifiers::OFFSET] = false
             end
@@ -408,10 +408,14 @@ module TPPlus
             end
           end
 
-          def copy_preset(lval, rval)
+          def copy_preset(lval, rval, group = nil)
             #copy default into pose if no groups have been set
-            rval.groups.each do |k, v|
-              lval.groups[k] = v.clone
+            if group
+              lval.groups[group] = rval.groups[group].clone
+            else
+              rval.groups.each do |k, v|
+                lval.groups[k] = v.clone
+              end
             end
 
             lval
