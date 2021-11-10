@@ -357,6 +357,15 @@ LBL[105] ;\n), @interpreter.list_warnings
    "LBL[100] ;\n"
   end
 
+  def test_boolean_constant
+    parse("CONST1 := true
+
+      if CONST1 == true
+        # comment
+      end")
+   assert_prog " ;\n" + "IF ON<>ON,JMP LBL[100] ;\n" + "! comment ;\n" + "LBL[100] ;\n"
+  end
+
   def test_program_call
     parse("foo()")
     assert_prog "CALL FOO ;\n"
