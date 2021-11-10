@@ -321,6 +321,42 @@ LBL[105] ;\n), @interpreter.list_warnings
    assert_prog "IF (R[1:bar]<10),DO[1:foo]=(ON) ;\n" 
   end
 
+  def test_conditional_io_on
+    parse("foo := DO[1]\nbar := R[1]\nif foo == on\nbar = 1\nend\n")
+   assert_prog "IF (DO[1:foo]=ON),R[1:bar]=(1) ;\n" 
+  end
+
+  def test_conditional_io_off
+    parse("foo := DO[1]\nbar := R[1]\nif foo == off\nbar = 1\nend\n")
+   assert_prog "IF (DO[1:foo]=OFF),R[1:bar]=(1) ;\n" 
+  end
+
+  def test_conditional_io_true
+    parse("foo := DO[1]\nbar := R[1]\nif foo == true\nbar = 1\nend\n")
+   assert_prog "IF (DO[1:foo]),R[1:bar]=(1) ;\n" 
+  end
+
+  def test_conditional_io_false
+    parse("foo := DO[1]\nbar := R[1]\nif foo == false\nbar = 1\nend\n")
+   assert_prog "IF (!DO[1:foo]),R[1:bar]=(1) ;\n" 
+  end
+
+  def test_conditional_io_true_mixed_logic
+    parse("foo := DO[1]
+      foo2 := F[2]
+      bar := R[1]
+      
+      if (foo == true) && (foo2 == true)
+        bar = 1
+        turn_off(foo2)
+      end")
+   assert_prog " ;\n" +
+   "IF ((!DO[1:foo]) OR (!F[2:foo2])),JMP LBL[100] ;\n" +
+   "R[1:bar]=1 ;\n" +
+   "F[2:foo2]=(OFF) ;\n" +
+   "LBL[100] ;\n"
+  end
+
   def test_program_call
     parse("foo()")
     assert_prog "CALL FOO ;\n"

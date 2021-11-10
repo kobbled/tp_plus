@@ -92,6 +92,8 @@ module TPPlus
 
         "true" => :TRUE_FALSE,
         "false" => :TRUE_FALSE,
+        "on" => :ON_OFF,
+        "off" => :ON_OFF,
 
         "TP_IGNORE_PAUSE" => :TP_HEADER,
         "TP_COMMENT" => :TP_HEADER,

@@ -13,7 +13,7 @@ token WAIT_FOR WAIT_UNTIL TIMEOUT AFTER
 token FANUC_USE COLL_GUARD SET_SKIP_CONDITION NAMESPACE
 token CASE WHEN INDIRECT POSITION
 token EVAL TIMER TIMER_METHOD RAISE ABORT RETURN
-token POSITION_DATA TRUE_FALSE CALL RUN PAUSE
+token POSITION_DATA TRUE_FALSE ON_OFF CALL RUN PAUSE
 token TP_HEADER TP_APPLICATION_TYPE
 token LPAREN RPAREN COLON COMMA LBRACK RBRACK LBRACE RBRACE
 token LABEL SYSTEM ADDRESS
@@ -120,6 +120,7 @@ rule
   tp_header_value
     : STRING
     | TRUE_FALSE
+    | ON_OFF
     ;
 
   tp_tool_methods
@@ -662,7 +663,12 @@ rule
     | var_system
     | indirect_thing
     | paren_expr
+    | booleans
     ;
+
+  booleans
+    : TRUE_FALSE   { result = BooleanNode.new(val[0]) }
+    | ON_OFF       { result = BooleanNode.new(val[0]) }
 
   paren_expr
     : LPAREN expression RPAREN        { result = ParenExpressionNode.new(val[1]) }

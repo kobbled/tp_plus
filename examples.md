@@ -10,6 +10,7 @@
     - [looping with a jump label](#looping-with-a-jump-label)
   - [Conditionals](#conditionals)
     - [If-Then Block](#if-then-block)
+    - [evaluating IO](#evaluating-io)
   - [Select](#select)
   - [Inline Statments](#inline-statments)
   - [Namespaces](#namespaces)
@@ -406,6 +407,49 @@ else
   turn_off(pin1)
   turn_off(pin2)
 end
+```
+
+###  evaluating IO
+
+Can use evaluators `true`, `false`, `on`, and `off`
+
+TP+
+```ruby
+foo := DI[1]
+bar := F[2]
+
+if (foo == on) && (bar == off) then
+  print('hello')
+end
+
+foo2 := UO[3]
+
+if foo2 == true then
+  print('Program is running')
+end
+
+if foo2 == false then
+  print('Program is not running')
+end
+```
+
+LS
+```fanuc
+/PROG main
+/MN
+ :  ;
+ : IF ((DI[1:foo]=ON) AND (F[2:bar]=OFF)) THEN ;
+ : CALL PRINT('hello') ;
+ : ENDIF ;
+ :  ;
+ : IF (UO[3:foo2]) THEN ;
+ : CALL PRINT('Program is running') ;
+ : ENDIF ;
+ :  ;
+ : IF (!UO[3:foo2]) THEN ;
+ : CALL PRINT('Program is not running') ;
+ : ENDIF ;
+/END
 ```
 
 

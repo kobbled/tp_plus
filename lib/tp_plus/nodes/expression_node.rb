@@ -56,6 +56,18 @@ module TPPlus
           else
             # flip the operator if options[:opposite]
             # flip the operands only if opposite and the operand is an expression
+            if @right_op.is_a?(BooleanNode)
+              if @right_op.eval(context, false) == :true
+                #handle opposite
+                return "!#{@left_op.eval(context)}" if ["!=", "<>"].include?(@op.string) || options[:opposite]
+                return "#{@left_op.eval(context)}"
+              elsif @right_op.eval(context, false) == :false
+                #handle opposite
+                return "#{@left_op.eval(context)}" if ["!=", "<>"].include?(@op.string) || options[:opposite]
+                return "!#{@left_op.eval(context)}"
+              end
+            end
+
             "#{@left_op.eval(context, opposite: ((@left_op.is_a?(ExpressionNode) || @left_op.is_a?(UnaryExpressionNode))&& options[:opposite]))}#{@op.eval(context, options)}#{@right_op.eval(context, opposite: ((@right_op.is_a?(ExpressionNode) || @right_op.is_a?(UnaryExpressionNode)) && options[:opposite]))}"
           end
         end
