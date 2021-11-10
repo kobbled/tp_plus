@@ -1,8 +1,15 @@
 module TPPlus
   module Nodes
     class BooleanNode < BaseNode
+      attr_reader :value, :name
+
       def initialize(bool)
-        @bool = bool.to_sym
+        @value = bool.to_sym
+        @name = ''
+      end
+
+      def setName(name)
+        @name = name
       end
 
       def requires_mixed_logic?(context)

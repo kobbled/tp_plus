@@ -716,6 +716,7 @@ rule
     | signed_number
     | string
     | framereg
+    | booleans
     ;
 
   definable_range
