@@ -10,7 +10,8 @@
     - [looping with a jump label](#looping-with-a-jump-label)
   - [Conditionals](#conditionals)
     - [If-Then Block](#if-then-block)
-    - [evaluating IO](#evaluating-io)
+    - [Evaluating IO](#evaluating-io)
+    - [Using Constants](#using-constants)
   - [Select](#select)
   - [Inline Statments](#inline-statments)
   - [Namespaces](#namespaces)
@@ -409,7 +410,7 @@ else
 end
 ```
 
-###  evaluating IO
+###  Evaluating IO
 
 Can use evaluators `true`, `false`, `on`, and `off`
 
@@ -437,20 +438,68 @@ LS
 ```fanuc
 /PROG main
 /MN
- :  ;
  : IF ((DI[1:foo]=ON) AND (F[2:bar]=OFF)) THEN ;
  : CALL PRINT('hello') ;
  : ENDIF ;
  :  ;
- : IF (UO[3:foo2]) THEN ;
+ : IF (UO[3:foo2]=ON) THEN ;
  : CALL PRINT('Program is running') ;
  : ENDIF ;
  :  ;
- : IF (!UO[3:foo2]) THEN ;
+ : IF (UO[3:foo2]=OFF) THEN ;
  : CALL PRINT('Program is not running') ;
  : ENDIF ;
 /END
 ```
+
+###  Using Constants
+
+Constants can be used in expressions:
+
+TP+
+```ruby
+CONST1 := true
+
+if CONST1 == false
+  print('hello')
+end
+```
+
+will evaluate to:
+
+LS
+```fanuc
+/PROG main
+/MN
+ : IF ON=OFF,CALL PRINT('hello') ;
+/END
+```
+
+which is legal syntax
+
+An infinite while loop can be constructed like so:
+
+TP+
+```ruby
+while true == true
+  print('hello')
+  wait_for(1, 's')
+end
+```
+
+LS
+```fanuc
+/PROG main
+/MN
+ : LBL[100] ;
+ : IF ON<>ON,JMP LBL[101] ;
+ : CALL PRINT('hello') ;
+ : WAIT 1.00(sec) ;
+ : JMP LBL[100] ;
+ : LBL[101] ;
+/END
+```
+
 
 
 ##  Select

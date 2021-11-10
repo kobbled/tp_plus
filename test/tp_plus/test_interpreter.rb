@@ -333,12 +333,12 @@ LBL[105] ;\n), @interpreter.list_warnings
 
   def test_conditional_io_true
     parse("foo := DO[1]\nbar := R[1]\nif foo == true\nbar = 1\nend\n")
-   assert_prog "IF (DO[1:foo]),R[1:bar]=(1) ;\n" 
+   assert_prog "IF (DO[1:foo]=ON),R[1:bar]=(1) ;\n" 
   end
 
   def test_conditional_io_false
     parse("foo := DO[1]\nbar := R[1]\nif foo == false\nbar = 1\nend\n")
-   assert_prog "IF (!DO[1:foo]),R[1:bar]=(1) ;\n" 
+   assert_prog "IF (DO[1:foo]=OFF),R[1:bar]=(1) ;\n" 
   end
 
   def test_conditional_io_true_mixed_logic
@@ -351,7 +351,7 @@ LBL[105] ;\n), @interpreter.list_warnings
         turn_off(foo2)
       end")
    assert_prog " ;\n" +
-   "IF ((!DO[1:foo]) OR (!F[2:foo2])),JMP LBL[100] ;\n" +
+   "IF ((DO[1:foo]<>ON) OR (F[2:foo2]<>ON)),JMP LBL[100] ;\n" +
    "R[1:bar]=1 ;\n" +
    "F[2:foo2]=(OFF) ;\n" +
    "LBL[100] ;\n"

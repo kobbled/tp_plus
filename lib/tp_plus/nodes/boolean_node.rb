@@ -10,11 +10,11 @@ module TPPlus
       end
 
       def eval(context, options= {})
-        case @bool
+        case @value
         when :true
-          return @bool
+          return "ON"
         when :false
-          return @bool
+          return "OFF"
         when :on
           return "ON"
         when :off
