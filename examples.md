@@ -71,7 +71,7 @@ TP+
 bar  := DO[1]
 baz  := DO[2]
 
-turn_on bar if foo == 5
+bar = on if foo == 5
 toggle baz
 ```
 
@@ -372,7 +372,7 @@ pin2 := DO[34]
 
 if foo == 1 then
  # do something
- turn_on(pin1)
+ pin1 = on
 end
 
 
@@ -380,33 +380,33 @@ end
 
 if $SCR.$NUM_GROUP > 1 then
   #true block
-  turn_on(pin1)
+  pin1 = on
 else
   #false block
-  turn_off(pin1)
+  pin1 = off
 end
 
 # else if block
 
 if foo == 1 then
   #true block
-  turn_on(pin1)
+  pin1 = on
 elsif foo==2 then
   #false block
-  turn_on(pin2)
+  pin2 = off
 end
 
 # else if - else block
 
 if foo == 1 then
   #true block
-  turn_on(pin1)
+  pin1 = on
 elsif foo==2 then
   #false block
-  turn_on(pin2)
+  pin2 = on
 else
-  turn_off(pin1)
-  turn_off(pin2)
+  pin1 = off
+  pin2 = off
 end
 ```
 
@@ -515,7 +515,7 @@ case foo
 when 1
   message('foo == 1')
   wait_for(1, 's')
-  turn_on foo3
+  foo3 = on
 when 2
   PROG1()
   foo2 += 1
@@ -565,7 +565,7 @@ jump_to @lbl unless foo==1
 jump_to @lbl unless flg
 
 foo=2 if foo==1
-turn_on foo if bar < 10
+foo = on if bar < 10
 
 prog() if foo >= 5
 prog() unless foo
@@ -721,7 +721,7 @@ end
 state := R[1]
 loop := F[3]
 
-turn_on(loop)
+loop = on
 
 namespace states
   PICKUP    := 1
@@ -736,7 +736,7 @@ while loop
     pickup_part()
     if !Infeed::part_present? then
       raise Alarms::part_presence
-      turn_off(loop)
+      loop = off
     else
       state = states::SCAN
       linear_move.to(Perch::scan).at(2000, 'mm/s').term(-1)
@@ -748,7 +748,7 @@ while loop
       linear_move.to(Perch::weld).at(2000, 'mm/s').term(-1)
     elsif !Infeed::part_scanning? && !Infeed::is_weldable? then
       raise Alarms::cannot_weld
-      turn_off(loop)
+      loop = off
     end
   when states::WELD
     weld_part()
@@ -765,7 +765,7 @@ while loop
       linear_move.to(Perch::pickup).at(2000, 'mm/s').term(-1)
     else
       raise Alarms::gripper
-      turn_off(loop)
+      loop = off
     end
   end
 end

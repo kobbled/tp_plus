@@ -205,6 +205,16 @@ class TestInterpreter < Test::Unit::TestCase
     assert_prog "DO[1:foo]=OFF ;\n"
   end
 
+  def test_on
+    parse("foo := DO[1]\nfoo = on")
+    assert_prog "DO[1:foo]=ON ;\n"
+  end
+
+  def test_off
+    parse("foo := DO[1]\nfoo = off")
+    assert_prog "DO[1:foo]=OFF ;\n"
+  end
+
   def test_toggle
     parse("foo := DO[1]\ntoggle foo")
     assert_prog "DO[1:foo]=(!DO[1:foo]) ;\n"
@@ -318,6 +328,11 @@ LBL[105] ;\n), @interpreter.list_warnings
 
   def test_inline_io_method
     parse("foo := DO[1]\nbar := R[1]\nturn_on foo if bar < 10\n")
+   assert_prog "IF (R[1:bar]<10),DO[1:foo]=(ON) ;\n" 
+  end
+
+  def test_inline_io_method_2
+    parse("foo := DO[1]\nbar := R[1]\nfoo = on if bar < 10\n")
    assert_prog "IF (R[1:bar]<10),DO[1:foo]=(ON) ;\n" 
   end
 
@@ -778,7 +793,7 @@ LBL[105] ;\n), @interpreter.list_warnings
           when 1
               message('foo == 1')
               wait_for(1, 's')
-              turn_on foo3
+              foo3 = on
           when 2
               PROG1()
               foo2 += 1
@@ -2200,21 +2215,21 @@ foo = &a::foo")
       Dummy2 = 0
       
       if ATAN2[Dummy1, Dummy2] == 0 then
-        turn_on(pin1)
-        turn_off(pin2)
-        turn_off(pin3)
+        pin1 = on
+        pin2 = off
+        pin3 = off
       elsif ATAN2[Dummy1, Dummy2] == 90 then
-        turn_off(pin1)
-        turn_on(pin2)
-        turn_off(pin3)
+        pin1 = off
+        pin2 = on
+        pin3 = off
       elsif ATAN2[Dummy1, Dummy2] == -90 then
-        turn_off(pin1)
-        turn_off(pin2)
-        turn_on(pin3)
+        pin1 = off
+        pin2 = off
+        pin3 = on
       else
-        turn_off(pin1)
-        turn_off(pin2)
-        turn_off(pin3)
+        pin1 = off
+        pin2 = off
+        pin3 = off
       end")
     
     assert_prog " ;\n" +
