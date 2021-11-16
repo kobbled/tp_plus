@@ -134,6 +134,18 @@ module TPPlus
 
         return @constants[identifier.to_sym]
       end
+
+      def check_constant(identifier)
+        return false if @constants[identifier.to_sym].nil?
+  
+        true
+      end
+  
+      def check_var(identifier)
+        return false if @variables[identifier.to_sym].nil?
+  
+        true
+      end
   
       def get_namespace(identifier)
         if ns = @namespaces[identifier.to_sym]

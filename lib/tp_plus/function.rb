@@ -43,11 +43,9 @@ module TPPlus
         @args = []
       end
 
-      if return?
-        @ret_register = TPPlus::Nodes::FunctionVarNode.new(RETURN_NAME)
-        #add to total arguements to be pushed to the interpreter variables
-        @args.append(@ret_register)
-      end
+      @ret_register = TPPlus::Nodes::FunctionVarNode.new(RETURN_NAME)
+      #add to total arguements to be pushed to the interpreter variables
+      @args.append(@ret_register)
 
       @args.each do |a|
         a.eval(self)
