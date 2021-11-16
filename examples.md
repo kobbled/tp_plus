@@ -32,6 +32,7 @@
   - [Positions](#positions)
     - [Setting positions](#setting-positions)
       - [Position Assignment](#position-assignment)
+    - [Coordinate Systems](#coordinate-systems)
     - [Assigning posregs](#assigning-posregs)
   - [Function parameters](#function-parameters)
   - [Math](#math)
@@ -1457,6 +1458,7 @@ Current modifiers are:
 * xyz
 * orient
 * config
+* offset
 
 A default pose named `default` should be specified in full before
 setting position variables, or else the default pose of 
@@ -1505,7 +1507,7 @@ p5.group(1).xyz -> [-50,0,100]
 p5.group(1).orient -> [0,0,0]
 p5.group(2).joints -> [90,-90]
 
-p6.group(1).joints -> [0. 20, 90, 0 ,0 ,0]
+p6.group(1).joints -> [0, 20, 90, 0 ,0 ,0]
 ```
 
 LS
@@ -1579,6 +1581,89 @@ P[5:"p5"]{
 /END
 ```
 
+positions can be offset from the previous position using the `offset` modifier
+
+```ruby
+p := P[1..5]
+
+use_uframe 3
+use_utool 2
+
+default.group(1).pose -> [0, 0, 0, 0, 0 ,0]
+default.group(1).config -> ['N', 'U', 'T', 0, 0, 0]
+default.group(2).joints -> [90, 0]
+
+p1.group(1).pose -> [0, 80, 300, 90, 180, 0]
+
+p2.group(1).xyz.offset -> [0, 10, 10]
+p2.group(2).joints.offset -> [0, 10]
+
+p3.group(1).xyz.offset -> [0, 10, 10]
+p3.group(2).joints.offset -> [0, 10]
+
+p4.group(1).orient.offset -> [0, 10, 10]
+p4.group(2).joints.offset -> [0, 10]
+
+p5.group(1).orient.offset -> [0, 10, 10]
+p5.group(2).joints.offset -> [0, 10]
+```
+
+LS
+```fanuc
+/POS
+P[1:"p1"]{
+   GP1:
+  UF : 3, UT : 2,  CONFIG : 'N U T, 0, 0, 0',
+  X = 0.000 mm, Y = 80.000 mm, Z = 300.000 mm,
+  W = 90.000 deg, P = 180.000 deg, R = 0.000 deg
+   GP2:
+  UF : 3, UT : 2,
+  J1 = 90.000 deg,
+  J2 = 0.000 deg
+  };
+P[2:"p2"]{
+   GP1:
+  UF : 3, UT : 2,  CONFIG : 'N U T, 0, 0, 0',
+  X = 0.000 mm, Y = 90.000 mm, Z = 310.000 mm,
+  W = 90.000 deg, P = 180.000 deg, R = 0.000 deg
+   GP2:
+  UF : 3, UT : 2,
+  J1 = 90.000 deg,
+  J2 = 10.000 deg
+  };
+P[3:"p3"]{
+   GP1:
+  UF : 3, UT : 2,  CONFIG : 'N U T, 0, 0, 0',
+  X = 0.000 mm, Y = 100.000 mm, Z = 320.000 mm,
+  W = 90.000 deg, P = 180.000 deg, R = 0.000 deg
+   GP2:
+  UF : 3, UT : 2,
+  J1 = 90.000 deg,
+  J2 = 20.000 deg
+  };
+P[4:"p4"]{
+   GP1:
+  UF : 3, UT : 2,  CONFIG : 'N U T, 0, 0, 0',
+  X = 0.000 mm, Y = 100.000 mm, Z = 320.000 mm,
+  W = 90.000 deg, P = 190.000 deg, R = 10.000 deg
+   GP2:
+  UF : 3, UT : 2,
+  J1 = 90.000 deg,
+  J2 = 30.000 deg
+  };
+P[5:"p5"]{
+   GP1:
+  UF : 3, UT : 2,  CONFIG : 'N U T, 0, 0, 0',
+  X = 0.000 mm, Y = 100.000 mm, Z = 320.000 mm,
+  W = 90.000 deg, P = 200.000 deg, R = 20.000 deg
+   GP2:
+  UF : 3, UT : 2,
+  J1 = 90.000 deg,
+  J2 = 40.000 deg
+  };
+/END
+```
+
 #### Position Assignment
 
 Ranges can be assigned using
@@ -1622,7 +1707,175 @@ p1..p3 = (p4..p6).reverse
 
 ```
 
-Including brackets around the range before the modifier is manditory.
+ **WARNING** Including brackets around the range before the modifier is manditory.
+
+Offsets with a position range will apply the offset sequentially through the range
+
+TP+
+```ruby
+p := P[1..5]
+use_uframe 3
+use_utool 2
+
+p1.group(1).pose -> [0, 80, 300, 90, 180, 0]
+
+(p2..p5).group(1).xyz.offset -> [0, 0 ,10]
+```
+
+LS
+```
+/POS
+P[1:"p1"]{
+   GP1:
+  UF : 3, UT : 2,  CONFIG : 'N B D, 0, 0, 0',
+  X = 0.000 mm, Y = 80.000 mm, Z = 300.000 mm,
+  W = 90.000 deg, P = 180.000 deg, R = 0.000 deg
+};
+P[2:"p2"]{
+   GP1:
+  UF : 3, UT : 2,  CONFIG : 'N B D, 0, 0, 0',
+  X = 0.000 mm, Y = 80.000 mm, Z = 310.000 mm,
+  W = 90.000 deg, P = 180.000 deg, R = 0.000 deg
+};
+P[3:"p3"]{
+   GP1:
+  UF : 3, UT : 2,  CONFIG : 'N B D, 0, 0, 0',
+  X = 0.000 mm, Y = 80.000 mm, Z = 320.000 mm,
+  W = 90.000 deg, P = 180.000 deg, R = 0.000 deg
+};
+P[4:"p4"]{
+   GP1:
+  UF : 3, UT : 2,  CONFIG : 'N B D, 0, 0, 0',
+  X = 0.000 mm, Y = 80.000 mm, Z = 330.000 mm,
+  W = 90.000 deg, P = 180.000 deg, R = 0.000 deg
+};
+P[5:"p5"]{
+   GP1:
+  UF : 3, UT : 2,  CONFIG : 'N B D, 0, 0, 0',
+  X = 0.000 mm, Y = 80.000 mm, Z = 340.000 mm,
+  W = 90.000 deg, P = 180.000 deg, R = 0.000 deg
+};
+/END
+```
+
+### Coordinate Systems
+
+position modifiers for converting between coordinate systems is also provided. Currently you can use
+
+* `polar` : to convert from cylindrical space (theta, radius, z) to cartesian space
+* `sphere` : to convert from spherical space (theta, rho, radius) to cartesian space
+
+The modifier after the coordinate system must be `x`, `y`, or `z` to specify the z-axis of the space. For example, to trace a cylinder along the `x` axis you would use `p1.group(1).pose.polar.x -> [0, 80, 300, 0, 0, 0]`
+
+The modifier `fix` will fix the position to the orientation specified. Without the `fix` modifier the position will align the orientation to the normal of the surface.
+
+TP+
+```ruby
+p := P[1..4]
+q := P[5..8]
+
+use_uframe 3
+use_utool 2
+
+p1.group(1).pose.polar.z -> [0, 80, 300, 90, 180, 0]
+p2.group(1).pose.polar.z -> [90, 80, 300, 90, 180, 0]
+p3.group(1).pose.polar.z -> [180, 80, 300, 90, 180, 0]
+p4.group(1).pose.polar.z -> [270, 80, 300, 90, 180, 0]
+
+q5.group(1).pose.polar.z.fix -> [0, 80, 300, 180, 0, 0]
+q6.group(1).pose.polar.z.fix -> [90, 80, 300, 180, 0, 0]
+q7.group(1).pose.polar.z.fix -> [180, 80, 300, 180, 0, 0]
+q8.group(1).pose.polar.z.fix -> [270, 80, 300, 180, 0, 0]
+```
+
+LS
+```
+/POS
+P[1:"p1"]{
+   GP1:
+  UF : 3, UT : 2,  CONFIG : 'N B D, 0, 0, 0',
+  X = 0.000 mm, Y = 80.000 mm, Z = 300.000 mm,
+  W = -90.000 deg, P = 0.000 deg, R = 180.000 deg
+};
+P[2:"p2"]{
+   GP1:
+  UF : 3, UT : 2,  CONFIG : 'N B D, 0, 0, 0',
+  X = -80.000 mm, Y = 0.000 mm, Z = 300.000 mm,
+  W = -90.000 deg, P = 0.000 deg, R = -90.000 deg
+};
+P[3:"p3"]{
+   GP1:
+  UF : 3, UT : 2,  CONFIG : 'N B D, 0, 0, 0',
+  X = -0.000 mm, Y = -80.000 mm, Z = 300.000 mm,
+  W = -90.000 deg, P = 0.000 deg, R = -0.000 deg
+};
+P[4:"p4"]{
+   GP1:
+  UF : 3, UT : 2,  CONFIG : 'N B D, 0, 0, 0',
+  X = 80.000 mm, Y = -0.000 mm, Z = 300.000 mm,
+  W = -90.000 deg, P = 0.000 deg, R = 90.000 deg
+};
+P[5:"q5"]{
+   GP1:
+  UF : 3, UT : 2,  CONFIG : 'N B D, 0, 0, 0',
+  X = 0.000 mm, Y = 80.000 mm, Z = 300.000 mm,
+  W = 180.000 deg, P = -0.000 deg, R = 0.000 deg
+};
+P[6:"q6"]{
+   GP1:
+  UF : 3, UT : 2,  CONFIG : 'N B D, 0, 0, 0',
+  X = -80.000 mm, Y = 0.000 mm, Z = 300.000 mm,
+  W = 180.000 deg, P = -0.000 deg, R = 0.000 deg
+};
+P[7:"q7"]{
+   GP1:
+  UF : 3, UT : 2,  CONFIG : 'N B D, 0, 0, 0',
+  X = -0.000 mm, Y = -80.000 mm, Z = 300.000 mm,
+  W = 180.000 deg, P = -0.000 deg, R = 0.000 deg
+};
+P[8:"q8"]{
+   GP1:
+  UF : 3, UT : 2,  CONFIG : 'N B D, 0, 0, 0',
+  X = 80.000 mm, Y = -0.000 mm, Z = 300.000 mm,
+  W = 180.000 deg, P = -0.000 deg, R = 0.000 deg
+};
+/END
+
+```
+
+The origin location of the coordinate system can be speicifed with the `origin` keyword
+
+TP+
+```ruby
+p1 := P[1]
+use_uframe 3
+use_utool 2
+
+p1.group(1).pose.origin -> [50, 50, 0, 0, 0, 0]
+p1.group(1).pose.polar.z -> [0, 80, 300, 90, 180, 0]
+```
+
+**WARNING** origins must be specified by a list of six values. Using the `xyz` modifier also currently does not work. The modifier must be `pose`.
+
+
+Offsets in a coordinate system also work
+
+```ruby
+p := P[1..5]
+use_uframe 3
+use_utool 2
+
+default.group(1).pose -> [0, 0, 0, 0, 0 ,0]
+default.group(1).config -> ['F', 'U', 'T', 0, 0, 0]
+default.group(2).joints -> [0]
+
+p1.group(1).pose.polar.z -> [0, 80, 300, 90, 180, 0]
+p1.group(2).joints -> [0]
+
+(p2..p5).group(1).xyz.offset.polar.z -> [45, 0 ,0]
+#keep tool straight
+(p2..p5).group(2).joints.offset -> [-45]
+```
 
 
 ### Assigning posregs
