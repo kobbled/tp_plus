@@ -298,16 +298,26 @@ module TPPlus
               default = @default_pose.clone
             end
 
-            raise "pose identifier does not exist" unless @poses.has_key?(id)
+            if pose.groups.length == 0
+              #if pose is an offset make sure to copy @last_pose instead
+              #of default as other groups not being updated will not be
+              #carried to the next position
+              if options.has_key?(Motion::Modifiers::OFFSET) && @last_pose
+                pose = copy_preset(pose, @last_pose)
+              else
+                pose = copy_preset(pose, default)
+              end
+            end
 
             #if pose group is already set, check to see if group type
             #matches. If types differ update group and exit
             if change_group_type?(pose, type, options[:group])
               add_group(pose, type, options)
 
-            #copy default into pose if no groups have been set
-            if pose.groups.length == 0
-              pose = copy_preset(pose, @default_pose)
+              #set as last pose
+              _ = copy_preset(@last_pose, pose)
+
+              return
             end
 
             #if an offset pose add to last pose
