@@ -31,7 +31,7 @@
     - [Touch sensing with robot](#touch-sensing-with-robot)
   - [Positions](#positions)
     - [Setting positions](#setting-positions)
-      - [Position Assignment](#position-assignment)
+    - [Position Assignment](#position-assignment)
     - [Coordinate Systems](#coordinate-systems)
     - [Assigning posregs](#assigning-posregs)
   - [Function parameters](#function-parameters)
@@ -1664,7 +1664,7 @@ P[5:"p5"]{
 /END
 ```
 
-#### Position Assignment
+### Position Assignment
 
 Ranges can be assigned using
 
@@ -1708,6 +1708,17 @@ p1..p3 = (p4..p6).reverse
 ```
 
  **WARNING** Including brackets around the range before the modifier is manditory.
+
+ Ranges can also be speicified in declaration statements.
+
+TP+
+```ruby
+p := P[1..5]
+(p1..p5).group(1).pose -> [0, 80, 300, 90, 180, 0]
+```
+
+This will set positions p1 to p5 all to the same position specified.
+
 
 Offsets with a position range will apply the offset sequentially through the range
 
