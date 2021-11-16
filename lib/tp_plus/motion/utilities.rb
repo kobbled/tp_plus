@@ -102,7 +102,7 @@ module TPPlus
             end
 
             def spherical_to_cartesian(origin, pose, z_axis, fix_orient = false)
-              #pose ordering (theta, rho, z, theta_rot, rho_rot, z_rot)
+              #pose ordering (theta, rho, r, theta_rot, rho_rot, z_rot)
               origin_mat = xyzrpw_2_pose(origin)
 
               case z_axis

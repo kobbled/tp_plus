@@ -268,16 +268,42 @@ module TPPlus
           end
 
           def set_pose(id, type, options={})
-            unless (@default_pose.groups.length > 0)
-              opt = {}
-              opt[:components] = [0,0,0,0,0,0]
-              set_default(Motion::Types::POSE, opt)
-              warn 'default position not set! May give unintended results! Check position data before running!'
-            end
 
             raise "pose identifier does not exist" unless @poses.has_key?(id)
 
             pose = @poses[id]
+
+            #copy default into pose if no groups have been set
+              #create a default pose if it doesn't exist
+            unless (@default_pose.groups.length > 0)
+              opt = {}
+              opt[:components] = [0,0,0,0,0,0]
+              if type == Motion::Types::JOINTS
+                set_default(Motion::Types::JOINTS, opt)
+              else
+                set_default(Motion::Types::POSE, opt)
+              end
+              warn 'default position not set! May give unintended results! Check position data before running!'
+            end
+              #check if default group is a different type than pose group
+            if change_group_type?(@default_pose, type, options[:group])
+              default = @default_pose.clone
+              
+              if type == Motion::Types::JOINTS
+                add_group(default, Motion::Types::JOINTS, options)
+              else
+                add_group(default, Motion::Types::POSE, options)
+              end
+            else
+              default = @default_pose.clone
+            end
+
+            raise "pose identifier does not exist" unless @poses.has_key?(id)
+
+            #if pose group is already set, check to see if group type
+            #matches. If types differ update group and exit
+            if change_group_type?(pose, type, options[:group])
+              add_group(pose, type, options)
 
             #copy default into pose if no groups have been set
             if pose.groups.length == 0
@@ -419,6 +445,20 @@ module TPPlus
             end
 
             lval
+          end
+
+          def change_group_type?(pose, type, group)
+            if pose.groups[group].is_a?(GroupCreator::Cart)
+              if type == Motion::Types::JOINTS
+                return true
+              end
+              return false
+            elsif pose.groups[group].is_a?(GroupCreator::Joint)
+              if type != Motion::Types::JOINTS
+                return true
+              end
+              return false
+            end
           end
           
         end
