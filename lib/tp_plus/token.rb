@@ -129,7 +129,8 @@ module TPPlus
         "sphere" => :SPHERE,
         "polar" => :POLAR,
         "origin" => :ORIGIN,
-        "fix" => :FIX
+        "fix" => :FIX,
+        "extunits" => :POSEATTR
       }
 
 

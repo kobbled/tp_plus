@@ -5,13 +5,21 @@ P[<%= p.id %>:"<%= p.comment %>"]{
    GP<%= g.group.to_s %>:
   UF : <%= g.uframe.to_s %>, UT : <%= g.utool.to_s %>,
   <% g.components.each_with_index do |(c1, c2), index| -%>
+  <% if index > 5 -%>
+E<%= (index+1 - 6).to_s %> = <%= sprintf("%.3f", c1) %> <%= c2 %><% if index <  g.components.length-1 %>,<% end %>
+  <% else -%>
 J<%= (index+1).to_s %> = <%= sprintf("%.3f", c1) %> <%= c2 %><% if index <  g.components.length-1 %>,<% end %>
+  <% end -%>
   <% end -%>
 <% else -%>
    GP<%= g.group.to_s %>:
   UF : <%= g.uframe.to_s %>, UT : <%= g.utool.to_s %>,  CONFIG : '<%= g.config[:flip] ? 'F' : 'N' %> <%= g.config[:up] ? 'U' : 'B' %> <%= g.config[:top] ? 'T' : 'D' %>, <%= g.config[:turn_counts][0].to_s %>, <%= g.config[:turn_counts][1].to_s %>, <%= g.config[:turn_counts][2].to_s %>',
   X = <%= sprintf("%.3f", g.components[:x]) %> mm, Y = <%= sprintf("%.3f", g.components[:y]) %> mm, Z = <%= sprintf("%.3f", g.components[:z]) %> mm,
-  W = <%= sprintf("%.3f", g.components[:w]) %> deg, P = <%= sprintf("%.3f", g.components[:p]) %> deg, R = <%= sprintf("%.3f", g.components[:r]) %> deg
+  W = <%= sprintf("%.3f", g.components[:w]) %> deg, P = <%= sprintf("%.3f", g.components[:p]) %> deg, R = <%= sprintf("%.3f", g.components[:r]) %> deg<% if g.components.has_key?(:e1) -%>, 
+  <% if g.components[:e1] -%>E1 = <%= sprintf("%.3f", g.components[:e1]) %> <%= g.units[0] %><% end -%><% if g.components[:e2] -%>,
+  E2 = <%= sprintf("%.3f", g.components[:e2]) %> <%= g.units[1] %><% end -%><% if g.components[:e3] -%>,
+  E3 = <%= sprintf("%.3f", g.components[:e3]) %> <%= g.units[2] %><% end -%>
+  <% end -%>
 <% end -%>
 <% end -%>
 };

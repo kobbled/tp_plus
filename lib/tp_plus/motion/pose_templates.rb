@@ -9,8 +9,9 @@ module TPPlus
             COORD = :xyz
             ORIENT = :orient
             CONFIG = :config
+            EXTUNITS = :extunits
 
-            KEYS = [POSE, JOINTS, COORD, ORIENT, CONFIG]
+            KEYS = [POSE, JOINTS, COORD, ORIENT, CONFIG, EXTUNITS]
         end
 
         module Modifiers
@@ -38,6 +39,18 @@ module TPPlus
                 :p => 0.0,
                 :r => 0.0
             }
+
+            AXESEXT = {
+              :x => 0.0,
+              :y => 0.0,
+              :z => 0.0,
+              :w => 0.0,
+              :p => 0.0,
+              :r => 0.0,
+              :e1 => nil,
+              :e2 => nil,
+              :e3 => nil
+          }
 
             CARTESIAN = {
                 :group => 1,

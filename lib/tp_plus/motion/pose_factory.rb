@@ -36,7 +36,7 @@ module TPPlus
 
       module GroupCreator
         class Creator
-          attr_reader :group, :components, :config, :uframe, :utool
+          attr_reader :group, :components, :config, :uframe, :utool, :units
           def initialize(id, frame, tool, rep = [], config = [])
             @group = id
             @uframe = frame
@@ -65,6 +65,25 @@ module TPPlus
             nil
           end
 
+          def set_units(units)
+            if @components.length() > 5
+              @units = []
+              i = 6
+              while i < @components.length()
+                if i > units.length()-1
+                  @units.append('deg')
+                else
+                  @units.append(units[i-6])
+                end
+                i += 1
+              end
+            else
+              raise "No extended axes declared for group #{@group}"
+            end
+            @units = units
+            nil
+          end
+
           def create
             raise NotImplementedError, "#{self.class} has not implemented method '#{__method__}'"
           end
@@ -89,14 +108,24 @@ module TPPlus
 
             if pose.is_a?(Array)
               raise "cartesian position needs an Array of #{Motion::MAX_AXES} values" if @components.length < Motion::MAX_AXES
-              @components = Motion::HashTemplate::AXES.clone
+              if pose.length() < 7
+                @components = Motion::HashTemplate::AXES.clone
+                comp_names = [:x, :y, :z, :w, :p, :r]
+              else
+                @components = Motion::HashTemplate::AXESEXT.clone
+                comp_names = [:x, :y, :z, :w, :p, :r, :e1, :e2, :e3]
+              end
 
-              @components[:x] = pose[0]
-              @components[:y] = pose[1]
-              @components[:z] = pose[2]
-              @components[:w] = pose[3]
-              @components[:p] = pose[4]
-              @components[:r] = pose[5]
+              pose.each_with_index do |comp, index|
+                if index > 6
+                  #seperate extended axis value from measurement unit
+                  #store measurement unit to shorthand for subsequent
+                  #poses
+                  @components[comp_names[index]] = comp
+                else
+                  @components[comp_names[index]] = comp
+                end
+              end
             end
 
             nil
@@ -164,7 +193,7 @@ module TPPlus
 
       module Pose
         class Pose
-          attr_reader :id, :comment, :groups, :mods
+          attr_reader :id, :comment, :groups, :mods, :ext_units
           def initialize(id, comment)
             @id = id
             @comment = comment
@@ -224,6 +253,8 @@ module TPPlus
               else
                 @groups[grp_no].set_pose(components)
               end
+            when Motion::Types::EXTUNITS
+              @groups[grp_no].set_units(components)
             end
             
             nil
@@ -232,7 +263,6 @@ module TPPlus
           def add_modifier(k, v)
             @mods[k] = v
           end
-        
         end
 
       end
@@ -438,7 +468,7 @@ module TPPlus
                 else
                   pose.add_group_pose(@current_frame, @current_tool, type, [])
                 end
-                end
+              end
             else
               pose.add_group(@current_frame, @current_tool, type)
             end
