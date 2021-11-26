@@ -1581,6 +1581,61 @@ P[5:"p5"]{
 /END
 ```
 
+Any unspecified positions declared will be automatically set to the default position.
+
+TP+
+```ruby
+p := P[1..3]
+
+default.group(1).pose -> [0, 0, 10500, 90, 0 ,0]
+default.group(1).config -> ['F', 'U', 'T', 0, 0, 0]
+default.group(3).joints -> [[10500, 'mm']]
+default.group(4).joints -> [0]
+
+```
+
+LS
+```
+/POS
+P[1:"p1"]{
+   GP1:
+  UF : 0, UT : 0,  CONFIG : 'F U T, 0, 0, 0',
+  X = 0.000 mm, Y = 0.000 mm, Z = 10500.000 mm,
+  W = 90.000 deg, P = 0.000 deg, R = 0.000 deg
+   GP3:
+  UF : 0, UT : 0,
+  J1 = 10500.000 mm
+     GP4:
+  UF : 0, UT : 0,
+  J1 = 0.000 deg
+  };
+P[2:"p2"]{
+   GP1:
+  UF : 0, UT : 0,  CONFIG : 'F U T, 0, 0, 0',
+  X = 0.000 mm, Y = 0.000 mm, Z = 10500.000 mm,
+  W = 90.000 deg, P = 0.000 deg, R = 0.000 deg
+   GP3:
+  UF : 0, UT : 0,
+  J1 = 10500.000 mm
+     GP4:
+  UF : 0, UT : 0,
+  J1 = 0.000 deg
+  };
+P[3:"p3"]{
+   GP1:
+  UF : 0, UT : 0,  CONFIG : 'F U T, 0, 0, 0',
+  X = 0.000 mm, Y = 0.000 mm, Z = 10500.000 mm,
+  W = 90.000 deg, P = 0.000 deg, R = 0.000 deg
+   GP3:
+  UF : 0, UT : 0,
+  J1 = 10500.000 mm
+     GP4:
+  UF : 0, UT : 0,
+  J1 = 0.000 deg
+  };
+/END
+```
+
 positions can be offset from the previous position using the `offset` modifier
 
 ```ruby
@@ -1883,6 +1938,7 @@ default.group(2).joints -> [0]
 p1.group(1).pose.polar.z -> [0, 80, 300, 90, 180, 0]
 p1.group(2).joints -> [0]
 
+#rotate 45 degrees each pose
 (p2..p5).group(1).xyz.offset.polar.z -> [45, 0 ,0]
 #keep tool straight
 (p2..p5).group(2).joints.offset -> [-45]
