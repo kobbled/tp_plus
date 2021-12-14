@@ -67,7 +67,10 @@ module TPPlus
                 func.add_var(a.identifier, context.get_var(a.identifier))
               end
 
-              return func.inline(args)
+              #increment number of inlines
+              context.number_of_inlines += 1
+
+              return func.inline(args, context)
             end
           end
 

@@ -108,9 +108,11 @@ module TPPlus
 
     end
 
-    def inline(args)
+    def inline(args, parent)
       #local variable
       interpreter = @parser.interpreter.clone
+      #set start label from the last parent label
+      interpreter.current_label = parent.current_label + 1
       #pass data between function, and interpreter
       interpreter.set_function_methods(self)
 
@@ -135,6 +137,9 @@ module TPPlus
 
       #list warning messages
       lines += interpreter.list_warnings
+
+      #pass back to parent interpreter what label number we left off on
+      parent.current_label = interpreter.current_label
 
       #prepend with a comment stating inlined function
       lines = "! inline #{@name} ;\n" + lines + "! end #{@name} ;\n"
