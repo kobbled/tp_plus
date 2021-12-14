@@ -1,6 +1,7 @@
 module TPPlus
   module Nodes
     class ConditionalBlockNode < BaseNode
+      attr_accessor :condition
       def initialize(condition,true_block,elsif_block,false_block)
         @condition   = condition
         @true_block  = true_block.flatten.reject  {|n| n.is_a? TerminatorNode }
@@ -22,6 +23,10 @@ module TPPlus
 
       def get_false_block
         @false_block
+      end
+
+      def get_elsif_block
+        @elsif_block
       end
 
       def elsif_block(context)

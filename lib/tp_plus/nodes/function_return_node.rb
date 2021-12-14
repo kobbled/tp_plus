@@ -1,7 +1,7 @@
 module TPPlus
   module Nodes
     class FunctionReturnNode < BaseNode
-      attr_accessor :ret_type, :return_register
+      attr_accessor :ret_type, :return_register, :expression
       def initialize(expression)
         @expression  = expression
         @ret_type = ''

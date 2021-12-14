@@ -1,7 +1,7 @@
 module TPPlus
   module Nodes
     class UsingNode < BaseNode
-      attr_reader :mods
+      attr_accessor :mods
       def initialize(mods)
         @mods = mods
       end
