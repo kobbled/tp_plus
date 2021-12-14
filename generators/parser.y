@@ -19,7 +19,7 @@ token LPAREN RPAREN COLON COMMA LBRACK RBRACK LBRACE RBRACE
 token LABEL SYSTEM ADDRESS
 token LPOS JPOS
 token false
-token FUNCTION OPERATION USING IMPORT COMPILE
+token FUNCTION OPERATION USING IMPORT COMPILE INLINE
 token ARROW DEFAULTPOS POSEATTR POSEREVERSE
 token SPHERE POLAR ORIGIN FIX
 
@@ -342,6 +342,8 @@ rule
   function
     : FUNCTION WORD LPAREN program_vars RPAREN block END         { result = FunctionNode.new(val[1],val[3],val[5]) }
     | FUNCTION WORD LPAREN program_vars RPAREN COLON WORD block END  { result = FunctionNode.new(val[1],val[3],val[7],val[6]) }
+    | INLINE FUNCTION WORD LPAREN program_vars RPAREN block END         { result = FunctionNode.new(val[2],val[4],val[6],inlined = true) }
+    | INLINE FUNCTION WORD LPAREN program_vars RPAREN COLON WORD block END  { result = FunctionNode.new(val[2],val[4],val[8],val[7],inlined = true) }
     ;
 
   case_statement

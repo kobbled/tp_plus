@@ -30,6 +30,10 @@ module TPPlus
         @false_block
       end
 
+      def get_elsif_block
+        @elsif_block
+      end
+
       def false_block(context)
         @f ||= string_for(@false_block,context)
       end

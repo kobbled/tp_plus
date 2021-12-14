@@ -1,7 +1,8 @@
 module TPPlus
   class Function < Namespace
+    attr_reader :inlined
 
-    def initialize(name, args, block, ret_type = '', vars = {})
+    def initialize(name, args, block, ret_type = '', vars = {}, inlined = false)
       super(name, block)
 
       @args       = args
@@ -11,6 +12,7 @@ module TPPlus
       @ret_type = ret_type
       @ret_register = {}
       @print_status = $global_options[:function_print]
+      @inlined = inlined
     end
 
     def eval

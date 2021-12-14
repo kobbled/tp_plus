@@ -59,14 +59,14 @@ module TPPlus
       parent
     end
 
-    def add_function(name, args, block, ret_type = '')
+    def add_function(name, args, block, ret_type = '', inlined = false)
       identifier = @name + '_' + name
 
       pass_nodes = get_parent_imports(block)
       pass_nodes = pass_nodes.merge(@variables)
       
       if @functions[name.to_sym].nil?
-        @functions[name.to_sym] = TPPlus::Function.new(identifier, args, block, ret_type=ret_type, vars=pass_nodes)
+        @functions[name.to_sym] = TPPlus::Function.new(identifier, args, block, ret_type=ret_type, vars=pass_nodes, inlined=inlined)
         @functions[name.to_sym].eval
       end
     end

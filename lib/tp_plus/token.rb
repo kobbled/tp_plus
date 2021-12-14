@@ -118,6 +118,7 @@ module TPPlus
         "using" => :USING,
         "import" => :IMPORT,
         "compile" => :COMPILE,
+        "inline" => :INLINE,
 
         "pose" => :POSEATTR,
         "joints" => :POSEATTR,
