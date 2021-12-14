@@ -101,13 +101,13 @@ module TPPlus
       end
 
       def add_constant(identifier, node)
-        raise "Constant #{identifier} already defined" if @constants[identifier.to_sym]
+        return if @constants[identifier.to_sym]
   
         @constants[identifier.to_sym] = node
       end
 
       def add_var(identifier, node)
-        raise "Variable #{identifier} already defined" if @variables[identifier.to_sym]
+        return if @variables[identifier.to_sym]
   
         @variables[identifier.to_sym] = node
         node.comment = identifier

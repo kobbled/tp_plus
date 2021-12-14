@@ -33,13 +33,13 @@ module TPPlus
     end
 
     def add_constant(identifier, node)
-      raise "Constant (#{identifier}) already defined within namespace #{@name}" unless @constants[identifier.to_sym].nil?
+      return unless @constants[identifier.to_sym].nil?
 
       @constants[identifier.to_sym] = node
     end
 
     def add_var(identifier, node)
-      raise "Variable (#{identifier}) already defined within namespace #{@name}" unless @variables[identifier.to_sym].nil? || identifier == RETURN_NAME
+      return unless @variables[identifier.to_sym].nil? || identifier == RETURN_NAME
 
       @variables[identifier.to_sym] = node
       node.comment = "#{@name} #{identifier}"
