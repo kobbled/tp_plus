@@ -66,7 +66,86 @@ module TPPlus
       false
     end
 
+    def mask_var_nodes(nodes, map)
+      if nodes.is_a?(Array)
+        nodes.each_with_index do |n, i|
+          if n.is_a?(Nodes::VarNode)
+            if map[n.identifier]
+              n.identifier = map[n.identifier]
+            end
+            next
+          end
+
+          if n.is_a?(Nodes::FunctionReturnNode)
+            nodes[i] = TPPlus::Nodes::AssignmentNode.new(self.get_var(map["ret"]), n.expression)
+            mask_var_nodes(n, map)
+            next
+          end
+
+          if n.is_a?(Array) || n.is_a?(Nodes::BaseNode)
+            mask_var_nodes(n, map)
+            next
+          end
+        end
+      end
+
+      if nodes.is_a?(Nodes::BaseNode)
+        nodes.get_attributes.each do |n|
+          if n.is_a?(Nodes::VarNode)
+            if map[n.identifier]
+              n.identifier = map[n.identifier]
+            end
+            next
+          end
+
+          if n.is_a?(Array) || n.is_a?(Nodes::BaseNode)
+            mask_var_nodes(n, map)
+            next
+          end
+        end
+      end
+
+
+    end
+
+    def inline(args)
+      #local variable
+      interpreter = @parser.interpreter.clone
+      #pass data between function, and interpreter
+      interpreter.set_function_methods(self)
+
+      #pass @variables into the interpreter.
+      #need to do this again as CallNode may add more variables
+      #like the call arguements into the function variables
+      add_parent_nodes(interpreter) 
+
+
+      #map call node arguments to the function variables
+      #for inlining into the main function
+      map = {}
+      @args.each_with_index do |a, i|
+        map[a.name] = args[i].identifier
+      end
+
+      #replace var nodes and return nodes with associated
+      #arguement nodes
+      mask_var_nodes(interpreter.nodes, map)
+
+      lines = interpreter.eval
+
+      #list warning messages
+      lines += interpreter.list_warnings
+
+      #prepend with a comment stating inlined function
+      lines = "! inline #{@name} ;\n" + lines + "! end #{@name} ;\n"
+
+      lines
+    end
+
     def output_program(prog_options)
+      #if function is inlined dont output
+      return "" if @inlined
+
       #local variable
       interpreter = @parser.interpreter
       #pass data between function, and interpreter

@@ -24,7 +24,7 @@ module TPPlus
         arg = "" 
 
         if @ret then
-          v = context.get_var(@ret.identifier)
+          v =  context.get_var(@ret.identifier)
           if v.is_a?(PosregNode)
             if @ret.is_a?(VarMethodNode) && @ret.method[:group].is_a?(DigitNode)
               arg = ",#{@ret.method[:group].value.to_s}"
@@ -48,11 +48,33 @@ module TPPlus
       def eval(context,options={})
         if @str_var
           @program_name = @str_var.eval(context)
+
+          return "#{async? ? "RUN" : "CALL"} #{@program_name}#{args_string(context)}"
         else
-          @program_name = @program_name.upcase
+          #check if inline function exists
+          if context.functions[@program_name.to_sym]
+            if context.functions[@program_name.to_sym].inlined
+
+              #copy function so as not to overwrite the original
+              func = DeepClone.clone(context.functions[@program_name.to_sym])
+              
+              #copy args
+              args = @args.clone
+              args.append(@ret)
+
+              #pass arguement registers into function scope
+              args.each do |a|
+                func.add_var(a.identifier, context.get_var(a.identifier))
+              end
+
+              return func.inline(args)
+            end
+          end
+
+          return "#{async? ? "RUN" : "CALL"} #{@program_name.upcase}#{args_string(context)}"
         end
 
-        "#{async? ? "RUN" : "CALL"} #{@program_name}#{args_string(context)}"
+        nil
       end
     end
   end
