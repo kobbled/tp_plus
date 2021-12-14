@@ -52,11 +52,26 @@ module TPPlus
           return "#{async? ? "RUN" : "CALL"} #{@program_name}#{args_string(context)}"
         else
           #check if inline function exists
-          if context.functions[@program_name.to_sym]
-            if context.functions[@program_name.to_sym].inlined
+            #split underscor to check for namespace
+          name = @program_name.split('_', 2)
+          
+          #search for functions in interpreter space
+          func = context.functions[@program_name.to_sym]
+          if name.length > 1
+            #search for functions in namespaces
+            context.namespaces.each do |k, v|
+              if v.functions.key?(name[1].to_sym)
+                func = v.functions[name[1].to_sym]
+                break
+              end
+            end
+          end
+
+          if func
+            if func.inlined
 
               #copy function so as not to overwrite the original
-              func = DeepClone.clone(context.functions[@program_name.to_sym])
+              func = DeepClone.clone(func)
               
               #copy args
               args = @args.clone
