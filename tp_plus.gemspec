@@ -9,6 +9,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rake', '~> 12.3.3'
   spec.add_development_dependency 'ruby-prof', '~> 0.15'
   spec.add_development_dependency 'rdoc'
+  spec.add_development_dependency 'ruby_deep_clone'
 
   spec.authors                   = ["Jay Strybis", "Matt Dewar"]
   spec.email                     = ['mattpdewar@gmail.com']

@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 require_relative '../lib/tp_plus'
 require 'optparse'
+require 'deep_clone'
 
 options = {}
 #make options global ** PATCH ** for options access in nodes
