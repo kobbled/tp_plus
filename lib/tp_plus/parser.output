@@ -149,10 +149,10 @@ rule 122 using_statement: USING word_list
 rule 123 compile_statement: COMPILE IMPORT word_list
 rule 124 import_statement: IMPORT word_list
 rule 125 namespace: NAMESPACE WORD block END
-rule 126 function: FUNCTION WORD LPAREN program_vars RPAREN block END
-rule 127 function: FUNCTION WORD LPAREN program_vars RPAREN COLON WORD block END
-rule 128 function: INLINE FUNCTION WORD LPAREN program_vars RPAREN block END
-rule 129 function: INLINE FUNCTION WORD LPAREN program_vars RPAREN COLON WORD block END
+rule 126 function: INLINE FUNCTION WORD LPAREN program_vars RPAREN block END
+rule 127 function: INLINE FUNCTION WORD LPAREN program_vars RPAREN COLON WORD block END
+rule 128 function: FUNCTION WORD LPAREN program_vars RPAREN block END
+rule 129 function: FUNCTION WORD LPAREN program_vars RPAREN COLON WORD block END
 rule 130 case_statement: CASE var swallow_newlines case_conditions case_else END
 rule 131 case_conditions: case_condition
 rule 132 case_conditions: case_conditions case_condition
@@ -876,7 +876,7 @@ rule 333 array_value: hash_value
   USING (121) 122
   IMPORT (122) 123 124
   COMPILE (123) 123
-  INLINE (124) 128 129
+  INLINE (124) 126 127
   ARROW (125) 202 203 204
   DEFAULTPOS (126) 202
   POSEATTR (127) 224
@@ -928,11 +928,11 @@ state 0
   ADDRESS       shift, and go to state 90
   LPOS          shift, and go to state 39
   JPOS          shift, and go to state 40
-  FUNCTION      shift, and go to state 72
+  FUNCTION      shift, and go to state 73
   USING         shift, and go to state 68
   IMPORT        shift, and go to state 70
   COMPILE       shift, and go to state 69
-  INLINE        shift, and go to state 73
+  INLINE        shift, and go to state 72
   DEFAULTPOS    shift, and go to state 82
   $default      reduce using rule 2 (program)
 
@@ -1036,11 +1036,11 @@ state 2
   ADDRESS       shift, and go to state 90
   LPOS          shift, and go to state 39
   JPOS          shift, and go to state 40
-  FUNCTION      shift, and go to state 72
+  FUNCTION      shift, and go to state 73
   USING         shift, and go to state 68
   IMPORT        shift, and go to state 70
   COMPILE       shift, and go to state 69
-  INLINE        shift, and go to state 73
+  INLINE        shift, and go to state 72
   DEFAULTPOS    shift, and go to state 82
   $default      reduce using rule 1 (program)
 
@@ -1831,18 +1831,18 @@ state 71
 
 state 72
 
- 126) function : FUNCTION _ WORD LPAREN program_vars RPAREN block END
- 127) function : FUNCTION _ WORD LPAREN program_vars RPAREN COLON WORD block END
+ 126) function : INLINE _ FUNCTION WORD LPAREN program_vars RPAREN block END
+ 127) function : INLINE _ FUNCTION WORD LPAREN program_vars RPAREN COLON WORD block END
 
-  WORD          shift, and go to state 180
+  FUNCTION      shift, and go to state 180
 
 
 state 73
 
- 128) function : INLINE _ FUNCTION WORD LPAREN program_vars RPAREN block END
- 129) function : INLINE _ FUNCTION WORD LPAREN program_vars RPAREN COLON WORD block END
+ 128) function : FUNCTION _ WORD LPAREN program_vars RPAREN block END
+ 129) function : FUNCTION _ WORD LPAREN program_vars RPAREN COLON WORD block END
 
-  FUNCTION      shift, and go to state 181
+  WORD          shift, and go to state 181
 
 
 state 74
@@ -3021,18 +3021,18 @@ state 179
 
 state 180
 
- 126) function : FUNCTION WORD _ LPAREN program_vars RPAREN block END
- 127) function : FUNCTION WORD _ LPAREN program_vars RPAREN COLON WORD block END
+ 126) function : INLINE FUNCTION _ WORD LPAREN program_vars RPAREN block END
+ 127) function : INLINE FUNCTION _ WORD LPAREN program_vars RPAREN COLON WORD block END
 
-  LPAREN        shift, and go to state 291
+  WORD          shift, and go to state 291
 
 
 state 181
 
- 128) function : INLINE FUNCTION _ WORD LPAREN program_vars RPAREN block END
- 129) function : INLINE FUNCTION _ WORD LPAREN program_vars RPAREN COLON WORD block END
+ 128) function : FUNCTION WORD _ LPAREN program_vars RPAREN block END
+ 129) function : FUNCTION WORD _ LPAREN program_vars RPAREN COLON WORD block END
 
-  WORD          shift, and go to state 292
+  LPAREN        shift, and go to state 292
 
 
 state 182
@@ -4172,11 +4172,11 @@ state 281
   ADDRESS       shift, and go to state 90
   LPOS          shift, and go to state 39
   JPOS          shift, and go to state 40
-  FUNCTION      shift, and go to state 72
+  FUNCTION      shift, and go to state 73
   USING         shift, and go to state 68
   IMPORT        shift, and go to state 70
   COMPILE       shift, and go to state 69
-  INLINE        shift, and go to state 73
+  INLINE        shift, and go to state 72
   DEFAULTPOS    shift, and go to state 82
 
   statement     go to state 3
@@ -4308,22 +4308,22 @@ state 290
 
 state 291
 
- 126) function : FUNCTION WORD LPAREN _ program_vars RPAREN block END
- 127) function : FUNCTION WORD LPAREN _ program_vars RPAREN COLON WORD block END
+ 126) function : INLINE FUNCTION WORD _ LPAREN program_vars RPAREN block END
+ 127) function : INLINE FUNCTION WORD _ LPAREN program_vars RPAREN COLON WORD block END
 
-  WORD          shift, and go to state 360
-  $default      reduce using rule 90 (program_vars)
+  LPAREN        shift, and go to state 358
 
-  program_var   go to state 358
-  program_vars  go to state 359
 
 state 292
 
- 128) function : INLINE FUNCTION WORD _ LPAREN program_vars RPAREN block END
- 129) function : INLINE FUNCTION WORD _ LPAREN program_vars RPAREN COLON WORD block END
+ 128) function : FUNCTION WORD LPAREN _ program_vars RPAREN block END
+ 129) function : FUNCTION WORD LPAREN _ program_vars RPAREN COLON WORD block END
 
-  LPAREN        shift, and go to state 361
+  WORD          shift, and go to state 361
+  $default      reduce using rule 90 (program_vars)
 
+  program_var   go to state 359
+  program_vars  go to state 360
 
 state 293
 
@@ -4972,11 +4972,11 @@ state 348
   ADDRESS       shift, and go to state 90
   LPOS          shift, and go to state 39
   JPOS          shift, and go to state 40
-  FUNCTION      shift, and go to state 72
+  FUNCTION      shift, and go to state 73
   USING         shift, and go to state 68
   IMPORT        shift, and go to state 70
   COMPILE       shift, and go to state 69
-  INLINE        shift, and go to state 73
+  INLINE        shift, and go to state 72
   DEFAULTPOS    shift, and go to state 82
   $default      reduce using rule 5 (block)
 
@@ -5145,38 +5145,38 @@ state 357
 
 state 358
 
+ 126) function : INLINE FUNCTION WORD LPAREN _ program_vars RPAREN block END
+ 127) function : INLINE FUNCTION WORD LPAREN _ program_vars RPAREN COLON WORD block END
+
+  WORD          shift, and go to state 361
+  $default      reduce using rule 90 (program_vars)
+
+  program_var   go to state 359
+  program_vars  go to state 416
+
+state 359
+
   88) program_vars : program_var _
 
   $default      reduce using rule 88 (program_vars)
 
 
-state 359
+state 360
 
   89) program_vars : program_vars _ COMMA program_var
- 126) function : FUNCTION WORD LPAREN program_vars _ RPAREN block END
- 127) function : FUNCTION WORD LPAREN program_vars _ RPAREN COLON WORD block END
+ 128) function : FUNCTION WORD LPAREN program_vars _ RPAREN block END
+ 129) function : FUNCTION WORD LPAREN program_vars _ RPAREN COLON WORD block END
 
-  RPAREN        shift, and go to state 417
-  COMMA         shift, and go to state 416
+  RPAREN        shift, and go to state 418
+  COMMA         shift, and go to state 417
 
 
-state 360
+state 361
 
   91) program_var : WORD _
 
   $default      reduce using rule 91 (program_var)
 
-
-state 361
-
- 128) function : INLINE FUNCTION WORD LPAREN _ program_vars RPAREN block END
- 129) function : INLINE FUNCTION WORD LPAREN _ program_vars RPAREN COLON WORD block END
-
-  WORD          shift, and go to state 360
-  $default      reduce using rule 90 (program_vars)
-
-  program_var   go to state 358
-  program_vars  go to state 418
 
 state 362
 
@@ -5678,31 +5678,31 @@ state 415
 
 state 416
 
-  89) program_vars : program_vars COMMA _ program_var
+  89) program_vars : program_vars _ COMMA program_var
+ 126) function : INLINE FUNCTION WORD LPAREN program_vars _ RPAREN block END
+ 127) function : INLINE FUNCTION WORD LPAREN program_vars _ RPAREN COLON WORD block END
 
-  WORD          shift, and go to state 360
+  RPAREN        shift, and go to state 464
+  COMMA         shift, and go to state 417
 
-  program_var   go to state 464
 
 state 417
 
- 126) function : FUNCTION WORD LPAREN program_vars RPAREN _ block END
- 127) function : FUNCTION WORD LPAREN program_vars RPAREN _ COLON WORD block END
+  89) program_vars : program_vars COMMA _ program_var
 
-  NEWLINE       shift, and go to state 281
-  COLON         shift, and go to state 466
+  WORD          shift, and go to state 361
 
-  block         go to state 465
+  program_var   go to state 465
 
 state 418
 
-  89) program_vars : program_vars _ COMMA program_var
- 128) function : INLINE FUNCTION WORD LPAREN program_vars _ RPAREN block END
- 129) function : INLINE FUNCTION WORD LPAREN program_vars _ RPAREN COLON WORD block END
+ 128) function : FUNCTION WORD LPAREN program_vars RPAREN _ block END
+ 129) function : FUNCTION WORD LPAREN program_vars RPAREN _ COLON WORD block END
 
-  RPAREN        shift, and go to state 467
-  COMMA         shift, and go to state 416
+  NEWLINE       shift, and go to state 281
+  COLON         shift, and go to state 467
 
+  block         go to state 466
 
 state 419
 
@@ -6100,34 +6100,34 @@ state 463
 
 state 464
 
+ 126) function : INLINE FUNCTION WORD LPAREN program_vars RPAREN _ block END
+ 127) function : INLINE FUNCTION WORD LPAREN program_vars RPAREN _ COLON WORD block END
+
+  NEWLINE       shift, and go to state 281
+  COLON         shift, and go to state 499
+
+  block         go to state 498
+
+state 465
+
   89) program_vars : program_vars COMMA program_var _
 
   $default      reduce using rule 89 (program_vars)
 
 
-state 465
-
- 126) function : FUNCTION WORD LPAREN program_vars RPAREN block _ END
-
-  END           shift, and go to state 498
-
-
 state 466
 
- 127) function : FUNCTION WORD LPAREN program_vars RPAREN COLON _ WORD block END
+ 128) function : FUNCTION WORD LPAREN program_vars RPAREN block _ END
 
-  WORD          shift, and go to state 499
+  END           shift, and go to state 500
 
 
 state 467
 
- 128) function : INLINE FUNCTION WORD LPAREN program_vars RPAREN _ block END
- 129) function : INLINE FUNCTION WORD LPAREN program_vars RPAREN _ COLON WORD block END
+ 129) function : FUNCTION WORD LPAREN program_vars RPAREN COLON _ WORD block END
 
-  NEWLINE       shift, and go to state 281
-  COLON         shift, and go to state 501
+  WORD          shift, and go to state 501
 
-  block         go to state 500
 
 state 468
 
@@ -6400,32 +6400,32 @@ state 497
 
 state 498
 
- 126) function : FUNCTION WORD LPAREN program_vars RPAREN block END _
+ 126) function : INLINE FUNCTION WORD LPAREN program_vars RPAREN block _ END
 
-  $default      reduce using rule 126 (function)
+  END           shift, and go to state 521
 
 
 state 499
 
- 127) function : FUNCTION WORD LPAREN program_vars RPAREN COLON WORD _ block END
+ 127) function : INLINE FUNCTION WORD LPAREN program_vars RPAREN COLON _ WORD block END
 
-  NEWLINE       shift, and go to state 281
+  WORD          shift, and go to state 522
 
-  block         go to state 521
 
 state 500
 
- 128) function : INLINE FUNCTION WORD LPAREN program_vars RPAREN block _ END
+ 128) function : FUNCTION WORD LPAREN program_vars RPAREN block END _
 
-  END           shift, and go to state 522
+  $default      reduce using rule 128 (function)
 
 
 state 501
 
- 129) function : INLINE FUNCTION WORD LPAREN program_vars RPAREN COLON _ WORD block END
+ 129) function : FUNCTION WORD LPAREN program_vars RPAREN COLON WORD _ block END
 
-  WORD          shift, and go to state 523
+  NEWLINE       shift, and go to state 281
 
+  block         go to state 523
 
 state 502
 
@@ -6582,25 +6582,25 @@ state 520
 
 state 521
 
- 127) function : FUNCTION WORD LPAREN program_vars RPAREN COLON WORD block _ END
+ 126) function : INLINE FUNCTION WORD LPAREN program_vars RPAREN block END _
 
-  END           shift, and go to state 535
+  $default      reduce using rule 126 (function)
 
 
 state 522
 
- 128) function : INLINE FUNCTION WORD LPAREN program_vars RPAREN block END _
-
-  $default      reduce using rule 128 (function)
-
-
-state 523
-
- 129) function : INLINE FUNCTION WORD LPAREN program_vars RPAREN COLON WORD _ block END
+ 127) function : INLINE FUNCTION WORD LPAREN program_vars RPAREN COLON WORD _ block END
 
   NEWLINE       shift, and go to state 281
 
-  block         go to state 536
+  block         go to state 535
+
+state 523
+
+ 129) function : FUNCTION WORD LPAREN program_vars RPAREN COLON WORD block _ END
+
+  END           shift, and go to state 536
+
 
 state 524
 
@@ -6696,16 +6696,16 @@ state 534
 
 state 535
 
- 127) function : FUNCTION WORD LPAREN program_vars RPAREN COLON WORD block END _
+ 127) function : INLINE FUNCTION WORD LPAREN program_vars RPAREN COLON WORD block _ END
 
-  $default      reduce using rule 127 (function)
+  END           shift, and go to state 544
 
 
 state 536
 
- 129) function : INLINE FUNCTION WORD LPAREN program_vars RPAREN COLON WORD block _ END
+ 129) function : FUNCTION WORD LPAREN program_vars RPAREN COLON WORD block END _
 
-  END           shift, and go to state 544
+  $default      reduce using rule 129 (function)
 
 
 state 537
@@ -6790,9 +6790,9 @@ state 543
 
 state 544
 
- 129) function : INLINE FUNCTION WORD LPAREN program_vars RPAREN COLON WORD block END _
+ 127) function : INLINE FUNCTION WORD LPAREN program_vars RPAREN COLON WORD block END _
 
-  $default      reduce using rule 129 (function)
+  $default      reduce using rule 127 (function)
 
 
 state 545
