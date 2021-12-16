@@ -24,7 +24,12 @@ module TPPlus
         arg = "" 
 
         if @ret then
-          v =  context.get_var(@ret.identifier)
+          if @ret.is_a?(Nodes::NamespacedVarNode)
+            v =  context.namespaces[@ret.namespaces[0].to_sym].get_var(@ret.identifier)
+          else
+            v =  context.get_var(@ret.identifier)
+          end
+
           if v.is_a?(PosregNode)
             if @ret.is_a?(VarMethodNode) && @ret.method[:group].is_a?(DigitNode)
               arg = ",#{@ret.method[:group].value.to_s}"
