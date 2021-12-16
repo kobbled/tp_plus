@@ -1821,12 +1821,12 @@ def _reduce_125(val, _values, result)
 end
 
 def _reduce_126(val, _values, result)
- result = FunctionNode.new(val[2],val[4],val[6],inlined = true) 
+ result = FunctionNode.new(val[2],val[4],val[6], '', true) 
     result
 end
 
 def _reduce_127(val, _values, result)
- result = FunctionNode.new(val[2],val[4],val[8],val[7],inlined = true) 
+ result = FunctionNode.new(val[2],val[4],val[8],val[7], true) 
     result
 end
 

@@ -340,8 +340,8 @@ rule
     ;
   
   function
-    : INLINE FUNCTION WORD LPAREN program_vars RPAREN block END         { result = FunctionNode.new(val[2],val[4],val[6],inlined = true) }
-    | INLINE FUNCTION WORD LPAREN program_vars RPAREN COLON WORD block END  { result = FunctionNode.new(val[2],val[4],val[8],val[7],inlined = true) }
+    : INLINE FUNCTION WORD LPAREN program_vars RPAREN block END         { result = FunctionNode.new(val[2],val[4],val[6], '', true) }
+    | INLINE FUNCTION WORD LPAREN program_vars RPAREN COLON WORD block END  { result = FunctionNode.new(val[2],val[4],val[8],val[7], true) }
     | FUNCTION WORD LPAREN program_vars RPAREN block END         { result = FunctionNode.new(val[1],val[3],val[5]) }
     | FUNCTION WORD LPAREN program_vars RPAREN COLON WORD block END  { result = FunctionNode.new(val[1],val[3],val[7],val[6]) }
     ;
