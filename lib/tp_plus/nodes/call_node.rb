@@ -84,7 +84,15 @@ module TPPlus
 
               #pass arguement registers into function scope
               args.each do |a|
-                func.add_var(a.identifier, context.get_var(a.identifier))
+                if a.is_a?(Nodes::VarNode)
+                  func.add_var(a.identifier, context.get_var(a.identifier))
+                elsif a.is_a?(Nodes::AddressNode)
+                  if a.id.is_a?(Nodes::NamespacedVarNode)
+                    func.add_var(a.id.identifier, context.namespaces[a.id.namespaces[0].to_sym].get_var(a.id.identifier))
+                  else
+                    func.add_var(a.id.identifier, context.get_var(a.id.identifier))
+                  end
+                end
               end
 
               #increment number of inlines
