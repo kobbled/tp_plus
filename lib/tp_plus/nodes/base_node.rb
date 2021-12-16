@@ -6,7 +6,7 @@ module TPPlus
       end
 
       def get_attributes
-        return self.instance_variables.map {|n| self.instance_variable_get(n)}
+        return self.instance_variables.map {|n| [n, self.instance_variable_get(n)]}
       end
     end
   end

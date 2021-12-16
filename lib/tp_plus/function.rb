@@ -73,13 +73,17 @@ module TPPlus
         nodes.each_with_index do |n, i|
           if n.is_a?(Nodes::VarNode)
             if map[n.identifier]
-              n.identifier = map[n.identifier]
+              if nodes.is_a?(Nodes::IndirectNode)
+                nodes.instance_variable_set(:@target, map[n.identifier])
+              else
+                nodes[i] = map[n.identifier]
+              end
             end
             next
           end
 
           if n.is_a?(Nodes::FunctionReturnNode)
-            nodes[i] = TPPlus::Nodes::AssignmentNode.new(self.get_var(map["ret"]), n.expression)
+            nodes[i] = TPPlus::Nodes::AssignmentNode.new(self.get_var(map["ret"].identifier), n.expression)
             mask_var_nodes(n, map)
             next
           end
@@ -92,10 +96,10 @@ module TPPlus
       end
 
       if nodes.is_a?(Nodes::BaseNode)
-        nodes.get_attributes.each do |n|
+        nodes.get_attributes.each do |id, n|
           if n.is_a?(Nodes::VarNode)
             if map[n.identifier]
-              n.identifier = map[n.identifier]
+              nodes.instance_variable_set(id, map[n.identifier])
             end
             next
           end
@@ -128,7 +132,7 @@ module TPPlus
       #for inlining into the main function
       map = {}
       @args.each_with_index do |a, i|
-        map[a.name] = args[i].identifier
+        map[a.name] = args[i]
       end
 
       #replace var nodes and return nodes with associated
