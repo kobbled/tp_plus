@@ -83,7 +83,7 @@ module TPPlus
           end
 
           if n.is_a?(Nodes::FunctionReturnNode)
-            nodes[i] = TPPlus::Nodes::AssignmentNode.new(self.get_var(map["ret"].identifier), n.expression)
+            nodes[i] = TPPlus::Nodes::AssignmentNode.new(map["ret"], n.expression)
             mask_var_nodes(n, map)
             next
           end

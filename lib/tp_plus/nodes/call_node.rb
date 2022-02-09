@@ -84,7 +84,7 @@ module TPPlus
 
               #pass arguement registers into function scope
               args.each do |a|
-                if a.is_a?(Nodes::VarNode)
+                if a.is_a?(Nodes::VarNode) || a.is_a?(Nodes::VarMethodNode)
                   func.add_var(a.identifier, context.get_var(a.identifier))
                 elsif a.is_a?(Nodes::AddressNode)
                   if a.id.is_a?(Nodes::NamespacedVarNode)
