@@ -103,7 +103,7 @@ Install
 3. Install bundler `gem install bundler`
 4. Clone the repo `git clone https://github.com/kobbled/tp_plus.git`
 5. Install dependencies with `bundle`
-6. Build the parser and run the tests with `rake`
+6. Build the parser and run the tests with `bundle exec rake`
 7. Make sure all tests pass
 8. Add full path of **./tp_plus/bin** to your environment path
 
