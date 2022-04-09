@@ -1234,10 +1234,15 @@ linear_move.to(p1).at(100, 'mm/s').term(100).
 linear_move.to(p2).at(100, 'mm/s').term(100).
       time_after(0.0, STOP_TOOL()).offset(Stop_Offset)
 
-#run program before reaching pose
+#run program before reaching pose (time based)
 joint_move.to(p1).at(40, '%').term(FINE)
 linear_move.to(p2).at(100, 'mm/s').term(100).
       time_before(0.5, PREP_NOZZLE())
+
+#run program before reaching pose (distance based)
+joint_move.to(p1).at(40, '%').term(FINE)
+linear_move.to(p2).at(100, 'mm/s').term(100).
+      distance_before(100, CHECK_STATE())
 
 #coordinated motion
 joint_move.to(p1).at(40, '%').term(FINE)
