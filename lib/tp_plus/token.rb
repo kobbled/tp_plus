@@ -19,6 +19,7 @@ module TPPlus
         "break" => :BREAK,
         "fplin" => :FPLIN,
         "faceplate_linear" => :FPLIN,
+        "distance_before" => :DISTANCE_SEGMENT,
 
         "approach_ld" => :AP_LD,
         "ap_ld" => :AP_LD,

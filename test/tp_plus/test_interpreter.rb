@@ -495,6 +495,16 @@ LBL[105] ;\n), @interpreter.list_warnings
   end
   # ---------
 
+  def test_distance_before
+    parse("p := P[1]\nlinear_move.to(p).at(2000, 'mm/s').term(0).distance_before(100, foo())")
+    assert_prog "L P[1:p] 2000mm/sec CNT0 DB 100mm,CALL FOO ;\n"
+  end
+
+  def test_distance_before_do
+    parse("p := P[1]\nd := DI[1]\np := P[1]\nlinear_move.to(p).at(2000, 'mm/s').term(0).distance_before(100, turn_on(d))")
+    assert_prog "L P[1:p] 2000mm/sec CNT0 DB 100mm,DI[1:d]=(ON) ;\n"
+  end
+
   def test_use_uframe
     parse("use_uframe 5")
     assert_prog "UFRAME_NUM=5 ;\n"

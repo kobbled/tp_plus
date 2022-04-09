@@ -1,6 +1,6 @@
 class TPPlus::Parser
 token ASSIGN AT_SYM COMMENT MESSAGE WARNING JUMP IO_METHOD INPUT OUTPUT
-token NUMREG POSREG VREG SREG TIME_SEGMENT ARG UALM TOOLREG FRAMEREG
+token NUMREG POSREG VREG SREG TIME_SEGMENT DISTANCE_SEGMENT ARG UALM TOOLREG FRAMEREG
 token MOVE DOT TO DOWNTO MID AT ACC TERM OFFSET SKIP GROUP COORD 
 token MROT PTH WJNT INC BREAK RTCP FPLIN
 token AP_LD RT_LD CD CR INDEV EV PSPD CTV
@@ -429,8 +429,10 @@ rule
                                        { result = TerminationNode.new(val[2],val[4],nil) }
     | DOT swallow_newlines OFFSET LPAREN var_or_indirect RPAREN
                                        { result = OffsetNode.new(val[2],val[4]) }
-    | DOT swallow_newlines TIME_SEGMENT LPAREN time COMMA time_seg_actions RPAREN
+    | DOT swallow_newlines TIME_SEGMENT LPAREN time COMMA seg_actions RPAREN
                                        { result = TimeNode.new(val[2],val[4],val[6]) }
+    | DOT swallow_newlines DISTANCE_SEGMENT LPAREN distance COMMA seg_actions RPAREN
+                                       { result = DistanceNode.new(val[2],val[4],val[6]) }
     | DOT swallow_newlines SKIP LPAREN label optional_lpos_arg RPAREN
                                        { result = SkipNode.new(val[4],val[5]) }
     | DOT swallow_newlines valid_motion_statements
@@ -486,7 +488,7 @@ rule
     |                 { result = nil }
     ;
 
-  time_seg_actions
+  seg_actions
     : program_call
     | io_method
     ;
@@ -494,6 +496,10 @@ rule
   time
     : var
     | number
+    ;
+  
+  distance
+    : number
     ;
 
   speed
