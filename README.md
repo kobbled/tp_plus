@@ -3,8 +3,11 @@ TP+
 
 [![Build Status](https://travis-ci.com/kobbled/tp_plus.svg?branch=master)](https://travis-ci.org/onerobotics/tp_plus)
 
+> :warning: Currently there are issues with using this repository on Ruby >3.1, and Ruby2. Please use Ruby 3.0 for now. I am working on resolving issues for both 3.1 and 2, as well as docker solutions to avoid this issue in the future. 
 
-> Creation, and all rights of this repository goes to [One Robotics](https://www.onerobotics.com/). This branch was forked from the archived repo [TP+](https://github.com/onerobotics/tp_plus)
+
+> This branch was forked from the archived repo [TP+](https://github.com/onerobotics/tp_plus)
+
 
 TP+ is a higher-level language abstraction that translates into FANUC
 TP. 
