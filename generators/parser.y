@@ -491,6 +491,7 @@ rule
   seg_actions
     : program_call
     | io_method
+    | assignment
     ;
 
   time
