@@ -500,7 +500,8 @@ rule
     ;
   
   distance
-    : number
+    : var
+    | number
     ;
 
   speed
