@@ -10,6 +10,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'ruby-prof', '~> 0.15'
   spec.add_development_dependency 'rdoc'
   spec.add_development_dependency 'ruby_deep_clone'
+  spec.add_development_dependency 'matrix', '~> 0.4.2'
 
   spec.authors                   = ["Jay Strybis", "Matt Dewar"]
   spec.email                     = ['mattpdewar@gmail.com']
