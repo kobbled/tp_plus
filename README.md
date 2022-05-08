@@ -3,7 +3,7 @@ TP+
 
 [![Build Status](https://travis-ci.com/kobbled/tp_plus.svg?branch=master)](https://travis-ci.org/onerobotics/tp_plus)
 
-> :warning: Currently there are issues with using this repository on Ruby >3.1, and Ruby2. Please use Ruby 3.0 for now. I am working on resolving issues for both 3.1 and 2, as well as docker solutions to avoid this issue in the future. 
+> :warning: Use with Ruby ~> 3 . Ruby 2 might contain issues. Dockerfiles will be posted soon. 
 
 
 > This branch was forked from the archived repo [TP+](https://github.com/onerobotics/tp_plus)
