@@ -446,7 +446,7 @@ module TPPlus
               end
             end
 
-            template = ERB.new(File.read(TEMPLATE_FILE), nil, '-')
+            template = ERB.new(File.read(TEMPLATE_FILE), trim_mode: '-')
             
             template.result(binding)
           end
