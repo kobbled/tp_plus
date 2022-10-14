@@ -50,11 +50,11 @@ module TPPlus
       def getDefinitions
         definitions = []
 
-        @range.each do |i|
+        @range.each_with_index do |e, i|
           if @length > 1
-            definitions.append(DefinitionNode.new("#{@baseName}#{i}", createNode(@type, i)))
+            definitions.append(DefinitionNode.new("#{@baseName}#{i+1}", createNode(@type, e)))
           else
-            definitions.append(DefinitionNode.new(@baseName, createNode(@type, i)))
+            definitions.append(DefinitionNode.new(@baseName, createNode(@type, e)))
           end
         end
 
