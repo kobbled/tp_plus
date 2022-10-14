@@ -12,6 +12,10 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'ruby_deep_clone'
   spec.add_development_dependency 'matrix', '~> 0.4.2'
 
+  spec.add_development_dependency 'ruby-debug-ide'
+  spec.add_development_dependency 'byebug'
+  spec.add_development_dependency 'debug'
+
   spec.authors                   = ["Jay Strybis", "Matt Dewar"]
   spec.email                     = ['mattpdewar@gmail.com']
 
