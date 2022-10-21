@@ -210,7 +210,7 @@ rule
   program_call
     : function_call LPAREN args RPAREN                { result = CallNode.new(val[0],val[2]) }
     | RUN function_call LPAREN args RPAREN            { result = CallNode.new(val[1],val[3],async: true) }
-    | CALL var LPAREN args RPAREN                     { result = CallNode.new(nil,val[3],str_call:val[1]) }
+    | CALL var_or_indirect LPAREN args RPAREN                     { result = CallNode.new(nil,val[3],str_call:val[1]) }
     | var_or_indirect EQUAL function_call LPAREN args RPAREN     { result = CallNode.new(val[2],val[4],ret:val[0]) }
     ;
 

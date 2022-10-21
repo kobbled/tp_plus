@@ -26,6 +26,8 @@ module TPPlus
         if @ret then
           if @ret.is_a?(Nodes::NamespacedVarNode)
             v =  context.namespaces[@ret.namespaces[0].to_sym].get_var(@ret.identifier)
+          elsif @ret.is_a?(Nodes::IndirectNode)
+            v = @ret
           else
             v =  context.get_var(@ret.identifier)
           end

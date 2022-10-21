@@ -66,6 +66,10 @@ module TPPlus
         [""].concat(GROUPS.keys).include? c
       end
 
+      def id
+        @target.value
+      end
+
       def eval(context,options={})
 
         @method[:method] ||= ""
