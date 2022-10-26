@@ -7,6 +7,9 @@ options = {}
 #make options global ** PATCH ** for options access in nodes
 $global_options = options
 
+#global var stack
+$stacks = TPPlus::Stacks.new
+
 #flag for printing functions
 options[:function_print] = true
 
