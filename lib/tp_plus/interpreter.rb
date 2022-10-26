@@ -16,6 +16,13 @@ module TPPlus
       @case_identifiers = 0
       @warning_identifiers = 0
       @number_of_inlines = 0
+      
+      @namespace_functions = []
+      # add call stack graph
+      @graph = Graph::Graph.new()
+      # add root
+      @graph.addNode(@name)
+      @graph.setRoot(@graph.graph[@name])
     end
 
     def next_label
