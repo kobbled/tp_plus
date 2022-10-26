@@ -1,6 +1,6 @@
 module TPPlus
   module Nodes
-    class ConditionalBlockNode < BaseNode
+    class ConditionalBlockNode < ConditionalNode
       attr_accessor :condition
       def initialize(condition,true_block,elsif_block,false_block)
         @condition   = condition

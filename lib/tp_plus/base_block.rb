@@ -170,6 +170,46 @@ module TPPlus
         end
       end
 
+      def traverse_nodes(nodes, lambda)
+        if nodes.is_a?(Array)
+          nodes.each_with_index do |n, index|
+            #loop statements
+            if n.is_a?(Nodes::RecursiveNode)
+              traverse_nodes(n.get_block, lambda)
+            end
+    
+            #if statements
+            if n.is_a?(Nodes::ConditionalNode)
+              traverse_nodes(n.get_true_block, lambda)
+              traverse_nodes(n.get_elsif_block, lambda)
+              traverse_nodes(n.get_false_block, lambda)
+            end
+    
+            #case statments
+            if n.is_a?(Nodes::CaseNode)
+              traverse_nodes(n.get_conditions, lambda)
+            end
+
+            #namespace
+            if n.is_a?(Nodes::NamespaceNode)
+              n.eval(self)
+            end
+
+            #imports
+            if n.is_a?(Nodes::ImportNode)
+              import_nodes = n.eval(self)
+              import_nodes.each do |n_import|
+                traverse_nodes(n_import, lambda)
+              end
+            end
+            
+            #run lambda function
+            lambda.call(n, index, nodes)
+          end
+        end
+  
+      end
+
       def eval
         pass
       end

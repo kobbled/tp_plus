@@ -12,7 +12,8 @@ module TPPlus
       end
 
       def get_conditions
-        return( @conditions.append(@else_condition))
+        conds = @conditions.clone
+        return(conds.append(@else_condition))
       end
 
       def first_condition(context)

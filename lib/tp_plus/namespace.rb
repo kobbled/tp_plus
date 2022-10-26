@@ -16,8 +16,10 @@ module TPPlus
 
       @nodes.each_with_index do |n, index|
         if n.is_a?(TPPlus::Nodes::RegDefinitionNode)
-          @nodes[index] = n.eval(self) 
-          @nodes = @nodes.flatten
+          #defer definition of local variables outside of constructor
+          unless n.range.is_a?(TPPlus::Nodes::LocalDefinitionNode)
+            @nodes[index] = n.eval(self) 
+          end
         end
       end
 

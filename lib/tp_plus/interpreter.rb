@@ -92,14 +92,22 @@ module TPPlus
           end
         end
       end
-
+      
+      #loop statements
       if nodes.is_a?(Nodes::RecursiveNode)
         find_warnings(nodes.get_block, warnings)
       end
-
+      
+      #if else statements
       if nodes.is_a?(Nodes::ConditionalNode)
         find_warnings(nodes.get_true_block, warnings)
+        find_warnings(nodes.get_elsif_block, warnings)
         find_warnings(nodes.get_false_block, warnings)
+      end
+
+      #case statements
+      if nodes.is_a?(Nodes::CaseNode)
+        find_warnings(nodes.get_conditions, warnings)
       end
 
       warnings
