@@ -157,16 +157,49 @@ module TPPlus
       return nil
     end
 
+    def create_call_stack(parent, nodes)
 
-      @namespaces.each do |n, nv|
-        if !nv.functions.empty?
-          nv.functions.each do |k, v|
-            s += v.output_program(options)
+      #find each call recursively
+      nodes.each do |n|
+        if n.is_a?(TPPlus::Nodes::CallNode)
+          @graph.addNode(n.program_name)
+          @graph.addEdge(parent, @graph.graph[n.program_name])
+          if @functions.key?(n.program_name.to_sym)
+            create_call_stack(n.program_name, @functions[n.program_name.to_sym].nodes)
           end
         end
       end
-      
-      return s
+    end
+
+    def set_call_stack_levels
+      #bfs to set the level of the function call
+      @graph.setBredthLevels
+      @functions.each do |k, f|
+        if @graph.graph.key?(k.to_s)
+          f.level = @graph.graph[k.to_s].level
+        end
+      end
+    end
+
+    def traverse_call_stack
+      call_stack_dfs(@graph.root)
+    end
+
+    def call_stack_dfs(node)
+      unless $stacks.pack.empty?()
+        if !node.name.empty?
+          $stacks.push_all
+          if @functions.key?(node.name.to_sym)
+            @functions[node.name.to_sym].define_local_vars()
+          end
+        end
+
+        node.children.each do |child|
+          call_stack_dfs(child)
+        end
+
+        $stacks.pop_all
+      end
     end
 
     # ----------------
@@ -250,6 +283,13 @@ module TPPlus
 
       #collect namespace functions to the interpreter for generating a call stack
       collect_namespace_functions(@namespaces)
+
+      #create call stack graph
+       #only perform on main entry. Not on namespace or function level.
+      if !@functions.empty?
+        create_call_stack(@name, @nodes)
+        set_call_stack_levels()
+        traverse_call_stack()
       end
 
       @nodes = @nodes.flatten.compact
