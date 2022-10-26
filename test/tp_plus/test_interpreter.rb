@@ -2394,6 +2394,8 @@ LINE_TRACK ;
 
   def test_function_with_return
     $global_options[:function_print] = true
+    $stacks = TPPlus::Stacks.new
+
     parse("foo := R[1]
       def set_reg(x) : numreg    
         return (x)
@@ -2416,6 +2418,8 @@ LINE_TRACK ;
 
   def test_function_with_case_statement
     $global_options[:function_print] = true
+    $stacks = TPPlus::Stacks.new
+
     parse("foo := R[1]
       bar := R[2]
       
@@ -2462,6 +2466,8 @@ LINE_TRACK ;
 
   def test_namespace_scoping
     $global_options[:function_print] = true
+    $stacks = TPPlus::Stacks.new
+
     parse("namespace ns1
       VAL1 := 1
       VAL2 := 2
@@ -2519,6 +2525,8 @@ LINE_TRACK ;
 
   def test_namespace_scoping_function
     $global_options[:function_print] = true
+    $stacks = TPPlus::Stacks.new
+
     parse("namespace ns1
       VAL1 := 'Hello'
     
@@ -2559,6 +2567,7 @@ LINE_TRACK ;
 
   def test_scoping_constants
     $global_options[:function_print] = true
+    $stacks = TPPlus::Stacks.new
     parse("CONST1 := 1
       CONST2 := 0.5
       
@@ -2587,6 +2596,8 @@ LINE_TRACK ;
 
   def test_scoping_posreg
     $global_options[:function_print] = true
+    $stacks = TPPlus::Stacks.new
+
     parse("pfoo := PR[5]
 
       def test()
