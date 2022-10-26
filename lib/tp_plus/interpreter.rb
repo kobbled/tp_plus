@@ -305,14 +305,19 @@ module TPPlus
         @source_line_count += 1 unless n.is_a?(Nodes::TerminatorNode) && !last_node.is_a?(Nodes::TerminatorNode)
         raise if n.is_a?(String)
 
+        #import nodes are imported during precompile (1st pass + 2nd pass) stage
+        next if n.nil? || n.is_a?(Nodes::ImportNode)
+
         res = n.eval(self)
+        
+        last_node = n unless res.nil?
 
         # preserve whitespace
-        if n.is_a?(Nodes::TerminatorNode) && last_node.is_a?(Nodes::TerminatorNode)
-          s += " ;\n"
+        if !last_node.nil?
+          if n.is_a?(Nodes::TerminatorNode) && last_node.is_a?(Nodes::TerminatorNode)
+            s += " ;\n"
+          end
         end
-        last_node = n
-        # end preserve whitespace
 
         next if res.nil?
 

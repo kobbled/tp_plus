@@ -49,13 +49,18 @@ module TPPlus
         $global_options[:function_print] = compileTF
         
         scanner = TPPlus::Scanner.new
-        parser = TPPlus::Parser.new(scanner, self)
+        parser = TPPlus::Parser.new(scanner)
+        interpreter = parser.interpreter
+
         scanner.scan_setup(file)
+
         parser.parse
-        eval
+        # eval
         
         #restore global function_print status
         $global_options[:function_print] = swap_flag
+
+        return interpreter.nodes
       rescue RuntimeError => e
         raise "Could not load import #{filepath}:\n#{e}"
       end

@@ -22,12 +22,17 @@ module TPPlus
         raise "File #{fileext} was not found in includes."
       end
 
+      def clear_files
+        @filenames = []
+      end
+
       def eval(context)
+        nodes = []
         @filenames.each do |f|
-          context.load_import(find_file(f), compile?)
+          nodes << context.load_import(find_file(f), compile?)
         end
 
-        nil
+        nodes
       end
     end
   end
