@@ -147,6 +147,11 @@ module TPPlus
       return s
     end
 
+    # ----------------
+
+    # pose functions
+    # ----------------
+
     def pos_section
       return "" if @position_data.empty?
       return "" if @position_data[:positions].empty?
@@ -188,24 +193,49 @@ module TPPlus
 
       return s
     end
+    # ----------------
 
     def eval
-      s = ""
-      last_node = nil
       
+      # first pass
+      #---------
       #set a list of declared positions into @pose_list
       #populate_pose_set
-      @nodes.each_with_index do |n, index|
-        if n.is_a?(TPPlus::Nodes::RegDefinitionNode)
-          @nodes[index] = n.eval(self) 
+      #create definitions from ranges
+      set_defs = -> (node, index, nodes) {
+        if [TPPlus::Nodes::RegDefinitionNode, TPPlus::Nodes::StackDefinitionNode].include? node.class
+          nodes[index] = node.eval(self)
+          if nodes[index].is_a?(Array)
+            nodes = nodes.flatten!()
+          end
+          
+          return if nodes[index].nil?
+          nodes[index].eval(self)
         end
+      }
+      traverse_nodes(@nodes, set_defs)
+
+      # second pass
+      #----------
+      #prepare/allocate functions
+      set_funcs = -> (node, index, nodes) { 
+        if node.is_a?(TPPlus::Nodes::FunctionNode)
+          node.eval(self)
+        end
+      }
+      traverse_nodes(@nodes, set_funcs)
+      @nodes = @nodes.flatten
+
       end
 
-      @nodes = @nodes.flatten
+      @nodes = @nodes.flatten.compact
 
       define_labels
 
       @source_line_count = 0
+
+      s = ""
+      last_node = nil
 
       @nodes.each do |n|
         @source_line_count += 1 unless n.is_a?(Nodes::TerminatorNode) && !last_node.is_a?(Nodes::TerminatorNode)

@@ -41,6 +41,18 @@ module TPPlus
       @nodes.append(node)
     end
 
+    def define_local_vars()
+      @nodes.each_with_index do |n, index|
+        if n.is_a?(TPPlus::Nodes::RegDefinitionNode)
+          if n.range.is_a?(TPPlus::Nodes::LocalDefinitionNode)
+            @nodes[index] = n.eval(self) 
+          end
+        end
+      end
+
+      @nodes = @nodes.flatten
+    end
+
     def set_arguement_registers
       if !@args
         @current_arg = 0
