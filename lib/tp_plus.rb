@@ -13,6 +13,12 @@ require_relative 'tp_plus/nodes/const_node'
 require_relative 'tp_plus/motion/pose_templates'
 require_relative 'tp_plus/motion/pose_factory'
 
+#stack
+require_relative 'tp_plus/localstack/stack'
+
+#graph
+require_relative 'tp_plus/graph/graph'
+
 # derived nodes
 require_relative 'tp_plus/nodes/import_node'
 require_relative 'tp_plus/nodes/abort_node'

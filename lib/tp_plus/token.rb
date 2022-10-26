@@ -132,7 +132,9 @@ module TPPlus
         "polar" => :POLAR,
         "origin" => :ORIGIN,
         "fix" => :FIX,
-        "extunits" => :POSEATTR
+        "extunits" => :POSEATTR,
+
+        "local" => :LOCALSTACK
       }
 
 
@@ -148,6 +150,9 @@ module TPPlus
         "UTOOL" => :TOOLREG,
         "UFRAME" => :FRAMEREG,
 
+        "LR" => :LOCALREG,
+        "LPR" => :LOCALPOSE,
+        "LF" => :LOCALFLAG,
 
         "SIN" => :OPERATION,
         "COS" => :OPERATION,

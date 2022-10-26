@@ -22,6 +22,7 @@ token false
 token FUNCTION OPERATION USING IMPORT COMPILE INLINE
 token ARROW DEFAULTPOS POSEATTR POSEREVERSE
 token SPHERE POLAR ORIGIN FIX
+token LOCALSTACK LOCALREG LOCALPOSE LOCALFLAG
 
 prechigh
   right BANG
@@ -514,7 +515,8 @@ rule
     ;
 
   definition
-    : WORD ASSIGN definable            { result = RegDefinitionNode.new(val[0], val[2]) }
+    : LOCALSTACK ASSIGN definable      {result = StackDefinitionNode.new(val[2])}
+    | WORD ASSIGN definable            { result = RegDefinitionNode.new(val[0], val[2]) }
     ;
 
   assignment
@@ -727,6 +729,7 @@ rule
     | string
     | framereg
     | booleans
+    | localvars
     ;
 
   definable_range
@@ -757,6 +760,16 @@ rule
 
   framereg
     : frametype LBRACK DIGIT RBRACK             { result = FrameNode.new(val[0], val[2].to_i) }
+    ;
+
+  local_types
+    : LOCALREG {result = val[0]}
+    | LOCALPOSE {result = val[0]}
+    | LOCALFLAG {result = val[0]}
+    ;
+
+  localvars
+    : local_types LBRACK RBRACK    {result = LocalDefinitionNode.new(val[0]) }
     ;
   
 
