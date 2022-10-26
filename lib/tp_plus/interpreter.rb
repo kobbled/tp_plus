@@ -135,6 +135,28 @@ module TPPlus
       @functions.each do |k, v|
         s += v.output_program(options)
       end
+      
+      return s
+    end
+
+    # Call stack functions
+    # ----------------
+
+    def collect_namespace_functions(namespaces)
+      namespaces.each do |k, ns|
+        unless ns.namespaces.empty?
+          collect_namespace_functions(ns.namespaces)
+        end
+        
+        ns.functions.each do |key, func|
+          @namespace_functions << func.name.to_sym
+          @functions[func.name.to_sym] = func
+        end
+      end
+
+      return nil
+    end
+
 
       @namespaces.each do |n, nv|
         if !nv.functions.empty?
@@ -226,6 +248,8 @@ module TPPlus
       traverse_nodes(@nodes, set_funcs)
       @nodes = @nodes.flatten
 
+      #collect namespace functions to the interpreter for generating a call stack
+      collect_namespace_functions(@namespaces)
       end
 
       @nodes = @nodes.flatten.compact
