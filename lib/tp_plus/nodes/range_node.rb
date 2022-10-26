@@ -2,7 +2,8 @@ module TPPlus
   module Nodes
     class RangeNode < BaseNode
 
-      attr_reader :range, :length, :name_range
+      attr_reader :range, :length, :name_range, :type
+
       def initialize(startIndex, endIndex, type = '', baseName ='')
 
         @baseName = baseName

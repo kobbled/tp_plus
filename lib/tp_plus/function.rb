@@ -1,6 +1,6 @@
 module TPPlus
   class Function < Namespace
-    attr_reader :inlined
+    attr_reader :inlined, :nodes, :name
 
     def initialize(name, args, block, ret_type = '', vars = {}, inlined = false)
       super(name, block)

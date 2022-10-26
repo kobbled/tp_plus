@@ -1,7 +1,7 @@
 module TPPlus
     class BaseBlock
-      attr_accessor :line_count, :nodes, :ret_type, :position_data, :pose_list
-      attr_reader :variables, :constants, :namespaces, :functions
+      attr_accessor :line_count, :nodes, :ret_type, :position_data, :pose_list, :functions
+      attr_reader :variables, :constants, :namespaces
 
       def initialize
         @name          = ''

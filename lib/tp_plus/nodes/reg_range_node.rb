@@ -10,7 +10,7 @@ module TPPlus
 
       def eval(context)
         
-        if @range.is_a?(RangeNode)
+        if @range.is_a?(RangeNode) || @range.is_a?(LocalDefinitionNode)
           @definitions = @range.getDefinitions
           
           @definitions.each do |d|
