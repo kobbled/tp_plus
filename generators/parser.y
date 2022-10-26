@@ -206,7 +206,7 @@ rule
 
   function_call
     : WORD                { result = val[0] }
-    | namespaces WORD     { result = val[0][0] + '_' + val[1] }
+    | namespaces WORD     { result = val[0].join('_') + '_' + val[1] }
     ;
   program_call
     : function_call LPAREN args RPAREN                { result = CallNode.new(val[0],val[2]) }

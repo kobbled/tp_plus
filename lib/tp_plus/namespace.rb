@@ -42,7 +42,7 @@ module TPPlus
       return unless @variables[identifier.to_sym].nil? || identifier == RETURN_NAME
 
       @variables[identifier.to_sym] = node
-      node.comment = "#{@name} #{identifier}"
+      node.comment = "#{@name}_#{identifier}"
     end
 
     def add_parent_nodes(parent)

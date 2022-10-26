@@ -85,7 +85,8 @@ module TPPlus
         pass_nodes = get_parent_imports(block)
 
         if @namespaces[identifier.to_sym].nil?
-          @namespaces[identifier.to_sym] = TPPlus::Namespace.new("#{@name} #{identifier}", block, vars=pass_nodes)
+          name = @name.empty? ? "#{identifier}" : "#{@name}_#{identifier}"
+          @namespaces[identifier.to_sym] = TPPlus::Namespace.new(name, block, vars=pass_nodes)
         else
           @namespaces[identifier.to_sym].reopen!(block)
         end
