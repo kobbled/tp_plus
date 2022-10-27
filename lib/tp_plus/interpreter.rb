@@ -206,6 +206,77 @@ module TPPlus
       end
     end
 
+
+    def preprocess_local_variables(node, index, nodes)
+      if node.is_a?(TPPlus::Nodes::ExpressionNode)
+        node.ret_var.each do |rv|
+          localnode = rv.eval(self)
+          localnode[0].eval(self)
+        end
+
+        # replace new local variable with function call
+        node.replace_function
+      end
+
+      if node.is_a?(TPPlus::Nodes::CallNode)
+        if node.args_contain_calls
+          node.ret_args.each do |rv|
+            localnode = rv.eval(self)
+            localnode[0].eval(self)
+          end
+
+          # replace args with var nodes
+          arg_exp_count = 0
+          node.args.each_with_index do |a, i|
+            if a.is_a?(TPPlus::Nodes::CallNode)
+              node.args[i] = TPPlus::Nodes::VarNode.new(a.ret.identifier)
+            end
+            if a.is_a?(TPPlus::Nodes::ExpressionNode)
+              node.args[i] = node.arg_exp[arg_exp_count].identifier
+              arg_exp_count += 1
+            end
+          end
+        end
+      end
+
+      if node.is_a?(TPPlus::Nodes::AssignmentNode)
+        #insert function assignment above assignment
+        if node.contains_call
+          ass_funcs = []
+          node.retrieve_calls(node.assignable, ass_funcs)
+
+          ass_funcs.each do |f|
+            nodes[index] = [f, nodes[index]]
+          end
+        end
+
+        if node.contains_arg_call
+          arg_funcs = []
+          node.retrieve_arg_calls(node.assignable, arg_funcs)
+
+          arg_funcs.each do |f|
+            nodes[index] = [f, nodes[index]]
+          end
+        end
+      end
+
+      if [TPPlus::Nodes::RegDefinitionNode, TPPlus::Nodes::StackDefinitionNode].include? node.class
+        nodes[index] = node.eval(self)
+        if nodes[index].is_a?(Array)
+          nodes = nodes.flatten!()
+        end
+        
+        return if nodes[index].nil?
+        nodes[index].eval(self)
+      end
+    end
+
+    def preprocess_functions(node, index, nodes)
+      if node.is_a?(TPPlus::Nodes::FunctionNode)
+        node.eval(self)
+      end
+    end
+
     # ----------------
 
     # pose functions
@@ -261,81 +332,12 @@ module TPPlus
       #set a list of declared positions into @pose_list
       #populate_pose_set
       #create definitions from ranges
-      set_defs = -> (node, index, nodes) {
-        
-        if node.is_a?(TPPlus::Nodes::ExpressionNode)
-          node.ret_var.each do |rv|
-            localnode = rv.eval(self)
-            localnode[0].eval(self)
-          end
-
-          # replace new local variable with function call
-          node.replace_function
-        end
-
-        if node.is_a?(TPPlus::Nodes::CallNode)
-          if node.args_contain_calls
-            node.ret_args.each do |rv|
-              localnode = rv.eval(self)
-              localnode[0].eval(self)
-            end
-
-            # replace args with var nodes
-            arg_exp_count = 0
-            node.args.each_with_index do |a, i|
-              if a.is_a?(TPPlus::Nodes::CallNode)
-                node.args[i] = TPPlus::Nodes::VarNode.new(a.ret.identifier)
-              end
-              if a.is_a?(TPPlus::Nodes::ExpressionNode)
-                node.args[i] = node.arg_exp[arg_exp_count].identifier
-                arg_exp_count += 1
-              end
-            end
-          end
-        end
-
-        if node.is_a?(TPPlus::Nodes::AssignmentNode)
-          #insert function assignment above assignment
-          if node.contains_call
-            ass_funcs = []
-            node.retrieve_calls(node.assignable, ass_funcs)
-
-            ass_funcs.each do |f|
-              nodes[index] = [f, nodes[index]]
-            end
-          end
-
-          if node.contains_arg_call
-            arg_funcs = []
-            node.retrieve_arg_calls(node.assignable, arg_funcs)
-
-            arg_funcs.each do |f|
-              nodes[index] = [f, nodes[index]]
-            end
-          end
-        end
-
-        if [TPPlus::Nodes::RegDefinitionNode, TPPlus::Nodes::StackDefinitionNode].include? node.class
-          nodes[index] = node.eval(self)
-          if nodes[index].is_a?(Array)
-            nodes = nodes.flatten!()
-          end
-          
-          return if nodes[index].nil?
-          nodes[index].eval(self)
-        end
-      }
-      traverse_nodes(@nodes, set_defs)
+      traverse_nodes(@nodes, :preprocess_local_variables)
 
       # second pass
       #----------
       #prepare/allocate functions
-      set_funcs = -> (node, index, nodes) { 
-        if node.is_a?(TPPlus::Nodes::FunctionNode)
-          node.eval(self)
-        end
-      }
-      traverse_nodes(@nodes, set_funcs)
+      traverse_nodes(@nodes, :preprocess_functions)
       @nodes = @nodes.flatten
 
       #collect namespace functions to the interpreter for generating a call stack

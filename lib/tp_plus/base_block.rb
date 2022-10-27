@@ -226,7 +226,7 @@ module TPPlus
             end
             
             #run lambda function
-            lambda.call(n, index, nodes)
+            method(lambda).call(n, index, nodes)
           end
         end
   
