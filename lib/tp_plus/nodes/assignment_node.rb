@@ -1,7 +1,7 @@
 module TPPlus
   module Nodes
     class AssignmentNode < BaseNode
-      attr_reader :identifier, :assignable
+      attr_reader :identifier, :assignable, :contains_call
       def initialize(identifier,assignable)
         @identifier = identifier
         @assignable = assignable

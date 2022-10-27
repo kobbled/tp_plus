@@ -18,6 +18,10 @@ module TPPlus
         @async
       end
 
+      def set_return(ret)
+        @ret = ret
+      end
+
       def args_string(context)
         #look for a return arguement. This will be appened to the arguement
         #list as an address
