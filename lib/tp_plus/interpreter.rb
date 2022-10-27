@@ -273,6 +273,21 @@ module TPPlus
           node.replace_function
         end
 
+        if node.is_a?(TPPlus::Nodes::CallNode)
+          if node.args_contain_calls
+            node.ret_args.each do |rv|
+              localnode = rv.eval(self)
+              localnode[0].eval(self)
+            end
+
+            node.args.each_with_index do |a, i|
+              if a.is_a?(TPPlus::Nodes::CallNode)
+                node.args[i] = TPPlus::Nodes::VarNode.new(a.ret.identifier)
+              end
+            end
+          end
+        end
+
         if node.is_a?(TPPlus::Nodes::AssignmentNode)
           #insert function assignment above assignment
           if node.contains_call
@@ -280,6 +295,15 @@ module TPPlus
             node.retrieve_calls(node.assignable, ass_funcs)
 
             ass_funcs.each do |f|
+              nodes[index] = [f, nodes[index]]
+            end
+          end
+
+          if node.contains_arg_call
+            arg_funcs = []
+            node.retrieve_arg_calls(node.assignable, arg_funcs)
+
+            arg_funcs.each do |f|
               nodes[index] = [f, nodes[index]]
             end
           end

@@ -230,6 +230,7 @@ rule
     | var
     | string
     | address
+    | expression
     ;
 
   program_vars

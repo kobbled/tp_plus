@@ -1,11 +1,12 @@
 module TPPlus
   module Nodes
     class AssignmentNode < BaseNode
-      attr_reader :identifier, :assignable, :contains_call
+      attr_reader :identifier, :assignable, :contains_call, :contains_arg_call
       def initialize(identifier,assignable)
         @identifier = identifier
         @assignable = assignable
         @contains_call = has_call?(assignable, false)
+        @contains_arg_call = has_arg_call?(assignable, false)
       end
 
       def assignable_string(context,options={})
@@ -51,6 +52,18 @@ module TPPlus
           end
         
           b | node.func_exp.any?
+        end
+      end
+
+      def has_arg_call?(node, b)
+        if node.is_a?(ExpressionNode)
+          [node.left_op, node.right_op].map.each do |op|
+            b = has_arg_call?(op, b) if op.is_a?(ExpressionNode)
+          end
+        end
+        
+        if node.is_a?(CallNode)
+          b | node.args_contain_calls
         end
       end
 

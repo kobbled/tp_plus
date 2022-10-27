@@ -1,13 +1,16 @@
 module TPPlus
   module Nodes
     class CallNode < BaseNode
-      attr_reader :args, :program_name
+      attr_reader :args, :program_name, :ret_args, :func_args, :ret, :arg_exp
       def initialize(program_name, args, options={})
         @program_name = program_name
         @args = args
         @async = options[:async]
         @ret = options[:ret]
         @str_var = options[:str_call]
+        @ret_args = []
+        @func_args = {}
+        handle_arg_funcs
       end
 
       def requires_mixed_logic?(context)
@@ -20,6 +23,25 @@ module TPPlus
 
       def set_return(ret)
         @ret = ret
+      end
+
+      def handle_arg_funcs
+        @args.each do |a|
+          if a.is_a?(CallNode)
+            #create local variable
+            $dvar_counter += 1
+            name = "dvar#{$dvar_counter}"
+            a.set_return(VarNode.new(name))
+
+            @func_args[a.program_name.to_sym] = a
+            @ret_args << RegDefinitionNode.new(name, LocalDefinitionNode.new('LR', name))
+          end
+
+        end
+      end
+
+      def args_contain_calls
+        @func_args.any? || @arg_exp.any?
       end
 
       def args_string(context)
