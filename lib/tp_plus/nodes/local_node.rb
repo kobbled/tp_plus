@@ -2,9 +2,11 @@ module TPPlus
   module Nodes
     class LocalDefinitionNode < BaseNode
 
-      def initialize(type)
+      attr_reader :name
+      def initialize(type,name=nil)
         @virtualtype = type
         @type = reg_map(type)
+        @name = name
       end
 
       def setName(name)
