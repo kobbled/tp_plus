@@ -2769,4 +2769,43 @@ LINE_TRACK ;
 
   end
 
+  def test_function_calls_in_expressions
+    $stacks = TPPlus::Stacks.new
+    $dvar_counter = 0
+    parse("local := R[70..80]
+
+      foo := R[10]
+      test := LR[]
+      
+      #regular assignment no abstraction
+      foo = Mth::ln(7)
+      #two functions in expression
+      foo = Mth::ln(7)+set_reg(100)
+      #two functions in a nested expression
+      foo = test+Mth::ln(7)+set_reg(100)
+      #two functions in a double nested expression
+      foo = test+Mth::ln(7)+set_reg(100)+5")
+
+      assert_prog " ;\n" +
+      " ;\n" +
+      "! regular assignment no ;\n" +
+      "! abstraction ;\n" +
+      "CALL MTH_LN(7,10) ;\n" +
+      "! two functions in expression ;\n" +
+      "CALL MTH_LN(7,71) ;\n" +
+      "CALL SET_REG(100,72) ;\n" +
+      "R[10:foo]=R[71:dvar1]+R[72:dvar2] ;\n" +
+      "! two functions in a nested ;\n" +
+      "! expression ;\n" +
+      "CALL MTH_LN(7,73) ;\n" +
+      "CALL SET_REG(100,74) ;\n" +
+      "R[10:foo]=(R[70:test]+R[73:dvar3]+R[74:dvar4]) ;\n" +
+      "! two functions in a double ;\n" +
+      "! nested expression ;\n" +
+      "CALL MTH_LN(7,76) ;\n" +
+      "CALL SET_REG(100,75) ;\n" +
+      "R[10:foo]=(R[70:test]+R[76:dvar6]+R[75:dvar5]+5) ;\n"
+  end
+  
+
 end
