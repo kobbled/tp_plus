@@ -9,6 +9,8 @@ $global_options = options
 
 #global var stack
 $stacks = TPPlus::Stacks.new
+#dummy variable counter
+$dvar_counter = 0
 
 #flag for printing functions
 options[:function_print] = true
