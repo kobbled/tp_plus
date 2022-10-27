@@ -9,6 +9,9 @@ require_relative 'tp_plus/nodes/recursive_node'
 require_relative 'tp_plus/nodes/reg_node'
 require_relative 'tp_plus/nodes/const_node'
 
+#utility functions
+require_relative 'tp_plus/utility_functions'
+
 #positions
 require_relative 'tp_plus/motion/pose_templates'
 require_relative 'tp_plus/motion/pose_factory'
