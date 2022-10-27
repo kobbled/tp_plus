@@ -2625,4 +2625,148 @@ LINE_TRACK ;
 ), @interpreter.output_functions(options)
   end
 
+  def test_local_vars
+    $stacks = TPPlus::Stacks.new
+    parse("local := R[50..100]
+      local := PR[12..22]
+      local := F[125..175]
+      
+      testreg := LR[]
+      testother := LR[]
+      testpr := LPR[]
+      testflag := LF[]
+      
+      testreg = 50
+      testother = 5*testreg + 30
+      testpr.group(1) = Pos::setxyz(500, 500, 0, 90, 0, 180)
+      testflag = on")
+
+      assert_prog " ;\n" +
+    " ;\n" +
+    "R[50:testreg]=50 ;\n" +
+    "R[51:testother]=(5*R[50:testreg]+30) ;\n" +
+    "CALL POS_SETXYZ(500,500,0,90,0,180,12,1) ;\n" +
+    "F[125:testflag]=(ON) ;\n"
+  end
+
+  def test_local_vars_function
+    $global_options[:function_print] = true
+    $stacks = TPPlus::Stacks.new
+
+    parse("local := R[50..100]
+
+      namespace ns1
+        VAL2 := 265
+      
+        def test2() : numreg
+          val := LR[]
+      
+          val = 10
+          return(val)
+        end
+      end
+      
+      add_num := LR[]
+      
+      add_num = ns1::test2()
+      add_num += 10")
+
+      assert_prog " ;\n" +
+      " ;\n" +
+      " ;\n" +
+      "CALL NS1_TEST2(50) ;\n" +
+      "R[50:add_num]=R[50:add_num]+10 ;\n"
+
+
+      options = {}
+      options[:output] = false
+      assert_equal %(: ! ------- ;
+: ! ns1_test2 ;
+: ! ------- ;
+ :  ;
+ : R[51:val]=10 ;
+ : R[AR[1]]=R[51:val] ;
+ : END ;
+: ! end of ns1_test2 ;
+: ! ------- ;
+), @interpreter.output_functions(options)
+
+  end
+
+  def test_local_vars_in_nested_namespaced_functions
+    $global_options[:function_print] = true
+    $stacks = TPPlus::Stacks.new
+
+    parse("local := R[55..60]
+
+      namespace ns1
+        VAL1 := 'Hello'
+      
+        def test2() : numreg
+          val := LR[]
+      
+          val = ns1::ns2::test3()
+          return(5+val)
+        end
+      
+        namespace ns2
+          VAL2 := true
+      
+          def test3() : numreg
+            add_val := LR[]
+      
+            add_val = 10
+            return(add_val)
+          end
+        end
+      end
+      
+      def test()
+        using ns1
+        foo := R[1]
+        foostr := SR[2]
+      
+        foostr = Str::set(ns1::VAL1)
+        foo = ns1::test2()
+      end
+      
+      test()")
+
+      assert_prog " ;\n" +
+      " ;\n" +
+      " ;\n" +
+      "CALL TEST ;\n"
+
+      options = {}
+      options[:output] = false
+      assert_equal %(: ! ------- ;
+: ! test ;
+: ! ------- ;
+ :  ;
+ : CALL STR_SET('Hello',2) ;
+ : CALL NS1_TEST2(1) ;
+: ! end of test ;
+: ! ------- ;
+: ! ------- ;
+: ! ns1_ns2_test3 ;
+: ! ------- ;
+ :  ;
+ : R[56:add_val]=10 ;
+ : R[AR[1]]=R[56:add_val] ;
+ : END ;
+: ! end of ns1_ns2_test3 ;
+: ! ------- ;
+: ! ------- ;
+: ! ns1_test2 ;
+: ! ------- ;
+ :  ;
+ : CALL NS1_NS2_TEST3(55) ;
+ : R[AR[1]]=5+R[55:val] ;
+ : END ;
+: ! end of ns1_test2 ;
+: ! ------- ;
+), @interpreter.output_functions(options)
+
+  end
+
 end
