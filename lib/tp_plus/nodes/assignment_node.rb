@@ -54,6 +54,16 @@ module TPPlus
         end
       end
 
+      def retrieve_calls(node, func_list)
+        if node.is_a?(ExpressionNode)
+          [node.left_op, node.right_op].map.each do |op|
+            b = retrieve_calls(op, func_list) if op.is_a?(ExpressionNode)
+          end
+        
+          func_list << node.func_exp if node.func_exp
+        end
+      end
+
       def identifier_string(context)
         @identifier.eval(context)
       end

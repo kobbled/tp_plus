@@ -261,6 +261,29 @@ module TPPlus
       #populate_pose_set
       #create definitions from ranges
       set_defs = -> (node, index, nodes) {
+        
+        if node.is_a?(TPPlus::Nodes::ExpressionNode)
+          node.ret_var.each do |rv|
+            localnode = rv.eval(self)
+            localnode[0].eval(self)
+          end
+
+          # replace new local variable with function call
+          node.replace_function
+        end
+
+        if node.is_a?(TPPlus::Nodes::AssignmentNode)
+          #insert function assignment above assignment
+          if node.contains_call
+            ass_funcs = []
+            node.retrieve_calls(node.assignable, ass_funcs)
+
+            ass_funcs.each do |f|
+              nodes[index] = [f, nodes[index]]
+            end
+          end
+        end
+
         if [TPPlus::Nodes::RegDefinitionNode, TPPlus::Nodes::StackDefinitionNode].include? node.class
           nodes[index] = node.eval(self)
           if nodes[index].is_a?(Array)

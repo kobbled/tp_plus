@@ -58,6 +58,17 @@ module TPPlus
         end
       end
 
+      def replace_function
+        if @left_op.is_a?(CallNode)
+          @left_op = VarNode.new(@ret_var[0].range.name)
+        end
+        if @right_op.is_a?(CallNode)
+          @right_op = VarNode.new(@ret_var[-1].range.name)
+        end
+        
+        nil
+      end
+
       def string_val(context, options={})
         if @op.bang?
           # this is for skip conditions, which do not
