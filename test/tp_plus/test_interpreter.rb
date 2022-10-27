@@ -2415,6 +2415,13 @@ LINE_TRACK ;
 ), @interpreter.output_functions(options)
   end
 
+  def test_function_with_pose_return
+    parse("foo := PR[15]
+      foo2 := PR[16]
+      foo.group(2) = Pos::setxyz(500, 500, 0, 90, 0, 180)
+      foo2 = Pos::move()")
+    assert_prog "CALL POS_SETXYZ(500,500,0,90,0,180,15,2) ;\nCALL POS_MOVE(16) ;\n"
+  end
 
   def test_function_with_case_statement
     $global_options[:function_print] = true
