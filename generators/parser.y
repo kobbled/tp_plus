@@ -303,9 +303,9 @@ rule
                       { result = ConditionalBlockNode.new(val[1],val[3],[],[]) }
 
   forloop
-    : FOR var IN LPAREN int_or_var TO int_or_var RPAREN block END
+    : FOR int_or_var IN LPAREN int_or_var TO int_or_var RPAREN block END
                                        { result = ForNode.new(val[1],val[4],val[6],val[8],val[5]) }
-    | FOR var IN LPAREN int_or_var DOWNTO int_or_var RPAREN block END
+    | FOR int_or_var IN LPAREN int_or_var DOWNTO int_or_var RPAREN block END
                                        { result = ForNode.new(val[1],val[4],val[6],val[8],val[5]) }
     ;
 
@@ -316,6 +316,7 @@ rule
   int_or_var
     : integer
     | var
+    | indirect_thing
     ;
 
   word_list
