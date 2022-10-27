@@ -162,6 +162,7 @@ module TPPlus
       #find each call recursively
       nodes.each do |n|
         if n.is_a?(TPPlus::Nodes::CallNode) || n.is_a?(TPPlus::Nodes::AssignmentNode)
+          next if n.is_a?(TPPlus::Nodes::CallNode) && n.program_name.nil?
           next if n.is_a?(TPPlus::Nodes::AssignmentNode) && !(n.assignable.is_a?(TPPlus::Nodes::CallNode))
           n = n.assignable if n.is_a?(TPPlus::Nodes::AssignmentNode) && n.assignable.is_a?(TPPlus::Nodes::CallNode)
 
