@@ -207,6 +207,15 @@ module TPPlus
                 traverse_nodes(n_import, lambda)
               end
             end
+
+            #look through expressions to find functions
+            if n.is_a?(Nodes::AssignmentNode)
+              traverse_nodes([n.assignable], lambda)
+            end
+
+            if n.is_a?(Nodes::ExpressionNode)
+              traverse_nodes([n.left_op, n.right_op], lambda) if n.contains_expression?
+            end
             
             #run lambda function
             lambda.call(n, index, nodes)
