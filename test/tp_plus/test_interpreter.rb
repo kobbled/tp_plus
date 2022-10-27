@@ -2802,9 +2802,93 @@ LINE_TRACK ;
       "R[10:foo]=(R[70:test]+R[73:dvar3]+R[74:dvar4]) ;\n" +
       "! two functions in a double ;\n" +
       "! nested expression ;\n" +
-      "CALL MTH_LN(7,76) ;\n" +
       "CALL SET_REG(100,75) ;\n" +
+      "CALL MTH_LN(7,76) ;\n" +
       "R[10:foo]=(R[70:test]+R[76:dvar6]+R[75:dvar5]+5) ;\n"
+  end
+
+  def test_function_calls_in_arguments
+    $stacks = TPPlus::Stacks.new
+    $dvar_counter = 0
+    parse("local := R[70..80]
+      foo := R[10]
+      
+      foo = Mth::ln(set_reg(100))")
+
+      assert_prog " ;\n" + 
+      "CALL SET_REG(100,70) ;\n" + 
+      "CALL MTH_LN(R[70:dvar1],10) ;\n"
+  end
+
+  def test_expressions_in_arguments
+    $stacks = TPPlus::Stacks.new
+    $dvar_counter = 0
+    parse("local := R[70..80]
+
+      foo := R[10]
+      bar := R[12]
+      biz := R[13]
+      
+      namespace Math
+        PI := 3.14159
+      end
+      
+      foo = Mth::test(5+3, bar*biz/2, -1*biz*Math::PI)")
+
+      assert_prog " ;\n" +
+      " ;\n" +
+      " ;\n" +
+      "R[70:dvar1]=5+3 ;\n" +
+      "R[71:dvar2]=(R[12:bar]*R[13:biz]/2) ;\n" +
+      "R[72:dvar3]=((-1)*R[13:biz]*3.14159) ;\n" +
+      "CALL MTH_TEST(R[70:dvar1],R[71:dvar2],R[72:dvar3],10) ;\n"
+  end
+
+  def test_expression_and_function_in_arguments
+    $stacks = TPPlus::Stacks.new
+    $dvar_counter = 0
+    parse("local := R[70..80]
+
+      foo := R[10]
+      bar := R[12]
+      biz := R[13]
+      
+      namespace Math
+        PI := 3.14159
+      end
+      
+      foo = Mth::test(bar*biz/2, set_reg(biz), -1*biz*Math::PI)")
+
+      assert_prog " ;\n" +
+      " ;\n" +
+      " ;\n" +
+      "CALL SET_REG(R[13:biz],71) ;\n" +
+      "R[70:dvar1]=(R[12:bar]*R[13:biz]/2) ;\n" +
+      "R[72:dvar3]=((-1)*R[13:biz]*3.14159) ;\n" +
+      "CALL MTH_TEST(R[70:dvar1],R[71:dvar2],R[72:dvar3],10) ;\n"
+  end
+
+  def test_expression_with_function_in_arguments
+    $stacks = TPPlus::Stacks.new
+    $dvar_counter = 0
+    parse("local := R[70..80]
+
+      foo := R[10]
+      bar := R[22]
+      baz := R[35]
+      
+      namespace Math
+        PI := 3.14159
+      end
+      
+      foo = Mth::test(bar*Math::PI*set_reg(baz))")
+
+      assert_prog " ;\n" +
+      " ;\n" +
+      " ;\n" +
+      "CALL SET_REG(R[35:baz],70) ;\n" +
+      "R[71:dvar2]=(R[22:bar]*3.14159*R[70:dvar1]) ;\n" +
+      "CALL MTH_TEST(R[71:dvar2],10) ;\n"
   end
   
 
