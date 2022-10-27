@@ -208,11 +208,14 @@ rule
     : WORD                { result = val[0] }
     | namespaces WORD     { result = val[0].join('_') + '_' + val[1] }
     ;
-  program_call
+  
+  basic_program_call
     : function_call LPAREN args RPAREN                { result = CallNode.new(val[0],val[2]) }
+
+  program_call
+    : basic_program_call               { result = val[0] }
     | RUN function_call LPAREN args RPAREN            { result = CallNode.new(val[1],val[3],async: true) }
     | CALL var_or_indirect LPAREN args RPAREN                     { result = CallNode.new(nil,val[3],str_call:val[1]) }
-    | var_or_indirect EQUAL function_call LPAREN args RPAREN     { result = CallNode.new(val[2],val[4],ret:val[0]) }
     ;
 
   args
@@ -642,6 +645,7 @@ rule
     : factor                           { result = val[0] }
     | address
     | BANG factor                      { result = UnaryExpressionNode.new("!",val[1]) }
+    | basic_program_call { result = val[0] }
     ;
 
   binary_expression
