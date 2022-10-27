@@ -5,6 +5,7 @@ module TPPlus
       def initialize(identifier,assignable)
         @identifier = identifier
         @assignable = assignable
+        @contains_call = has_call?(assignable, false)
       end
 
       def assignable_string(context,options={})
@@ -20,6 +21,9 @@ module TPPlus
           end
         elsif @assignable.is_a?(VarNode)
           options[:mixed_logic] = true if @assignable.target_node(context).is_a? IONode
+        elsif @assignable.is_a?(CallNode)
+          options[:mixed_logic] = false
+          @assignable.set_return(@identifier)
         else
           options[:mixed_logic] = true if @assignable.requires_mixed_logic?(context)
           options[:mixed_logic] = true if @identifier.requires_mixed_logic?(context)
@@ -40,6 +44,16 @@ module TPPlus
         true
       end
 
+      def has_call?(node, b)
+        if node.is_a?(ExpressionNode)
+          [node.left_op, node.right_op].map.each do |op|
+            b = has_call?(op, b) if op.is_a?(ExpressionNode)
+          end
+        
+          b | node.func_exp.any?
+        end
+      end
+
       def identifier_string(context)
         @identifier.eval(context)
       end
@@ -51,8 +65,11 @@ module TPPlus
             return nil
           end
         end
-
-        "#{identifier_string(context)}=#{assignable_string(context,options)}"
+        if @assignable.is_a?(CallNode)
+          return "#{assignable_string(context,options)}"
+        else
+          return "#{identifier_string(context)}=#{assignable_string(context,options)}"
+        end
       end
     end
   end
