@@ -10,6 +10,8 @@ module TPPlus
         @str_var = options[:str_call]
         @ret_args = []
         @func_args = {}
+        @arg_exp = []
+
         handle_arg_funcs
       end
 
@@ -37,6 +39,17 @@ module TPPlus
             @ret_args << RegDefinitionNode.new(name, LocalDefinitionNode.new('LR', name))
           end
 
+          if a.is_a?(ExpressionNode)
+            #create local variable
+            $dvar_counter += 1
+            name = "dvar#{$dvar_counter}"
+            
+            # create assignment node with expression
+            @arg_exp << TPPlus::Nodes::AssignmentNode.new(VarNode.new(name), a)
+
+            #add local variable to list
+            @ret_args << RegDefinitionNode.new(name, LocalDefinitionNode.new('LR', name))
+          end
         end
       end
 

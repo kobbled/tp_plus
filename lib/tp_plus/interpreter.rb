@@ -280,9 +280,15 @@ module TPPlus
               localnode[0].eval(self)
             end
 
+            # replace args with var nodes
+            arg_exp_count = 0
             node.args.each_with_index do |a, i|
               if a.is_a?(TPPlus::Nodes::CallNode)
                 node.args[i] = TPPlus::Nodes::VarNode.new(a.ret.identifier)
+              end
+              if a.is_a?(TPPlus::Nodes::ExpressionNode)
+                node.args[i] = node.arg_exp[arg_exp_count].identifier
+                arg_exp_count += 1
               end
             end
           end

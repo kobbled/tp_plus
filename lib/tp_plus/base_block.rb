@@ -216,6 +216,14 @@ module TPPlus
             if n.is_a?(Nodes::ExpressionNode)
               traverse_nodes([n.left_op, n.right_op], lambda) if n.contains_expression?
             end
+
+            if n.is_a?(TPPlus::Nodes::CallNode)
+              if n.args_contain_calls
+                args = n.args.select {|a| a.is_a?(TPPlus::Nodes::ExpressionNode) }
+                
+                traverse_nodes(args, lambda)
+              end
+            end
             
             #run lambda function
             lambda.call(n, index, nodes)
