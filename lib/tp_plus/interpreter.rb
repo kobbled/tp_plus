@@ -161,7 +161,10 @@ module TPPlus
 
       #find each call recursively
       nodes.each do |n|
-        if n.is_a?(TPPlus::Nodes::CallNode)
+        if n.is_a?(TPPlus::Nodes::CallNode) || n.is_a?(TPPlus::Nodes::AssignmentNode)
+          next if n.is_a?(TPPlus::Nodes::AssignmentNode) && !(n.assignable.is_a?(TPPlus::Nodes::CallNode))
+          n = n.assignable if n.is_a?(TPPlus::Nodes::AssignmentNode) && n.assignable.is_a?(TPPlus::Nodes::CallNode)
+
           @graph.addNode(n.program_name)
           @graph.addEdge(parent, @graph.graph[n.program_name])
           if @functions.key?(n.program_name.to_sym)
