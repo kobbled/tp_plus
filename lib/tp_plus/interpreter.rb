@@ -243,7 +243,7 @@ module TPPlus
         #insert function assignment above assignment
         if node.contains_call
           ass_funcs = []
-          TPPlus.retrieve_calls(node.assignable, ass_funcs)
+          TPPlus::Util.retrieve_calls(node.assignable, ass_funcs)
 
           ass_funcs.each do |f|
             nodes[index] = [f, nodes[index]]
@@ -252,11 +252,20 @@ module TPPlus
 
         if node.contains_arg_call
           arg_funcs = []
-          TPPlus.retrieve_arg_calls(node.assignable, arg_funcs)
+          TPPlus::Util.retrieve_arg_calls(node.assignable, arg_funcs)
 
           arg_funcs.each do |f|
             nodes[index] = [f, nodes[index]]
           end
+        end
+      end
+
+      if node.is_a?(TPPlus::Nodes::FunctionReturnNode)
+        ret_exp = []
+        TPPlus::Util.retrieve_calls(node.expression, ret_exp)
+
+        ret_exp.each do |f|
+          nodes[index] = [f, nodes[index]]
         end
       end
 

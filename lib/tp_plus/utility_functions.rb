@@ -1,4 +1,5 @@
 module TPPlus
+  module Util
     def retrieve_calls(node, func_list)
       if node.is_a?(TPPlus::Nodes::ExpressionNode)
         [node.left_op, node.right_op].map.each do |op|
@@ -33,4 +34,5 @@ module TPPlus
     end
 
     module_function :retrieve_calls, :retrieve_arg_calls
+  end
 end

@@ -2890,6 +2890,39 @@ LINE_TRACK ;
       "R[71:dvar2]=(R[22:bar]*3.14159*R[70:dvar1]) ;\n" +
       "CALL MTH_TEST(R[71:dvar2],10) ;\n"
   end
+
+  def test_expression_with_function_in_return
+    $global_options[:function_print] = true
+    $stacks = TPPlus::Stacks.new
+
+    parse("local := R[70..80]
+
+      def test(d) : numreg
+        return(4.53+3.13*Mth::ln(d))
+      end
+      
+      foo := R[1]
+      DAIM := 80
+      
+      foo = test(DAIM)")
+
+      assert_prog " ;\n" +
+      " ;\n" +
+      " ;\n" +
+      "CALL TEST(80,1) ;\n"
+
+      options = {}
+      options[:output] = false
+      assert_equal %(: ! ------- ;
+: ! test ;
+: ! ------- ;
+ : CALL MTH_LN(AR[1],70) ;
+ : R[AR[2]]=(4.53+3.13*R[70:dvar3]) ;
+ : END ;
+: ! end of test ;
+: ! ------- ;
+), @interpreter.output_functions(options)
+  end
   
 
 end

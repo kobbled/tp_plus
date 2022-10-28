@@ -224,6 +224,10 @@ module TPPlus
                 traverse_nodes(args, lambda)
               end
             end
+
+            if n.is_a?(TPPlus::Nodes::FunctionReturnNode)
+              traverse_nodes([n.expression], lambda)
+            end
             
             #run lambda function
             method(lambda).call(n, index, nodes)
