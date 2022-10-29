@@ -2,17 +2,18 @@ require "erb"
 
 module TPPlus
   module Karel
-    convert_type = {"R" => "DATA_REG", 
-                    "PR" => "DATA_POSREG",
-                    "SR" => "DATA_STRING", 
-                    "F" => "io_flag",
-                    "DO" => "io_dout",
-                    "DI" => "io_din",
-                    "AO" => "io_anout",
-                    "AI" => "io_anin",
-                    "UO" => "io_uopout",
-                    "UI" => "io_uopin"
-                  }
+
+    CONVERT_TYPE = {"R" => "DATA_REG", 
+      "PR" => "DATA_POSREG",
+      "SR" => "DATA_STRING", 
+      "F" => "io_flag",
+      "DO" => "io_dout",
+      "DI" => "io_din",
+      "AO" => "io_anout",
+      "AI" => "io_anin",
+      "UO" => "io_uopout",
+      "UI" => "io_uopin"
+    }
 
     T_Register = Struct.new(:name, :type, :id)
 
@@ -34,13 +35,13 @@ module TPPlus
           type = val.class
           case
             when val.is_a?(TPPlus::Nodes::IONode)
-              @variables << T_Register.new(val.comment, val.type, val.id)
+              @variables << T_Register.new(val.comment, CONVERT_TYPE[val.type], val.id)
             when val.is_a?(TPPlus::Nodes::NumregNode)
-              @variables << T_Register.new(val.comment, 'R', val.id)
+              @variables << T_Register.new(val.comment, CONVERT_TYPE["R"], val.id)
             when val.is_a?(TPPlus::Nodes::PosregNode)
-              @variables << T_Register.new(val.comment, 'PR', val.id)
+              @variables << T_Register.new(val.comment, CONVERT_TYPE["PR"], val.id)
             when val.is_a?(TPPlus::Nodes::StringRegisterNode)
-              @variables << T_Register.new(val.comment, 'SR', val.id)
+              @variables << T_Register.new(val.comment, CONVERT_TYPE["SR"], val.id)
             else
               next
           end

@@ -5,8 +5,8 @@ PROGRAM <%= @filename %>
 --change depending on size of environment file
 %define HASH_SIZE <%= @variables.length.to_s %>
 
-%define HASH_PROGRAM <%= @hashprog %>
-%define HASHTABLE <%= @hashtable %>
+%define HASH_PROGRAM '<%= @hashprog %>'
+%define HASHTABLE '<%= @hashtable %>'
 ---------------
 
 %include register_types.klt
