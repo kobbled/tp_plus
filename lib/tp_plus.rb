@@ -12,6 +12,9 @@ require_relative 'tp_plus/nodes/const_node'
 #utility functions
 require_relative 'tp_plus/utility_functions'
 
+#karel evnironment
+require_relative 'tp_plus/karel/karel'
+
 #positions
 require_relative 'tp_plus/motion/pose_templates'
 require_relative 'tp_plus/motion/pose_factory'

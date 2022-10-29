@@ -2,7 +2,7 @@ module TPPlus
   module Nodes
     class IONode < RegNode
       attr_accessor :comment
-      attr_reader :id
+      attr_reader :id, :type
       def initialize(type, id)
         @type    = type
         @id      = id.to_i

@@ -1,0 +1,62 @@
+PROGRAM <%= @filename %>
+%NOLOCKGROUP
+
+-------macros
+--change depending on size of environment file
+%define HASH_SIZE <%= @variables.length.to_s %>
+
+%define HASH_PROGRAM <%= @hashprog %>
+%define HASHTABLE <%= @hashtable %>
+---------------
+
+%include register_types.klt
+--include value type
+%include hashenv.klt
+hash_type_define(hashenv)
+--create hash type
+t_hash(hashname,hval_def,hashenv)
+
+VAR
+  tblProg : STRING[16]
+  tblName : STRING[16]
+  reg : hval_def
+  tbl FROM env: ARRAY[HASH_SIZE] OF hashname
+  b : BOOLEAN
+
+%include hashreg.klh
+
+%class hashenv('hash.klc','hashclass.klh','hashenv.klt')
+
+BEGIN
+  IF UNINIT(tblProg) THEN
+    tblProg = HASH_PROGRAM
+  ENDIF
+  IF UNINIT(tblName) THEN
+    tblName = HASHTABLE
+  ENDIF
+
+  --set hashreg object
+  hashr__set_hash_table(tblProg, tblName)
+  
+  --clear registers
+  hashr__clear_registers(DATA_REG, TRUE)
+  hashr__clear_registers(DATA_POSREG, FALSE)
+  hashr__clear_registers(DATA_STRING, TRUE)
+  hashr__clear_registers(io_flag, TRUE)
+
+  --clear hash table
+  reg = hashr__nullenv
+  b = hashenv__clear_table(tblProg, tblName, reg)
+
+  --**insert environment variables into hash**
+  -----------
+  <% @variables.each do |val| -%>
+  reg.typ = <%= val.type %> ; reg.id = <%= val.id %>
+  b = hashenv__put('<%= val.name %>', reg, tblProg, tblName)
+  <% end -%>
+  -----------
+
+  --set comment registers
+  hashr__set_comments
+
+END <%= @filename %>

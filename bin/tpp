@@ -30,6 +30,10 @@ OptionParser.new do |opts|
     raise "Include directory #{i}, was not found" unless File.directory?(i)
   end
 
+  opts.on("-k", "--karel-environment <file>", "build karel script to rename/reset all registers using the environment file") do |k|
+    options[:karel] = k
+  end
+
   opts.on("-o", "--output <file>", "Write output to <file>") do |o|
     options[:output] = o
     options[:output_folder] = File.dirname(o)
@@ -80,6 +84,13 @@ parser = TPPlus::Parser.new(scanner)
 interpreter = parser.interpreter
 if options[:environment]
   interpreter.load_environment(options[:environment])
+
+  #build karel file if option is set
+  if options[:karel]
+    karelenv = TPPlus::Karel::Environment.new(options[:karel], 'env', 'tbl')
+    karelenv.build_list(interpreter.variables)
+    karelenv.makefile
+  end
 end
 
 src = contents(ARGV[0])
