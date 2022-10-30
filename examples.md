@@ -24,7 +24,9 @@
     - [namespace collections](#namespace-collections)
     - [functions with positions](#functions-with-positions)
     - [functions with posreg returns](#functions-with-posreg-returns)
-  - [imports](#imports)
+  - [Imports](#imports)
+  - [Local variables](#local-variables)
+    - [Expressions in Arguements](#expressions-in-arguements)
   - [Frames](#frames)
   - [Motion](#motion)
     - [basic options](#basic-options)
@@ -42,6 +44,7 @@
   - [String Manipulation](#string-manipulation)
   - [Timers](#timers)
   - [wait statments](#wait-statments)
+  - [Environment Files](#environment-files)
   - [Misc Statments](#misc-statments)
     - [MNU Access](#mnu-access)
     - [collision guard](#collision-guard)
@@ -1036,7 +1039,7 @@ DEFAULT_GROUP = 1,*,*,*,*;
  :  ;
 /END
 ```
-## imports
+## Imports
 
 **WARNING** New feature is without unit tesst coverage. There may be issues with usage.
 
@@ -1123,6 +1126,215 @@ namespace Sense
       raise ulrm
   end
 end
+```
+
+## Local variables
+
+> [!DANGER]
+> This feature is experimental, it may provide unpredictable results. Use at your own discretion.
+
+> [!TODO]
+> Make a karel program to handle a local register stack dynamically during runtime.
+
+You can declare a local stack of variables using:
+
+```ruby
+local := R[50..100]
+local := PR[5..10]
+local := F[50..100]
+```
+
+A virtual stack will be created during compilation to track where the function calls occur in the program. Depending on the scope of the function call, local registers will be assigned to an open register. If you run out of register a _Stack Overflow_ error will result.
+
+Local registers can be declared with:
+
+```
+numreg := LR[]
+posreg := LPR[]
+flag   := LF[] 
+```
+
+Below is an example of its usage:
+
+```ruby
+local := R[50..70]
+
+sum := LR[]
+
+def ratio(ar1) :numreg
+    divisor := LR[]
+
+    if (ar1 % 2 == 0)
+      divisor = 2
+    else
+      divisor = 1
+    end
+
+    return(ar1/divisor)
+end
+
+def addin() : numreg
+    foo := LR[]
+    bar := LR[]
+
+    bar = multiple(bar)
+    return(foo + bar)
+end
+
+def multiple(ar1) : numreg
+    multiplier := LR[]
+
+    multiplier = 10
+    return(ar1*multiplier)
+end
+
+sum = addin()
+sum = ratio()
+```
+
+which will produce this TP:
+
+```fortran
+/PROG TEST
+COMMENT = "TEST";
+DEFAULT_GROUP = 1,*,*,*,*;
+/MN
+ : CALL ADDIN(50) ;
+ : CALL RATIO(50) ;
+/POS
+/END
+```
+```fortran
+/PROG ADDIN
+COMMENT = "ADDIN";
+DEFAULT_GROUP = *,*,*,*,*;
+/MN
+ :  ;
+ : CALL MULTIPLE(R[52:bar],52) ;
+ : R[AR[1]]=R[51:foo]+R[52:bar] ;
+ : END ;
+/END
+```
+```fortran
+/PROG MULTIPLE
+COMMENT = "MULTIPLE";
+DEFAULT_GROUP = *,*,*,*,*;
+/MN
+ :  ;
+ : R[53:multiplier]=10 ;
+ : R[AR[2]]=AR[1]*R[53:multiplier] ;
+ : END ;
+/END
+```
+```fortran
+/PROG RATIO
+COMMENT = "RATIO";
+DEFAULT_GROUP = *,*,*,*,*;
+/MN
+ :  ;
+ : IF ((AR[1] MOD 2<>0)),JMP LBL[100] ;
+ : R[51:divisor]=2 ;
+ : JMP LBL[101] ;
+ : LBL[100] ;
+ : R[51:divisor]=1 ;
+ : LBL[101] ;
+ :  ;
+ : R[AR[2]]=AR[1]/R[51:divisor] ;
+ : END ;
+/END
+```
+
+> [!WARNING]
+> The local variable system is done completely at compile time If the function is not defined in the compilation scope, it will not be captured. 
+
+> [!WARNING]
+> The local variable system is done completely at compile time, each function/subroutine should be re-exported to the robot everytime! In the case a where the same subroutine is used in different programs, at different points in the program, different register number may be assigned and conflict with the program scope.
+
+### Expressions in Arguements
+
+Currently the Fanuc TP language does not allow you to put expressions in function arguments. With the use of local variables this is now possible in TP+.
+
+```ruby
+local := R[70..80]
+
+foo := R[10]
+bar := R[11]
+biz := R[12]
+baz := R[13]
+
+namespace Math
+  PI := 3.14159
+
+  def test(ar1, ar2, ar3) : numreg
+    return(Math::test2(ar1, ar2)*(ar1+ar2+ar3))
+  end
+
+  def test2(ar1, ar2) : numreg
+    if ar1 > ar2
+      return(0.5)
+    end
+
+    return(1)
+  end
+end
+
+foo = Mth::ln(2)
+
+foo = Mth::test(5+3, bar*biz/2, -1*biz*Math::PI)
+
+foo = Mth::test(bar*biz/2, set_reg(biz), -1*biz*Math::PI)
+
+foo = Mth::test3(bar*Math::PI*set_reg(baz))
+```
+
+will transform into this:
+
+```fortran
+/PROG TEST29
+COMMENT = "TEST29";
+DEFAULT_GROUP = 1,*,*,*,*;
+/MN
+ : CALL MTH_LN(2,10) ;
+ :  ;
+ : R[70:dvar2]=5+3 ;
+ : R[71:dvar3]=(R[11:bar]*R[12:biz]/2) ;
+ : R[72:dvar4]=((-1)*R[12:biz]*3.14159) ;
+ : CALL MTH_TEST(R[70:dvar2],R[71:dvar3],R[72:dvar4],10) ;
+ :  ;
+ : CALL SET_REG(R[12:biz],74) ;
+ : R[73:dvar5]=(R[11:bar]*R[12:biz]/2) ;
+ : R[75:dvar7]=((-1)*R[12:biz]*3.14159) ;
+ : CALL MTH_TEST(R[73:dvar5],R[74:dvar6],R[75:dvar7],10) ;
+ :  ;
+ : CALL SET_REG(R[13:baz],76) ;
+ : R[77:dvar9]=(R[11:bar]*3.14159*R[76:dvar8]) ;
+ : CALL MTH_TEST3(R[77:dvar9],10) ;
+/POS
+/END
+```
+```fortran
+/PROG MATH_TEST
+COMMENT = "MATH_TEST";
+DEFAULT_GROUP = *,*,*,*,*;
+/MN
+ : CALL MATH_TEST2(AR[1],AR[2],78) ;
+ : R[AR[4]]=(R[78:dvar1]*(AR[1]+AR[2]+AR[3])) ;
+ : END ;
+/END
+```
+```fortran
+/PROG MATH_TEST2
+COMMENT = "MATH_TEST2";
+DEFAULT_GROUP = *,*,*,*,*;
+/MN
+ : IF (AR[1]<=AR[2]),JMP LBL[100] ;
+ : R[AR[3]]=0.5 ;
+ : END ;
+ : LBL[100] ;
+ :  ;
+ : R[AR[3]]=1 ;
+ : END ;
+/END
 ```
 
 ## Frames
@@ -2286,6 +2498,228 @@ DEFAULT_GROUP = 1,*,*,*,*;
  : LBL[100:bar] ;
 /END
 ```
+
+## Environment Files
+
+An environment file can be used to save a configuration of a robot workcell or a workstation.
+
+**environment**
+```ruby
+#----------
+#Constants
+#----------
+FINE  :=  -1
+CNT  := 100
+PI    := 3.14159
+
+#----------
+#Frames
+#----------
+world        := UFRAME[1]
+frame        := UFRAME[2]
+tool         := UTOOL[1]
+
+#----------
+#Laser IO
+#----------
+Laser_Enable         := DO[1]
+Laser_Ready          := DI[2]
+Laser_On             := DO[3]
+
+Laser_Power         :=  AO[1]
+
+#----------
+# User IO
+#----------
+system_ready    := UO[2]
+Prgm_Run        := UO[3]
+Prgm_Pause      := UO[4]
+
+#-----------
+# HMI Flags
+#-----------
+Hmi_Start            := F[1]
+Hmi_Stop             := F[2]
+Hmi_Laser_Enable        := F[3]
+Hmi_Laser_Disable       := F[4]
+
+#----------
+#Program Registers
+#----------
+program_name := SR[1]
+
+Alarm_Reg       := R[1]
+Mem_Tool_No     := R[2]
+Mem_Frame_No    := R[3]
+
+j := R[50]
+passes := R[51]
+l := R[52]
+layers := R[53]
+
+
+#----------
+#Workstations
+#----------
+
+namespace Headstock
+  frame := UTOOL[2]
+  select := F[38]
+  home := PR[3]
+  GROUP := 2
+  DIRECTION := -1
+end
+
+namespace Positioner
+  frame := UTOOL[3]
+  select := F[37]
+  home := PR[4]
+  GROUP := 3
+  DIRECTION := 1
+end
+
+#----------
+#EEF Tools
+#----------
+namespace Tool1
+  frame := UTOOL[1]
+  read_pin := AI[1]
+  interupt_pin := DI[8]
+  SEARCH_DIST := 10
+  SEARCH_SPEED := 3
+end
+
+namespace Tool2
+  frame := UTOOL[3]
+  read_pin := AI[2]
+  interupt_pin := DI[10]
+  SEARCH_DIST := 50
+  SEARCH_SPEED := 6
+end
+
+#----------
+#LAM Parameters
+#----------
+namespace Lam
+  power          := R[60]
+  flowrate       := R[26]
+  speed          := R[61]
+  strt           := DO[3]
+  enable         := DO[1]
+end
+
+# ----------
+# local variables
+# -----------
+local         := R[250..300]
+local         := PR[80..100]
+
+```
+
+Through the usage of the [Ka-Boost](https://github.com/kobbled/Ka-Boost) library, specifically the [hash-registers](https://github.com/kobbled/kl-hash-registers) package, you can manage the robot controllers register set, and register comments.
+
+Envoking the `-k <filename>` option will produce a .kl file which is the environment file represented as a hash table. This file will clear the comments of your register set (and values if specified), and update the register comments with the names in the hash table.
+
+For example this would be the output karel file from the environment above:
+```pascal
+PROGRAM tppenv
+%NOLOCKGROUP
+
+-------macros
+--change depending on size of environment file
+%define HASH_SIZE 19
+
+%define HASH_PROGRAM 'env'
+%define HASHTABLE 'tbl'
+---------------
+
+%include register_types.klt
+--include value type
+%include hashenv.klt
+hash_type_define(hashenv)
+--create hash type
+t_hash(hashname,hval_def,hashenv)
+
+VAR
+  tblProg : STRING[16]
+  tblName : STRING[16]
+  reg : hval_def
+  tbl FROM env: ARRAY[HASH_SIZE] OF hashname
+  b : BOOLEAN
+
+%include hashreg.klh
+
+%class hashenv('hash.klc','hashclass.klh','hashenv.klt')
+
+BEGIN
+  IF UNINIT(tblProg) THEN
+    tblProg = HASH_PROGRAM
+  ENDIF
+  IF UNINIT(tblName) THEN
+    tblName = HASHTABLE
+  ENDIF
+
+  --set hashreg object
+  hashr__set_hash_table(tblProg, tblName)
+  
+  --clear registers
+  hashr__clear_registers(DATA_REG, FALSE)
+  hashr__clear_registers(DATA_POSREG, FALSE)
+  hashr__clear_registers(DATA_STRING, FALSE)
+  hashr__clear_registers(io_flag, FALSE)
+
+  --clear hash table
+  reg = hashr__nullenv
+  b = hashenv__clear_table(tblProg, tblName, reg)
+
+  --**insert environment variables into hash**
+  -----------
+    reg.typ = io_dout ; reg.id = 1
+  b = hashenv__put('Laser_Enable', reg, tblProg, tblName)
+    reg.typ = io_din ; reg.id = 2
+  b = hashenv__put('Laser_Ready', reg, tblProg, tblName)
+    reg.typ = io_dout ; reg.id = 3
+  b = hashenv__put('Laser_On', reg, tblProg, tblName)
+    reg.typ = io_anout ; reg.id = 1
+  b = hashenv__put('Laser_Power', reg, tblProg, tblName)
+    reg.typ = io_uopout ; reg.id = 2
+  b = hashenv__put('system_ready', reg, tblProg, tblName)
+    reg.typ = io_uopout ; reg.id = 3
+  b = hashenv__put('Prgm_Run', reg, tblProg, tblName)
+    reg.typ = io_uopout ; reg.id = 4
+  b = hashenv__put('Prgm_Pause', reg, tblProg, tblName)
+    reg.typ = io_flag ; reg.id = 1
+  b = hashenv__put('Hmi_Start', reg, tblProg, tblName)
+    reg.typ = io_flag ; reg.id = 2
+  b = hashenv__put('Hmi_Stop', reg, tblProg, tblName)
+    reg.typ = io_flag ; reg.id = 3
+  b = hashenv__put('Hmi_Laser_Enable', reg, tblProg, tblName)
+    reg.typ = io_flag ; reg.id = 4
+  b = hashenv__put('Hmi_Laser_Disable', reg, tblProg, tblName)
+    reg.typ = DATA_STRING ; reg.id = 1
+  b = hashenv__put('program_name', reg, tblProg, tblName)
+    reg.typ = DATA_REG ; reg.id = 1
+  b = hashenv__put('Alarm_Reg', reg, tblProg, tblName)
+    reg.typ = DATA_REG ; reg.id = 2
+  b = hashenv__put('Mem_Tool_No', reg, tblProg, tblName)
+    reg.typ = DATA_REG ; reg.id = 3
+  b = hashenv__put('Mem_Frame_No', reg, tblProg, tblName)
+    reg.typ = DATA_REG ; reg.id = 50
+  b = hashenv__put('j', reg, tblProg, tblName)
+    reg.typ = DATA_REG ; reg.id = 51
+  b = hashenv__put('passes', reg, tblProg, tblName)
+    reg.typ = DATA_REG ; reg.id = 52
+  b = hashenv__put('l', reg, tblProg, tblName)
+    reg.typ = DATA_REG ; reg.id = 53
+  b = hashenv__put('layers', reg, tblProg, tblName)
+    -----------
+
+  --set comment registers
+  hashr__set_comments
+
+END tppenv
+```
+
 ## Misc Statments
 
 ### MNU Access

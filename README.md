@@ -3,99 +3,693 @@ TP+
 
 [![Build Status](https://travis-ci.com/kobbled/tp_plus.svg?branch=master)](https://travis-ci.org/onerobotics/tp_plus)
 
-> :warning: Use with Ruby ~> 3 . Ruby 2 might contain issues. Dockerfiles will be posted soon. 
-
-
-> This branch was forked from the archived repo [TP+](https://github.com/onerobotics/tp_plus)
-
 
 TP+ is a higher-level language abstraction that translates into FANUC
 TP. 
 
-This is an example script of some of its features:
+Features
+-----------
+
+### Pose Declarations
+
+<table>
+<tr>
+<td> <b>TP+</b> </td> <td> <b>TP</b> </td>
+</tr>
+<tr>
+<td>
 
 ```ruby
-namespace System
-  base_EEF     := UTOOL[1]
-  variable_EEF := UTOOL[2]
-
-  temp_uframe := PR[16]
-  temp_utool  := PR[17]
-  search      := PR[25]
-  lpos        := PR[30]
-  ofset       := PR[10]
-
-  dummy := PR[100..150]
-end
-
-namespace Sensor
-  signal := DI[1]
-  val    := AI[1]
-  zerod  := DI[2]
-end
-
-namespace Pose
-  using System
-
-  def goHome()
-    use_uframe 0
-    use_utool 1
-
-    pHome := P[1]
-    pHome.joints -> [127.834, 24.311, -29.462, -110.295, 121.424, 54.899]
-
-    joint_move.to(pHome).at(10, '%').term(-1)
-  end
-
-  inline def offsetTool(base_frame, frame_offsets, out_frame)
-    using System
-
-    System::temp_uframe = indirect('utool', base_frame)
-    Pos::cnvcart(&System::temp_uframe, 1)
-
-    System::dummy100 = indirect('posreg', frame_offsets)
-    System::temp_uframe = Pos::mult(&System::temp_uframe, &System::dummy100)
-
-    indirect('utool', out_frame) = System::temp_uframe
-  end
-end
-
 TP_GROUPMASK = "1,*,*,*,*"
+TP_COMMENT = "test prog"
 
-start_pose := P[1]
+p := P[1..6]
+
+tool := UTOOL[5]
+frame := UFRAME[3]
+
+use_utool tool
+use_uframe frame
+
+#declare a default pose to set all positions to
+#if they are not explicitly declared
 default.group(1).pose -> [0, 0, 0, 0, 0 ,0]
 default.group(1).config -> ['F', 'U', 'T', 0, 0, 0]
 
-#send home
-Pose::goHome()
+#declare joint pose
+p1.group(1).joints -> [180, 23.2, 90.5, 0, 60.8, -90.5]
+joint_move.to(p1).at(30, '%').term(-1)
 
-#go to start pose
-linear_move.to(start_pose).at(100, 'mm/s').term(-1)
+#declare position
+p2.group(1).pose -> [0,50,100,0,90,0]
+p2.group(1).config -> ['F', 'U', 'T', 0, 0, 0]
 
-#set skip condition if sensor hits zero
-set_skip_condition Sensor::zerod
+#independently set position and orientation
+p3.group(1).xyz -> [0,30,0]
+p3.group(1).orient -> [90,0,0]
+p3.group(1).config -> ['F', 'U', 'T', 0, 0, 0]
 
-#set search distance
-Pos::clrpr(&System::search)
-System::search.z = 100
+arc_move.to(p2).at(50, 'mm/s').term(100)
+arc_move.to(p3).at(50, 'mm/s').term(100)
 
-#move in until interrupt
-linear_move.to(start_pose).at(20, 'mm/s').term(-1).
-  tool_offset(System::search).
-  skip_to(@error, System::lpos)
+#batch declare poses, as well as apply offsets
+(p4..p6).group(1).xyz.offset -> [0, 0 ,50]
+linear_move.to(p4).at(50, 'mm/s').term(-1)
+linear_move.to(p5).at(30, 'mm/s').term(100)
+linear_move.to(p6).at(30, 'mm/s').term(-1)
+```
 
-#offset frame by search amount
-System::dummy100 = start_pose
-System::ofset = Pos::sub(&System::lpos, &System::dummy100)
-Pose::offsetTool(&System::base_EEF, &System::ofset, &System::variable_EEF)
+</td>
+<td>
 
-return
+```fortran
+/PROG TEST10
+COMMENT = "test prog";
+DEFAULT_GROUP = 1,*,*,*,*;
+/MN
+ : UTOOL_NUM=5 ;
+ : UFRAME_NUM=3 ;
+ :  ;
+ : ! declare joint pose ;
+ : J P[1:p1] 30% FINE ;
+ :  ;
+ : ! declare position ;
+ :  ;
+ : ! independently set position and ;
+ : ! orientation ;
+ :  ;
+ : A P[2:p2] 50mm/sec CNT100 ;
+ : A P[3:p3] 50mm/sec CNT100 ;
+ :  ;
+ : ! batch declare poses, as well as ;
+ : ! apply offsets ;
+ : L P[4:p4] 50mm/sec FINE ;
+ : L P[5:p5] 30mm/sec CNT100 ;
+ : L P[6:p6] 30mm/sec FINE ;
+/POS
+P[1:"p1"]{
+   GP1:
+  UF : 3, UT : 5,
+    J1 = 180.000 deg, J2 = 23.200 deg, J3 = 90.500 deg,
+    J4 = 0.000 deg, J5 = 60.800 deg, J6 = -90.500 deg};
+P[2:"p2"]{
+   GP1:
+  UF : 3, UT : 5,  CONFIG : 'F U T, 0, 0, 0',
+  X = 0.000 mm, Y = 50.000 mm, Z = 100.000 mm,
+  W = 0.000 deg, P = 90.000 deg, R = 0.000 deg};
+P[3:"p3"]{
+   GP1:
+  UF : 3, UT : 5,  CONFIG : 'F U T, 0, 0, 0',
+  X = 0.000 mm, Y = 30.000 mm, Z = 0.000 mm,
+  W = 90.000 deg, P = 0.000 deg, R = 0.000 deg};
+P[4:"p4"]{
+   GP1:
+  UF : 3, UT : 5,  CONFIG : 'F U T, 0, 0, 0',
+  X = 0.000 mm, Y = 30.000 mm, Z = 50.000 mm,
+  W = 90.000 deg, P = 0.000 deg, R = 0.000 deg};
+P[5:"p5"]{
+   GP1:
+  UF : 3, UT : 5,  CONFIG : 'F U T, 0, 0, 0',
+  X = 0.000 mm, Y = 30.000 mm, Z = 100.000 mm,
+  W = 90.000 deg, P = 0.000 deg, R = 0.000 deg};
+P[6:"p6"]{
+   GP1:
+  UF : 3, UT : 5,  CONFIG : 'F U T, 0, 0, 0',
+  X = 0.000 mm, Y = 30.000 mm, Z = 150.000 mm,
+  W = 90.000 deg, P = 0.000 deg, R = 0.000 deg};
+/END
+```
 
-@error
-tcp_alarm := UALM[5]
-raise tcp_alarm
-warning('Did not find zero')
+</td>
+</tr>
+</table>
 
+### Namespaces
+
+<table>
+<tr>
+<td> <b>TP+</b> </td> <td> <b>TP</b> </td>
+</tr>
+<tr>
+<td>
+
+```ruby
+namespace ns1
+  VAL1 := 1
+  VAL2 := 2
+end
+
+namespace ns2
+  VAL1 := 3.14
+  VAL2 := 2.72
+end
+
+def test()
+  using ns1, ns2
+
+  foo := R[1]
+  bar := R[2]
+  foostr := SR[3]
+
+  foo = ns1::VAL1
+  bar = ns1::VAL2
+
+  foostr = Str::set(ns2::VAL1)
+  foo = ns3::test2()
+end
+```
+
+</td>
+<td>
+
+```fortran
+/PROG TEST
+COMMENT = "TEST";
+DEFAULT_GROUP = *,*,*,*,*;
+/MN
+ :  ;
+ :  ;
+ : R[1:foo]=1 ;
+ : R[2:bar]=2 ;
+ :  ;
+ : CALL STR_SET(3.14,3) ;
+ : CALL NS3_TEST2(1) ;
+/END
+
+```
+
+</td>
+</tr>
+</table>
+
+### Functions
+
+<table>
+<tr>
+<td> <b>TP+</b> </td> <td> <b>TP</b> </td>
+</tr>
+<tr>
+<td>
+
+```ruby
+namespace Math
+  M_PI := 3.14159
+
+  def arclength(ang, rad) : numreg
+    using M_PI
+
+    return(ang*rad*M_PI/180)
+  end
+
+  def arcangle(len, rad) : numreg
+    using M_PI
+
+    return(len/rad*180/M_PI)
+  end
+end
+
+arclength := R[1]
+arcangle := R[2]
+
+arclength = Math::arclength(90, 85)
+arcangle = Math::arclength(arclength, 85)
+```
+
+</td>
+<td>
+
+```fortran
+/PROG TEST
+COMMENT = "TEST";
+DEFAULT_GROUP = 1,*,*,*,*;
+/MN
+ : CALL MATH_ARCLENGTH(90,85,1) ;
+ : CALL MATH_ARCLENGTH(R[1:arclength],85,2) ;
+/POS
+/END
+```
+
+```fortran
+/PROG MATH_ARCANGLE
+COMMENT = "MATH_ARCANGLE";
+DEFAULT_GROUP = *,*,*,*,*;
+/MN
+ : R[AR[3]]=(AR[1]/AR[2]*180/3.14159) ;
+ : END ;
+/END
+```
+
+```fortran
+/PROG MATH_ARCLENGTH
+COMMENT = "MATH_ARCLENGTH";
+DEFAULT_GROUP = *,*,*,*,*;
+/MN
+ : R[AR[3]]=(AR[1]*AR[2]*3.14159/180) ;
+ : END ;
+/END
+```
+
+</td>
+</tr>
+</table>
+
+
+### Inline Functions
+
+<table>
+<tr>
+<td> <b>TP+</b> </td> <td> <b>TP</b> </td>
+</tr>
+<tr>
+<td>
+
+```ruby
+namespace Math
+  M_PI := 3.14159
+
+  inline def arclength(ang, rad) : numreg
+    using M_PI
+
+    return(ang*rad*M_PI/180)
+  end
+
+  inline def arcangle(len, rad) : numreg
+    using M_PI
+
+    return(len/rad*180/M_PI)
+  end
+end
+
+arclength := R[1]
+
+arclength = Math::arclength(90, 85)
+```
+
+</td>
+<td>
+
+```fortran
+/PROG TEST
+COMMENT = "TEST";
+DEFAULT_GROUP = 1,*,*,*,*;
+/MN
+ : ! inline Math_arclength ;
+ :  ;
+ : R[1:arclength]=(90*85*3.14159/180) ;
+ : ! end Math_arclength ;
+ :  ;
+/POS
+/END
+```
+
+</td>
+</tr>
+</table>
+
+### Importing Files
+
+<table>
+<tr>
+<td> <b>TP+</b> </td> <td> <b>TP</b> </td>
+</tr>
+<tr>
+<td>
+
+```ruby
+import math_imp
+
+arclength := R[30]
+degress   := R[31]
+radius    := R[32]
+
+degress = 90
+radius = 85
+
+arclength = Math::arclength(degress, radius)
+```
+
+_math_imp.tpp_
+```ruby
+namespace Math
+  M_PI := 3.14159
+
+  inline def arclength(ang, rad) : numreg
+    using M_PI
+
+    return(ang*rad*M_PI/180)
+  end
+
+  inline def arcangle(len, rad) : numreg
+    using M_PI
+
+    return(len/rad*180/M_PI)
+  end
+end
+```
+
+</td>
+<td>
+
+```fortran
+/PROG TEST
+COMMENT = "TEST";
+DEFAULT_GROUP = 1,*,*,*,*;
+/MN
+ :  ;
+ : R[31:degress]=90 ;
+ : R[32:radius]=85 ;
+ :  ;
+ : ! inline Math_arclength ;
+ :  ;
+ : R[30:arclength]=(R[31:degress]*R[32:radius]*3.14159/180) ;
+ : ! end Math_arclength ;
+ :  ;
+/POS
+/END
+```
+
+</td>
+</tr>
+</table>
+
+### Local Variables
+
+<table>
+<tr>
+<td> <b>TP+</b> </td> <td> <b>TP</b> </td>
+</tr>
+<tr>
+<td>
+
+```ruby
+local := R[50..70]
+
+sum := LR[]
+
+def ratio(ar1) :numreg
+    divisor := LR[]
+
+    if (ar1 % 2 == 0)
+      divisor = 2
+    else
+      divisor = 1
+    end
+
+    return(ar1/divisor)
+end
+
+def addin() : numreg
+    foo := LR[]
+    bar := LR[]
+
+    bar = multiple(bar)
+    return(foo + bar)
+end
+
+def multiple(ar1) : numreg
+    multiplier := LR[]
+
+    multiplier = 10
+    return(ar1*multiplier)
+end
+
+sum = addin()
+sum = ratio()
+```
+
+</td>
+<td>
+
+```fortran
+/PROG TEST
+COMMENT = "TEST";
+DEFAULT_GROUP = 1,*,*,*,*;
+/MN
+ : CALL ADDIN(50) ;
+ : CALL RATIO(50) ;
+/POS
+/END
+```
+
+```fortran
+/PROG ADDIN
+COMMENT = "ADDIN";
+DEFAULT_GROUP = *,*,*,*,*;
+/MN
+ :  ;
+ : CALL MULTIPLE(R[52:bar],52) ;
+ : R[AR[1]]=R[51:foo]+R[52:bar] ;
+ : END ;
+/END
+```
+
+```fortran
+/PROG MULTIPLE
+COMMENT = "MULTIPLE";
+DEFAULT_GROUP = *,*,*,*,*;
+/MN
+ :  ;
+ : R[53:multiplier]=10 ;
+ : R[AR[2]]=AR[1]*R[53:multiplier] ;
+ : END ;
+/END
+```
+
+```fortran
+/PROG RATIO
+COMMENT = "RATIO";
+DEFAULT_GROUP = *,*,*,*,*;
+/MN
+ :  ;
+ : IF ((AR[1] MOD 2<>0)),JMP LBL[100] ;
+ : R[51:divisor]=2 ;
+ : JMP LBL[101] ;
+ : LBL[100] ;
+ : R[51:divisor]=1 ;
+ : LBL[101] ;
+ :  ;
+ : R[AR[2]]=AR[1]/R[51:divisor] ;
+ : END ;
+/END
+```
+
+</td>
+</tr>
+</table>
+
+### Expressions in Arguments
+
+<table>
+<tr>
+<td> <b>TP+</b> </td> <td> <b>TP</b> </td>
+</tr>
+<tr>
+<td>
+
+```ruby
+local := R[70..80]
+
+foo := R[10]
+bar := R[11]
+biz := R[12]
+baz := R[13]
+
+namespace Math
+  PI := 3.14159
+
+  def test(ar1, ar2, ar3) : numreg
+    return(Math::test2(ar1, ar2)*(ar1+ar2+ar3))
+  end
+
+  def test2(ar1, ar2) : numreg
+    if ar1 > ar2
+      return(0.5)
+    end
+
+    return(1)
+  end
+end
+
+foo = Mth::ln(2)
+
+foo = Mth::test(5+3, bar*biz/2, -1*biz*Math::PI)
+
+foo = Mth::test(bar*biz/2, set_reg(biz), -1*biz*Math::PI)
+
+foo = Mth::test3(bar*Math::PI*set_reg(baz))
+```
+
+</td>
+<td>
+
+```fortran
+/PROG TEST
+COMMENT = "TEST";
+DEFAULT_GROUP = 1,*,*,*,*;
+/MN
+ : CALL MTH_LN(2,10) ;
+ :  ;
+ : R[70:dvar2]=5+3 ;
+ : R[71:dvar3]=(R[11:bar]*R[12:biz]/2) ;
+ : R[72:dvar4]=((-1)*R[12:biz]*3.14159) ;
+ : CALL MTH_TEST(R[70:dvar2],R[71:dvar3],R[72:dvar4],10) ;
+ :  ;
+ : CALL SET_REG(R[12:biz],74) ;
+ : R[73:dvar5]=(R[11:bar]*R[12:biz]/2) ;
+ : R[75:dvar7]=((-1)*R[12:biz]*3.14159) ;
+ : CALL MTH_TEST(R[73:dvar5],R[74:dvar6],R[75:dvar7],10) ;
+ :  ;
+ : CALL SET_REG(R[13:baz],76) ;
+ : R[77:dvar9]=(R[11:bar]*3.14159*R[76:dvar8]) ;
+ : CALL MTH_TEST3(R[77:dvar9],10) ;
+/POS
+/END
+```
+```fortran
+/PROG MATH_TEST
+COMMENT = "MATH_TEST";
+DEFAULT_GROUP = *,*,*,*,*;
+/MN
+ : CALL MATH_TEST2(AR[1],AR[2],78) ;
+ : R[AR[4]]=(R[78:dvar1]*(AR[1]+AR[2]+AR[3])) ;
+ : END ;
+/END
+```
+```fortran
+/PROG MATH_TEST2
+COMMENT = "MATH_TEST2";
+DEFAULT_GROUP = *,*,*,*,*;
+/MN
+ : IF (AR[1]<=AR[2]),JMP LBL[100] ;
+ : R[AR[3]]=0.5 ;
+ : END ;
+ : LBL[100] ;
+ :  ;
+ : R[AR[3]]=1 ;
+ : END ;
+/END
+```
+
+</td>
+</tr>
+</table>
+
+### Environment Files
+
+You can save the robot controller configuration into an environment file. This can be swiched out depending on which robot you are using, and can be used to manage the register names on the controller (see: [examples.md](examples.md#environment-files))
+
+> [!TODO]
+> A preprocessor still needs to be added to TP+ in order to fully define a workcell/workstation in an environment file.
+
+```ruby
+#----------
+#Constants
+#----------
+FINE  :=  -1
+CNT  := 100
+PI    := 3.14159
+
+#----------
+#Frames
+#----------
+world        := UFRAME[1]
+frame        := UFRAME[2]
+tool         := UTOOL[1]
+
+#----------
+#Laser IO
+#----------
+Laser_Enable         := DO[1]
+Laser_Ready          := DI[2]
+Laser_On             := DO[3]
+
+Laser_Power         :=  AO[1]
+
+#----------
+# User IO
+#----------
+system_ready    := UO[2]
+Prgm_Run        := UO[3]
+Prgm_Pause      := UO[4]
+
+#-----------
+# HMI Flags
+#-----------
+Hmi_Start            := F[1]
+Hmi_Stop             := F[2]
+Hmi_Laser_Enable        := F[3]
+Hmi_Laser_Disable       := F[4]
+
+#----------
+#Program Registers
+#----------
+program_name := SR[1]
+
+Alarm_Reg       := R[1]
+Mem_Tool_No     := R[2]
+Mem_Frame_No    := R[3]
+
+j := R[50]
+passes := R[51]
+l := R[52]
+layers := R[53]
+
+
+#----------
+#Workstations
+#----------
+
+namespace Headstock
+  frame := UTOOL[2]
+  select := F[38]
+  home := PR[3]
+  GROUP := 2
+  DIRECTION := -1
+end
+
+namespace Positioner
+  frame := UTOOL[3]
+  select := F[37]
+  home := PR[4]
+  GROUP := 3
+  DIRECTION := 1
+end
+
+#----------
+#EEF Tools
+#----------
+namespace Tool1
+  frame := UTOOL[1]
+  read_pin := AI[1]
+  interupt_pin := DI[8]
+  SEARCH_DIST := 10
+  SEARCH_SPEED := 3
+end
+
+namespace Tool2
+  frame := UTOOL[3]
+  read_pin := AI[2]
+  interupt_pin := DI[10]
+  SEARCH_DIST := 50
+  SEARCH_SPEED := 6
+end
+
+#----------
+#LAM Parameters
+#----------
+namespace Lam
+  power          := R[60]
+  flowrate       := R[26]
+  speed          := R[61]
+  strt           := DO[3]
+  enable         := DO[1]
+end
+
+# ----------
+# local variables
+# -----------
+local         := R[250..300]
+local         := PR[80..100]
 ```
 
 Install
@@ -157,6 +751,9 @@ tpp filename.tpp -k karelFilename
 ```
 
 See `tpp --help` for options.
+
+> [!**NOTE**]
+> All of these options can be accessed through vscode using the [Fanuc TP-Plus Language Extension](https://marketplace.visualstudio.com/items?itemName=kobbled.fanuc-tp-plus)
 
 
 Examples
