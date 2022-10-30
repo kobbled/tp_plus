@@ -17,3 +17,4 @@ SyncToy*.dat
 .vscode/*
 doc/
 debug/
+examples/ls

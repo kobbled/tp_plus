@@ -24,9 +24,11 @@ TP+ is a higher-level language abstraction that translates into FANUC TP. It fea
 
 > This branch was forked from the archived repo [TP+](https://github.com/onerobotics/tp_plus)
 
-see [Features](#features) for a quick look at the features
+> see [Features](#features) for a quick look at the features
 
-see [examples.md](examples.md) for an indepth introduction to TP+
+> see [examples.md](examples.md) for an indepth introduction to TP+
+
+> Test examples can be found in **./examples** directory of this repository
 
 
 <!-- TOC -->
