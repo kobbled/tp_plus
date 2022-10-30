@@ -1,7 +1,7 @@
 module TPPlus
   module Util
     def to_boolean(str)
-      str == 'true'
+      str.downcase == 'true'
     end
 
     def retrieve_calls(node, func_list)
