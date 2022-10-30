@@ -2751,8 +2751,8 @@ LINE_TRACK ;
 : ! ns1_ns2_test3 ;
 : ! ------- ;
  :  ;
- : R[56:add_val]=10 ;
- : R[AR[1]]=R[56:add_val] ;
+ : R[55:add_val]=10 ;
+ : R[AR[1]]=R[55:add_val] ;
  : END ;
 : ! end of ns1_ns2_test3 ;
 : ! ------- ;
@@ -2760,8 +2760,8 @@ LINE_TRACK ;
 : ! ns1_test2 ;
 : ! ------- ;
  :  ;
- : CALL NS1_NS2_TEST3(55) ;
- : R[AR[1]]=5+R[55:val] ;
+ : CALL NS1_NS2_TEST3(56) ;
+ : R[AR[1]]=5+R[56:val] ;
  : END ;
 : ! end of ns1_test2 ;
 : ! ------- ;
@@ -2920,6 +2920,86 @@ LINE_TRACK ;
  : R[AR[2]]=(4.53+3.13*R[70:dvar3]) ;
  : END ;
 : ! end of test ;
+: ! ------- ;
+), @interpreter.output_functions(options)
+  end
+
+  def test__nested_expressions_in_function_arguements
+    $global_options[:function_print] = true
+    $stacks = TPPlus::Stacks.new
+    $dvar_counter = 0
+
+    parse("local := R[70..80]
+
+      foo := R[10]
+      bar := R[11]
+      biz := R[12]
+      baz := R[13]
+      
+      namespace Math
+        PI := 3.14159
+      
+        def test(ar1, ar2, ar3) : numreg
+          return(Math::test2(ar1, ar2)*(ar1+ar2+ar3))
+        end
+      
+        def test2(ar1, ar2) : numreg
+          if ar1 > ar2
+            return(0.5)
+          end
+      
+          return(1)
+        end
+      end
+      
+      foo = Mth::ln(2)
+      
+      foo = Mth::test(5+3, bar*biz/2, -1*biz*Math::PI)
+      
+      foo = Mth::test(bar*biz/2, set_reg(biz), -1*biz*Math::PI)
+      
+      foo = Mth::test3(bar*Math::PI*set_reg(baz))")
+
+      assert_prog " ;\n" +
+      " ;\n" +
+      " ;\n" +
+      "CALL MTH_LN(2,10) ;\n" +
+      " ;\n" +
+      "R[70:dvar2]=5+3 ;\n" +
+      "R[71:dvar3]=(R[11:bar]*R[12:biz]/2) ;\n" +
+      "R[72:dvar4]=((-1)*R[12:biz]*3.14159) ;\n" +
+      "CALL MTH_TEST(R[70:dvar2],R[71:dvar3],R[72:dvar4],10) ;\n" +
+      " ;\n" +
+      "CALL SET_REG(R[12:biz],74) ;\n" +
+      "R[73:dvar5]=(R[11:bar]*R[12:biz]/2) ;\n" +
+      "R[75:dvar7]=((-1)*R[12:biz]*3.14159) ;\n" +
+      "CALL MTH_TEST(R[73:dvar5],R[74:dvar6],R[75:dvar7],10) ;\n" +
+      " ;\n" +
+      "CALL SET_REG(R[13:baz],76) ;\n" +
+      "R[77:dvar9]=(R[11:bar]*3.14159*R[76:dvar8]) ;\n" +
+      "CALL MTH_TEST3(R[77:dvar9],10) ;\n"
+
+      options = {}
+      options[:output] = false
+      assert_equal %(: ! ------- ;
+: ! Math_test ;
+: ! ------- ;
+ : CALL MATH_TEST2(AR[1],AR[2],78) ;
+ : R[AR[4]]=(R[78:dvar1]*(AR[1]+AR[2]+AR[3])) ;
+ : END ;
+: ! end of Math_test ;
+: ! ------- ;
+: ! ------- ;
+: ! Math_test2 ;
+: ! ------- ;
+ : IF (AR[1]<=AR[2]),JMP LBL[100] ;
+ : R[AR[3]]=0.5 ;
+ : END ;
+ : LBL[100] ;
+ :  ;
+ : R[AR[3]]=1 ;
+ : END ;
+: ! end of Math_test2 ;
 : ! ------- ;
 ), @interpreter.output_functions(options)
   end
