@@ -2618,7 +2618,7 @@ local         := PR[80..100]
 
 Through the usage of the [Ka-Boost](https://github.com/kobbled/Ka-Boost) library, specifically the [hash-registers](https://github.com/kobbled/kl-hash-registers) package, you can manage the robot controllers register set, and register comments.
 
-Envoking the `-k <filename>` option will produce a .kl file which is the environment file represented as a hash table. This file will clear the comments of your register set (and values if specified), and update the register comments with the names in the hash table.
+Envoking the `-k <filename>,<true|false>` option will produce a .kl file which is the environment file represented as a hash table. This file will clear the comments of your register set (and values if specified), and update the register comments with the names in the hash table.
 
 For example this would be the output karel file from the environment above:
 ```pascal

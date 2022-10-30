@@ -101,10 +101,13 @@ include folders:
 tpp filename.tpp -i ../folder1 -i ../folder2
 ```
 
-build karel hash table from environment file
+build karel hash table from environment file. The first argument is to specify the filename (without the extension) that the hash will be written to. The second argument specifies if you also want to clear the register values on execution of the karel program.
+
+> [!**WARNING**]
+> Setting to `true` will wipe the registers, position registers, and string registers from the controller
 
 ```shell
-tpp filename.tpp -k karelFilename
+tpp filename.tpp -k 'karelFilename',false
 ```
 
 See `tpp --help` for options.
