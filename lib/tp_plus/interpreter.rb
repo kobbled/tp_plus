@@ -3,7 +3,7 @@ require_relative 'parser'
 module TPPlus
   class Interpreter < BaseBlock
     attr_accessor :line_count, :header_data, :header_appl_data, :number_of_inlines, :current_label
-    attr_reader :labels, :source_line_count
+    attr_reader :labels, :source_line_count, :variables
     def initialize
       super
       
@@ -210,8 +210,10 @@ module TPPlus
     def preprocess_local_variables(node, index, nodes)
       if node.is_a?(TPPlus::Nodes::ExpressionNode)
         node.ret_var.each do |rv|
-          localnode = rv.eval(self)
-          localnode[0].eval(self)
+          if !@variables.has_key?(rv.range.name.to_sym)
+            localnode = rv.eval(self)
+            localnode[0].eval(self)
+          end
         end
 
         # replace new local variable with function call
@@ -347,10 +349,16 @@ module TPPlus
       #----------
       #prepare/allocate functions
       traverse_nodes(@nodes, :preprocess_functions)
+
       @nodes = @nodes.flatten
 
       #collect namespace functions to the interpreter for generating a call stack
       collect_namespace_functions(@namespaces)
+
+      #evaluate functions
+      @functions.each do |k, v|
+        v.interpret
+      end
 
       #create call stack graph
        #only perform on main entry. Not on namespace or function level.

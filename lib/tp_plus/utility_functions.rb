@@ -7,6 +7,7 @@ module TPPlus
         end
       
         func_list.unshift(node.func_exp) if node.func_exp
+        node.func_exp = []
       end
     end
 

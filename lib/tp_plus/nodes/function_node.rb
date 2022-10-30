@@ -1,7 +1,7 @@
 module TPPlus
   module Nodes
     class FunctionNode < BaseNode
-      attr_reader :block, :args
+      attr_reader :name, :block, :args
       def initialize(name, args, block, ret_type = '', inlined = false)
         @name = name
         @block = block

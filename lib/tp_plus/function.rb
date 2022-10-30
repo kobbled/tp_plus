@@ -128,6 +128,17 @@ module TPPlus
 
     end
 
+    def interpret
+      #local variable
+      interpreter = @parser.interpreter
+      #pass data between function, and interpreter
+      interpreter.set_function_methods(self)
+
+      @lines = interpreter.eval
+
+      @variables = interpreter.variables
+    end
+
     def inline(args, parent)
       #local variable
       interpreter = @parser.interpreter.clone
