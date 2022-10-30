@@ -28,7 +28,7 @@ TP+ is a higher-level language abstraction that translates into FANUC TP. It fea
 
 > see [examples.md](examples.md) for an indepth introduction to TP+
 
-> Test examples can be found in **./examples** directory of this repository
+> Test examples can be found in [./examples](https://github.com/kobbled/tp_plus/tree/master/examples) directory of this repository
 
 
 <!-- TOC -->
