@@ -1,4 +1,5 @@
 require_relative '../test_helper'
+require 'deep_clone'
 
 class TestInterpreter < Test::Unit::TestCase
   include TPPlus::Nodes
@@ -2623,6 +2624,51 @@ LINE_TRACK ;
 : ! end of test ;
 : ! ------- ;
 ), @interpreter.output_functions(options)
+  end
+
+  def test_inlined_functions
+    $stacks = TPPlus::Stacks.new
+
+    parse("namespace Math
+      M_PI := 3.14159
+    
+      inline def arclength(ang, rad) : numreg
+        using M_PI
+    
+        return(ang*rad*M_PI/180)
+      end
+    
+      inline def arcangle(len, rad) : numreg
+        using M_PI
+    
+        return(len/rad*180/M_PI)
+      end
+    end
+    
+    radius := R[1]
+    angle  := R[2]
+    length := R[3]
+    
+    radius = 100
+    angle = 90
+    
+    length = Math::arclength(angle, radius)
+    angle = Math::arcangle(length, radius)")
+      assert_prog " ;\n" +
+      " ;\n" +
+      "R[1:radius]=100 ;\n" +
+      "R[2:angle]=90 ;\n" +
+      " ;\n" +
+      "! inline Math_arclength ;\n" +
+      " ;\n" +
+      "R[3:length]=(R[2:angle]*R[1:radius]*3.14159/180) ;\n" +
+      "! end Math_arclength ;\n" +
+      " ;\n" +
+      "! inline Math_arcangle ;\n" +
+      " ;\n" +
+      "R[2:angle]=(R[3:length]/R[1:radius]*180/3.14159) ;\n" +
+      "! end Math_arcangle ;\n" +
+      " ;\n"
   end
 
   def test_local_vars
