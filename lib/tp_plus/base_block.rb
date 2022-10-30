@@ -112,7 +112,7 @@ module TPPlus
         @constants[identifier.to_sym] = node
       end
 
-      def add_var(identifier, node)
+      def add_var(identifier, node, options = {})
         return if @variables[identifier.to_sym]
   
         @variables[identifier.to_sym] = node

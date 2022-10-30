@@ -187,10 +187,12 @@ module TPPlus
       #pass data between function, and interpreter
       interpreter.set_function_methods(self)
 
-      lines = interpreter.eval
+      if !defined?(@lines)
+        @lines = interpreter.eval
+      end
 
       #list warning messages
-      lines += interpreter.list_warnings
+      @lines += interpreter.list_warnings
 
       return output = "" if !@print_status
 
@@ -212,7 +214,7 @@ DEFAULT_GROUP = #{interpreter.header_data[:group_mask] || "*,*,*,*,*"};
         output += ": ! ------- ;\n"
       end
 
-      lines.each_line do |line|
+      @lines.each_line do |line|
         output += " : " + line
       end
 

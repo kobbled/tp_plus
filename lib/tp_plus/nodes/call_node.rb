@@ -122,16 +122,17 @@ module TPPlus
               #copy args
               args = @args.clone
               args.append(@ret)
-
+              
+              options[:inlined] = true
               #pass arguement registers into function scope
               args.each do |a|
                 if a.is_a?(Nodes::VarNode) || a.is_a?(Nodes::VarMethodNode)
-                  func.add_var(a.identifier, context.get_var(a.identifier))
+                  func.add_var(a.identifier, context.get_var(a.identifier), options)
                 elsif a.is_a?(Nodes::AddressNode)
                   if a.id.is_a?(Nodes::NamespacedVarNode)
-                    func.add_var(a.id.identifier, context.namespaces[a.id.namespaces[0].to_sym].get_var(a.id.identifier))
+                    func.add_var(a.id.identifier, context.namespaces[a.id.namespaces[0].to_sym].get_var(a.id.identifier), options)
                   else
-                    func.add_var(a.id.identifier, context.get_var(a.id.identifier))
+                    func.add_var(a.id.identifier, context.get_var(a.id.identifier), options)
                   end
                 end
               end

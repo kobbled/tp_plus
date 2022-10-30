@@ -40,11 +40,15 @@ module TPPlus
       @constants[identifier.to_sym] = node
     end
 
-    def add_var(identifier, node)
+    def add_var(identifier, node, options = {})
       return unless @variables[identifier.to_sym].nil? || identifier == RETURN_NAME
 
       @variables[identifier.to_sym] = node
-      node.comment = "#{@name}_#{identifier}"
+      if options[:inlined]
+        node.comment = "#{identifier}"
+      else
+        node.comment = "#{@name}_#{identifier}"
+      end
     end
 
     def add_parent_nodes(parent)
