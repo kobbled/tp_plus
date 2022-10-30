@@ -144,6 +144,18 @@ interpret using an environment file:
 tpp filename.tpp -e env.tpp
 ```
 
+include folders:
+
+```shell
+tpp filename.tpp -i ../folder1 -i ../folder2
+```
+
+build karel hash table from environment file
+
+```shell
+tpp filename.tpp -k karelFilename
+```
+
 See `tpp --help` for options.
 
 

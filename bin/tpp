@@ -21,6 +21,20 @@ options[:include] = []
 OptionParser.new do |opts|
   opts.banner = "Usage: tpp [options] filename"
 
+  #go through args look for \I"Folder" and reformat
+  #this is needed to work with rossum
+  opts.default_argv.each_with_index do |a, i|
+    if a.start_with?("/I")
+      include_folder = a.dup
+      include_folder.sub! '/I', ''
+      include_folder.sub! '"', ''
+      include_folder.sub! '"', ''
+      include_folder.gsub! '/', '\\'
+      opts.default_argv[i] = '-i'
+      opts.default_argv.insert(i+1, include_folder)
+    end
+  end
+
   opts.on("-e", "--environment <file>", "Require an environment file <file> before parsing") do |e|
     options[:environment] = e
   end
