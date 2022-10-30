@@ -45,8 +45,13 @@ OptionParser.new do |opts|
   end
 
   opts.on("-k file, clear_reg", "--karel-environment <file>, <clear_registers>", Array, "build karel script to rename/reset all registers using the environment file") do |k|
-    options[:karel] = k[0]
-    options[:clear_registers] = k[1]
+    if k[1].instance_of?(String)
+      clr_reg = TPPlus::Util.to_boolean(k[1].strip)
+    else
+      clr_reg = k[1]
+    end
+    options[:karel] = k[0].strip
+    options[:clear_registers] = clr_reg
   end
 
   opts.on("-o", "--output <file>", "Write output to <file>") do |o|
