@@ -39,10 +39,17 @@ BEGIN
   hashr__set_hash_table(tblProg, tblName)
   
   --clear registers
+  <% if @clear_registers -%>
   hashr__clear_registers(DATA_REG, TRUE)
-  hashr__clear_registers(DATA_POSREG, FALSE)
+  hashr__clear_registers(DATA_POSREG, TRUE)
   hashr__clear_registers(DATA_STRING, TRUE)
   hashr__clear_registers(io_flag, TRUE)
+  <% else -%>
+  hashr__clear_registers(DATA_REG, FALSE)
+  hashr__clear_registers(DATA_POSREG, FALSE)
+  hashr__clear_registers(DATA_STRING, FALSE)
+  hashr__clear_registers(io_flag, FALSE)
+  <% end -%>
 
   --clear hash table
   reg = hashr__nullenv

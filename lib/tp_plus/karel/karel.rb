@@ -28,6 +28,11 @@ module TPPlus
         @filename = filename
         @hashprog = hashprog
         @hashtable = hashtable
+        @clear_registers = false
+      end
+
+      def set_clear_registers(clear)
+        @clear_registers = clear
       end
 
       def build_list(nodes)
