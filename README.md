@@ -4,8 +4,116 @@ TP+
 [![Build Status](https://travis-ci.com/kobbled/tp_plus.svg?branch=master)](https://travis-ci.org/onerobotics/tp_plus)
 
 
-TP+ is a higher-level language abstraction that translates into FANUC
-TP. 
+TP+ is a higher-level language abstraction that translates into FANUC TP. It features many useful utilities that makes creating TP programs easier:
+
+* Functions and inline functions
+* Importing numerous files
+* Namespacing
+* Variable declaration for registers, position registers, IO, etc.
+* Local variables
+* Readable motion statements
+* Streamlined position declaration
+* Position manipulation
+* Build the same program for multiple controllers through the use of environment files and imports
+* Managing Register sets on controller
+* Register and Postion ranges for easy declaration of blocks of registers
+* Automatic label numbering
+* Improved looping
+* Easier managment of numerous TP files
+* Can be used with the package manager [Rossum](https://github.com/kobbled/rossum)
+
+> This branch was forked from the archived repo [TP+](https://github.com/onerobotics/tp_plus)
+
+see [Features](#features) for a quick look at the features
+
+see [examples.md](examples.md) for an indepth introduction to TP+
+
+
+<!-- TOC -->
+
+- [TP+](#tp)
+  - [Install](#install)
+  - [Updating](#updating)
+  - [Usage](#usage)
+  - [Features](#features)
+    - [Pose Declarations](#pose-declarations)
+    - [Namespaces](#namespaces)
+    - [Functions](#functions)
+    - [Inline Functions](#inline-functions)
+    - [Importing Files](#importing-files)
+    - [Local Variables](#local-variables)
+    - [Expressions in Arguments](#expressions-in-arguments)
+    - [Environment Files](#environment-files)
+  - [Documentation](#documentation)
+  - [License](#license)
+
+<!-- /TOC -->
+
+Install
+-----------
+
+1. Install Ruby
+2. Install git
+3. Install bundler `gem install bundler`
+4. Clone the repo `git clone https://github.com/kobbled/tp_plus.git`
+5. Install dependencies with `bundle`
+6. Build the parser and run the tests with `bundle exec rake`
+7. Make sure all tests pass
+8. Add full path of **./tp_plus/bin** to your environment path
+
+```shell
+set PATH=%PATH%;\path\to\tp_plus\bin
+```
+
+Updating
+-----------
+
+In a command prompt, or git shell run
+```
+git fetch && git pull
+rake
+```
+**WARNING** : Make sure you run `rake` after git pull to update the racc parser, as this compilation is not tracked in the repo.
+
+Usage
+-----
+print output to console:
+
+```shell
+tpp filename.tpp
+```
+
+print output to file (must be the same filename):
+
+```shell
+tpp filename.tpp -o filename.ls
+```
+
+interpret using an environment file:
+
+```shell
+tpp filename.tpp -e env.tpp
+```
+
+include folders:
+
+```shell
+tpp filename.tpp -i ../folder1 -i ../folder2
+```
+
+build karel hash table from environment file
+
+```shell
+tpp filename.tpp -k karelFilename
+```
+
+See `tpp --help` for options.
+
+> [!**INFO**]
+> All of these options can be accessed through vscode using the [Fanuc TP-Plus Language Extension](https://marketplace.visualstudio.com/items?itemName=kobbled.fanuc-tp-plus)
+
+> [!**INFO**]
+> All of these options can be specified in the [Rossum](https://github.com/kobbled/rossum) package manager through the `package.json` file
 
 Features
 -----------
@@ -691,75 +799,6 @@ end
 local         := R[250..300]
 local         := PR[80..100]
 ```
-
-Install
------------
-
-1. Install Ruby
-2. Install git
-3. Install bundler `gem install bundler`
-4. Clone the repo `git clone https://github.com/kobbled/tp_plus.git`
-5. Install dependencies with `bundle`
-6. Build the parser and run the tests with `bundle exec rake`
-7. Make sure all tests pass
-8. Add full path of **./tp_plus/bin** to your environment path
-
-```shell
-set PATH=%PATH%;\path\to\tp_plus\bin
-```
-
-Updating
------------
-
-In a command prompt, or git shell run
-```
-git fetch && git pull
-rake
-```
-**WARNING** : Make sure you run `rake` after git pull to update the racc parser, as this compilation is not tracked in the repo.
-
-Usage
------
-print output to console:
-
-```shell
-tpp filename.tpp
-```
-
-print output to file (must be the same filename):
-
-```shell
-tpp filename.tpp -o filename.ls
-```
-
-interpret using an environment file:
-
-```shell
-tpp filename.tpp -e env.tpp
-```
-
-include folders:
-
-```shell
-tpp filename.tpp -i ../folder1 -i ../folder2
-```
-
-build karel hash table from environment file
-
-```shell
-tpp filename.tpp -k karelFilename
-```
-
-See `tpp --help` for options.
-
-> [!**NOTE**]
-> All of these options can be accessed through vscode using the [Fanuc TP-Plus Language Extension](https://marketplace.visualstudio.com/items?itemName=kobbled.fanuc-tp-plus)
-
-
-Examples
---------
-
-see [examples.md](examples.md)
 
 Documentation
 ----------
