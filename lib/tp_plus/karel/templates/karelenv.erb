@@ -20,7 +20,7 @@ VAR
   tblProg : STRING[16]
   tblName : STRING[16]
   reg : hval_def
-  tbl FROM env: ARRAY[HASH_SIZE] OF hashname
+  tbl IN CMOS: ARRAY[HASH_SIZE] OF hashname
   b : BOOLEAN
 
 %include hashreg.klh
@@ -44,11 +44,6 @@ BEGIN
   hashr__clear_registers(DATA_POSREG, TRUE)
   hashr__clear_registers(DATA_STRING, TRUE)
   hashr__clear_registers(io_flag, TRUE)
-  <% else -%>
-  hashr__clear_registers(DATA_REG, FALSE)
-  hashr__clear_registers(DATA_POSREG, FALSE)
-  hashr__clear_registers(DATA_STRING, FALSE)
-  hashr__clear_registers(io_flag, FALSE)
   <% end -%>
 
   --clear hash table

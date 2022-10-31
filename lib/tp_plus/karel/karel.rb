@@ -1,4 +1,5 @@
 require "erb"
+require_relative "../utility_functions.rb"
 
 module TPPlus
   module Karel
@@ -25,8 +26,9 @@ module TPPlus
 
       def initialize(filename = 'tppenv', hashprog = 'env', hashtable = 'tbl')
         @variables = []
+        @nodes = []
         @filename = filename
-        @hashprog = hashprog
+        @hashprog = filename
         @hashtable = hashtable
         @clear_registers = false
       end
@@ -35,8 +37,14 @@ module TPPlus
         @clear_registers = clear
       end
 
-      def build_list(nodes)
-        nodes.each do |key, val|
+      def gather_variables(interpreter)
+        @nodes = []
+        TPPlus::Util.gather_variables(interpreter, @nodes)
+        nil
+      end
+
+      def build_list
+        @nodes.each do |val|
           type = val.class
           case
             when val.is_a?(TPPlus::Nodes::IONode)

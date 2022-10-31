@@ -15,6 +15,17 @@ module TPPlus
       end
     end
 
+    def gather_variables(interpreter, vars)
+      interpreter.namespaces.each_value do |n|
+        gather_variables(n, vars)
+      end
+
+      # store in a list as hash keys might conflict
+      # from namespace to namespace
+      vars << interpreter.variables.values
+      vars = vars.flatten!
+    end
+
     def retrieve_arg_calls(node, func_list)
       if node.is_a?(TPPlus::Nodes::ExpressionNode)
         [node.left_op, node.right_op].map.each do |op|
@@ -38,6 +49,6 @@ module TPPlus
       end
     end
 
-    module_function :retrieve_calls, :retrieve_arg_calls, :to_boolean
+    module_function :retrieve_calls, :retrieve_arg_calls, :to_boolean, :gather_variables
   end
 end

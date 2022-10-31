@@ -109,7 +109,8 @@ if options[:environment]
   if options[:karel]
     karelenv = TPPlus::Karel::Environment.new(options[:karel], 'env', 'tbl')
     karelenv.set_clear_registers(options[:clear_registers])
-    karelenv.build_list(interpreter.variables)
+    karelenv.gather_variables(interpreter)
+    karelenv.build_list
     karelenv.makefile
   end
 end

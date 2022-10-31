@@ -56,7 +56,7 @@ layers := R[53]
 #----------
 
 namespace Headstock
-  frame := UTOOL[2]
+  frame := UFRAME[2]
   select := F[38]
   home := PR[3]
   GROUP := 2
@@ -64,7 +64,7 @@ namespace Headstock
 end
 
 namespace Positioner
-  frame := UTOOL[3]
+  frame := UFRAME[3]
   select := F[37]
   home := PR[4]
   GROUP := 3
