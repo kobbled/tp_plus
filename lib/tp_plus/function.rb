@@ -130,7 +130,9 @@ module TPPlus
 
     def interpret
       #local variable
-      interpreter = @parser.interpreter
+        # without clone, environment file gets exported
+        # on `inline` functions.
+      interpreter = @parser.interpreter.clone
       #pass data between function, and interpreter
       interpreter.set_function_methods(self)
 
