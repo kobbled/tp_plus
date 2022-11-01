@@ -52,6 +52,7 @@ module TPPlus
       end
 
       def string_for(block,context)
+        block = block.flatten
         block.inject("") {|s,n| s << "#{n.eval(context)} ;\n" }
       end
 
