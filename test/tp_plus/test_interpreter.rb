@@ -1263,7 +1263,7 @@ Foo::Bar::baz = 2)
     assert_prog "IF (!DI[1:Foo_bar]),JMP LBL[100] ;\n! bar is on ;\nLBL[100] ;\n"
   end
 
-  # ..todo::
+  # ..TODO::
   # currenly if mutiple namespaces with the same name are declared the 2nd one
   # is ignored.
   #
