@@ -1,6 +1,4 @@
 
-def process()
-  using env
 
   TP_GROUPMASK = "1,*,1,*,*"
 
@@ -13,7 +11,17 @@ def process()
   Lam::set_parameters(&Lam::power, &Lam::flowrate, &Lam::speed)
   Lam::enable = on
 
-  while l < layers
+.def sum(num)
+   num = num.to_i
+   sum = 0
+   for i in 0..num do
+    sum += i
+   end
+
+   :< "#{sum}"
+.end
+
+  while l < sum(10)
 
     #pause after each layer
     if (layers > 1)
@@ -36,4 +44,3 @@ def process()
 
   #move home
   linear_move.to(Positioner::home).at(100, 'mm/s').term(-1)
-end
