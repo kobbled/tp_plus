@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 require_relative '../lib/tp_plus'
+require 'ppr'
 require 'optparse'
 require 'deep_clone'
 

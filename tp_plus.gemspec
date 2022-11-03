@@ -11,6 +11,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rdoc'
   spec.add_development_dependency 'ruby_deep_clone'
   spec.add_development_dependency 'matrix', '~> 0.4.2'
+  spec.add_development_dependency 'ppr'
 
   spec.add_development_dependency 'ruby-debug-ide'
   spec.add_development_dependency 'byebug'
