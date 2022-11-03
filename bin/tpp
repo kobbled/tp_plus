@@ -130,7 +130,18 @@ end
 
 src = contents(ARGV[0])
 
-scanner.scan_setup(src)
+#preprocess main file
+# ..IMPORTANT:: The preprocessor only works on linux/unix machines
+if Gem.win_platform?
+  scanner.scan_setup(src)
+else
+  ppr = Ppr::Preprocessor.new(includes: $global_options[:include])
+  ppr_src = ""
+  ppr.preprocess(src,ppr_src)
+
+  scanner.scan_setup(ppr_src)
+end
+
 parser.parse
 
 lines = interpreter.eval
