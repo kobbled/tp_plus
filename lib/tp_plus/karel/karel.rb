@@ -23,12 +23,14 @@ module TPPlus
       attr_reader :variables
 
       TEMPLATE_FILE = File.join(File.dirname(__FILE__),"templates/karelenv.erb")
+      ROSSUM_FILE = File.join(File.dirname(__FILE__),"templates/rossumenv.erb")
 
-      def initialize(filename = 'tppenv', hashprog = 'env', hashtable = 'tbl')
+      def initialize(hashfilename = 'tppenv', rossumfilename = 'env', hashtable = 'tbl')
         @variables = []
         @nodes = []
-        @filename = filename
-        @hashprog = filename
+        @hashfilename = hashfilename
+        @rossumfilename = rossumfilename
+        @hashprog = hashfilename
         @hashtable = hashtable
         @clear_registers = false
       end
@@ -62,7 +64,14 @@ module TPPlus
 
         def makefile
           erb = ERB.new(File.read(TEMPLATE_FILE), trim_mode: '-')
-          File.open(@filename + '.kl', 'w') do |f|
+          File.open(@hashfilename + '.kl', 'w') do |f|
+            f.write erb.result(binding)
+          end
+        end
+
+        def makeconfig
+          erb = ERB.new(File.read(ROSSUM_FILE), trim_mode: '-')
+          File.open(@rossumfilename + '.klt', 'w') do |f|
             f.write erb.result(binding)
           end
         end

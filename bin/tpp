@@ -44,7 +44,7 @@ OptionParser.new do |opts|
     raise "Include directory #{i}, was not found" unless File.directory?(i)
   end
 
-  opts.on("-k file, clear_reg", "--karel-environment <file>, <clear_registers>", Array, "build karel script to rename/reset all registers using the environment file") do |k|
+  opts.on("-k karelenv, clear_reg, rossumenv", "--karel-environment <filename>, <clear_registers>, <rossum_name>", Array, "build karel script to rename/reset all registers using the environment file") do |k|
     if k[1].instance_of?(String)
       clr_reg = TPPlus::Util.to_boolean(k[1].strip)
     else
@@ -52,6 +52,9 @@ OptionParser.new do |opts|
     end
     options[:karel] = k[0].strip
     options[:clear_registers] = clr_reg
+    if k.length() > 2
+      options[:rossumvar] = k[2].strip
+    end
   end
 
   opts.on("-o", "--output <file>", "Write output to <file>") do |o|
@@ -107,11 +110,20 @@ if options[:environment]
 
   #build karel file if option is set
   if options[:karel]
-    karelenv = TPPlus::Karel::Environment.new(options[:karel], 'env', 'tbl')
+    rossumconfig = ''
+    if options[:rossumvar]
+      rossumconfig = options[:rossumvar]
+    end
+    karelenv = TPPlus::Karel::Environment.new(options[:karel], rossumconfig, 'tbl')
     karelenv.set_clear_registers(options[:clear_registers])
     karelenv.gather_variables(interpreter)
     karelenv.build_list
+    #build karel hash table
     karelenv.makefile
+    #build rossum enum file
+    if options[:rossumvar]
+      karelenv.makeconfig
+    end
   end
 end
 

@@ -1,0 +1,6 @@
+-- *** TPP Env Vars ***
+-- **************************
+
+<% @variables.each do |val| -%>
+%define <%=val.name.upcase %> = <%= val.id %>
+<% end -%>
