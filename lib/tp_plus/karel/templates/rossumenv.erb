@@ -2,5 +2,5 @@
 -- **************************
 
 <% @variables.each do |val| -%>
-%define <%=val.name.upcase %> = <%= val.id %>
+%define <%=val.name.upcase %> <%= val.id %>
 <% end -%>
