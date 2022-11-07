@@ -359,7 +359,7 @@ module TPPlus
 
       #evaluate functions
       @functions.each do |k, v|
-        v.interpret
+        v.interpret(self) if !v.interpretted
       end
 
       #create call stack graph

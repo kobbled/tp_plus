@@ -16,6 +16,7 @@ module TPPlus
       @print_status = $global_options[:function_print]
       @inlined = inlined
       @level = 0
+      @interpretted = false
     end
 
     def eval
@@ -129,7 +130,23 @@ module TPPlus
 
     end
 
-    def interpret
+    def eval_inline_calls
+      @nodes.each_with_index do |n, index|
+        if n.is_a?(TPPlus::Nodes::CallNode)
+          if @functions[n.program_name.to_sym]
+            func = @functions[n.program_name.to_sym]
+            if func.inlined
+             func.preinline(n, self)
+             @nodes[index] = func.nodes
+            end
+          end
+        end
+      end
+
+      self.nodes.flatten!
+    end
+
+    def interpret(context)
       #local variable
         # without clone, environment file gets exported
         # on `inline` functions.
@@ -142,9 +159,34 @@ module TPPlus
       @variables = interpreter.variables
     end
 
-    def inline(args, parent)
+    def preinline(callnode, parent)
+
+      #map call node arguments to the function variables
+      #for inlining into the main function
+      map = {}
+      args = callnode.args.clone
+      args.append(callnode.ret)
+
+      @args.each_with_index do |a, i|
+        map[a.name] = args[i]
+      end
+
+      #replace var nodes and return nodes with associated
+      #arguement nodes
+      mask_var_nodes(self.nodes, map)
+
+      #check if callnodes in function are also inlined
+      eval_inline_calls
+    end
+
+    def inline(parent)
       #local variable
       interpreter = @parser.interpreter.clone
+      # ..IMPORTANT:: needed as interpreter.nodes may be different
+      #               from function member @nodes, at this point. Reason
+      #               unknown, although def interpret does copy the interpretter
+      #               before evaluation???
+      interpreter.nodes = @nodes
       #set start label from the last parent label
       interpreter.current_label = parent.current_label + 1
       #pass data between function, and interpreter
@@ -154,18 +196,6 @@ module TPPlus
       #need to do this again as CallNode may add more variables
       #like the call arguements into the function variables
       add_parent_nodes(interpreter) 
-
-
-      #map call node arguments to the function variables
-      #for inlining into the main function
-      map = {}
-      @args.each_with_index do |a, i|
-        map[a.name] = args[i]
-      end
-
-      #replace var nodes and return nodes with associated
-      #arguement nodes
-      mask_var_nodes(interpreter.nodes, map)
 
       lines = interpreter.eval
 

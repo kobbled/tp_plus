@@ -152,7 +152,8 @@ module TPPlus
               #increment number of inlines
               context.number_of_inlines += 1
 
-              return func.inline(args, context)
+              func.preinline(self, context)
+              return func.inline(context)
             end
           end
 
