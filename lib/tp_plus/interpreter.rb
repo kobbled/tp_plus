@@ -241,6 +241,18 @@ module TPPlus
         end
       end
 
+      # ..IMPORTANT:: This is a special case added, as argument expression
+      #               were only considered if a return assignment variable
+      #               is set. This is a work around when no return is present.
+      if node.is_a?(TPPlus::Nodes::CallNode) && !node.contained
+        arg_funcs = []
+        TPPlus::Util.retrieve_arg_calls(node, arg_funcs)
+
+        arg_funcs.each do |f|
+          nodes[index] = [f, nodes[index]]
+        end
+      end
+
       if node.is_a?(TPPlus::Nodes::AssignmentNode)
         #insert function assignment above assignment
         if node.contains_call
