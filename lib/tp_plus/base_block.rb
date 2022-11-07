@@ -214,6 +214,8 @@ module TPPlus
 
             #look through expressions to find functions
             if n.is_a?(Nodes::AssignmentNode)
+              n.assignable.set_contained(true) if n.assignable.is_a?(TPPlus::Nodes::CallNode)
+              
               traverse_nodes([n.assignable], lambda)
             end
 

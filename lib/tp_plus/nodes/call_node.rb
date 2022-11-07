@@ -1,7 +1,7 @@
 module TPPlus
   module Nodes
     class CallNode < BaseNode
-      attr_reader :args, :program_name, :ret_args, :func_args, :ret, :arg_exp
+      attr_reader :args, :program_name, :ret_args, :func_args, :ret, :arg_exp, :contained
       def initialize(program_name, args, options={})
         @program_name = program_name
         @args = args
@@ -11,6 +11,7 @@ module TPPlus
         @ret_args = []
         @func_args = {}
         @arg_exp = []
+        @contained = false
 
         handle_arg_funcs
       end
@@ -25,6 +26,10 @@ module TPPlus
 
       def set_return(ret)
         @ret = ret
+      end
+
+      def set_contained(cont)
+        @contained = cont
       end
 
       def handle_arg_funcs
