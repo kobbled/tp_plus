@@ -1,14 +1,15 @@
 module TPPlus
   class Function < Namespace
-    attr_reader :inlined, :nodes, :name
+    attr_reader :inlined, :nodes, :name, :interpretted, :lines, :args
     attr_accessor :level
 
-    def initialize(name, args, block, ret_type = '', vars = {}, inlined = false)
+    def initialize(name, args, block, ret_type = '', vars = {}, funcs = {}, inlined = false)
       super(name, block)
 
       @args       = args
       #passing by ref will expose local scope of the function to global
       @variables = vars.clone
+      @functions = funcs
       @current_arg = 0
       @ret_type = ret_type
       @ret_register = {}

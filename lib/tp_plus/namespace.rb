@@ -1,11 +1,12 @@
 module TPPlus
   class Namespace < BaseBlock
-    def initialize(name, block, vars={})
+    def initialize(name, block, vars={}, funcs = {})
       super()
       
       @name       = name.strip
       @nodes      = block
       @variables  = vars.clone
+      @functions  = funcs
 
       define!
     end
@@ -72,7 +73,7 @@ module TPPlus
       pass_nodes = pass_nodes.merge(@variables)
       
       if @functions[name.to_sym].nil?
-        @functions[name.to_sym] = TPPlus::Function.new(identifier, args, block, ret_type=ret_type, vars=pass_nodes, inlined=inlined)
+        @functions[name.to_sym] = TPPlus::Function.new(identifier, args, block, ret_type=ret_type, vars=pass_nodes[:vars], funcs=pass_nodes[:funcs], inlined=inlined)
         @functions[name.to_sym].eval
       end
     end

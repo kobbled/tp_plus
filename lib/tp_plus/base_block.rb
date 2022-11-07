@@ -66,18 +66,18 @@ module TPPlus
       end
 
       def get_parent_imports(nodes)
-        parent_nodes = {}
+        parent_nodes = {:vars => {}, :funcs => {}}
         nodes.each do |n|
           if n.is_a?(TPPlus::Nodes::UsingNode)
             n.mods.each do |m|
               if m == "env"
                 next
               elsif get_namespace(m)
-                parent_nodes[m.to_sym] = get_namespace(m)
+                parent_nodes[:vars][m.to_sym] = get_namespace(m)
               elsif get_function(m)
-                parent_nodes[m.to_sym] = get_function(m)
+                parent_nodes[:funcs][m.to_sym] = get_function(m)
               elsif get_var_or_const(m)
-                parent_nodes[m.to_sym] = get_var_or_const(m)
+                parent_nodes[:vars][m.to_sym] = get_var_or_const(m)
               end
             end
           end
@@ -91,7 +91,7 @@ module TPPlus
 
         if @namespaces[identifier.to_sym].nil?
           name = @name.empty? ? "#{identifier}" : "#{@name}_#{identifier}"
-          @namespaces[identifier.to_sym] = TPPlus::Namespace.new(name, block, vars=pass_nodes)
+          @namespaces[identifier.to_sym] = TPPlus::Namespace.new(name, block, vars=pass_nodes[:vars], funcs=pass_nodes[:funcs])
         else
           @namespaces[identifier.to_sym].reopen!(block)
         end
@@ -101,9 +101,13 @@ module TPPlus
         pass_nodes = get_parent_imports(block)
 
         if @functions[name.to_sym].nil?
-          @functions[name.to_sym] = TPPlus::Function.new(name, args, block, ret_type=ret_type, vars=pass_nodes, inlined=inlined)
+          @functions[name.to_sym] = TPPlus::Function.new(name, args, block, ret_type=ret_type, vars=pass_nodes[:vars], funcs=pass_nodes[:funcs], inlined=inlined)
           @functions[name.to_sym].eval
         end
+      end
+
+      def merge_functions(funcs)
+        @functions.merge!(funcs)
       end
 
       def add_constant(identifier, node)
