@@ -34,7 +34,7 @@ module TPPlus
     end
 
     def add_label(identifier)
-      raise "Label @#{identifier} already defined" if @labels[identifier.to_sym]
+      return if @labels[identifier.to_sym]
       @labels[identifier.to_sym] = next_label
     end
 
@@ -269,6 +269,8 @@ module TPPlus
         ret_exp.each do |f|
           nodes[index] = [f, nodes[index]]
         end
+
+        nodes = nodes.flatten!()
       end
 
       if [TPPlus::Nodes::RegDefinitionNode, TPPlus::Nodes::StackDefinitionNode].include? node.class

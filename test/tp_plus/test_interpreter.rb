@@ -179,13 +179,6 @@ class TestInterpreter < Test::Unit::TestCase
   end
   # ------
 
-  def test_duplicate_label_definition
-    parse("@foo\n@foo")
-    assert_raise RuntimeError do
-      assert_prog ""
-    end
-  end
-
   def test_jump_to_label
     parse("@foo\njump_to @foo")
     assert_prog "LBL[100:foo] ;\nJMP LBL[100] ;\n"
