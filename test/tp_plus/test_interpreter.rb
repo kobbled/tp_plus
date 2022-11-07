@@ -2647,6 +2647,7 @@ LINE_TRACK ;
     
     length = Math::arclength(angle, radius)
     angle = Math::arcangle(length, radius)")
+
       assert_prog " ;\n" +
       " ;\n" +
       "R[1:radius]=100 ;\n" +
@@ -2661,6 +2662,77 @@ LINE_TRACK ;
       " ;\n" +
       "R[2:angle]=(R[3:length]/R[1:radius]*180/3.14159) ;\n" +
       "! end Math_arcangle ;\n" +
+      " ;\n"
+  end
+
+  def test_nested_inlined_functions
+    $stacks = TPPlus::Stacks.new
+
+    parse("namespace ns1
+      CONST1 := 1
+    
+      inline def func1(num)
+        print_nr(num)
+        print('HELLO')
+      end
+    
+      inline def func2() : numreg
+        using CONST1, func1
+    
+        var1 := R[1]
+        var1 = CONST1 + 1
+    
+        func1(var1)
+    
+        return(var1)
+      end
+    end
+    
+    var2 := R[2]
+    
+    var2 = ns1::func2()")
+    
+      assert_prog " ;\n" +
+      " ;\n" +
+      "! inline ns1_func2 ;\n" +
+      " ;\n" +
+      "R[1:var1]=1+1 ;\n" +
+      " ;\n" +
+      "CALL PRINT_NR(R[1:var1]) ;\n" +
+      "CALL PRINT('HELLO') ;\n" +
+      " ;\n" +
+      "R[2:var2]=R[1:var1] ;\n" +
+      "! end ns1_func2 ;\n" +
+      " ;\n"
+  end
+
+  def test_inlined_return_expression
+    $stacks = TPPlus::Stacks.new
+
+    parse("namespace ns1
+          inline def calc_offset(num) : numreg
+              return(4.53+3.13*Mth::ln(num))
+          end
+      end
+      
+      local := R[70..80]
+      
+      var1 := R[1]
+      var2 := R[2]
+      
+      var1 = 10
+      
+      var2 = ns1::calc_offset(var1)")
+
+      assert_prog " ;\n" +
+      " ;\n" +
+      " ;\n" +
+      "R[1:var1]=10 ;\n" +
+      " ;\n" +
+      "! inline ns1_calc_offset ;\n" +
+      "CALL MTH_LN(R[1:var1],70) ;\n" +
+      "R[2:var2]=(4.53+3.13*R[70:dvar7]) ;\n" +
+      "! end ns1_calc_offset ;\n" +
       " ;\n"
   end
 

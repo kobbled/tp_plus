@@ -6,6 +6,5 @@
     "author" : "kobbled",
     "environment" : "test_env.tpp",
     "includes" : ["./fldr1"],
-    "karel" : {"name" : "tppenv", "clear" : true},
     "ftp"  : "127.0.0.1"
 }
