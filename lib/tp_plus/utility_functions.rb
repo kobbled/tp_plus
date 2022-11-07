@@ -34,6 +34,12 @@ module TPPlus
         node.left_op.is_a?(Nodes::ParenExpressionNode) ? left = node.left_op.x : left = node.left_op
         node.right_op.is_a?(Nodes::ParenExpressionNode) ? right = node.right_op.x : right = node.right_op
         
+        # handle nested call statement
+        if node.func_exp
+          node.func_exp.select {|n|  n.is_a?(TPPlus::Nodes::CallNode)}.each do |n|
+            func_list.unshift(n)
+          end
+        end
 
         [left, right].map.each do |op|
           b = retrieve_calls(op, func_list) if op.is_a?(TPPlus::Nodes::ExpressionNode)
