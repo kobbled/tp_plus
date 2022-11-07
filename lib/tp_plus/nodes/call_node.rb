@@ -115,9 +115,6 @@ module TPPlus
 
           if func
             if func.inlined
-
-              #copy function so as not to overwrite the original
-              func = DeepClone.clone(func)
               
               #copy args
               args = @args.clone
@@ -127,12 +124,27 @@ module TPPlus
               #pass arguement registers into function scope
               args.each do |a|
                 if a.is_a?(Nodes::VarNode) || a.is_a?(Nodes::VarMethodNode)
-                  func.add_var(a.identifier, context.get_var(a.identifier), options)
+                  var = context.get_var_or_const(a.identifier)
+                  if var.is_a?(Nodes::ConstNode)
+                    func.add_constant(a.identifier, var)
+                  else
+                    func.add_var(a.identifier, var, options)
+                  end
                 elsif a.is_a?(Nodes::AddressNode)
                   if a.id.is_a?(Nodes::NamespacedVarNode)
-                    func.add_var(a.id.identifier, context.namespaces[a.id.namespaces[0].to_sym].get_var(a.id.identifier), options)
+                    var = context.namespaces[a.id.namespaces[0].to_sym].get_var_or_const(a.id.identifier)
+                    if var.is_a?(Nodes::ConstNode)
+                      func.add_constant(a.id.identifier, var)
+                    else
+                      func.add_var(a.id.identifier, var, options)
+                    end
                   else
-                    func.add_var(a.id.identifier, context.get_var(a.id.identifier), options)
+                    var = context.get_var_or_const(a.id.identifier)
+                    if var.is_a?(Nodes::ConstNode)
+                      func.add_constant(a.id.identifier, var)
+                    else
+                      func.add_var(a.id.identifier, var, options)
+                    end
                   end
                 end
               end
