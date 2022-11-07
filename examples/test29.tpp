@@ -28,3 +28,5 @@ foo = Mth::test(5+3, bar*biz/2, -1*biz*Math::PI)
 foo = Mth::test(bar*biz/2, set_reg(biz), -1*biz*Math::PI)
 
 foo = Mth::test3(bar*Math::PI*set_reg(baz))
+
+Mth::test4(set_reg(biz), ((-1*biz)*Math::PI)/bar)

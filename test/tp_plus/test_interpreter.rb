@@ -3035,7 +3035,7 @@ LINE_TRACK ;
 ), @interpreter.output_functions(options)
   end
 
-  def test__nested_expressions_in_function_arguements
+  def test__expressions_in_function_arguements
     $global_options[:function_print] = true
     $stacks = TPPlus::Stacks.new
     $dvar_counter = 0
@@ -3069,7 +3069,9 @@ LINE_TRACK ;
       
       foo = Mth::test(bar*biz/2, set_reg(biz), -1*biz*Math::PI)
       
-      foo = Mth::test3(bar*Math::PI*set_reg(baz))")
+      foo = Mth::test3(bar*Math::PI*set_reg(baz))
+      
+      Mth::test4(set_reg(biz), ((-1*biz)*Math::PI)/bar)")
 
       assert_prog " ;\n" +
       " ;\n" +
@@ -3088,15 +3090,19 @@ LINE_TRACK ;
       " ;\n" +
       "CALL SET_REG(R[13:baz],76) ;\n" +
       "R[77:dvar9]=(R[11:bar]*3.14159*R[76:dvar8]) ;\n" +
-      "CALL MTH_TEST3(R[77:dvar9],10) ;\n"
+      "CALL MTH_TEST3(R[77:dvar9],10) ;\n" +
+      " ;\n" +
+      "CALL SET_REG(R[12:biz],78) ;\n" +
+      "R[79:dvar11]=((((-1)*R[12:biz])*3.14159)/R[11:bar]) ;\n" +
+      "CALL MTH_TEST4(R[78:dvar10],R[79:dvar11]) ;\n"
 
       options = {}
       options[:output] = false
       assert_equal %(: ! ------- ;
 : ! Math_test ;
 : ! ------- ;
- : CALL MATH_TEST2(AR[1],AR[2],78) ;
- : R[AR[4]]=(R[78:dvar1]*(AR[1]+AR[2]+AR[3])) ;
+ : CALL MATH_TEST2(AR[1],AR[2],80) ;
+ : R[AR[4]]=(R[80:dvar1]*(AR[1]+AR[2]+AR[3])) ;
  : END ;
 : ! end of Math_test ;
 : ! ------- ;
@@ -3111,6 +3117,114 @@ LINE_TRACK ;
  : R[AR[3]]=1 ;
  : END ;
 : ! end of Math_test2 ;
+: ! ------- ;
+), @interpreter.output_functions(options)
+  end
+
+  def test__nested_calls
+    $global_options[:function_print] = true
+    $stacks = TPPlus::Stacks.new
+    $dvar_counter = 0
+
+    parse("local := R[70..80]
+
+      def func2(val, exp) : numreg
+        num := LR[]
+        num = Mth::exp(exp * Mth::ln(val))
+        return(num)
+      end
+      
+      power := R[20]
+      power = ns1::func2(4, 2)")
+
+      assert_prog " ;\n" + 
+      " ;\n" + 
+      "CALL NS1_FUNC2(4,2,20) ;\n"
+
+      options = {}
+      options[:output] = false
+      assert_equal %(: ! ------- ;
+: ! func2 ;
+: ! ------- ;
+ : CALL MTH_LN(AR[1],71) ;
+ : R[72:dvar2]=AR[2]*R[71:dvar1] ;
+ : CALL MTH_EXP(R[72:dvar2],70) ;
+ : R[AR[3]]=R[70:num] ;
+ : END ;
+: ! end of func2 ;
+: ! ------- ;
+), @interpreter.output_functions(options)
+  end
+
+  def test__split_namespace
+    $global_options[:function_print] = true
+    $stacks = TPPlus::Stacks.new
+    $dvar_counter = 0
+
+    parse("local := R[70..80]
+
+      namespace ns1
+        var1 := R[1]
+        var2 := R[2]
+      
+        CONST1 := 2.5
+        CONST2 := 10
+      end
+      
+      namespace ns1
+        def func1(num)
+          using CONST1, CONST2
+      
+          print_nr((CONST2*num)/CONST1)
+          print('HELLO')
+        end
+      
+        def func2(val, exp) : numreg
+          using var1, var2
+      
+          var1 = val
+          var2 = exp
+      
+          num := LR[]
+          num = Mth::exp(exp * Mth::ln(val))
+      
+          return(num)
+        end
+      end
+      
+      power := R[10]
+      power = ns1::func2(4, 2)")
+
+      assert_prog " ;\n" + 
+      " ;\n" + 
+      " ;\n" + 
+      "CALL NS1_FUNC2(4,2,10) ;\n"
+
+      options = {}
+      options[:output] = false
+      assert_equal %(: ! ------- ;
+: ! ns1_func1 ;
+: ! ------- ;
+ :  ;
+ : R[70:dvar1]=((10*AR[1])/2.5) ;
+ : CALL PRINT_NR(R[70:dvar1]) ;
+ : CALL PRINT('HELLO') ;
+: ! end of ns1_func1 ;
+: ! ------- ;
+: ! ------- ;
+: ! ns1_func2 ;
+: ! ------- ;
+ :  ;
+ : R[1:var1]=AR[1] ;
+ : R[2:var2]=AR[2] ;
+ :  ;
+ : CALL MTH_LN(AR[1],72) ;
+ : R[73:dvar3]=AR[2]*R[72:dvar2] ;
+ : CALL MTH_EXP(R[73:dvar3],71) ;
+ :  ;
+ : R[AR[3]]=R[71:num] ;
+ : END ;
+: ! end of ns1_func2 ;
 : ! ------- ;
 ), @interpreter.output_functions(options)
   end
