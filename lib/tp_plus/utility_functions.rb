@@ -5,8 +5,11 @@ module TPPlus
     end
 
     def retrieve_calls(node, func_list)
-      if node.is_a?(TPPlus::Nodes::ExpressionNode)
-        [node.left_op, node.right_op].map.each do |op|
+      if node.is_a?(TPPlus::Nodes::ExpressionNode) || node.is_a?(Nodes::ParenExpressionNode)
+        node.left_op.is_a?(Nodes::ParenExpressionNode) ? left = node.left_op.x : left = node.left_op
+        node.right_op.is_a?(Nodes::ParenExpressionNode) ? right = node.right_op.x : right = node.right_op
+        
+        [left, right].map.each do |op|
           b = retrieve_calls(op, func_list) if op.is_a?(TPPlus::Nodes::ExpressionNode)
         end
       
@@ -27,8 +30,12 @@ module TPPlus
     end
 
     def retrieve_arg_calls(node, func_list)
-      if node.is_a?(TPPlus::Nodes::ExpressionNode)
-        [node.left_op, node.right_op].map.each do |op|
+      if node.is_a?(TPPlus::Nodes::ExpressionNode) || node.is_a?(Nodes::ParenExpressionNode)
+        node.left_op.is_a?(Nodes::ParenExpressionNode) ? left = node.left_op.x : left = node.left_op
+        node.right_op.is_a?(Nodes::ParenExpressionNode) ? right = node.right_op.x : right = node.right_op
+        
+
+        [left, right].map.each do |op|
           b = retrieve_calls(op, func_list) if op.is_a?(TPPlus::Nodes::ExpressionNode)
         end
       end
@@ -40,7 +47,7 @@ module TPPlus
           end
 
           node.arg_exp.each do |ea|
-            if ea.assignable.is_a?(TPPlus::Nodes::ExpressionNode)
+            if ea.assignable.is_a?(TPPlus::Nodes::ExpressionNode) || node.is_a?(Nodes::ParenExpressionNode)
               retrieve_arg_calls(ea.assignable, func_list)
             end
             func_list.unshift(ea)

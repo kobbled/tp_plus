@@ -217,13 +217,19 @@ module TPPlus
               traverse_nodes([n.assignable], lambda)
             end
 
-            if n.is_a?(Nodes::ExpressionNode)
-              traverse_nodes([n.left_op, n.right_op], lambda) if n.contains_expression?
+            if n.is_a?(Nodes::ExpressionNode) || n.is_a?(Nodes::ParenExpressionNode)
+              n.left_op.is_a?(Nodes::ParenExpressionNode) ? left = n.left_op.x : left = n.left_op
+              n.right_op.is_a?(Nodes::ParenExpressionNode) ? right = n.right_op.x : right = n.right_op
+              
+              left.set_contained(true) if left.is_a?(TPPlus::Nodes::CallNode)
+              right.set_contained(true) if right.is_a?(TPPlus::Nodes::CallNode)
+
+              traverse_nodes([left, right], lambda) if n.contains_expression?
             end
 
             if n.is_a?(TPPlus::Nodes::CallNode)
               if n.args_contain_calls
-                args = n.args.select {|a| a.is_a?(TPPlus::Nodes::ExpressionNode) }
+                args = n.args.select {|a| [TPPlus::Nodes::ExpressionNode, Nodes::ParenExpressionNode].include? a.class }
                 
                 traverse_nodes(args, lambda)
               end

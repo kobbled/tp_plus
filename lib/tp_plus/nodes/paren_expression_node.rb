@@ -1,6 +1,8 @@
 module TPPlus
   module Nodes
     class ParenExpressionNode < BaseNode
+      attr_reader :x
+
       def initialize(x)
         @x = x
       end
