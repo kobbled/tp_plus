@@ -39,6 +39,9 @@ module TPPlus
       end
 
       def eval(context)
+        @top_label = nil
+        @bottom_label = nil
+        
         "LBL[#{top_label(context)}] ;\n#{if_statement(context)}#{block_each_eval(context)}JMP LBL[#{top_label(context)}] ;\nLBL[#{bottom_label(context)}]"
       end
     end

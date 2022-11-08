@@ -74,6 +74,9 @@ module TPPlus
       end
 
       def eval(context, options={inlined: can_be_inlined?})
+        @true_label = nil
+        @end_label = nil
+
         return InlineConditionalNode.new(@type,@condition,@true_block.first).eval(context) if options[:inlined]
 
         s = "IF #{parens(@condition.eval(context,opposite: opposite?), context)},JMP LBL[#{true_label(context)}] ;\n#{true_block(context)}"
