@@ -82,6 +82,8 @@ module TPPlus
       end
 
       def eval(context)
+        @final_label = nil
+        
         #select statment
         s = "SELECT #{@var.eval(context)}#{first_cond_statement(context)}#{other_conditions(context)}#{else_condition_eval(context)} ;\n"
         s += "JMP LBL[#{final_label(context)}]"

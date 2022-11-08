@@ -183,7 +183,9 @@ module TPPlus
       #               before evaluation???
       interpreter.nodes = @nodes
       #set start label from the last parent label
-      interpreter.current_label = parent.current_label + 1
+      interpreter.current_label = parent.current_label
+      #renumber labels
+      interpreter.renumber_labels
       #pass data between function, and interpreter
       interpreter.set_function_methods(self)
 

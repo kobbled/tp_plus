@@ -38,6 +38,12 @@ module TPPlus
       @labels[identifier.to_sym] = next_label
     end
 
+    def renumber_labels
+      @labels.each do |k, _|
+        @labels[k] = next_label
+      end
+    end
+
     def label_recur(nodes, labels)
       if nodes.is_a?(Array)
         nodes.each do |node|
