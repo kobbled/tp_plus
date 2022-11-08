@@ -2736,6 +2736,90 @@ LINE_TRACK ;
       " ;\n"
   end
 
+  def test_inlined_case_statement_with_proper_labelling
+    $stacks = TPPlus::Stacks.new
+
+    parse("namespace Enum
+      TYPE1 := 1
+      TYPE2 := 2
+      TYPE3 := 3
+      TYPE4 := 4
+    end
+    
+    inline def func1(type, prnum, val)
+      using Enum
+    
+      Pos::clrpr(prnum)
+    
+      case type
+        when Enum::TYPE1
+          indirect('posreg', prnum).x = val
+          indirect('posreg', prnum).y = val
+          indirect('posreg', prnum).z = val
+        when Enum::TYPE2
+          indirect('posreg', prnum).x = val
+        when Enum::TYPE3
+          indirect('posreg', prnum).y = val
+        when Enum::TYPE4
+          indirect('posreg', prnum).z = val
+      end
+    end
+    
+    var1 := R[1]
+    var2 := PR[2]
+    var3 := R[3]
+    flg1 := F[30]
+    
+    if flg1
+      var1 = 1
+      var3 = 100
+    else
+      var1 = 3
+      var3 = 50
+    end
+    
+    func1(var1, &var2, var3)")
+
+      assert_prog " ;\n" +
+      " ;\n" +
+      " ;\n" +
+      "IF (!F[30:flg1]),JMP LBL[100] ;\n" +
+      "R[1:var1]=1 ;\n" +
+      "R[3:var3]=100 ;\n" +
+      "JMP LBL[101] ;\n" +
+      "LBL[100] ;\n" +
+      "R[1:var1]=3 ;\n" +
+      "R[3:var3]=50 ;\n" +
+      "LBL[101] ;\n" +
+      " ;\n" +
+      "! inline func1 ;\n" +
+      " ;\n" +
+      "CALL POS_CLRPR(2) ;\n" +
+      " ;\n" +
+      "SELECT R[1:var1]=1,JMP LBL[102] ;\n" +
+      "       =2,JMP LBL[103] ;\n" +
+      "       =3,JMP LBL[104] ;\n" +
+      "       =4,JMP LBL[105] ;\n" +
+      "JMP LBL[106] ;\n" +
+      "LBL[102:caselbl1] ;\n" +
+      "PR[2,1]=R[3:var3] ;\n" +
+      "PR[2,2]=R[3:var3] ;\n" +
+      "PR[2,3]=R[3:var3] ;\n" +
+      "JMP LBL[106] ;\n" +
+      "LBL[103:caselbl2] ;\n" +
+      "PR[2,1]=R[3:var3] ;\n" +
+      "JMP LBL[106] ;\n" +
+      "LBL[104:caselbl3] ;\n" +
+      "PR[2,2]=R[3:var3] ;\n" +
+      "JMP LBL[106] ;\n" +
+      "LBL[105:caselbl4] ;\n" +
+      "PR[2,3]=R[3:var3] ;\n" +
+      "JMP LBL[106] ;\n" +
+      "LBL[106:endcase] ;\n" +
+      "! end func1 ;\n" +
+      " ;\n"
+  end
+
   def test_local_vars
     $stacks = TPPlus::Stacks.new
     parse("local := R[50..100]
