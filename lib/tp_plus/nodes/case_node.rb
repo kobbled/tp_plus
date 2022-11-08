@@ -1,6 +1,8 @@
 module TPPlus
   module Nodes
     class CaseNode < BaseNode
+      attr_accessor :conditions, :else_condition
+
       def initialize(var, conditions, else_condition)
         @var = var
         @conditions = conditions
@@ -19,7 +21,7 @@ module TPPlus
       def first_condition(context)
         #split off first condition as it is
         #formatted differently than proceeding conditions
-        @first_condition ||= @conditions.shift
+        @first_condition = @conditions[0]
       end
 
       def first_cond_statement(context)
@@ -30,9 +32,10 @@ module TPPlus
       def first_cond_block(context)
         first_condition(context)
         @first_condition.block_eval(context, final_label(context))
+        ""
       end
 
-      def else_condition(context)
+      def else_condition_eval(context)
         return "" if @else_condition.nil?
 
         " ;\n#{@else_condition.eval(context)}"
@@ -49,9 +52,11 @@ module TPPlus
 
         s = " ;\n"
         @conditions.append(nil)
-        @conditions.reject! {|c| c.nil? }.each do |c|
-          s += c.eval(context)
-          s += " ;\n" unless c == @conditions.last
+        @conditions.reject! {|c| c.nil? }.each_with_index do |c, i|
+          if i > 0
+            s += c.eval(context)
+            s += " ;\n" unless c == @conditions.last
+          end
         end
 
         s
@@ -78,7 +83,7 @@ module TPPlus
 
       def eval(context)
         #select statment
-        s = "SELECT #{@var.eval(context)}#{first_cond_statement(context)}#{other_conditions(context)}#{else_condition(context)} ;\n"
+        s = "SELECT #{@var.eval(context)}#{first_cond_statement(context)}#{other_conditions(context)}#{else_condition_eval(context)} ;\n"
         s += "JMP LBL[#{final_label(context)}]"
         #select blocks
         s += blocks(context)

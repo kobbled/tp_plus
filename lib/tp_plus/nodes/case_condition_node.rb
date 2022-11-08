@@ -1,6 +1,8 @@
 module TPPlus
   module Nodes
     class CaseConditionNode < RecursiveNode
+      attr_accessor :block
+
       def initialize(condition, block)
         super()
         
@@ -9,12 +11,12 @@ module TPPlus
         @block      = block.flatten.reject {|n| n.is_a?(TerminatorNode) }
       end
 
-      def block(context)
-        @s ||= @block.inject("") {|s,n| s << "#{n.eval(context)} ;\n" }
+      def block_each_eval(context)
+        @s = @block.inject("") {|s,n| s << "#{n.eval(context)} ;\n" }
       end
 
       def block_eval(context, end_label)
-        "#{@label.eval(context)} ;\n#{block(context)}JMP LBL[#{end_label}] ;\n"
+        "#{@label.eval(context)} ;\n#{block_each_eval(context)}JMP LBL[#{end_label}] ;\n"
       end
 
       def get_block
