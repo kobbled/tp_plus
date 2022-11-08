@@ -1,6 +1,8 @@
 module TPPlus
   module Nodes
     class IndirectNode < BaseNode
+      attr_accessor :target
+      
       def initialize(type, target, method)
         @type   = type
         @target = target
