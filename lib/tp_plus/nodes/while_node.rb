@@ -30,7 +30,7 @@ module TPPlus
         @condition_node.eval(context, opposite: true)
       end
 
-      def block(context)
+      def block_each_eval(context)
         @block.inject("") {|s,n| s << "#{n.eval(context)} ;\n" }
       end
 
@@ -39,7 +39,7 @@ module TPPlus
       end
 
       def eval(context)
-        "LBL[#{top_label(context)}] ;\n#{if_statement(context)}#{block(context)}JMP LBL[#{top_label(context)}] ;\nLBL[#{bottom_label(context)}]"
+        "LBL[#{top_label(context)}] ;\n#{if_statement(context)}#{block_each_eval(context)}JMP LBL[#{top_label(context)}] ;\nLBL[#{bottom_label(context)}]"
       end
     end
   end

@@ -11,7 +11,7 @@ module TPPlus
         @range_specifier    = range
       end
 
-      def block(context)
+      def block_eval(context)
         @s ||= @block.inject("") {|s,n| s << "#{n.eval(context)} ;\n" }
       end
 
@@ -20,7 +20,7 @@ module TPPlus
       end
 
       def eval(context)
-        "FOR #{@var_node.eval(context)}=#{@initial_value_node.eval(context)} #{@range_specifier.upcase} #{@final_value_node.eval(context)} ;\n#{block(context)}ENDFOR"
+        "FOR #{@var_node.eval(context)}=#{@initial_value_node.eval(context)} #{@range_specifier.upcase} #{@final_value_node.eval(context)} ;\n#{block_eval(context)}ENDFOR"
       end
     end
   end
