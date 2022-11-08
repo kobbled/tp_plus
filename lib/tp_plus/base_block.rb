@@ -179,24 +179,25 @@ module TPPlus
         end
       end
 
-      def traverse_nodes(nodes, lambda)
+      def traverse_nodes(nodes, lambda, options = {})
         if nodes.is_a?(Array)
           nodes.each_with_index do |n, index|
             #loop statements
             if n.is_a?(Nodes::RecursiveNode)
-              traverse_nodes(n.get_block, lambda)
+              traverse_nodes(n.block, lambda, options)
             end
     
             #if statements
             if n.is_a?(Nodes::ConditionalNode)
-              traverse_nodes(n.get_true_block, lambda)
-              traverse_nodes(n.get_elsif_block, lambda)
-              traverse_nodes(n.get_false_block, lambda)
+              traverse_nodes(n.get_true_block, lambda, options)
+              traverse_nodes(n.get_elsif_block, lambda, options)
+              traverse_nodes(n.get_false_block, lambda, options)
             end
     
             #case statments
             if n.is_a?(Nodes::CaseNode)
-              traverse_nodes(n.get_conditions, lambda)
+              traverse_nodes(n.conditions, lambda, options)
+              traverse_nodes(n.else_condition, lambda, options)
             end
 
             #namespace
@@ -208,7 +209,7 @@ module TPPlus
             if n.is_a?(Nodes::ImportNode)
               import_nodes = n.eval(self)
               import_nodes.each do |n_import|
-                traverse_nodes(n_import, lambda)
+                traverse_nodes(n_import, lambda, options)
               end
             end
 
@@ -216,7 +217,7 @@ module TPPlus
             if n.is_a?(Nodes::AssignmentNode)
               n.assignable.set_contained(true) if n.assignable.is_a?(TPPlus::Nodes::CallNode)
               
-              traverse_nodes([n.assignable], lambda)
+              traverse_nodes([n.assignable], lambda, options)
             end
 
             if n.is_a?(Nodes::ExpressionNode) || n.is_a?(Nodes::ParenExpressionNode)
@@ -226,23 +227,29 @@ module TPPlus
               left.set_contained(true) if left.is_a?(TPPlus::Nodes::CallNode)
               right.set_contained(true) if right.is_a?(TPPlus::Nodes::CallNode)
 
-              traverse_nodes([left, right], lambda) if n.contains_expression?
+              traverse_nodes([left, right], lambda, options) if n.contains_expression?
             end
 
             if n.is_a?(TPPlus::Nodes::CallNode)
-              if n.args_contain_calls
-                args = n.args.select {|a| [TPPlus::Nodes::ExpressionNode, Nodes::ParenExpressionNode].include? a.class }
-                
-                traverse_nodes(args, lambda)
-              end
+              # if n.args_contain_calls
+              #   args = n.args.select {|a| [TPPlus::Nodes::ExpressionNode, Nodes::ParenExpressionNode].include? a.class }
+              #   traverse_nodes(args, lambda, options)
+              # end
+
+              traverse_nodes(n.args, lambda, options)
             end
 
             if n.is_a?(TPPlus::Nodes::FunctionReturnNode)
-              traverse_nodes([n.expression], lambda)
+              traverse_nodes([n.expression], lambda, options)
             end
             
             #run lambda function
-            method(lambda).call(n, index, nodes)
+            case lambda
+            when :mask_var_nodes
+              method(lambda).call(n, index, nodes, options)
+            else
+              method(lambda).call(n, index, nodes)
+            end
           end
         end
   

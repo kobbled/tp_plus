@@ -84,49 +84,42 @@ module TPPlus
       false
     end
 
-    def mask_var_nodes(nodes, map)
-      if nodes.is_a?(Array)
-        nodes.each_with_index do |n, i|
-          if n.is_a?(Nodes::VarNode)
-            if map[n.identifier]
-              if nodes.is_a?(Nodes::IndirectNode)
-                nodes.instance_variable_set(:@target, map[n.identifier])
-              else
-                nodes[i] = map[n.identifier]
-              end
-            end
-            next
-          end
-
-          if n.is_a?(Nodes::FunctionReturnNode)
-            nodes[i] = TPPlus::Nodes::AssignmentNode.new(map["ret"], n.expression)
-            mask_var_nodes(n, map)
-            next
-          end
-
-          if n.is_a?(Array) || n.is_a?(Nodes::BaseNode)
-            mask_var_nodes(n, map)
-            next
+    def mask_var_nodes(n, index, nodes, options)
+      if n.is_a?(Nodes::VarNode)
+        if options[:map][n.identifier]
+          if n.is_a?(Nodes::IndirectNode)
+            n.instance_variable_set(:@target, options[:map][n.identifier])
+          else
+            nodes[index] = options[:map][n.identifier]
           end
         end
       end
 
-      if nodes.is_a?(Nodes::BaseNode)
-        nodes.get_attributes.each do |id, n|
-          if n.is_a?(Nodes::VarNode)
-            if map[n.identifier]
-              nodes.instance_variable_set(id, map[n.identifier])
-            end
-            next
+      if n.is_a?(Nodes::AssignmentNode)
+        if n.identifier.is_a?(Nodes::IndirectNode)
+          if options[:map][n.identifier.target.identifier]
+            nodes[index].identifier.instance_variable_set(:@target, options[:map][n.identifier.target.identifier])
           end
-
-          if n.is_a?(Array) || n.is_a?(Nodes::BaseNode)
-            mask_var_nodes(n, map)
-            next
+        else
+          if options[:map][n.identifier]
+            nodes[index] = options[:map][n.identifier]
           end
         end
       end
 
+      if n.is_a?(Nodes::FunctionReturnNode)
+        nodes[index] = TPPlus::Nodes::AssignmentNode.new(options[:map]["ret"], n.expression)
+      end
+
+      if n.is_a?(Nodes::BaseNode)
+        n.get_attributes.each do |id, nde|
+          if nde.is_a?(Nodes::VarNode)
+            if options[:map][nde.identifier]
+              nodes[index].instance_variable_set(id, options[:map][nde.identifier])
+            end
+          end
+        end
+      end
 
     end
 
@@ -173,7 +166,9 @@ module TPPlus
 
       #replace var nodes and return nodes with associated
       #arguement nodes
-      mask_var_nodes(self.nodes, map)
+      options = {}
+      options[:map] = map
+      traverse_nodes(self.nodes, :mask_var_nodes, options)
 
       #check if callnodes in function are also inlined
       eval_inline_calls
