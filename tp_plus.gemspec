@@ -13,9 +13,9 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'matrix', '~> 0.4.2'
   spec.add_development_dependency 'ppr'
 
-  spec.add_development_dependency 'ruby-debug-ide'
-  spec.add_development_dependency 'byebug'
-  spec.add_development_dependency 'debug'
+  spec.add_development_dependency 'ruby-debug-ide' unless RUBY_PLATFORM =~ /x86_64-linux-musl/i
+  spec.add_development_dependency 'byebug' unless RUBY_PLATFORM =~ /x86_64-linux-musl/i
+  spec.add_development_dependency 'debug' unless RUBY_PLATFORM =~ /x86_64-linux-musl/i
 
   spec.authors                   = ["Jay Strybis", "Matt Dewar"]
   spec.email                     = ['mattpdewar@gmail.com']
