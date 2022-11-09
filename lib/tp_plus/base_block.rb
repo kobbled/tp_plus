@@ -1,3 +1,5 @@
+require 'ppr'
+
 module TPPlus
     class BaseBlock
       attr_accessor :line_count, :nodes, :ret_type, :position_data, :pose_list, :functions
@@ -38,7 +40,7 @@ module TPPlus
             scanner.scan_setup(file)
           else
             ppr = Ppr::Preprocessor.new(includes: $global_options[:include])
-            ppr_src = ""
+            ppr_file = ""
             ppr.preprocess(file,ppr_file)
           
             scanner.scan_setup(ppr_file)
@@ -70,7 +72,7 @@ module TPPlus
           scanner.scan_setup(file)
         else
           ppr = Ppr::Preprocessor.new(includes: $global_options[:include])
-          ppr_src = ""
+          ppr_file = ""
           ppr.preprocess(file,ppr_file)
         
           scanner.scan_setup(ppr_file)
