@@ -1,3 +1,5 @@
+require 'ppr'
+
 module TPPlus
     Struct.new("Dummy", :variables, :constants)
     
@@ -72,7 +74,7 @@ module TPPlus
           scanner.scan_setup(file)
         else
           ppr = Ppr::Preprocessor.new(includes: $global_options[:include])
-          ppr_src = ""
+          ppr_file = ""
           ppr.preprocess(file,ppr_file)
         
           scanner.scan_setup(ppr_file)
