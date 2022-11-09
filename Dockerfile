@@ -1,19 +1,22 @@
-FROM ruby:3.1
+FROM ruby:3.1.2-alpine3.15
 
-# throw errors if Gemfile has been modified since Gemfile.lock
-RUN bundle config --global frozen 1
-RUN apt-get update
-#install package to convert windows line endings
-RUN apt-get install dos2unix
+RUN apk add --no-cache bash
+RUN /bin/sh
+RUN apk update && apk add --virtual build-dependencies build-base
+RUN apk add --no-cache git
+RUN gem install bundler -v 2.3.11
 
-WORKDIR /tp_plus
+#add env
+ENV TPP_REPO /tp_plus
+ENV TPP_FILE /tp_plus/bin/tpp
+RUN echo 'alias tppmake="bundle exec ruby $TPP_FILE"' >> ~/.bashrc
+ENV PATH=$PATH:/tp_plus/bin
+
+WORKDIR $TPP_REPO
 
 COPY . .
-#convert windows line ending to unix
-RUN git config --global core.autocrlf input
-RUN find ./ -type f -exec dos2unix {} \;
 
 RUN bundle install
 RUN bundle exec rake
 
-CMD ./bin/tpp
+ENTRYPOINT ["/bin/sh"]
