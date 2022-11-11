@@ -108,8 +108,24 @@ module TPPlus
         end
       end
 
+      def append_namespace(key, namespace)
+        @namespaces[key] = namespace
+      end
+
       def merge_functions(funcs)
-        @functions.merge!(funcs)
+        @functions = @functions.merge!(funcs)
+      end
+
+      def merge_namespaces(namespaces)
+        @namespaces = @namespaces.merge!(namespaces)
+      end
+
+      def merge_constants(consts)
+        @constants = @constants.merge!(consts)
+      end
+
+      def merge_vars(vars)
+        @variables = @variables.merge!(vars)
       end
 
       def add_constant(identifier, node)
