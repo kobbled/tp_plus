@@ -2483,15 +2483,11 @@ LINE_TRACK ;
       using ns1, ns2
     
       def test()
-        using ns1
-    
         bar := R[15]
         bar = ns1::VAL2
       end
     
       def test2()
-        using ns2
-    
         foo := R[20]
         foo = ns2::VAL1
         
@@ -2509,14 +2505,12 @@ LINE_TRACK ;
       assert_equal %(: ! ------- ;
 : ! ns3_test ;
 : ! ------- ;
- :  ;
  : R[15:bar]=2 ;
 : ! end of ns3_test ;
 : ! ------- ;
 : ! ------- ;
 : ! ns3_test2 ;
 : ! ------- ;
- :  ;
  : R[20:foo]=3.14 ;
  :  ;
 : ! end of ns3_test2 ;
@@ -2626,14 +2620,10 @@ LINE_TRACK ;
       M_PI := 3.14159
     
       inline def arclength(ang, rad) : numreg
-        using M_PI
-    
         return(ang*rad*M_PI/180)
       end
     
       inline def arcangle(len, rad) : numreg
-        using M_PI
-    
         return(len/rad*180/M_PI)
       end
     end
@@ -2654,12 +2644,10 @@ LINE_TRACK ;
       "R[2:angle]=90 ;\n" +
       " ;\n" +
       "! inline Math_arclength ;\n" +
-      " ;\n" +
       "R[3:length]=(R[2:angle]*R[1:radius]*3.14159/180) ;\n" +
       "! end Math_arclength ;\n" +
       " ;\n" +
       "! inline Math_arcangle ;\n" +
-      " ;\n" +
       "R[2:angle]=(R[3:length]/R[1:radius]*180/3.14159) ;\n" +
       "! end Math_arcangle ;\n" +
       " ;\n"
@@ -2677,8 +2665,6 @@ LINE_TRACK ;
       end
     
       inline def func2() : numreg
-        using CONST1, func1
-    
         var1 := R[1]
         var1 = CONST1 + 1
     
@@ -2695,7 +2681,6 @@ LINE_TRACK ;
       assert_prog " ;\n" +
       " ;\n" +
       "! inline ns1_func2 ;\n" +
-      " ;\n" +
       "R[1:var1]=1+1 ;\n" +
       " ;\n" +
       "CALL PRINT_NR(R[1:var1]) ;\n" +
@@ -3257,15 +3242,11 @@ LINE_TRACK ;
       
       namespace ns1
         def func1(num)
-          using CONST1, CONST2
-      
           print_nr((CONST2*num)/CONST1)
           print('HELLO')
         end
       
         def func2(val, exp) : numreg
-          using var1, var2
-      
           var1 = val
           var2 = exp
       
@@ -3289,7 +3270,6 @@ LINE_TRACK ;
       assert_equal %(: ! ------- ;
 : ! ns1_func1 ;
 : ! ------- ;
- :  ;
  : R[70:dvar1]=((10*AR[1])/2.5) ;
  : CALL PRINT_NR(R[70:dvar1]) ;
  : CALL PRINT('HELLO') ;
@@ -3298,7 +3278,6 @@ LINE_TRACK ;
 : ! ------- ;
 : ! ns1_func2 ;
 : ! ------- ;
- :  ;
  : R[1:var1]=AR[1] ;
  : R[2:var2]=AR[2] ;
  :  ;

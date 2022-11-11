@@ -13,8 +13,6 @@ namespace sensor
   SAMPLING_TIME := 0.3
 
   def sample(pin, time) : numreg
-    using POLLING_RATE, SAMPLING_TIME
-    
     t := R[150]
     sum := R[151]
     inc := R[152]
