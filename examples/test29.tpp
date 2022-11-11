@@ -21,12 +21,12 @@ namespace Math
   end
 end
 
-foo = Mth::ln(2)
+foo = Math::ln(2)
 
-foo = Mth::test(5+3, bar*biz/2, -1*biz*Math::PI)
+foo = Math::test(5+3, bar*biz/2, -1*biz*Math::PI)
 
-foo = Mth::test(bar*biz/2, set_reg(biz), -1*biz*Math::PI)
+foo = Math::test(bar*biz/2, set_reg(biz), -1*biz*Math::PI)
 
-foo = Mth::test3(bar*Math::PI*set_reg(baz))
+foo = Math::test3(bar*Math::PI*set_reg(baz))
 
-Mth::test4(set_reg(biz), ((-1*biz)*Math::PI)/bar)
+Math::test4(set_reg(biz), ((-1*biz)*Math::PI)/bar)

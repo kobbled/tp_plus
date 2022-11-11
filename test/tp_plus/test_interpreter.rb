@@ -2536,7 +2536,7 @@ LINE_TRACK ;
       foostr := SR[2]
     
       foostr = Str::set(ns1::VAL1)
-      foo = ns3::test2()
+      foo = ns1::test2()
     end")
       assert_prog " ;\n"
       options = {}
@@ -2546,7 +2546,7 @@ LINE_TRACK ;
 : ! ------- ;
  :  ;
  : CALL STR_SET('Hello',2) ;
- : CALL NS3_TEST2(1) ;
+ : CALL NS1_TEST2(1) ;
 : ! end of test ;
 : ! ------- ;
 : ! ------- ;
@@ -3132,38 +3132,38 @@ LINE_TRACK ;
         end
       end
       
-      foo = Mth::ln(2)
+      foo = Math::ln(2)
       
-      foo = Mth::test(5+3, bar*biz/2, -1*biz*Math::PI)
+      foo = Math::test(5+3, bar*biz/2, -1*biz*Math::PI)
       
-      foo = Mth::test(bar*biz/2, set_reg(biz), -1*biz*Math::PI)
+      foo = Math::test(bar*biz/2, set_reg(biz), -1*biz*Math::PI)
       
-      foo = Mth::test3(bar*Math::PI*set_reg(baz))
+      foo = Math::test3(bar*Math::PI*set_reg(baz))
       
-      Mth::test4(set_reg(biz), ((-1*biz)*Math::PI)/bar)")
+      Math::test4(set_reg(biz), ((-1*biz)*Math::PI)/bar)")
 
       assert_prog " ;\n" +
       " ;\n" +
       " ;\n" +
-      "CALL MTH_LN(2,10) ;\n" +
+      "CALL MATH_LN(2,10) ;\n" +
       " ;\n" +
       "R[70:dvar2]=5+3 ;\n" +
       "R[71:dvar3]=(R[11:bar]*R[12:biz]/2) ;\n" +
       "R[72:dvar4]=((-1)*R[12:biz]*3.14159) ;\n" +
-      "CALL MTH_TEST(R[70:dvar2],R[71:dvar3],R[72:dvar4],10) ;\n" +
+      "CALL MATH_TEST(R[70:dvar2],R[71:dvar3],R[72:dvar4],10) ;\n" +
       " ;\n" +
       "CALL SET_REG(R[12:biz],74) ;\n" +
       "R[73:dvar5]=(R[11:bar]*R[12:biz]/2) ;\n" +
       "R[75:dvar7]=((-1)*R[12:biz]*3.14159) ;\n" +
-      "CALL MTH_TEST(R[73:dvar5],R[74:dvar6],R[75:dvar7],10) ;\n" +
+      "CALL MATH_TEST(R[73:dvar5],R[74:dvar6],R[75:dvar7],10) ;\n" +
       " ;\n" +
       "CALL SET_REG(R[13:baz],76) ;\n" +
       "R[77:dvar9]=(R[11:bar]*3.14159*R[76:dvar8]) ;\n" +
-      "CALL MTH_TEST3(R[77:dvar9],10) ;\n" +
+      "CALL MATH_TEST3(R[77:dvar9],10) ;\n" +
       " ;\n" +
       "CALL SET_REG(R[12:biz],78) ;\n" +
       "R[79:dvar11]=((((-1)*R[12:biz])*3.14159)/R[11:bar]) ;\n" +
-      "CALL MTH_TEST4(R[78:dvar10],R[79:dvar11]) ;\n"
+      "CALL MATH_TEST4(R[78:dvar10],R[79:dvar11]) ;\n"
 
       options = {}
       options[:output] = false
@@ -3221,6 +3221,55 @@ LINE_TRACK ;
  : R[AR[3]]=R[70:num] ;
  : END ;
 : ! end of func2 ;
+: ! ------- ;
+), @interpreter.output_functions(options)
+  end
+
+  def test__handling_conflicting_namespaces
+    $global_options[:function_print] = true
+
+    parse("namespace ns1
+      CONST1 := 10
+      var1 := R[12]
+    
+      def func1()
+       var1 = CONST1
+      end
+    end
+    
+    namespace ns2
+      using ns1
+    
+      CONST1 := 22
+      var1 := R[45]
+    
+      def func1()
+       ns1::func1()
+       var1 = CONST1
+      end
+    end
+    
+    ns1::func1()
+    ns2::func1()")
+
+      assert_prog " ;\n" + 
+      " ;\n" + "CALL NS1_FUNC1 ;\n" + 
+      "CALL NS2_FUNC1 ;\n"
+
+      options = {}
+      options[:output] = false
+      assert_equal %(: ! ------- ;
+: ! ns1_func1 ;
+: ! ------- ;
+ : R[12:var1]=10 ;
+: ! end of ns1_func1 ;
+: ! ------- ;
+: ! ------- ;
+: ! ns2_func1 ;
+: ! ------- ;
+ : CALL NS1_FUNC1 ;
+ : R[45:var1]=22 ;
+: ! end of ns2_func1 ;
 : ! ------- ;
 ), @interpreter.output_functions(options)
   end
