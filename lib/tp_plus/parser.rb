@@ -2715,9 +2715,7 @@ def _reduce_319(val, _values, result)
 end
 
 def _reduce_320(val, _values, result)
- @interpreter.increment_warning_labels()
-label = @interpreter.get_warning_label()
-result = WarningNode.new(MessageNode.new(val[2]), LabelDefinitionNode.new(label)) 
+ result = WarningNode.new(MessageNode.new(val[2])) 
     result
 end
 

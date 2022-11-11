@@ -270,41 +270,144 @@ class TestInterpreter < Test::Unit::TestCase
       else
           message('foo != 1')
       end
+
+      @alarm
       
       warning('This is another warning')
     )
 
-    assert_prog %( ;
-IF R[1:foo]<>1,JMP LBL[102] ;
-MESSAGE[foo == 1] ;
-JMP LBL[100] ;
-JMP LBL[103] ;
-LBL[102] ;
-MESSAGE[foo != 1] ;
-LBL[103] ;
- ;
-JMP LBL[101] ;\n)
+    assert_prog " ;\n" +
+    "IF R[1:foo]<>1,JMP LBL[101] ;\n" +
+    "MESSAGE[foo == 1] ;\n" +
+    "JMP LBL[102] ;\n" +
+    "JMP LBL[104] ;\n" +
+    "LBL[101] ;\n" +
+    "MESSAGE[foo != 1] ;\n" +
+    "LBL[104] ;\n" +
+    " ;\n" +
+    "LBL[100:alarm] ;\n" +
+    " ;\n" +
+    "JMP LBL[105] ;\n"
 
     assert_equal %(;
 ! ******** ;
 ! WARNINGS ;
 ! ******** ;
  ;
-JMP LBL[104] ;
-LBL[100:warning1] ;
+JMP LBL[103] ;
+LBL[102:warning1] ;
 CALL USERCLR ;
 MESSAGE[This is a warning] ;
 WAIT UI[5]=ON ;
 WAIT UI[5]=OFF ;
-LBL[104] ;
+LBL[103] ;
  ;
-JMP LBL[105] ;
-LBL[101:warning2] ;
+JMP LBL[106] ;
+LBL[105:warning2] ;
 CALL USERCLR ;
 MESSAGE[This is another warning] ;
 WAIT UI[5]=ON ;
 WAIT UI[5]=OFF ;
-LBL[105] ;\n), @interpreter.list_warnings
+LBL[106] ;
+), @interpreter.list_warnings
+  end
+
+  def test_warning_in_function
+    $global_options[:function_print] = true
+    parse %(Auto_Mode_Sel := DO[111]
+
+      namespace Laser
+        using Auto_Mode_Sel
+      
+        enableio  := DO[19]
+        start_     := DO[21]
+        reset_     := DO[18]
+        time      := TIMER[3]
+      
+        def enable()
+          #close laser gate
+          start_ = off
+          #reset laser
+          reset_ = on
+          wait_for(0.5,'s')
+          reset_ = off
+          #reset time
+          reset time
+          #enable laser
+          enableio = on
+          wait_for(1.0,'s')
+      
+          #force override to 100% in auto mode
+          if Auto_Mode_Sel
+            use_override 100
+          end
+      
+          #enable conditions
+          wait_until(enableio).timeout_to(@alarm).after(10, 's')
+          wait_until(!start_).timeout_to(@alarm).after(10, 's')
+          
+          return
+          @alarm
+          warning('Laser enable sequence failed. Must clear laser faults.')
+        end
+      end
+      
+      Laser::enable()
+    )
+
+    assert_prog " ;\n" + 
+    " ;\n" + 
+    "CALL LASER_ENABLE ;\n"
+
+    options = {}
+      options[:output] = false
+      assert_equal %(: ! ------- ;
+: ! Laser_enable ;
+: ! ------- ;
+ : ! close laser gate ;
+ : DO[21:start_]=OFF ;
+ : ! reset laser ;
+ : DO[18:reset_]=ON ;
+ : WAIT .50(sec) ;
+ : DO[18:reset_]=OFF ;
+ : ! reset time ;
+ : TIMER[3]=RESET ;
+ : ! enable laser ;
+ : DO[19:enableio]=ON ;
+ : WAIT 1.00(sec) ;
+ :  ;
+ : ! force override to 100% in auto ;
+ : ! mode ;
+ : IF (!DO[111:Auto_Mode_Sel]),JMP LBL[101] ;
+ : OVERRIDE=100% ;
+ : LBL[101] ;
+ :  ;
+ : ! enable conditions ;
+ : $WAITTMOUT=(1000) ;
+ : WAIT (DO[19:enableio]) TIMEOUT,LBL[100] ;
+ : $WAITTMOUT=(1000) ;
+ : WAIT (!DO[21:start_]) TIMEOUT,LBL[100] ;
+ :  ;
+ : END ;
+ : LBL[100:alarm] ;
+ : JMP LBL[102] ;
+ : ;
+ : ! ******** ;
+ : ! WARNINGS ;
+ : ! ******** ;
+ :  ;
+ : JMP LBL[103] ;
+ : LBL[102:warning1] ;
+ : CALL USERCLR ;
+ : MESSAGE[Laser enable sequence] ;
+ : MESSAGE[failed. Must clear laser] ;
+ : MESSAGE[faults.] ;
+ : WAIT UI[5]=ON ;
+ : WAIT UI[5]=OFF ;
+ : LBL[103] ;
+: ! end of Laser_enable ;
+: ! ------- ;
+), @interpreter.output_functions(options)
   end
 
   def test_inline_conditional_if_on_jump

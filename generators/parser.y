@@ -800,9 +800,7 @@ rule
     ;
 
 warning
-    : WARNING LPAREN STRING RPAREN      { @interpreter.increment_warning_labels()
-label = @interpreter.get_warning_label()
-result = WarningNode.new(MessageNode.new(val[2]), LabelDefinitionNode.new(label)) }
+    : WARNING LPAREN STRING RPAREN      { result = WarningNode.new(MessageNode.new(val[2])) }
     ;
 
   terminator

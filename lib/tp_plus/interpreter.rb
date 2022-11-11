@@ -78,7 +78,7 @@ module TPPlus
     end
 
     def get_warning_label
-      "warning#{@warning_identifiers}"
+      TPPlus::Nodes::LabelDefinitionNode.new("warning#{@warning_identifiers}")
     end
 
     def define_labels
