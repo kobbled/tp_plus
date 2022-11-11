@@ -3291,6 +3291,74 @@ LINE_TRACK ;
 : ! ------- ;
 ), @interpreter.output_functions(options)
   end
+
+  def test_split_namespace_in_environment
+    $global_options[:function_print] = true
+    environment = "namespace Lam
+      power          := R[60]
+      flowrate       := R[26]
+      speed          := R[61]
+      strt           := DO[3]
+      enable         := DO[1]
+    end
+    "
+    @interpreter.load_environment(environment)
+
+    parse("namespace ns1
+      frame := UFRAME[1]
+      var1 := R[10]
+      ANALOG_M := 10.321
+    
+      inline def foobar(barreg)
+        print('selected register')
+        printnr(barreg)
+      end
+    end
+    
+    namespace Lam
+      using ns1
+    
+      def set_params()
+        power = 1000
+        flowrate = 0.85
+        ns1::foobar(&power)
+      end
+    end
+    
+    var1 := R[123]
+    var2 := R[124]
+    
+    use_uframe ns1::frame
+    
+    ns1::var1 = ns1::ANALOG_M
+    var1 = Lam::power
+    var2 = Lam::flowrate")
+
+    assert_prog " ;\n" +
+    " ;\n" +
+    " ;\n" +
+    "UFRAME_NUM=UFRAME[1] ;\n" +
+    " ;\n" +
+    "R[10:var1]=10.321 ;\n" +
+    "R[123:var1]=R[60:power] ;\n" +
+    "R[124:var2]=R[26:flowrate] ;\n"
+
+    options = {}
+    options[:output] = false
+    assert_equal %(: ! ------- ;
+: ! Lam_set_params ;
+: ! ------- ;
+ : R[60:power]=1000 ;
+ : R[26:flowrate]=0.85 ;
+ : ! inline ns1_foobar ;
+ : CALL PRINT('selected register') ;
+ : CALL PRINTNR(60) ;
+ : ! end ns1_foobar ;
+ :  ;
+: ! end of Lam_set_params ;
+: ! ------- ;
+), @interpreter.output_functions(options)
+  end
   
 
 end
