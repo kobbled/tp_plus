@@ -13,6 +13,7 @@ module TPPlus
         @ret_type      = {}
         @position_data = {}
         @line_count    = 0
+        @imports = []
 
         @pose_list = Motion::Factory::Pose.new
       end
@@ -66,14 +67,15 @@ module TPPlus
       end
 
       def get_parent_imports(nodes)
-        parent_nodes = {:vars => {}, :funcs => {}}
+        parent_nodes = {:vars => {}, :funcs => {}, :namespaces => {}}
         nodes.each do |n|
           if n.is_a?(TPPlus::Nodes::UsingNode)
             n.mods.each do |m|
               if m == "env"
                 next
               elsif get_namespace(m)
-                parent_nodes[:vars][m.to_sym] = get_namespace(m)
+                @imports << m
+                parent_nodes[:namespaces][m.to_sym] = get_namespace(m)
               elsif get_function(m)
                 parent_nodes[:funcs][m.to_sym] = get_function(m)
               elsif get_var_or_const(m)
@@ -82,18 +84,18 @@ module TPPlus
             end
           end
         end
-
         parent_nodes
       end
       
       def add_namespace(identifier, block)
         pass_nodes = get_parent_imports(block)
 
-        if @namespaces[identifier.to_sym].nil?
+        if @namespaces[identifier.to_sym].nil? && !@imports.include?(identifier.to_s)
           name = @name.empty? ? "#{identifier}" : "#{@name}_#{identifier}"
-          @namespaces[identifier.to_sym] = TPPlus::Namespace.new(name, block, vars=pass_nodes[:vars], funcs=pass_nodes[:funcs])
+          @namespaces[identifier.to_sym] = TPPlus::Namespace.new(name, block, vars=pass_nodes[:vars], funcs=pass_nodes[:funcs], nspaces=pass_nodes[:namespaces], environment = @environment, imports = @imports)
         else
-          @namespaces[identifier.to_sym].reopen!(block)
+          @namespaces[identifier.to_sym].environment = @environment
+          @namespaces[identifier.to_sym].reopen!(block, vars=pass_nodes[:vars], funcs=pass_nodes[:funcs], nspaces=pass_nodes[:namespaces], imports = @imports)
         end
       end
 
@@ -101,7 +103,7 @@ module TPPlus
         pass_nodes = get_parent_imports(block)
 
         if @functions[name.to_sym].nil?
-          @functions[name.to_sym] = TPPlus::Function.new(name, args, block, ret_type=ret_type, vars=pass_nodes[:vars], funcs=pass_nodes[:funcs], inlined=inlined)
+          @functions[name.to_sym] = TPPlus::Function.new(name, args, block, ret_type=ret_type, vars=pass_nodes[:vars], funcs=pass_nodes[:funcs], nspaces=pass_nodes[:namespaces], environment = @environment, imports = @imports, inlined=inlined)
           @functions[name.to_sym].eval
         end
       end

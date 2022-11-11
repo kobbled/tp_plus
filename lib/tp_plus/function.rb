@@ -3,13 +3,10 @@ module TPPlus
     attr_reader :inlined, :nodes, :name, :interpretted, :lines, :args
     attr_accessor :level
 
-    def initialize(name, args, block, ret_type = '', vars = {}, funcs = {}, inlined = false)
-      super(name, block)
+    def initialize(name, args, block, ret_type = '', vars = {}, funcs = {}, nspaces = {}, environment = {}, imports = [], inlined = false)
+      super(name, block, vars, funcs, nspaces, environment, imports)
 
       @args       = args
-      #passing by ref will expose local scope of the function to global
-      @variables = vars.clone
-      @functions = funcs
       @current_arg = 0
       @ret_type = ret_type
       @ret_register = {}
@@ -32,10 +29,18 @@ module TPPlus
 
       interpreter = @parser.interpreter
 
-      # copy variables & constants to interpreter
-      add_parent_nodes(interpreter)
-
       interpreter.nodes = @nodes
+
+      # copy variables & constants to interpreter
+      add_parent_nodes(interpreter, @variables)
+      add_parent_nodes(interpreter, @constants)
+      #copy namespaces to interpreter
+      add_namespaces(interpreter, @namespaces)
+      #copy namespaces to interpreter
+      add_functions(interpreter, @functions)
+      #pass environment
+      interpreter.environment = @environment
+
     end
     
     #for appending created nodes into the ast
@@ -192,7 +197,15 @@ module TPPlus
       #pass @variables into the interpreter.
       #need to do this again as CallNode may add more variables
       #like the call arguements into the function variables
-      add_parent_nodes(interpreter) 
+      add_parent_nodes(interpreter, @variables)
+      add_parent_nodes(interpreter, @constants)
+      #copy namespaces to interpreter
+      add_namespaces(interpreter, @namespaces)
+      #copy namespaces to interpreter
+      add_functions(interpreter, @functions)
+      #pass environment
+      interpreter.environment = @environment
+
 
       lines = interpreter.eval
 

@@ -1,19 +1,23 @@
 module TPPlus
   class Namespace < BaseBlock
-    def initialize(name, block, vars={}, funcs = {})
+    def initialize(name, block, vars={}, funcs = {}, nspaces = {}, environment = {}, imports = [])
       super()
       
       @name       = name.strip
       @nodes      = block
-      @variables  = vars.clone
       @functions  = funcs
+      @imports = imports
 
-      define!
+      define!(vars, funcs, nspaces)
     end
 
-    def define!
+    def define!(vars, funcs, namespaces)
       # copy variables & constants to interpreter
-      add_parent_nodes(self)
+      add_parent_nodes(self, vars)
+      #copy namespaces to interpreter
+      add_namespaces(self, namespaces)
+      #copy functions to interpreter
+      add_functions(self, funcs)
 
       @nodes.each_with_index do |n, index|
         if n.is_a?(TPPlus::Nodes::RegDefinitionNode)
@@ -30,9 +34,11 @@ module TPPlus
       end
     end
 
-    def reopen!(block)
+    def reopen!(block, vars={}, funcs = {}, nspaces = {}, imports = [])
       @nodes = block
-      define!
+      #merge imports in
+      @imports += imports
+      define!(vars, funcs, nspaces)
     end
 
     def add_constant(identifier, node)
@@ -52,12 +58,10 @@ module TPPlus
       end
     end
 
-    def add_parent_nodes(parent)
-      @variables.each do |k,v|
+    def add_parent_nodes(parent, variables)
+      variables.each do |k,v|
         if v.is_a?(Nodes::RegNode)
           parent.add_var(k, v)
-        elsif v.is_a?(Namespace)
-          parent.add_namespace(k, v.nodes)
         elsif v.is_a?(Nodes::ConstNode)
           parent.add_constant(k, v)
         end
@@ -66,14 +70,38 @@ module TPPlus
       parent
     end
 
+    def add_namespaces(parent, nspaces)
+
+      if nspaces.any?
+        nspaces.each do |k,v|
+          if v.is_a?(Namespace)
+            if @imports.include?(k.to_s)
+              parent.append_namespace(k, v)
+            else
+              parent.add_namespace(k, v.nodes)
+            end
+          end
+        end
+      end
+    end
+
+    def add_functions(parent, funcs)
+      if funcs.any?
+        parent.merge_functions(funcs)
+      end
+    end
+
     def add_function(name, args, block, ret_type = '', inlined = false)
       identifier = @name + '_' + name
 
       pass_nodes = get_parent_imports(block)
-      pass_nodes = pass_nodes.merge(@variables)
+      pass_nodes[:vars] = pass_nodes[:vars].merge(@variables)
+      pass_nodes[:vars] = pass_nodes[:vars].merge(@constants)
+      pass_nodes[:namespaces] = pass_nodes[:namespaces].merge(@namespaces)
+      pass_nodes[:funcs] = pass_nodes[:funcs].merge(@functions)
       
       if @functions[name.to_sym].nil?
-        @functions[name.to_sym] = TPPlus::Function.new(identifier, args, block, ret_type=ret_type, vars=pass_nodes[:vars], funcs=pass_nodes[:funcs], inlined=inlined)
+        @functions[name.to_sym] = TPPlus::Function.new(identifier, args, block, ret_type=ret_type, vars=pass_nodes[:vars], funcs=pass_nodes[:funcs], nspaces=pass_nodes[:namespaces], environment=@environment, imports = @imports, inlined=inlined)
         @functions[name.to_sym].eval
       end
     end
