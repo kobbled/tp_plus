@@ -7,6 +7,7 @@ module TPPlus
       @nodes      = block
       @functions  = funcs
       @imports = imports
+      @environment = environment
 
       define!(vars, funcs, nspaces)
     end

@@ -7,13 +7,6 @@ module TPPlus
       end
 
       def eval(context)
-        @mods.each do |m|
-          #if m.match("((?:[^/]*/)*)(env)(/*)")
-          if m == "env"
-            context.load_environment($global_options[:environment])
-          end
-        end
-
         nil
       end
       

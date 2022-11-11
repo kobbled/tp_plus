@@ -1,6 +1,8 @@
 module TPPlus
+    Struct.new("Dummy", :variables, :constants)
+    
     class BaseBlock
-      attr_accessor :line_count, :nodes, :ret_type, :position_data, :pose_list, :functions
+      attr_accessor :line_count, :nodes, :ret_type, :position_data, :pose_list, :functions, :environment
       attr_reader :variables, :constants, :namespaces
 
       def initialize
@@ -14,6 +16,9 @@ module TPPlus
         @position_data = {}
         @line_count    = 0
         @imports = []
+        #need to set :variables, and :constants members for when
+        #an environment file is not used. (see `get_const`, `get_var`)
+        @environment = Struct::Dummy.new({}, {})
 
         @pose_list = Motion::Factory::Pose.new
       end
@@ -27,17 +32,25 @@ module TPPlus
           file = string
         end
 
-        if self.is_a?(Function)
-          eval
-        else
-          scanner = TPPlus::Scanner.new
-          parser = TPPlus::Parser.new(scanner, self)
-          scanner.scan_setup(file)
-          parser.parse
-          eval
-        end
+        scanner = TPPlus::Scanner.new
+        parser = TPPlus::Parser.new(scanner)
+        scanner.scan_setup(file)
+        parser.parse
+        #evaluate environment
+        @environment = parser.interpreter
+        @environment.environment_file?
+        @environment.eval
+
+        #merge namespaces into main scope. These need to be passed
+        #into scope of namespaces, or functions
+        merge_namespaces(@environment.namespaces)
+        
       rescue RuntimeError => e
         raise "Runtime error in environment on line #{@source_line_count}:\n#{e}"
+      end
+
+      def environment_file?
+        @env_flg = true
       end
 
       def load_import(filepath, compileTF)
@@ -142,35 +155,39 @@ module TPPlus
       end
   
       def get_constant(identifier)
-        raise "Constant (#{identifier}) not defined" if @constants[identifier.to_sym].nil?
+        raise "Constant (#{identifier}) not defined" if @constants[identifier.to_sym].nil? && @environment.constants[identifier.to_sym].nil?
   
-        @constants[identifier.to_sym]
+        @constants[identifier.to_sym] || @environment.constants[identifier.to_sym]
       end
   
       def get_var(identifier)
-        raise "Variable (#{identifier}) not defined" if @variables[identifier.to_sym].nil?
+        raise "Variable (#{identifier}) not defined" if @variables[identifier.to_sym].nil? && @environment.variables[identifier.to_sym].nil?
   
-        @variables[identifier.to_sym]
+        @variables[identifier.to_sym] || @environment.variables[identifier.to_sym]
       end
 
       def get_var_or_const(identifier)
-        raise "Variable (#{identifier}) not defined" if @variables[identifier.to_sym].nil? && @constants[identifier.to_sym].nil?
+        raise "Variable (#{identifier}) not defined" if (@variables[identifier.to_sym].nil? && @environment.variables[identifier.to_sym].nil?) && (@constants[identifier.to_sym].nil? && @environment.constants[identifier.to_sym].nil?)
         
         if @variables[identifier.to_sym]
           return @variables[identifier.to_sym]
+        elsif @environment.variables[identifier.to_sym]
+          return @environment.variables[identifier.to_sym]
+        elsif @constants[identifier.to_sym]
+          return @constants[identifier.to_sym]
+        else
+          @environment.constants[identifier.to_sym]
         end
-
-        return @constants[identifier.to_sym]
       end
 
       def check_constant(identifier)
-        return false if @constants[identifier.to_sym].nil?
+        return false if @constants[identifier.to_sym].nil? && @environment.constants[identifier.to_sym].nil?
   
         true
       end
   
       def check_var(identifier)
-        return false if @variables[identifier.to_sym].nil?
+        return false if @variables[identifier.to_sym].nil? && @environment.variables[identifier.to_sym].nil?
   
         true
       end

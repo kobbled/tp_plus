@@ -151,6 +151,8 @@ module TPPlus
       interpreter = @parser.interpreter.clone
       #pass data between function, and interpreter
       interpreter.set_function_methods(self)
+      #pass environment
+      interpreter.environment = @environment
 
       @lines = interpreter.eval
 
