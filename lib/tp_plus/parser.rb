@@ -15,12 +15,24 @@ module TPPlus
   def initialize(scanner, interpreter = TPPlus::Interpreter.new)
     @scanner       = scanner
     @interpreter   = interpreter
+    #store list of tokens to check against for conflicting variable definitions
+    @check_list = Token::KEYWORDS.except("namespace", "local")
     super()
   end
 
   def next_token
     t = @scanner.next_token
     @interpreter.line_count += 1 if t && t[0] == :NEWLINE
+
+    if @vstack.any? && @vstack[-1].instance_of?(String) && !t.nil? && t[0] == :ASSIGN
+      if @vstack[0] == "namespace" 
+        if @vstack[-1].instance_of?(String)
+          raise "variable '#{@vstack[1]}::#{@vstack[-1]}' is a keyword. Choose another identifier." if @check_list.key?(@vstack[-1])
+        end
+      else
+        raise "variable '#{@vstack[-1]}' is a keyword. Choose another identifier." if @check_list.key?(@vstack[-1])
+      end
+    end
 
     #puts t.inspect
     t

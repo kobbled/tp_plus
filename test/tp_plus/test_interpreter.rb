@@ -1087,6 +1087,13 @@ LBL[104:endcase] ;\n)
     end
   end
 
+  def test_defining_variable_with_reserved_name
+    assert_raise(RuntimeError) do
+      parse("reset := R[10]")
+      assert_prog ""
+    end
+  end
+
   def test_using_argument_var
     parse("foo := AR[1]\n@top\njump_to @top if foo==1")
     assert_prog "LBL[100:top] ;\nIF (AR[1]=1),JMP LBL[100] ;\n"
