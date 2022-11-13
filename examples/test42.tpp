@@ -6,7 +6,9 @@ pr1 := PR[22]
 
 .assign DEBUG :< true
 
-.assign GRP :< 2
+.def GRP :< 3
+.assign GRP :< 3
+
 .assign STARTX :< 0
 .def STARTZ :< 100
 .def PITCH :< 6
@@ -22,6 +24,8 @@ pr1 := PR[22]
 .end
 
 varz = STARTZ
+
+pr1.group(GRP) = home_pos() 
 
 l := LR[]
 layers := LR[]
