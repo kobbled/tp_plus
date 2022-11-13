@@ -36,7 +36,14 @@ module TPPlus
 
         scanner = TPPlus::Scanner.new
         parser = TPPlus::Parser.new(scanner)
-        scanner.scan_setup(file)
+
+        #preprocess main file
+        ppr = Ppr::Preprocessor.new(includes: $global_options[:include])
+        ppr_file = ""
+        ppr.preprocess(file,ppr_file)
+        # ***** end preproccessor *******
+
+        scanner.scan_setup(ppr_file)
         parser.parse
         #evaluate environment
         @environment = parser.interpreter
@@ -69,16 +76,12 @@ module TPPlus
         interpreter = parser.interpreter
         
         #preprocess main file
-        # ..IMPORTANT:: The preprocessor only works on linux/unix machines
-        if Gem.win_platform?
-          scanner.scan_setup(file)
-        else
-          ppr = Ppr::Preprocessor.new(includes: $global_options[:include])
-          ppr_file = ""
-          ppr.preprocess(file,ppr_file)
-        
-          scanner.scan_setup(ppr_file)
-        end
+        ppr = Ppr::Preprocessor.new(includes: $global_options[:include])
+        ppr_file = ""
+        ppr.preprocess(file,ppr_file)
+        # ***** end preproccessor *******
+      
+        scanner.scan_setup(ppr_file)
 
         parser.parse
         # eval
