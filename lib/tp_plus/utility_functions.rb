@@ -1,3 +1,33 @@
+class String
+  def is_i?
+     /\A[-+]?\d+\z/ === self
+  end
+
+  def is_f?
+    Float(self) != nil rescue false
+  end
+
+  def is_b?
+    self.downcase == "true" || self.downcase == "false"
+  end
+
+  def to_b
+    self.downcase == "true"
+  end
+
+  def to_value
+    if self.is_i?
+      return self.to_i
+    elsif self.is_b?
+      return self.to_b
+    elsif self.is_f?
+      return self.to_f
+    end
+  end
+
+end
+
+
 module TPPlus
   module Util
     def to_boolean(str)

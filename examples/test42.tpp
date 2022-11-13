@@ -4,8 +4,6 @@ varx := R[10]
 varz := R[11]
 pr1 := PR[22]
 
-.assign DEBUG :< true
-
 .assign GRP :< 2
 .assign STARTX :< 0
 .def STARTZ :< 100
@@ -30,7 +28,9 @@ while l < layers
   
   sum(5)
 
-  .if :< (@DEBUG)
-    printnr(varz)
-  .endif
+.if :< (defined?(@DEBUG))
+  printnr(varz)
+.else
+.endif
+
 end

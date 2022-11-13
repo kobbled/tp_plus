@@ -19,6 +19,9 @@ options[:function_print] = true
 #list ofr include directories
 options[:include] = []
 
+#dictionary for macros
+options[:macros] = {}
+
 OptionParser.new do |opts|
   opts.banner = "Usage: tpp [options] filename"
 
@@ -56,6 +59,16 @@ OptionParser.new do |opts|
     if k.length() > 2
       options[:rossumvar] = k[2].strip
     end
+  end
+
+  opts.on("-m", "--macros <name>, <value>", "use preprocessor macro during compilation") do |m|
+    m = m.split("=")
+    m[0] = m[0].strip
+    m[1] = m[1].strip
+    #convert string to type
+    m[1] = m[1].to_value
+    #store in dict
+    options[:macros][m[0]] = m[1]
   end
 
   opts.on("-o", "--output <file>", "Write output to <file>") do |o|
@@ -106,6 +119,11 @@ end
 scanner = TPPlus::Scanner.new
 parser = TPPlus::Parser.new(scanner)
 interpreter = parser.interpreter
+
+#initialize preprocessor and pass into interpreter before loading environment
+ppr = Ppr::Preprocessor.new(options[:macros], includes: $global_options[:include])
+interpreter.load_preprocessor(ppr)
+
 if options[:environment]
   interpreter.load_environment(options[:environment])
 
@@ -131,7 +149,6 @@ end
 src = contents(ARGV[0])
 
 #preprocess main file
-ppr = Ppr::Preprocessor.new(includes: $global_options[:include])
 ppr_src = ""
 ppr.preprocess(src,ppr_src)
 # ***** end preproccessor *******
