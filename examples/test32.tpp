@@ -11,17 +11,7 @@
   Lam::set_parameters(&Lam::power, &Lam::flowrate, &Lam::speed)
   Lam::enable = on
 
-.def sum(num)
-   num = num.to_i
-   sum = 0
-   for i in 0..num do
-    sum += i
-   end
-
-   :< "#{sum}"
-.end
-
-  while l < sum(10)
+  while l < layers
 
     #pause after each layer
     if (layers > 1)
