@@ -108,13 +108,12 @@ module TPPlus
           
           #search for functions in interpreter space
           func = context.functions[@program_name.to_sym]
+          
           if name.length > 1
-            #search for functions in namespaces
-            context.namespaces.each do |k, v|
-              if v.functions.key?(name[1].to_sym)
-                func = v.functions[name[1].to_sym]
-                break
-              end
+            ns = context.namespaces.select { |k, _| k == name[0].to_sym }
+            unless ns.nil?
+              #search for functions in namespaces
+              ns.each { |key,value| func = value.functions[name[1].to_sym] if value.functions[name[1].to_sym] }
             end
           end
 
@@ -159,6 +158,10 @@ module TPPlus
 
               func.preinline(self, context)
               return func.inline(context)
+            else
+              #replace @program_name, with the actual name of the function
+              #needed for namespaced functions
+              @program_name = func.name
             end
           end
 

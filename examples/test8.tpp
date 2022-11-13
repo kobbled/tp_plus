@@ -14,7 +14,6 @@ namespace ns3
   VAL1 := 'Hello'
 
   def test2() : numreg
-    using ns1
     return(ns1::VAL1 + 5)
   end
 end

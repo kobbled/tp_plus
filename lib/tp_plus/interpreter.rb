@@ -78,7 +78,7 @@ module TPPlus
     end
 
     def get_warning_label
-      "warning#{@warning_identifiers}"
+      TPPlus::Nodes::LabelDefinitionNode.new("warning#{@warning_identifiers}")
     end
 
     def define_labels
@@ -382,7 +382,7 @@ module TPPlus
 
       #create call stack graph
        #only perform on main entry. Not on namespace or function level.
-      if !@functions.empty?
+      if !@functions.empty? && !defined?(@env_flg)
         create_call_stack(@name, @nodes)
         set_call_stack_levels()
         traverse_call_stack()

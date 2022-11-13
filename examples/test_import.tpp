@@ -7,8 +7,6 @@ namespace Sense
   ulrm    := UALM[1]
 
   def read()
-    using  measure, tool
-
     while 0
       measure = tool::read_pin
       wait_for(250,'ms')
@@ -16,8 +14,6 @@ namespace Sense
   end
 
   def findZero()
-    using measure, ulrm, tool
-
     lpos := PR[1]
     ofst := PR[2]
 

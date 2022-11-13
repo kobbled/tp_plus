@@ -37,6 +37,11 @@ module TPPlus
 
       def pop
         return nil if @length == 0
+        #handle case where stack has been prematurly cleared
+        if @stack[0] == nil
+          @length = 0
+          return nil
+        end
 
         @stack_pointer -= @stack[0].size
         @length -= @stack[0].size

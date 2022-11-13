@@ -634,7 +634,6 @@ namespace ns3
   VAL1 := 'Hello'
 
   def test2() : numreg
-    using ns1
     return(ns1::VAL1 + 5)
   end
 end
@@ -895,14 +894,10 @@ namespace Math
   M_PI := 3.14159
 
   inline def arclength(ang, rad) : numreg
-    using M_PI
-
     return(ang*rad*M_PI/180)
   end
 
   inline def arcangle(len, rad) : numreg
-    using M_PI
-
     return(len/rad*180/M_PI)
   end
 end
@@ -1075,8 +1070,6 @@ namespace tool
 end
 ```
 
-`using` keyword still has to be used to pass outside namespaces into the current namespace or function scope.
-
 test_import.tpp
 ```ruby
 namespace Sense
@@ -1086,8 +1079,6 @@ namespace Sense
   ulrm    := UALM[1]
 
   def read()
-    using  measure, tool
-
     while 0
       measure = tool::read_pin
       wait_for(250,'ms')
@@ -1095,8 +1086,6 @@ namespace Sense
   end
 
   def findZero()
-    using measure, ulrm, tool
-
     lpos := PR[1]
     ofst := PR[2]
 
@@ -1541,9 +1530,6 @@ namespace sensor
   SAMPLING_TIME := 0.4
 
   def sample(pin, time) : numreg
-    
-    using POLLING_RATE, SAMPLING_TIME
-
     t := R[150]
     sum := R[151]
     inc := R[152]

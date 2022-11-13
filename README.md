@@ -308,14 +308,10 @@ namespace Math
   M_PI := 3.14159
 
   def arclength(ang, rad) : numreg
-    using M_PI
-
     return(ang*rad*M_PI/180)
   end
 
   def arcangle(len, rad) : numreg
-    using M_PI
-
     return(len/rad*180/M_PI)
   end
 end
@@ -380,14 +376,10 @@ namespace Math
   M_PI := 3.14159
 
   inline def arclength(ang, rad) : numreg
-    using M_PI
-
     return(ang*rad*M_PI/180)
   end
 
   inline def arcangle(len, rad) : numreg
-    using M_PI
-
     return(len/rad*180/M_PI)
   end
 end
@@ -446,14 +438,10 @@ namespace Math
   M_PI := 3.14159
 
   inline def arclength(ang, rad) : numreg
-    using M_PI
-
     return(ang*rad*M_PI/180)
   end
 
   inline def arcangle(len, rad) : numreg
-    using M_PI
-
     return(len/rad*180/M_PI)
   end
 end
@@ -622,13 +610,13 @@ namespace Math
   end
 end
 
-foo = Mth::ln(2)
+foo = Math::ln(2)
 
-foo = Mth::test(5+3, bar*biz/2, -1*biz*Math::PI)
+foo = Math::test(5+3, bar*biz/2, -1*biz*Math::PI)
 
-foo = Mth::test(bar*biz/2, set_reg(biz), -1*biz*Math::PI)
+foo = Math::test(bar*biz/2, set_reg(biz), -1*biz*Math::PI)
 
-foo = Mth::test3(bar*Math::PI*set_reg(baz))
+foo = Math::test3(bar*Math::PI*set_reg(baz))
 ```
 
 </td>
@@ -639,21 +627,21 @@ foo = Mth::test3(bar*Math::PI*set_reg(baz))
 COMMENT = "TEST";
 DEFAULT_GROUP = 1,*,*,*,*;
 /MN
- : CALL MTH_LN(2,10) ;
+ : CALL MATH_LN(2,10) ;
  :  ;
  : R[70:dvar2]=5+3 ;
  : R[71:dvar3]=(R[11:bar]*R[12:biz]/2) ;
  : R[72:dvar4]=((-1)*R[12:biz]*3.14159) ;
- : CALL MTH_TEST(R[70:dvar2],R[71:dvar3],R[72:dvar4],10) ;
+ : CALL MATH_TEST(R[70:dvar2],R[71:dvar3],R[72:dvar4],10) ;
  :  ;
  : CALL SET_REG(R[12:biz],74) ;
  : R[73:dvar5]=(R[11:bar]*R[12:biz]/2) ;
  : R[75:dvar7]=((-1)*R[12:biz]*3.14159) ;
- : CALL MTH_TEST(R[73:dvar5],R[74:dvar6],R[75:dvar7],10) ;
+ : CALL MATH_TEST(R[73:dvar5],R[74:dvar6],R[75:dvar7],10) ;
  :  ;
  : CALL SET_REG(R[13:baz],76) ;
  : R[77:dvar9]=(R[11:bar]*3.14159*R[76:dvar8]) ;
- : CALL MTH_TEST3(R[77:dvar9],10) ;
+ : CALL MATH_TEST3(R[77:dvar9],10) ;
 /POS
 /END
 ```

@@ -1,8 +1,10 @@
 require 'ppr'
 
 module TPPlus
+    Struct.new("Dummy", :variables, :constants)
+    
     class BaseBlock
-      attr_accessor :line_count, :nodes, :ret_type, :position_data, :pose_list, :functions
+      attr_accessor :line_count, :nodes, :ret_type, :position_data, :pose_list, :functions, :environment
       attr_reader :variables, :constants, :namespaces
 
       def initialize
@@ -15,6 +17,10 @@ module TPPlus
         @ret_type      = {}
         @position_data = {}
         @line_count    = 0
+        @imports = []
+        #need to set :variables, and :constants members for when
+        #an environment file is not used. (see `get_const`, `get_var`)
+        @environment = Struct::Dummy.new({}, {})
 
         @pose_list = Motion::Factory::Pose.new
       end
@@ -28,29 +34,25 @@ module TPPlus
           file = string
         end
 
-        if self.is_a?(Function)
-          eval
-        else
-          scanner = TPPlus::Scanner.new
-          parser = TPPlus::Parser.new(scanner, self)
+        scanner = TPPlus::Scanner.new
+        parser = TPPlus::Parser.new(scanner)
+        scanner.scan_setup(file)
+        parser.parse
+        #evaluate environment
+        @environment = parser.interpreter
+        @environment.environment_file?
+        @environment.eval
 
-          #preprocess main file
-          # ..IMPORTANT:: The preprocessor only works on linux/unix machines
-          if Gem.win_platform?
-            scanner.scan_setup(file)
-          else
-            ppr = Ppr::Preprocessor.new(includes: $global_options[:include])
-            ppr_file = ""
-            ppr.preprocess(file,ppr_file)
-          
-            scanner.scan_setup(ppr_file)
-          end
-          
-          parser.parse
-          eval
-        end
+        #merge namespaces into main scope. These need to be passed
+        #into scope of namespaces, or functions
+        merge_namespaces(@environment.namespaces)
+        
       rescue RuntimeError => e
         raise "Runtime error in environment on line #{@source_line_count}:\n#{e}"
+      end
+
+      def environment_file?
+        @env_flg = true
       end
 
       def load_import(filepath, compileTF)
@@ -90,14 +92,15 @@ module TPPlus
       end
 
       def get_parent_imports(nodes)
-        parent_nodes = {:vars => {}, :funcs => {}}
+        parent_nodes = {:vars => {}, :funcs => {}, :namespaces => {}}
         nodes.each do |n|
           if n.is_a?(TPPlus::Nodes::UsingNode)
             n.mods.each do |m|
               if m == "env"
                 next
               elsif get_namespace(m)
-                parent_nodes[:vars][m.to_sym] = get_namespace(m)
+                @imports << m
+                parent_nodes[:namespaces][m.to_sym] = get_namespace(m)
               elsif get_function(m)
                 parent_nodes[:funcs][m.to_sym] = get_function(m)
               elsif get_var_or_const(m)
@@ -106,18 +109,18 @@ module TPPlus
             end
           end
         end
-
         parent_nodes
       end
       
       def add_namespace(identifier, block)
         pass_nodes = get_parent_imports(block)
 
-        if @namespaces[identifier.to_sym].nil?
+        if @namespaces[identifier.to_sym].nil? && !@imports.include?(identifier.to_s)
           name = @name.empty? ? "#{identifier}" : "#{@name}_#{identifier}"
-          @namespaces[identifier.to_sym] = TPPlus::Namespace.new(name, block, vars=pass_nodes[:vars], funcs=pass_nodes[:funcs])
+          @namespaces[identifier.to_sym] = TPPlus::Namespace.new(name, block, vars=pass_nodes[:vars], funcs=pass_nodes[:funcs], nspaces=pass_nodes[:namespaces], environment = @environment, imports = @imports)
         else
-          @namespaces[identifier.to_sym].reopen!(block)
+          @namespaces[identifier.to_sym].environment = @environment
+          @namespaces[identifier.to_sym].reopen!(block, vars=pass_nodes[:vars], funcs=pass_nodes[:funcs], nspaces=pass_nodes[:namespaces], imports = @imports)
         end
       end
 
@@ -125,13 +128,29 @@ module TPPlus
         pass_nodes = get_parent_imports(block)
 
         if @functions[name.to_sym].nil?
-          @functions[name.to_sym] = TPPlus::Function.new(name, args, block, ret_type=ret_type, vars=pass_nodes[:vars], funcs=pass_nodes[:funcs], inlined=inlined)
+          @functions[name.to_sym] = TPPlus::Function.new(name, args, block, ret_type=ret_type, vars=pass_nodes[:vars], funcs=pass_nodes[:funcs], nspaces=pass_nodes[:namespaces], environment = @environment, imports = @imports, inlined=inlined)
           @functions[name.to_sym].eval
         end
       end
 
+      def append_namespace(key, namespace)
+        @namespaces[key] = namespace
+      end
+
       def merge_functions(funcs)
-        @functions.merge!(funcs)
+        @functions = @functions.merge!(funcs)
+      end
+
+      def merge_namespaces(namespaces)
+        @namespaces = @namespaces.merge!(namespaces)
+      end
+
+      def merge_constants(consts)
+        @constants = @constants.merge!(consts)
+      end
+
+      def merge_vars(vars)
+        @variables = @variables.merge!(vars)
       end
 
       def add_constant(identifier, node)
@@ -148,35 +167,39 @@ module TPPlus
       end
   
       def get_constant(identifier)
-        raise "Constant (#{identifier}) not defined" if @constants[identifier.to_sym].nil?
+        raise "Constant (#{identifier}) not defined" if @constants[identifier.to_sym].nil? && @environment.constants[identifier.to_sym].nil?
   
-        @constants[identifier.to_sym]
+        @constants[identifier.to_sym] || @environment.constants[identifier.to_sym]
       end
   
       def get_var(identifier)
-        raise "Variable (#{identifier}) not defined" if @variables[identifier.to_sym].nil?
+        raise "Variable (#{identifier}) not defined" if @variables[identifier.to_sym].nil? && @environment.variables[identifier.to_sym].nil?
   
-        @variables[identifier.to_sym]
+        @variables[identifier.to_sym] || @environment.variables[identifier.to_sym]
       end
 
       def get_var_or_const(identifier)
-        raise "Variable (#{identifier}) not defined" if @variables[identifier.to_sym].nil? && @constants[identifier.to_sym].nil?
+        raise "Variable (#{identifier}) not defined" if (@variables[identifier.to_sym].nil? && @environment.variables[identifier.to_sym].nil?) && (@constants[identifier.to_sym].nil? && @environment.constants[identifier.to_sym].nil?)
         
         if @variables[identifier.to_sym]
           return @variables[identifier.to_sym]
+        elsif @environment.variables[identifier.to_sym]
+          return @environment.variables[identifier.to_sym]
+        elsif @constants[identifier.to_sym]
+          return @constants[identifier.to_sym]
+        else
+          @environment.constants[identifier.to_sym]
         end
-
-        return @constants[identifier.to_sym]
       end
 
       def check_constant(identifier)
-        return false if @constants[identifier.to_sym].nil?
+        return false if @constants[identifier.to_sym].nil? && @environment.constants[identifier.to_sym].nil?
   
         true
       end
   
       def check_var(identifier)
-        return false if @variables[identifier.to_sym].nil?
+        return false if @variables[identifier.to_sym].nil? && @environment.variables[identifier.to_sym].nil?
   
         true
       end
