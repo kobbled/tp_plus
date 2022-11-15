@@ -2,6 +2,7 @@
 P[<%= p.id %>:"<%= p.comment %>"]{
 <% p.groups.each do |k,g| -%>
 <% if g.config.empty? -%>
+
    GP<%= g.group.to_s %>:
   UF : <%= g.uframe.to_s %>, UT : <%= g.utool.to_s %>,
   <% g.components.each_with_index do |(c1, c2), index| -%>

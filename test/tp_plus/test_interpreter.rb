@@ -2463,6 +2463,105 @@ end)
     assert_equal 1, @interpreter.position_data[:positions].length
   end
 
+
+  def test_polar_position_data
+    parse %(TP_GROUPMASK = "1,1,*,*,*"
+
+      default.group(1).pose -> [0,0,0,90,180,0]
+      default.group(1).config -> ['F','U','T', 0, 0, 0]
+      default.group(2).joints -> [0]
+      
+      p := P[1..9]
+      p1.group(1).pose.polar.z -> [0, 80, 100, 90, 180, 0]
+      p1.group(2).joints -> [0]
+      
+      (p2..p9).group(1).xyz.offset.polar.z -> [-18, 0 ,0]
+      (p2..p9).group(2).joints.offset -> [18])
+    
+        assert_prog " ;\n" + " ;\n" + " ;\n"
+        assert_equal %(P[1:"p1"]{
+   GP1:
+  UF : 0, UT : 0,  CONFIG : 'F U T, 0, 0, 0',
+  X = 0.000 mm, Y = 80.000 mm, Z = 100.000 mm,
+  W = -90.000 deg, P = 0.000 deg, R = 180.000 deg
+   GP2:
+  UF : 0, UT : 0,
+    J1 = 0.000 deg
+    };
+P[2:"p2"]{
+   GP1:
+  UF : 0, UT : 0,  CONFIG : 'F U T, 0, 0, 0',
+  X = 24.721 mm, Y = 76.085 mm, Z = 100.000 mm,
+  W = -90.000 deg, P = 0.000 deg, R = 162.000 deg
+   GP2:
+  UF : 0, UT : 0,
+    J1 = 18.000 deg
+    };
+P[3:"p3"]{
+   GP1:
+  UF : 0, UT : 0,  CONFIG : 'F U T, 0, 0, 0',
+  X = 47.023 mm, Y = 64.721 mm, Z = 100.000 mm,
+  W = -90.000 deg, P = 0.000 deg, R = 144.000 deg
+   GP2:
+  UF : 0, UT : 0,
+    J1 = 36.000 deg
+    };
+P[4:"p4"]{
+   GP1:
+  UF : 0, UT : 0,  CONFIG : 'F U T, 0, 0, 0',
+  X = 64.721 mm, Y = 47.023 mm, Z = 100.000 mm,
+  W = -90.000 deg, P = 0.000 deg, R = 126.000 deg
+   GP2:
+  UF : 0, UT : 0,
+    J1 = 54.000 deg
+    };
+P[5:"p5"]{
+   GP1:
+  UF : 0, UT : 0,  CONFIG : 'F U T, 0, 0, 0',
+  X = 76.085 mm, Y = 24.721 mm, Z = 100.000 mm,
+  W = -90.000 deg, P = 0.000 deg, R = 108.000 deg
+   GP2:
+  UF : 0, UT : 0,
+    J1 = 72.000 deg
+    };
+P[6:"p6"]{
+   GP1:
+  UF : 0, UT : 0,  CONFIG : 'F U T, 0, 0, 0',
+  X = 80.000 mm, Y = 0.000 mm, Z = 100.000 mm,
+  W = -90.000 deg, P = 0.000 deg, R = 90.000 deg
+   GP2:
+  UF : 0, UT : 0,
+    J1 = 90.000 deg
+    };
+P[7:"p7"]{
+   GP1:
+  UF : 0, UT : 0,  CONFIG : 'F U T, 0, 0, 0',
+  X = 76.085 mm, Y = -24.721 mm, Z = 100.000 mm,
+  W = -90.000 deg, P = 0.000 deg, R = 72.000 deg
+   GP2:
+  UF : 0, UT : 0,
+    J1 = 108.000 deg
+    };
+P[8:"p8"]{
+   GP1:
+  UF : 0, UT : 0,  CONFIG : 'F U T, 0, 0, 0',
+  X = 64.721 mm, Y = -47.023 mm, Z = 100.000 mm,
+  W = -90.000 deg, P = 0.000 deg, R = 54.000 deg
+   GP2:
+  UF : 0, UT : 0,
+    J1 = 126.000 deg
+    };
+P[9:"p9"]{
+   GP1:
+  UF : 0, UT : 0,  CONFIG : 'F U T, 0, 0, 0',
+  X = 47.023 mm, Y = -64.721 mm, Z = 100.000 mm,
+  W = -90.000 deg, P = 0.000 deg, R = 36.000 deg
+   GP2:
+  UF : 0, UT : 0,
+    J1 = 144.000 deg
+    };\n), @interpreter.pose_list.eval
+  end
+
   def test_conditional_equals_minus_one
     parse("foo := R[1]\nfoo2 := R[2]\nif foo == (foo2-1)\nfoo = 1\nfoo2 = 2\nend")
     assert_prog "IF (R[1:foo]<>(R[2:foo2]-1)),JMP LBL[100] ;\nR[1:foo]=1 ;\nR[2:foo2]=2 ;\nLBL[100] ;\n"
