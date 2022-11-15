@@ -79,14 +79,14 @@ module TPPlus
         scanner = TPPlus::Scanner.new
         parser = TPPlus::Parser.new(scanner)
         interpreter = parser.interpreter
-
-        #pass preprocessor into interpeter
-        interpreter.load_preprocessor(@ppr)
         
         #preprocess main file
         ppr_file = ""
         @ppr.preprocess(file,ppr_file)
         # ***** end preproccessor *******
+
+        #pass preprocessor into interpeter
+        interpreter.load_preprocessor(@ppr)
       
         scanner.scan_setup(ppr_file)
 
