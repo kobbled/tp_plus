@@ -36,8 +36,14 @@ OptionParser.new do |opts|
       include_folder.gsub! '/', '\\'
       opts.default_argv[i] = '-i'
       opts.default_argv.insert(i+1, include_folder)
+    elsif a.start_with?("/D")
+      rmacro = a.dup
+      rmacro.sub! '/D', ''
+      opts.default_argv[i] = '-m'
+      opts.default_argv.insert(i+1, rmacro)
     end
   end
+
 
   opts.on("-e", "--environment <file>", "Require an environment file <file> before parsing") do |e|
     options[:environment] = e
