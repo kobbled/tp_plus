@@ -17,6 +17,7 @@ TP+ is a higher-level language abstraction that translates into FANUC TP. It fea
 * Build the same program for multiple controllers through the use of environment files and imports
 * Managing Register sets on controller
 * Register and Postion ranges for easy declaration of blocks of registers
+* Preprocessor
 * Automatic label numbering
 * Improved looping
 * Easier managment of numerous TP files
@@ -24,11 +25,14 @@ TP+ is a higher-level language abstraction that translates into FANUC TP. It fea
 
 > This branch was forked from the archived repo [TP+](https://github.com/onerobotics/tp_plus)
 
-> see [Features](#features) for a quick look at the features
+> [!**NEW**]
+> * A Preprocessor [ppr](https://github.com/civol/ppr) was added! See [examples.md](examples.md#preprocessor) for details.
+> * Local variables can be declared! See [examples.md](examples.md#local-variables) for details.
 
-> see [examples.md](examples.md) for an indepth introduction to TP+
-
-> Test examples can be found in [./examples](https://github.com/kobbled/tp_plus/tree/master/examples) directory of this repository
+> [!**INFO**]
+> * see [Features](#features) for a quick look at the features
+> * see [examples.md](examples.md) for an indepth introduction to TP+
+> * Test example .tpp files can be found in [./examples](https://github.com/kobbled/tp_plus/tree/master/examples) directory of this repository
 
 
 <!-- TOC -->
@@ -45,6 +49,7 @@ TP+ is a higher-level language abstraction that translates into FANUC TP. It fea
     - [Importing Files](#importing-files)
     - [Local Variables](#local-variables)
     - [Expressions in Arguments](#expressions-in-arguments)
+    - [Preprocessor](#preprocessor)
     - [Environment Files](#environment-files)
   - [Documentation](#documentation)
   - [License](#license)
@@ -674,12 +679,110 @@ DEFAULT_GROUP = *,*,*,*,*;
 </tr>
 </table>
 
+### Preprocessor
+
+With the [ppr](https://github.com/civol/ppr) preprocessor things like **conditional inclusion**, **file inclusion**, **text macros**, **executing internal ruby code** is possible.
+
+Below is an example of running a ruby script to output the arc motion path of a circle in TP.
+
+<table>
+<tr>
+<td> <b>TP+</b> </td> <td> <b>TP</b> </td>
+</tr>
+<tr>
+<td>
+
+```ruby
+use_utool 3
+use_uframe 2
+
+TP_GROUPMASK = "1,1,*,*,*"
+
+default.group(1).pose -> [0,0,0,90,180,0]
+default.group(1).config -> ['F','U','T', 0, 0, 0]
+default.group(2).joints -> [0]
+
+
+.assign RADIUS :< 80
+.assign INCREMENTS :< 20
+.assign DISTANCE :< 100
+
+.do
+  #define points
+  :< "p := P[1..#{@INCREMENTS}]"
+
+  #set first point
+  :< "joint_move.to(p1).at(15, '%').term(-1)\n"
+
+  inc = @INCREMENTS.to_i
+  degree = 0
+  for i in 1..inc do
+    #get degree
+    degree = 360*(i-1)/(inc-1)
+    :< "p#{i}.group(1).pose.polar.z -> [#{(-1*degree).to_s}, #{@RADIUS.to_s}, #{@DISTANCE.to_s}, 90, 180, 0]\n"
+    :< "p#{i}.group(2).joints -> [#{(degree).to_s}]\n"
+    :< "arc_move.to(p#{i}).at(50, 'mm/s').term(#{(i == 1 || i == inc) ? '-1' : '100'}).coord\n"
+  end
+.end
+```
+
+</td>
+<td>
+
+```fortran
+/PROG TEST41
+/ATTR
+COMMENT = "TEST41";
+TCD:  STACK_SIZE	= 0,
+      TASK_PRIORITY	= 50,
+      TIME_SLICE	= 0,
+      BUSY_LAMP_OFF	= 0,
+      ABORT_REQUEST	= 0,
+      PAUSE_REQUEST	= 0;
+DEFAULT_GROUP = 1,1,*,*,*;
+/APPL
+/MN
+ : UTOOL_NUM=3 ;
+ : UFRAME_NUM=2 ;
+ :  ;
+ :  ;
+ :  ;
+ :  ;
+ : J P[1:p1] 15% FINE ;
+ : A P[1:p1] 50mm/sec FINE COORD ;
+ : A P[2:p2] 50mm/sec CNT100 COORD ;
+ : A P[3:p3] 50mm/sec CNT100 COORD ;
+ : A P[4:p4] 50mm/sec CNT100 COORD ;
+ : A P[5:p5] 50mm/sec CNT100 COORD ;
+ : A P[6:p6] 50mm/sec CNT100 COORD ;
+ : A P[7:p7] 50mm/sec CNT100 COORD ;
+ : A P[8:p8] 50mm/sec CNT100 COORD ;
+ : A P[9:p9] 50mm/sec CNT100 COORD ;
+ : A P[10:p10] 50mm/sec CNT100 COORD ;
+ : A P[11:p11] 50mm/sec CNT100 COORD ;
+ : A P[12:p12] 50mm/sec CNT100 COORD ;
+ : A P[13:p13] 50mm/sec CNT100 COORD ;
+ : A P[14:p14] 50mm/sec CNT100 COORD ;
+ : A P[15:p15] 50mm/sec CNT100 COORD ;
+ : A P[16:p16] 50mm/sec CNT100 COORD ;
+ : A P[17:p17] 50mm/sec CNT100 COORD ;
+ : A P[18:p18] 50mm/sec CNT100 COORD ;
+ : A P[19:p19] 50mm/sec CNT100 COORD ;
+ : A P[20:p20] 50mm/sec FINE COORD ;
+ :  ;
+ :  ;
+/POS
+/END
+```
+
+</td>
+</tr>
+</table>
+
+
 ### Environment Files
 
 You can save the robot controller configuration into an environment file. This can be swiched out depending on which robot you are using, and can be used to manage the register names on the controller (see: [examples.md](examples.md#environment-files))
-
-> [!TODO]
-> A preprocessor still needs to be added to TP+ in order to fully define a workcell/workstation in an environment file.
 
 ```ruby
 #----------
@@ -743,16 +846,18 @@ namespace Headstock
   frame := UTOOL[2]
   select := F[38]
   home := PR[3]
-  GROUP := 2
-  DIRECTION := -1
+.def Headstock_GROUP :< 2
+.def Headstock_DIRECTION :< -1
+
 end
 
 namespace Positioner
   frame := UTOOL[3]
   select := F[37]
   home := PR[4]
-  GROUP := 3
-  DIRECTION := 1
+.def Positioner_GROUP :< 3
+.def Positioner_DIRECTION :< 1
+
 end
 
 #----------
