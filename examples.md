@@ -1041,8 +1041,6 @@ DEFAULT_GROUP = 1,*,*,*,*;
 ```
 ## Imports
 
-**WARNING** New feature is without unit tesst coverage. There may be issues with usage.
-
 imports outside of current working directory are set with
 ```bash
 tpp test.tpp -o "./ls/test.ls" -i "path/to/include/dir"
@@ -1051,8 +1049,6 @@ tpp test.tpp -o "./ls/test.ls" -i "path/to/include/dir"
 import names refer to the filenames without the .tpp extension
 
 imports can be chosen to be printed or not with the `compile` keyword infront of the import statement 
-
-**NOTE** : importing the same file in nested files may cause problems as there   are currently no collision guards.
 
 main
 ```ruby
