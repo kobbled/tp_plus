@@ -141,12 +141,13 @@ if options[:environment]
     end
     karelenv = TPPlus::Karel::Environment.new(options[:karel], rossumconfig, 'tbl')
     karelenv.set_clear_registers(options[:clear_registers])
-    karelenv.gather_variables(interpreter)
+    karelenv.gather_variables(interpreter.environment)
     karelenv.build_list
     #build karel hash table
     karelenv.makefile
     #build rossum enum file
     if options[:rossumvar]
+      karelenv.gather_constants(interpreter.environment)
       karelenv.makeconfig
     end
   end

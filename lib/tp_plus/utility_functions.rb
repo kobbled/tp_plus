@@ -59,6 +59,22 @@ module TPPlus
       vars = vars.flatten!
     end
 
+    def gather_constants(interpreter, vars)
+      interpreter.namespaces.each_value do |n|
+        gather_constants(n, vars)
+      end
+
+      # store in a list as hash keys might conflict
+      # from namespace to namespace
+      vars << interpreter.constants.values
+      # prepend namespace name
+      vars[-1].each do |d|
+        d.setName(interpreter.name + '_' + d.name) if !interpreter.name.empty?
+      end
+
+      vars = vars.flatten!
+    end
+
     def retrieve_arg_calls(node, func_list)
       if node.is_a?(TPPlus::Nodes::ExpressionNode) || node.is_a?(Nodes::ParenExpressionNode)
         node.left_op.is_a?(Nodes::ParenExpressionNode) ? left = node.left_op.x : left = node.left_op
@@ -92,6 +108,6 @@ module TPPlus
       end
     end
 
-    module_function :retrieve_calls, :retrieve_arg_calls, :to_boolean, :gather_variables
+    module_function :retrieve_calls, :retrieve_arg_calls, :to_boolean, :gather_variables, :gather_constants
   end
 end
