@@ -1,6 +1,16 @@
 -- *** TPP Env Vars ***
 -- **************************
 
+-- ** CONSTANTS **
+-- ---------------
+
+<% @constants.each do |val| -%>
+%define <%=val.name.upcase %> <%= val.value %>
+<% end -%>
+
+-- ** REGISTERS **
+-- ---------------
+
 <% @variables.each do |val| -%>
 %define <%=val.name.upcase %> <%= val.id %>
 <% end -%>

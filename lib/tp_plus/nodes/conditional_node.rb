@@ -19,7 +19,7 @@ module TPPlus
       end
 
       def true_block(context)
-        @t ||= string_for(@true_block,context)
+        @t = string_for(@true_block,context)
       end
 
       def get_true_block
@@ -35,7 +35,7 @@ module TPPlus
       end
 
       def false_block(context)
-        @f ||= string_for(@false_block,context)
+        @f = string_for(@false_block,context)
       end
 
       def elsif_block(context)
@@ -57,6 +57,7 @@ module TPPlus
       end
 
       def can_be_inlined?
+        return false unless @elsif_block.empty?
         return false unless @false_block.empty?
         return false unless @true_block.length == 1
 
@@ -92,7 +93,7 @@ module TPPlus
           end
         else
           if @false_block.empty?
-            s += "LBL[#{true_label(context)}] ;\n#{elsif_block(context)}"
+            s += "LBL[#{true_label(context)}] ;\n#{elsif_block(context)}LBL[#{end_label(context)}]"
           else
             s += "JMP LBL[#{end_label(context)}] ;\nLBL[#{true_label(context)}] ;\n#{elsif_block(context)} ;\n#{false_block(context)}LBL[#{end_label(context)}]"
           end

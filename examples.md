@@ -44,6 +44,11 @@
   - [String Manipulation](#string-manipulation)
   - [Timers](#timers)
   - [wait statments](#wait-statments)
+  - [Preprocessor](#preprocessor)
+    - [Define Macros](#define-macros)
+    - [Conditional Inclusion](#conditional-inclusion)
+    - [File inclusion](#file-inclusion)
+    - [Code Execution](#code-execution)
   - [Environment Files](#environment-files)
   - [Misc Statments](#misc-statments)
     - [MNU Access](#mnu-access)
@@ -1036,8 +1041,6 @@ DEFAULT_GROUP = 1,*,*,*,*;
 ```
 ## Imports
 
-**WARNING** New feature is without unit tesst coverage. There may be issues with usage.
-
 imports outside of current working directory are set with
 ```bash
 tpp test.tpp -o "./ls/test.ls" -i "path/to/include/dir"
@@ -1046,8 +1049,6 @@ tpp test.tpp -o "./ls/test.ls" -i "path/to/include/dir"
 import names refer to the filenames without the .tpp extension
 
 imports can be chosen to be printed or not with the `compile` keyword infront of the import statement 
-
-**NOTE** : importing the same file in nested files may cause problems as there   are currently no collision guards.
 
 main
 ```ruby
@@ -2485,6 +2486,225 @@ DEFAULT_GROUP = 1,*,*,*,*;
 /END
 ```
 
+## Preprocessor
+
+> [!**NOTE**]
+> For a full description of the preprocessor see the [Ppr documentation](https://github.com/civol/ppr).
+
+### Define Macros
+
+Macros can be used as text replacement during compilation. Say you have a workcell with a mechanism on group 2, however have another workcell with the same mechanism on group 3. Depending on which environment file you are building with, the respective group number will be used.
+
+**Environment File 1**
+```ruby
+.def Positioner_Group :< 2
+```
+
+**Environment File 2**
+```ruby
+.def Positioner_Group :< 3
+```
+
+**Main file**
+```ruby
+pr1.group(Positioner_Group) = Pos::setxyz(0, 0, 0, 0, 0, 0)
+```
+
+### Conditional Inclusion
+
+The block below will only insert `printnr(varz)` if the macro `DEBUG`
+is defined in the tpp arguements. 
+
+`tpp example.tpp -o example.ls -m "DEBUG=true"`
+
+```ruby
+.if :< (defined?(@DEBUG))
+  printnr(varz)
+.else
+.endif
+```
+
+This can be used to print or log debugging information if enabled throughout a project.
+
+>[!WARNING]
+> The `.else` statement is currently required to make this work.
+
+### File inclusion
+
+File inclusion can be used as an alternative to imports, which will copy, paste, and evaluate the file contents to where it is declared
+
+**main.tpp**
+```ruby
+.require :< "functions.tpp"
+
+val1 = R[10]
+val1 = func1(arg1, arg2)
+```
+**functions.tpp**
+```ruby
+def func1(a1, a2)
+  return(a1*a2)
+end
+```
+
+### Code Execution
+
+Arbitrary ruby code can be ran and executed inside the `.def`, `.do`, or `.if` macros
+
+>[!IMPORTANT]
+> If a macro is being used inside of execution code you must use the **.assign** keyword and not the **.def** keyword. If also using macro for text replacement you must declare it as both an **.assign** and **.def** macro.
+
+The following code will create a circular path in coordinated motion with a rotary. 
+
+```ruby
+use_utool 3
+use_uframe 2
+
+TP_GROUPMASK = "1,1,*,*,*"
+
+default.group(1).pose -> [0,0,0,90,180,0]
+default.group(1).config -> ['F','U','T', 0, 0, 0]
+default.group(2).joints -> [0]
+
+
+.assign RADIUS :< 80
+.assign INCREMENTS :< 20
+.assign DISTANCE :< 100
+
+.do
+  #define points
+  :< "p := P[1..#{@INCREMENTS}]"
+
+  #set first point
+  :< "joint_move.to(p1).at(15, '%').term(-1)\n"
+
+  inc = @INCREMENTS.to_i
+  degree = 0
+  for i in 1..inc do
+    #get degree
+    degree = 360*(i-1)/(inc-1)
+    :< "p#{i}.group(1).pose.polar.z -> [#{(-1*degree).to_s}, #{@RADIUS.to_s}, #{@DISTANCE.to_s}, 90, 180, 0]\n"
+    :< "p#{i}.group(2).joints -> [#{(degree).to_s}]\n"
+    :< "arc_move.to(p#{i}).at(50, 'mm/s').term(#{(i == 1 || i == inc) ? '-1' : '100'}).coord\n"
+  end
+.end
+```
+
+```fortran
+/PROG TEST41
+/ATTR
+COMMENT = "TEST41";
+TCD:  STACK_SIZE	= 0,
+      TASK_PRIORITY	= 50,
+      TIME_SLICE	= 0,
+      BUSY_LAMP_OFF	= 0,
+      ABORT_REQUEST	= 0,
+      PAUSE_REQUEST	= 0;
+DEFAULT_GROUP = 1,1,*,*,*;
+/APPL
+/MN
+ : UTOOL_NUM=3 ;
+ : UFRAME_NUM=2 ;
+ :  ;
+ :  ;
+ :  ;
+ :  ;
+ : J P[1:p1] 15% FINE ;
+ : A P[1:p1] 50mm/sec FINE COORD ;
+ : A P[2:p2] 50mm/sec CNT100 COORD ;
+ : A P[3:p3] 50mm/sec CNT100 COORD ;
+ : A P[4:p4] 50mm/sec CNT100 COORD ;
+ : A P[5:p5] 50mm/sec CNT100 COORD ;
+ : A P[6:p6] 50mm/sec CNT100 COORD ;
+ : A P[7:p7] 50mm/sec CNT100 COORD ;
+ : A P[8:p8] 50mm/sec CNT100 COORD ;
+ : A P[9:p9] 50mm/sec CNT100 COORD ;
+ : A P[10:p10] 50mm/sec CNT100 COORD ;
+ : A P[11:p11] 50mm/sec CNT100 COORD ;
+ : A P[12:p12] 50mm/sec CNT100 COORD ;
+ : A P[13:p13] 50mm/sec CNT100 COORD ;
+ : A P[14:p14] 50mm/sec CNT100 COORD ;
+ : A P[15:p15] 50mm/sec CNT100 COORD ;
+ : A P[16:p16] 50mm/sec CNT100 COORD ;
+ : A P[17:p17] 50mm/sec CNT100 COORD ;
+ : A P[18:p18] 50mm/sec CNT100 COORD ;
+ : A P[19:p19] 50mm/sec CNT100 COORD ;
+ : A P[20:p20] 50mm/sec FINE COORD ;
+ :  ;
+ :  ;
+/POS
+P[1:"p1"]{
+   GP1:
+  UF : 2, UT : 3,  CONFIG : 'F U T, 0, 0, 0',
+  X = 0.000 mm, Y = 80.000 mm, Z = 100.000 mm,
+  W = -90.000 deg, P = 0.000 deg, R = 180.000 deg
+   GP2:
+  UF : 2, UT : 3,
+    J1 = 0.000 deg
+    };
+P[2:"p2"]{
+   GP1:
+  UF : 2, UT : 3,  CONFIG : 'F U T, 0, 0, 0',
+  X = 24.721 mm, Y = 76.085 mm, Z = 100.000 mm,
+  W = -90.000 deg, P = 0.000 deg, R = 162.000 deg
+   GP2:
+  UF : 2, UT : 3,
+    J1 = 18.000 deg
+    };
+P[3:"p3"]{
+   GP1:
+  UF : 2, UT : 3,  CONFIG : 'F U T, 0, 0, 0',
+  X = 48.145 mm, Y = 63.891 mm, Z = 100.000 mm,
+  W = -90.000 deg, P = 0.000 deg, R = 143.000 deg
+   GP2:
+  UF : 2, UT : 3,
+    J1 = 37.000 deg
+    };
+P[4:"p4"]{
+   GP1:
+  UF : 2, UT : 3,  CONFIG : 'F U T, 0, 0, 0',
+  X = 66.323 mm, Y = 44.735 mm, Z = 100.000 mm,
+  W = -90.000 deg, P = 0.000 deg, R = 124.000 deg
+   GP2:
+  UF : 2, UT : 3,
+    J1 = 56.000 deg
+    };
+  .
+  . 
+  .
+  .
+P[18:"p18"]{
+   GP1:
+  UF : 2, UT : 3,  CONFIG : 'F U T, 0, 0, 0',
+  X = -49.253 mm, Y = 63.041 mm, Z = 100.000 mm,
+  W = -90.000 deg, P = 0.000 deg, R = -142.000 deg
+   GP2:
+  UF : 2, UT : 3,
+    J1 = 322.000 deg
+    };
+P[19:"p19"]{
+   GP1:
+  UF : 2, UT : 3,  CONFIG : 'F U T, 0, 0, 0',
+  X = -26.045 mm, Y = 75.641 mm, Z = 100.000 mm,
+  W = -90.000 deg, P = 0.000 deg, R = -161.000 deg
+   GP2:
+  UF : 2, UT : 3,
+    J1 = 341.000 deg
+    };
+P[20:"p20"]{
+   GP1:
+  UF : 2, UT : 3,  CONFIG : 'F U T, 0, 0, 0',
+  X = -0.000 mm, Y = 80.000 mm, Z = 100.000 mm,
+  W = -90.000 deg, P = 0.000 deg, R = -180.000 deg
+   GP2:
+  UF : 2, UT : 3,
+    J1 = 360.000 deg
+    };
+/END
+
+```
+
+
 ## Environment Files
 
 An environment file can be used to save a configuration of a robot workcell or a workstation.
@@ -2552,16 +2772,16 @@ namespace Headstock
   frame := UTOOL[2]
   select := F[38]
   home := PR[3]
-  GROUP := 2
-  DIRECTION := -1
+.def Headstock_GROUP :< 2
+.def Headstock_DIRECTION :< -1
 end
 
 namespace Positioner
   frame := UTOOL[3]
   select := F[37]
   home := PR[4]
-  GROUP := 3
-  DIRECTION := 1
+.def Positioner_GROUP :< 3
+.def Positioner_DIRECTION :< 1
 end
 
 #----------
@@ -2605,6 +2825,9 @@ local         := PR[80..100]
 Through the usage of the [Ka-Boost](https://github.com/kobbled/Ka-Boost) library, specifically the [hash-registers](https://github.com/kobbled/kl-hash-registers) package, you can manage the robot controllers register set, and register comments.
 
 Envoking the `-k <filename>,<true|false>` option will produce a .kl file which is the environment file represented as a hash table. This file will clear the comments of your register set (and values if specified), and update the register comments with the names in the hash table.
+
+<details>
+  </br>
 
 For example this would be the output karel file from the environment above:
 ```pascal
@@ -2705,6 +2928,8 @@ BEGIN
 
 END tppenv
 ```
+
+</details>
 
 ## Misc Statments
 

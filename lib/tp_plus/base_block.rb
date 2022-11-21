@@ -4,8 +4,8 @@ module TPPlus
     Struct.new("Dummy", :variables, :constants)
     
     class BaseBlock
-      attr_accessor :line_count, :nodes, :ret_type, :position_data, :pose_list, :functions, :environment
-      attr_reader :variables, :constants, :namespaces
+      attr_accessor :line_count, :nodes, :ret_type, :position_data, :pose_list, :functions, :environment, :ppr
+      attr_reader :variables, :constants, :namespaces, :name
 
       def initialize
         @name          = ''
@@ -21,8 +21,14 @@ module TPPlus
         #need to set :variables, and :constants members for when
         #an environment file is not used. (see `get_const`, `get_var`)
         @environment = Struct::Dummy.new({}, {})
+        #dummy preprocessor for when it is not initialized
+        @ppr = Ppr::Preprocessor.new()
 
         @pose_list = Motion::Factory::Pose.new
+      end
+
+      def load_preprocessor(ppr)
+        @ppr = ppr
       end
 
       def load_environment(string)
@@ -38,9 +44,8 @@ module TPPlus
         parser = TPPlus::Parser.new(scanner)
 
         #preprocess main file
-        ppr = Ppr::Preprocessor.new(includes: $global_options[:include])
         ppr_file = ""
-        ppr.preprocess(file,ppr_file)
+        @ppr.preprocess(file,ppr_file)
         # ***** end preproccessor *******
 
         scanner.scan_setup(ppr_file)
@@ -76,10 +81,12 @@ module TPPlus
         interpreter = parser.interpreter
         
         #preprocess main file
-        ppr = Ppr::Preprocessor.new(includes: $global_options[:include])
         ppr_file = ""
-        ppr.preprocess(file,ppr_file)
+        @ppr.preprocess(file,ppr_file)
         # ***** end preproccessor *******
+
+        #pass preprocessor into interpeter
+        interpreter.load_preprocessor(@ppr)
       
         scanner.scan_setup(ppr_file)
 

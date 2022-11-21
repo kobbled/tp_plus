@@ -1,3 +1,33 @@
+class String
+  def is_i?
+     /\A[-+]?\d+\z/ === self
+  end
+
+  def is_f?
+    Float(self) != nil rescue false
+  end
+
+  def is_b?
+    self.downcase == "true" || self.downcase == "false"
+  end
+
+  def to_b
+    self.downcase == "true"
+  end
+
+  def to_value
+    if self.is_i?
+      return self.to_i
+    elsif self.is_b?
+      return self.to_b
+    elsif self.is_f?
+      return self.to_f
+    end
+  end
+
+end
+
+
 module TPPlus
   module Util
     def to_boolean(str)
@@ -26,6 +56,22 @@ module TPPlus
       # store in a list as hash keys might conflict
       # from namespace to namespace
       vars << interpreter.variables.values
+      vars = vars.flatten!
+    end
+
+    def gather_constants(interpreter, vars)
+      interpreter.namespaces.each_value do |n|
+        gather_constants(n, vars)
+      end
+
+      # store in a list as hash keys might conflict
+      # from namespace to namespace
+      vars << interpreter.constants.values
+      # prepend namespace name
+      vars[-1].each do |d|
+        d.setName(interpreter.name + '_' + d.name) if !interpreter.name.empty?
+      end
+
       vars = vars.flatten!
     end
 
@@ -62,6 +108,6 @@ module TPPlus
       end
     end
 
-    module_function :retrieve_calls, :retrieve_arg_calls, :to_boolean, :gather_variables
+    module_function :retrieve_calls, :retrieve_arg_calls, :to_boolean, :gather_variables, :gather_constants
   end
 end

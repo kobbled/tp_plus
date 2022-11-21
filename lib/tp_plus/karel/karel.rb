@@ -27,6 +27,7 @@ module TPPlus
 
       def initialize(hashfilename = 'tppenv', rossumfilename = 'env', hashtable = 'tbl')
         @variables = []
+        @constants = []
         @nodes = []
         @hashfilename = hashfilename
         @rossumfilename = rossumfilename
@@ -42,6 +43,12 @@ module TPPlus
       def gather_variables(interpreter)
         @nodes = []
         TPPlus::Util.gather_variables(interpreter, @nodes)
+        nil
+      end
+
+      def gather_constants(interpreter)
+        @constants = []
+        TPPlus::Util.gather_constants(interpreter, @constants)
         nil
       end
 

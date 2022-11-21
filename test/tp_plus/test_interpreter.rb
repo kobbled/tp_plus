@@ -471,6 +471,351 @@ LBL[106] ;
    "LBL[100] ;\n"
   end
 
+  def test_conditional_ifelse_no_else
+    parse("flg := F[5]
+      flg2 := F[10]
+      
+      #goto powder bottle
+      if flg
+        # positioner bottle
+        func2()
+      elsif flg2
+        # headstock bottle
+        func3()
+      end")
+   assert_prog " ;\n" +
+   "! goto powder bottle ;\n" +
+   "IF (!F[5:flg]),JMP LBL[100] ;\n" +
+   "! positioner bottle ;\n" +
+   "CALL FUNC2 ;\n" +
+   "LBL[100] ;\n" +
+   "IF (!F[10:flg2]),JMP LBL[101] ;\n" +
+   "! headstock bottle ;\n" +
+   "CALL FUNC3 ;\n" +
+   "JMP LBL[102] ;\n" +
+   "LBL[101] ;\n" +
+   "LBL[102] ;\n"
+  end
+
+  def testing_conditional_heavy_nesting
+    parse("flg1 := F[5]
+      flg2 := F[6]
+      flg3 := F[7]
+      
+      l := R[51]
+      layers := R[52]
+      k := R[53]
+      pockets := R[54]
+      j := R[55]
+      passes := R[56]
+      
+      
+      while l < layers
+      
+        if (layers > 1) && (l < layers)
+          flg2 = on
+          func1()
+        else
+          flg2 = on
+        end
+      
+        if (flg1 && (l==layers-1))
+          flg3 = on
+          func2()
+        elsif (!flg1)
+          flg3 = on
+        end
+      
+        while k < pockets
+          if (pockets > 1) && (k < pockets)
+            pause
+            Pos::move_to()
+          end
+      
+          while j < passes
+      
+            if (j <= 0) || (flg1 > 0)
+              if (j <= 0)
+                #start move
+                Pos::move_to()
+              elsif (flg1 > 0)
+                if (j % flg1 == 0)
+                  #pause on pass
+                  pause
+                  Pos::move_to()
+                end
+              end
+            end
+      
+            #increment pass
+            j += 1
+      
+            if (j >= passes) || (flg1 > 0)
+              if (j >= passes)
+                flg2 = on
+                flg3 = off
+              else 
+                if (flg1 > 0)
+                  if (j % flg1 == 0)
+                    flg3 = on
+                    flg2 = off
+                  end
+                end
+              end
+            end
+            
+          end
+          
+          k += 1
+        end
+      
+        l += 1
+      end")
+   assert_prog " ;\n" +
+   " ;\n" +
+   "LBL[100] ;\n" +
+   "IF R[51:l]>=R[52:layers],JMP LBL[101] ;\n" +
+   " ;\n" +
+   "IF ((R[52:layers]<=1) OR (R[51:l]>=R[52:layers])),JMP LBL[102] ;\n" +
+   "F[6:flg2]=(ON) ;\n" +
+   "CALL FUNC1 ;\n" +
+   "JMP LBL[103] ;\n" +
+   "LBL[102] ;\n" +
+   "F[6:flg2]=(ON) ;\n" +
+   "LBL[103] ;\n" +
+   " ;\n" +
+   "IF ((!(F[5:flg1]) OR (R[51:l]<>R[52:layers]-1))),JMP LBL[104] ;\n" +
+   "F[7:flg3]=(ON) ;\n" +
+   "CALL FUNC2 ;\n" +
+   "LBL[104] ;\n" +
+   "IF ((F[5:flg1])),JMP LBL[105] ;\n" +
+   "F[7:flg3]=(ON) ;\n" +
+   "JMP LBL[106] ;\n" +
+   "LBL[105] ;\n" +
+   "LBL[106] ;\n" +
+   " ;\n" +
+   "LBL[107] ;\n" +
+   "IF R[53:k]>=R[54:pockets],JMP LBL[108] ;\n" +
+   "IF ((R[54:pockets]<=1) OR (R[53:k]>=R[54:pockets])),JMP LBL[109] ;\n" +
+   "PAUSE ;\n" +
+   "CALL POS_MOVE_TO ;\n" +
+   "LBL[109] ;\n" +
+   " ;\n" +
+   "LBL[110] ;\n" +
+   "IF R[55:j]>=R[56:passes],JMP LBL[111] ;\n" +
+   " ;\n" +
+   "IF ((R[55:j]>0) AND (F[5:flg1]<=0)),JMP LBL[112] ;\n" +
+   "IF ((R[55:j]>0)),JMP LBL[113] ;\n" +
+   "! start move ;\n" +
+   "CALL POS_MOVE_TO ;\n" +
+   "LBL[113] ;\n" +
+   "IF ((F[5:flg1]<=0)),JMP LBL[114] ;\n" +
+   "IF ((R[55:j] MOD F[5:flg1]<>0)),JMP LBL[115] ;\n" +
+   "! pause on pass ;\n" +
+   "PAUSE ;\n" +
+   "CALL POS_MOVE_TO ;\n" +
+   "LBL[115] ;\n" +
+   "JMP LBL[116] ;\n" +
+   "LBL[114] ;\n" +
+   "LBL[116] ;\n" +
+   "LBL[112] ;\n" +
+   " ;\n" +
+   "! increment pass ;\n" +
+   "R[55:j]=R[55:j]+1 ;\n" +
+   " ;\n" +
+   "IF ((R[55:j]<R[56:passes]) AND (F[5:flg1]<=0)),JMP LBL[117] ;\n" +
+   "IF ((R[55:j]<R[56:passes])),JMP LBL[118] ;\n" +
+   "F[6:flg2]=(ON) ;\n" +
+   "F[7:flg3]=(OFF) ;\n" +
+   "JMP LBL[119] ;\n" +
+   "LBL[118] ;\n" +
+   "IF ((F[5:flg1]<=0)),JMP LBL[120] ;\n" +
+   "IF ((R[55:j] MOD F[5:flg1]<>0)),JMP LBL[121] ;\n" +
+   "F[7:flg3]=(ON) ;\n" +
+   "F[6:flg2]=(OFF) ;\n" +
+   "LBL[121] ;\n" +
+   "LBL[120] ;\n" +
+   "LBL[119] ;\n" +
+   "LBL[117] ;\n" +
+   " ;\n" +
+   "JMP LBL[110] ;\n" +
+   "LBL[111] ;\n" +
+   " ;\n" +
+   "R[53:k]=R[53:k]+1 ;\n" +
+   "JMP LBL[107] ;\n" +
+   "LBL[108] ;\n" +
+   " ;\n" +
+   "R[51:l]=R[51:l]+1 ;\n" +
+   "JMP LBL[100] ;\n" +
+   "LBL[101] ;\n"
+  end
+
+  def test_nested_inlined_conditionals
+    parse("flg1 := F[5]
+      flg2 := F[6]
+      flg3 := F[7]
+      
+      l := R[51]
+      layers := R[52]
+      k := R[53]
+      pockets := R[54]
+      j := R[55]
+      passes := R[56]
+      
+      
+      inline def func1()
+        using j, flg1
+      
+        if (j <= 0) || (flg1 > 0)
+          if (j <= 0)
+            #start move
+            Pos::move_to()
+          elsif (flg1 > 0)
+            if (j % flg1 == 0)
+              #pause on pass
+              pause
+              Pos::move_to()
+            end
+          end
+        end
+      end
+      
+      inline def func2()
+        using j, passes, flg1, flg2, flg3
+      
+        if (j >= passes) || (flg1 > 0)
+          if (j >= passes)
+            flg2 = on
+            flg3 = off
+          else 
+            if (flg1 > 0)
+              if (j % flg1 == 0)
+                flg3 = on
+                flg2 = off
+              end
+            end
+          end
+        end
+      end
+      
+      
+      while l < layers
+      
+        if (layers > 1) && (l < layers)
+          flg2 = on
+          func1()
+        else
+          flg2 = on
+        end
+      
+        if (flg1 && (l==layers-1))
+          flg3 = on
+          func2()
+        elsif (!flg1)
+          flg3 = on
+        end
+      
+        while k < pockets
+          if (pockets > 1) && (k < pockets)
+            pause
+            Pos::move_to()
+          end
+      
+          while j < passes
+            #increment pass
+            j += 1
+            
+          end
+          
+          k += 1
+        end
+      
+        l += 1
+      end")
+   assert_prog " ;\n" +
+   " ;\n" +
+   " ;\n" +
+   " ;\n" +
+   "LBL[100] ;\n" +
+   "IF R[51:l]>=R[52:layers],JMP LBL[101] ;\n" +
+   " ;\n" +
+   "IF ((R[52:layers]<=1) OR (R[51:l]>=R[52:layers])),JMP LBL[102] ;\n" +
+   "F[6:flg2]=(ON) ;\n" +
+   "! inline func1 ;\n" +
+   " ;\n" +
+   "IF ((R[55:j]>0) AND (F[5:flg1]<=0)),JMP LBL[103] ;\n" +
+   "IF ((R[55:j]>0)),JMP LBL[104] ;\n" +
+   "! start move ;\n" +
+   "CALL POS_MOVE_TO ;\n" +
+   "LBL[104] ;\n" +
+   "IF ((F[5:flg1]<=0)),JMP LBL[105] ;\n" +
+   "IF ((R[55:j] MOD F[5:flg1]<>0)),JMP LBL[106] ;\n" +
+   "! pause on pass ;\n" +
+   "PAUSE ;\n" +
+   "CALL POS_MOVE_TO ;\n" +
+   "LBL[106] ;\n" +
+   "JMP LBL[107] ;\n" +
+   "LBL[105] ;\n" +
+   "LBL[107] ;\n" +
+   "LBL[103] ;\n" +
+   "! end func1 ;\n" +
+   " ;\n" +
+   "JMP LBL[108] ;\n" +
+   "LBL[102] ;\n" +
+   "F[6:flg2]=(ON) ;\n" +
+   "LBL[108] ;\n" +
+   " ;\n" +
+   "IF ((!(F[5:flg1]) OR (R[51:l]<>R[52:layers]-1))),JMP LBL[109] ;\n" +
+   "F[7:flg3]=(ON) ;\n" +
+   "! inline func2 ;\n" +
+   " ;\n" +
+   "IF ((R[55:j]<R[56:passes]) AND (F[5:flg1]<=0)),JMP LBL[110] ;\n" +
+   "IF ((R[55:j]<R[56:passes])),JMP LBL[111] ;\n" +
+   "F[6:flg2]=(ON) ;\n" +
+   "F[7:flg3]=(OFF) ;\n" +
+   "JMP LBL[112] ;\n" +
+   "LBL[111] ;\n" +
+   "IF ((F[5:flg1]<=0)),JMP LBL[113] ;\n" +
+   "IF ((R[55:j] MOD F[5:flg1]<>0)),JMP LBL[114] ;\n" +
+   "F[7:flg3]=(ON) ;\n" +
+   "F[6:flg2]=(OFF) ;\n" +
+   "LBL[114] ;\n" +
+   "LBL[113] ;\n" +
+   "LBL[112] ;\n" +
+   "LBL[110] ;\n" +
+   "! end func2 ;\n" +
+   " ;\n" +
+   "LBL[109] ;\n" +
+   "IF ((F[5:flg1])),JMP LBL[115] ;\n" +
+   "F[7:flg3]=(ON) ;\n" +
+   "JMP LBL[116] ;\n" +
+   "LBL[115] ;\n" +
+   "LBL[116] ;\n" +
+   " ;\n" +
+   "LBL[117] ;\n" +
+   "IF R[53:k]>=R[54:pockets],JMP LBL[118] ;\n" +
+   "IF ((R[54:pockets]<=1) OR (R[53:k]>=R[54:pockets])),JMP LBL[119] ;\n" +
+   "PAUSE ;\n" +
+   "CALL POS_MOVE_TO ;\n" +
+   "LBL[119] ;\n" +
+   " ;\n" +
+   "LBL[120] ;\n" +
+   "IF R[55:j]>=R[56:passes],JMP LBL[121] ;\n" +
+   "! increment pass ;\n" +
+   "R[55:j]=R[55:j]+1 ;\n" +
+   " ;\n" +
+   "JMP LBL[120] ;\n" +
+   "LBL[121] ;\n" +
+   " ;\n" +
+   "R[53:k]=R[53:k]+1 ;\n" +
+   "JMP LBL[117] ;\n" +
+   "LBL[118] ;\n" +
+   " ;\n" +
+   "R[51:l]=R[51:l]+1 ;\n" +
+   "JMP LBL[100] ;\n" +
+   "LBL[101] ;\n"
+  end
+
   def test_boolean_constant
     parse("CONST1 := true
 
@@ -2116,6 +2461,105 @@ end)
     #output = @interpreter.pos_section
     #output = output
     assert_equal 1, @interpreter.position_data[:positions].length
+  end
+
+
+  def test_polar_position_data
+    parse %(TP_GROUPMASK = "1,1,*,*,*"
+
+      default.group(1).pose -> [0,0,0,90,180,0]
+      default.group(1).config -> ['F','U','T', 0, 0, 0]
+      default.group(2).joints -> [0]
+      
+      p := P[1..9]
+      p1.group(1).pose.polar.z -> [0, 80, 100, 90, 180, 0]
+      p1.group(2).joints -> [0]
+      
+      (p2..p9).group(1).xyz.offset.polar.z -> [-18, 0 ,0]
+      (p2..p9).group(2).joints.offset -> [18])
+    
+        assert_prog " ;\n" + " ;\n" + " ;\n"
+        assert_equal %(P[1:"p1"]{
+   GP1:
+  UF : 0, UT : 0,  CONFIG : 'F U T, 0, 0, 0',
+  X = 0.000 mm, Y = 80.000 mm, Z = 100.000 mm,
+  W = -90.000 deg, P = 0.000 deg, R = 180.000 deg
+   GP2:
+  UF : 0, UT : 0,
+    J1 = 0.000 deg
+    };
+P[2:"p2"]{
+   GP1:
+  UF : 0, UT : 0,  CONFIG : 'F U T, 0, 0, 0',
+  X = 24.721 mm, Y = 76.085 mm, Z = 100.000 mm,
+  W = -90.000 deg, P = 0.000 deg, R = 162.000 deg
+   GP2:
+  UF : 0, UT : 0,
+    J1 = 18.000 deg
+    };
+P[3:"p3"]{
+   GP1:
+  UF : 0, UT : 0,  CONFIG : 'F U T, 0, 0, 0',
+  X = 47.023 mm, Y = 64.721 mm, Z = 100.000 mm,
+  W = -90.000 deg, P = 0.000 deg, R = 144.000 deg
+   GP2:
+  UF : 0, UT : 0,
+    J1 = 36.000 deg
+    };
+P[4:"p4"]{
+   GP1:
+  UF : 0, UT : 0,  CONFIG : 'F U T, 0, 0, 0',
+  X = 64.721 mm, Y = 47.023 mm, Z = 100.000 mm,
+  W = -90.000 deg, P = 0.000 deg, R = 126.000 deg
+   GP2:
+  UF : 0, UT : 0,
+    J1 = 54.000 deg
+    };
+P[5:"p5"]{
+   GP1:
+  UF : 0, UT : 0,  CONFIG : 'F U T, 0, 0, 0',
+  X = 76.085 mm, Y = 24.721 mm, Z = 100.000 mm,
+  W = -90.000 deg, P = 0.000 deg, R = 108.000 deg
+   GP2:
+  UF : 0, UT : 0,
+    J1 = 72.000 deg
+    };
+P[6:"p6"]{
+   GP1:
+  UF : 0, UT : 0,  CONFIG : 'F U T, 0, 0, 0',
+  X = 80.000 mm, Y = 0.000 mm, Z = 100.000 mm,
+  W = -90.000 deg, P = 0.000 deg, R = 90.000 deg
+   GP2:
+  UF : 0, UT : 0,
+    J1 = 90.000 deg
+    };
+P[7:"p7"]{
+   GP1:
+  UF : 0, UT : 0,  CONFIG : 'F U T, 0, 0, 0',
+  X = 76.085 mm, Y = -24.721 mm, Z = 100.000 mm,
+  W = -90.000 deg, P = 0.000 deg, R = 72.000 deg
+   GP2:
+  UF : 0, UT : 0,
+    J1 = 108.000 deg
+    };
+P[8:"p8"]{
+   GP1:
+  UF : 0, UT : 0,  CONFIG : 'F U T, 0, 0, 0',
+  X = 64.721 mm, Y = -47.023 mm, Z = 100.000 mm,
+  W = -90.000 deg, P = 0.000 deg, R = 54.000 deg
+   GP2:
+  UF : 0, UT : 0,
+    J1 = 126.000 deg
+    };
+P[9:"p9"]{
+   GP1:
+  UF : 0, UT : 0,  CONFIG : 'F U T, 0, 0, 0',
+  X = 47.023 mm, Y = -64.721 mm, Z = 100.000 mm,
+  W = -90.000 deg, P = 0.000 deg, R = 36.000 deg
+   GP2:
+  UF : 0, UT : 0,
+    J1 = 144.000 deg
+    };\n), @interpreter.pose_list.eval
   end
 
   def test_conditional_equals_minus_one
