@@ -1,9 +1,6 @@
 TP+
 ===
 
-[![Build Status](https://travis-ci.com/kobbled/tp_plus.svg?branch=master)](https://travis-ci.org/onerobotics/tp_plus)
-
-
 TP+ is a higher-level language abstraction that translates into FANUC TP. It features many useful utilities that makes creating TP programs easier:
 
 * Functions and inline functions
@@ -71,6 +68,9 @@ Install
 ```shell
 set PATH=%PATH%;\path\to\tp_plus\bin
 ```
+
+> [!**INFO**]
+> Alternatively there is a docker image located in the [docker-container](https://github.com/kobbled/tp_plus/tree/docker-container) branch. However due to Roboguide and Fanuc tools being windows only, the workflow is too awkward for the standard user and is not recommended. Furthermore, the build tools [vscode-tpp-extension](https://github.com/kobbled/vscode-tpp-extension), and [Rossum](https://github.com/kobbled/rossum) currently do not have docker interoperability support. 
 
 Updating
 -----------
