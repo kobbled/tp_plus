@@ -56,6 +56,9 @@ TP+ is a higher-level language abstraction that translates into FANUC TP. It fea
 Install
 -----------
 
+> [!**NOTE**]
+> A Standalone `.exe` can be found in https://github.com/kobbled/tp_plus/releases, where you do not have to install anything. Simply add the location where the `tpp.exe` file resides onto your environment `Path`. However, with this method you will not recieve up to date changes to TP+.
+
 1. Install Ruby
 2. Install git
 3. Install bundler `gem install bundler`
