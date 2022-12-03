@@ -605,7 +605,7 @@ LBL[106] ;
    "IF R[55:j]>=R[56:passes],JMP LBL[111] ;\n" +
    " ;\n" +
    "IF ((R[55:j]>0) AND (F[5:flg1]<=0)),JMP LBL[112] ;\n" +
-   "IF ((R[55:j]>0)),JMP LBL[113] ;\n" +
+   "IF (R[55:j]>0),JMP LBL[113] ;\n" +
    "! start move ;\n" +
    "CALL POS_MOVE_TO ;\n" +
    "LBL[113] ;\n" +
@@ -624,7 +624,7 @@ LBL[106] ;
    "R[55:j]=R[55:j]+1 ;\n" +
    " ;\n" +
    "IF ((R[55:j]<R[56:passes]) AND (F[5:flg1]<=0)),JMP LBL[117] ;\n" +
-   "IF ((R[55:j]<R[56:passes])),JMP LBL[118] ;\n" +
+   "IF (R[55:j]<R[56:passes]),JMP LBL[118] ;\n" +
    "F[6:flg2]=(ON) ;\n" +
    "F[7:flg3]=(OFF) ;\n" +
    "JMP LBL[119] ;\n" +
@@ -744,7 +744,7 @@ LBL[106] ;
    "! inline func1 ;\n" +
    " ;\n" +
    "IF ((R[55:j]>0) AND (F[5:flg1]<=0)),JMP LBL[103] ;\n" +
-   "IF ((R[55:j]>0)),JMP LBL[104] ;\n" +
+   "IF (R[55:j]>0),JMP LBL[104] ;\n" +
    "! start move ;\n" +
    "CALL POS_MOVE_TO ;\n" +
    "LBL[104] ;\n" +
@@ -770,7 +770,7 @@ LBL[106] ;
    "! inline func2 ;\n" +
    " ;\n" +
    "IF ((R[55:j]<R[56:passes]) AND (F[5:flg1]<=0)),JMP LBL[110] ;\n" +
-   "IF ((R[55:j]<R[56:passes])),JMP LBL[111] ;\n" +
+   "IF (R[55:j]<R[56:passes]),JMP LBL[111] ;\n" +
    "F[6:flg2]=(ON) ;\n" +
    "F[7:flg3]=(OFF) ;\n" +
    "JMP LBL[112] ;\n" +
@@ -2312,6 +2312,24 @@ end)
   def test_negative_numbers_have_parens
     parse %(foo := R[1]\njump_to @end if foo > -1\njump_to @end if foo > -5.3\n@end)
     assert_prog "IF R[1:foo]>(-1),JMP LBL[100] ;\nIF R[1:foo]>(-5.3),JMP LBL[100] ;\nLBL[100:end] ;\n"
+  end
+
+  def test_parens_around_posreg_arithmatic
+    parse %(pr := PR[20..30]\nyval := R[5]\nyval = (pr1.group(1).y-pr2.group(1).y))
+    assert_prog "R[5:yval]=(PR[GP1:20,2:pr1]-PR[GP1:21,2:pr2]) ;\n"
+  end
+
+  def test_over_parenthesized
+    parse %(calc1 := R[5]\nk := R[6]\nseperation := R[7]\nl := R[8]\noverlap := R[9]\nccw := R[10]\ncalc1 = ((((k*seperation)+(l*overlap))*ccw)) )
+    assert_prog "R[5:calc1]=((R[6:k]*R[7:seperation])+(R[8:l]*R[9:overlap])*R[10:ccw]) ;\n"
+  end
+
+  def test_if_over_parenthesized
+    parse("foo := R[1]\nif (foo <= 0)\nfoo = 2\nfoo = 1\nend")
+    assert_prog "IF (R[1:foo]>0),JMP LBL[100] ;\n" +
+    "R[1:foo]=2 ;\n" +
+    "R[1:foo]=1 ;\n" +
+    "LBL[100] ;\n"
   end
 
   def test_modulus

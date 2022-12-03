@@ -10,7 +10,7 @@ module TPPlus
       end
 
       def assignable_string(context,options={})
-        if @assignable.is_a?(ExpressionNode)
+        if @assignable.instance_of?(ExpressionNode)
           options[:mixed_logic] = true if @assignable.contains_expression?
           options[:mixed_logic] = true if @assignable.op.requires_mixed_logic?(context)
           options[:mixed_logic] = true if @assignable.op.boolean?
@@ -31,7 +31,12 @@ module TPPlus
         end
 
         if options[:mixed_logic]
-          "(#{@assignable.eval(context)})"
+          s = @assignable.eval(context)
+          if !check_balance(s)
+            "(#{s})"
+          else
+            s
+          end
         else
           @assignable.eval(context)
         end
@@ -43,6 +48,14 @@ module TPPlus
 
       def can_be_inlined?
         true
+      end
+
+      def check_balance(s)
+        if s[0] == '(' && s[-1] == ')'
+          return true
+        else
+          return false
+        end
       end
 
       def has_call?(node, b)
