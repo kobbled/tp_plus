@@ -3377,6 +3377,116 @@ LINE_TRACK ;
       " ;\n"
   end
 
+  def test_labelling_for_namespaced_functions
+    $global_options[:function_print] = true
+
+    parse("namespace Sense
+      measure := R[10]
+      sensor_signal := DO[10]
+      sensor_zero := DO[11]
+    
+      def zero(dist, outpose)
+
+        start_pose := PR[8]
+    
+        if !sensor_signal
+          message('Sensor is out of range. Manually move in and continue.')
+          pause
+        end
+    
+        @zero
+          set_skip_condition sensor_zero
+          linear_move.to(indirect('PR', start_pose)).at(3, 'mm/s').term(-1).
+              skip_to(@failed)
+          return
+        @failed
+          message('Sensor zeroing failed. Manually move in range, and retry.')
+          pause
+          jump_to @zero
+      end
+    
+      def none(dist, outpose)
+
+        start_pose := PR[8]
+    
+        if !sensor_signal
+          message('Sensor is out of range. Manually move in and continue.]')
+          pause
+        end
+    
+        @zero
+          set_skip_condition !sensor_signal
+          linear_move.to(indirect('PR', start_pose)).at(3, 'mm/s').term(-1).
+              skip_to(@failed)
+          return
+        @failed
+          message('Sensor zeroing failed. Manually move in range, and retry.]')
+          pause
+          jump_to @zero
+      end
+    end
+    
+    pr1 := PR[5]
+    Sense::zero(10, &pr1)")
+
+    assert_prog " ;\n" + 
+    "CALL SENSE_ZERO(10,5) ;\n"
+
+    options = {}
+    options[:output] = false
+    assert_equal %(: ! ------- ;
+: ! Sense_zero ;
+: ! ------- ;
+ :  ;
+ :  ;
+ : IF (DO[10:sensor_signal]),JMP LBL[102] ;
+ : MESSAGE[Sensor is out of range.] ;
+ : MESSAGE[Manually move in and] ;
+ : MESSAGE[continue.] ;
+ : PAUSE ;
+ : LBL[102] ;
+ :  ;
+ : LBL[100:zero] ;
+ : SKIP CONDITION DO[11:sensor_zero]=ON ;
+ : L PR[PR[8:start_pose]] 3mm/sec FINE Skip,LBL[101] ;
+ : END ;
+ : LBL[101:failed] ;
+ : MESSAGE[Sensor zeroing failed.] ;
+ : MESSAGE[Manually move in range,] ;
+ : MESSAGE[and retry.] ;
+ : PAUSE ;
+ : JMP LBL[100] ;
+: ! end of Sense_zero ;
+: ! ------- ;
+: ! ------- ;
+: ! Sense_none ;
+: ! ------- ;
+ :  ;
+ :  ;
+ : IF (DO[10:sensor_signal]),JMP LBL[102] ;
+ : MESSAGE[Sensor is out of range.] ;
+ : MESSAGE[Manually move in and] ;
+ : MESSAGE[continue.]] ;
+ : PAUSE ;
+ : LBL[102] ;
+ :  ;
+ : LBL[100:zero] ;
+ : SKIP CONDITION DO[10:sensor_signal]=OFF ;
+ : L PR[PR[8:start_pose]] 3mm/sec FINE Skip,LBL[101] ;
+ : END ;
+ : LBL[101:failed] ;
+ : MESSAGE[Sensor zeroing failed.] ;
+ : MESSAGE[Manually move in range,] ;
+ : MESSAGE[and retry.]] ;
+ : PAUSE ;
+ : JMP LBL[100] ;
+: ! end of Sense_none ;
+: ! ------- ;
+), @interpreter.output_functions(options)
+
+
+  end
+
   def test_local_vars
     $stacks = TPPlus::Stacks.new
     parse("local := R[50..100]

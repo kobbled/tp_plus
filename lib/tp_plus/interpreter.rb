@@ -34,8 +34,17 @@ module TPPlus
     end
 
     def add_label(identifier)
-      return if @labels[identifier.to_sym]
-      @labels[identifier.to_sym] = next_label
+      if @labels[identifier.to_sym]
+        # [!ISSUE]
+        # @current_label in namespace functions does not get
+        # updated in manual labels are declared. This is a patch
+        # for that case. See test -> `test_labelling_for_namespaced_functions` 
+        if @current_label < @labels[identifier.to_sym]
+          @current_label = @labels[identifier.to_sym]
+        end
+      else
+        @labels[identifier.to_sym] = next_label
+      end
     end
 
     def renumber_labels
