@@ -2319,6 +2319,14 @@ end)
     assert_prog "R[5:yval]=(PR[GP1:20,2:pr1]-PR[GP1:21,2:pr2]) ;\n"
   end
 
+  def test_parens_around_posreg_assignment
+    parse %(pr1 := PR[1]
+      part_length := R[1]
+      gripper_depth := R[2]
+      pr1.x = -1*(part_length-gripper_depth))
+    assert_prog "PR[1,1:pr1]=((-1)*(R[1:part_length]-R[2:gripper_depth])) ;\n"
+  end
+
   def test_over_parenthesized
     parse %(calc1 := R[5]\nk := R[6]\nseperation := R[7]\nl := R[8]\noverlap := R[9]\nccw := R[10]\ncalc1 = ((((k*seperation)+(l*overlap))*ccw)) )
     assert_prog "R[5:calc1]=((R[6:k]*R[7:seperation])+(R[8:l]*R[9:overlap])*R[10:ccw]) ;\n"

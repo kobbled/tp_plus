@@ -49,6 +49,10 @@ module TPPlus
         [""].concat(GROUPS.keys).include? c
       end
 
+      def has_method?(options)
+        options.key?(:method)
+      end
+
       def requires_mixed_logic?(context)
         false
       end

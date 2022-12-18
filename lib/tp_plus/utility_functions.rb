@@ -108,6 +108,27 @@ module TPPlus
       end
     end
 
-    module_function :retrieve_calls, :retrieve_arg_calls, :to_boolean, :gather_variables, :gather_constants
+    def balanced_parentheses?(str)
+      # Initialize a stack to keep track of the parentheses
+      stack = []
+    
+      # Iterate through the characters in the string
+      str.each_char do |char|
+        if char == '('
+          # If the character is an opening parenthesis, push it onto the stack
+          stack.push(char)
+        elsif char == ')'
+          # If the character is a closing parenthesis, pop an element off the stack
+          # If the stack is empty or the top element of the stack is not an opening parenthesis,
+          # the parentheses are not balanced
+          return false if stack.empty? || stack.pop != '('
+        end
+      end
+    
+      # If there are any opening parentheses left on the stack, the parentheses are not balanced
+      return stack.empty?
+    end
+
+    module_function :retrieve_calls, :retrieve_arg_calls, :to_boolean, :gather_variables, :gather_constants, :balanced_parentheses?
   end
 end

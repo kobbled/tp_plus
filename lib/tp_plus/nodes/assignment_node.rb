@@ -18,7 +18,9 @@ module TPPlus
           # this is a hack that fixes issue #12
           # PR[a]=PR[b]+PR[c]+PR[d] (no parens)
           if @identifier.is_a? VarNode
-            options[:mixed_logic] = false if @identifier.target_node(context).is_a? PosregNode
+            if @identifier.target_node(context).is_a? PosregNode
+              options[:mixed_logic] = false if !@identifier.target_node(context).has_method?(options)
+            end
           end
         elsif @assignable.is_a?(VarNode)
           options[:mixed_logic] = true if @assignable.target_node(context).is_a? IONode
@@ -52,7 +54,13 @@ module TPPlus
 
       def check_balance(s)
         if s[0] == '(' && s[-1] == ')'
-          return true
+          #check if first and last character are encompassing parentheses
+           # include new line (-2)
+          if TPPlus::Util.balanced_parentheses?(s[1..-2])
+            return true
+          else
+            return false
+          end
         else
           return false
         end
