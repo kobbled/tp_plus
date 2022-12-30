@@ -276,6 +276,15 @@ module TPPlus
               
               traverse_nodes([n.assignable], lambda, options)
             end
+            
+            if n.instance_of?(Nodes::ParenExpressionNode)
+              traverse_nodes([n.x], lambda, options)
+              
+              #copy ret_var to parens expression
+              if n.x.respond_to?(:ret_var)
+                n.ret_var = n.x.ret_var if n.x.ret_var
+              end
+            end
 
             if n.is_a?(Nodes::ExpressionNode)
               n.left_op.is_a?(Nodes::ParenExpressionNode) ? left = n.left_op.x : left = n.left_op
