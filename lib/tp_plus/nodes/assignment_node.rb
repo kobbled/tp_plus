@@ -67,12 +67,15 @@ module TPPlus
       end
 
       def has_call?(node, b)
-        if node.is_a?(ExpressionNode) || node.is_a?(ParenExpressionNode)
+        #drill into parens
+        b = has_call?(node.x, b) if node.instance_of?(ParenExpressionNode)
+
+        if node.is_a?(ExpressionNode)
           node.left_op.is_a?(ParenExpressionNode) ? left = node.left_op.x : left = node.left_op
           node.right_op.is_a?(ParenExpressionNode) ? right = node.right_op.x : right = node.right_op
 
           [left, right].map.each do |op|
-            b = has_call?(op, b) if op.is_a?(ExpressionNode) || op.is_a?(ParenExpressionNode)
+            b = has_call?(op, b) if op.is_a?(ExpressionNode)
           end
         
           b | node.func_exp.any?
@@ -80,12 +83,15 @@ module TPPlus
       end
 
       def has_arg_call?(node, b)
-        if node.is_a?(ExpressionNode) || node.is_a?(ParenExpressionNode)
+        #drill into parens
+        b = has_call?(node.x, b) if node.instance_of?(ParenExpressionNode)
+
+        if node.is_a?(ExpressionNode)
           node.left_op.is_a?(ParenExpressionNode) ? left = node.left_op.x : left = node.left_op
           node.right_op.is_a?(ParenExpressionNode) ? right = node.right_op.x : right = node.right_op
 
           [left, right].map.each do |op|
-            b = has_arg_call?(op, b) if op.is_a?(ExpressionNode) || op.is_a?(ParenExpressionNode)
+            b = has_arg_call?(op, b) if op.is_a?(ExpressionNode)
           end
         end
         

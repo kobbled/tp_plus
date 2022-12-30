@@ -277,7 +277,7 @@ module TPPlus
               traverse_nodes([n.assignable], lambda, options)
             end
 
-            if n.is_a?(Nodes::ExpressionNode) || n.is_a?(Nodes::ParenExpressionNode)
+            if n.is_a?(Nodes::ExpressionNode)
               n.left_op.is_a?(Nodes::ParenExpressionNode) ? left = n.left_op.x : left = n.left_op
               n.right_op.is_a?(Nodes::ParenExpressionNode) ? right = n.right_op.x : right = n.right_op
               
