@@ -7,6 +7,7 @@ module TPPlus
         @assignable = assignable
         @contains_call = has_call?(assignable, false)
         @contains_arg_call = has_arg_call?(assignable, false)
+        @expansions = []
       end
 
       def assignable_string(context,options={})
@@ -100,11 +101,42 @@ module TPPlus
         end
       end
 
+      def add_expression_expansions
+        if self.contains_call
+          ass_funcs = []
+          TPPlus::Util.retrieve_calls(self.assignable, ass_funcs)
+
+          ass_funcs.each do |f|
+            @expansions.append(f)
+          end
+        end
+
+        if self.contains_arg_call
+          arg_funcs = []
+          TPPlus::Util.retrieve_arg_calls(self.assignable, arg_funcs)
+
+          arg_funcs.each do |f|
+            @expansions.append(f)
+          end
+        end
+
+        @expansions = @expansions.flatten
+      end
+
       def identifier_string(context)
         @identifier.eval(context)
       end
 
       def eval(context,options={})
+        s = ""
+
+        #print the expansion of the expression
+        if @expansions
+          @expansions.reverse_each do |f|
+            s += f.eval(context, options) + " ;\n"
+          end
+        end
+
         if @identifier.is_a?(VarNode) && @assignable.is_a?(VarNode)
           if @assignable.target_node(context).is_a?(PositionNode) && @identifier.target_node(context).is_a?(PositionNode)
             context.pose_list.copy_pose(@identifier.target_node(context).comment, @assignable.target_node(context).comment)
@@ -112,10 +144,12 @@ module TPPlus
           end
         end
         if @assignable.is_a?(CallNode)
-          return "#{assignable_string(context,options)}"
+          s += "#{assignable_string(context,options)}"
         else
-          return "#{identifier_string(context)}=#{assignable_string(context,options)}"
+          s += "#{identifier_string(context)}=#{assignable_string(context,options)}"
         end
+
+        s
       end
     end
   end

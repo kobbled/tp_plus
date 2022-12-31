@@ -268,29 +268,8 @@ module TPPlus
         end
       end
 
-      if node.is_a?(TPPlus::Nodes::AssignmentNode)
-        #insert function assignment above assignment
-        if node.contains_call
-          ass_funcs = []
-          TPPlus::Util.retrieve_calls(node.assignable, ass_funcs)
-
-          ass_funcs.each do |f|
-            nodes[index] = [f, nodes[index]]
-          end
-        end
-
-        if node.contains_arg_call
-          arg_funcs = []
-          TPPlus::Util.retrieve_arg_calls(node.assignable, arg_funcs)
-
-          arg_funcs.each do |f|
-            nodes[index] = [f, nodes[index]]
-          end
-        end
-      end
-
-      #check if expression expansion is needed for condition nodes
-      if node.is_a?(TPPlus::Nodes::RecursiveNode)
+      #check if expression expansion is needed for condition nodes & assignment nodes
+      if node.is_a?(TPPlus::Nodes::AssignmentNode) || node.is_a?(TPPlus::Nodes::RecursiveNode)
         node.add_expression_expansions
       end
 

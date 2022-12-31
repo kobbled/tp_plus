@@ -41,7 +41,7 @@ module TPPlus
 
       def eval_expression_expansions(context)
         s = ""
-        @expansions.each do |f|
+        @expansions.reverse_each do |f|
           s += f.eval(context) + ";\n"
         end
 

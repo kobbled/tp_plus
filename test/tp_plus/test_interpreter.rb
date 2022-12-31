@@ -3662,13 +3662,13 @@ LINE_TRACK ;
       "! abstraction ;\n" +
       "CALL MTH_LN(7,10) ;\n" +
       "! two functions in expression ;\n" +
-      "CALL MTH_LN(7,71) ;\n" +
       "CALL SET_REG(100,72) ;\n" +
+      "CALL MTH_LN(7,71) ;\n" +
       "R[10:foo]=R[71:dvar1]+R[72:dvar2] ;\n" +
       "! two functions in a nested ;\n" +
       "! expression ;\n" +
-      "CALL MTH_LN(7,73) ;\n" +
       "CALL SET_REG(100,74) ;\n" +
+      "CALL MTH_LN(7,73) ;\n" +
       "R[10:foo]=(R[70:test]+R[73:dvar3]+R[74:dvar4]) ;\n" +
       "! two functions in a double ;\n" +
       "! nested expression ;\n" +
