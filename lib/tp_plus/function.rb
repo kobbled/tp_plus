@@ -102,8 +102,10 @@ module TPPlus
 
       if n.is_a?(Nodes::AssignmentNode)
         if n.identifier.is_a?(Nodes::IndirectNode)
-          if options[:map][n.identifier.target.identifier]
-            nodes[index].identifier.instance_variable_set(:@target, options[:map][n.identifier.target.identifier])
+          unless n.identifier.target.is_a?(Nodes::AddressNode)
+            if options[:map][n.identifier.target.identifier]
+              nodes[index].identifier.instance_variable_set(:@target, options[:map][n.identifier.target.identifier])
+            end
           end
         else
           if options[:map][n.identifier]
@@ -128,22 +130,6 @@ module TPPlus
 
     end
 
-    def eval_inline_calls
-      @nodes.each_with_index do |n, index|
-        if n.is_a?(TPPlus::Nodes::CallNode)
-          if @functions[n.program_name.to_sym]
-            func = @functions[n.program_name.to_sym]
-            if func.inlined
-             func.preinline(n, self)
-             @nodes[index] = func.nodes
-            end
-          end
-        end
-      end
-
-      self.nodes.flatten!
-    end
-
     def interpret(context)
       #local variable
         # without clone, environment file gets exported
@@ -157,6 +143,8 @@ module TPPlus
       @lines = interpreter.eval
 
       @variables = interpreter.variables
+
+      @interpretted = true
     end
 
     def preinline(callnode, parent)
@@ -174,11 +162,25 @@ module TPPlus
       #replace var nodes and return nodes with associated
       #arguement nodes
       options = {}
+
+      if self.instance_variable_defined?(:@recurse_map)
+        @recurse_map.each do |k, v|
+          if v
+            if v.is_a?(TPPlus::Nodes::AddressNode)
+              map[v.id.identifier] = map[k]
+            else
+              map[v.identifier] = map[k]
+            end
+          end
+        end
+      end
+
       options[:map] = map
+
       traverse_nodes(self.nodes, :mask_var_nodes, options)
 
       #check if callnodes in function are also inlined
-      eval_inline_calls
+      @recurse_map = options[:map]
     end
 
     def inline(parent)

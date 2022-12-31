@@ -3280,11 +3280,75 @@ LINE_TRACK ;
       "! inline ns1_func2 ;\n" +
       "R[1:var1]=1+1 ;\n" +
       " ;\n" +
+      "! inline ns1_func1 ;\n" +
       "CALL PRINT_NR(R[1:var1]) ;\n" +
       "CALL PRINT('HELLO') ;\n" +
+      "! end ns1_func1 ;\n" +
+      " ;\n" +
       " ;\n" +
       "R[2:var2]=R[1:var1] ;\n" +
       "! end ns1_func2 ;\n" +
+      " ;\n"
+  end
+
+  def test_nested_inlined_functions2
+    $stacks = TPPlus::Stacks.new
+
+    parse("local := R[50..80]
+
+      namespace ns1
+        inline def normalize(n1,n2,n3,e1,e2,e3) 
+          nrm := LR[]
+          
+          nrm = Mth::sqrt(n1*n1 + n2*n2 + n3*n3)
+          indirect('r', e1) = n1/nrm
+          indirect('r', e2) = n2/nrm
+          indirect('r', e3) = n3/nrm
+        end
+      
+        inline def dot(nx,ny,nz,vx,vy,vz) : numreg
+          return(nx*vx + ny*vy + nz*vz)
+        end
+      
+        inline def func1(nx,ny,nz,vx,vy,vz)
+          dd := LR[]
+          ux := LR[]
+          uy := LR[]
+          uz := LR[]
+          
+          normalize(nx,ny,nz,&ux,&uy,&uz)
+      
+          dd = dot(nx,ny,nz,vx,vy,vz)
+        end
+      end
+      
+      out := LR[]
+      
+      num := R[1..6]
+      
+      ns1::func1(num1,num2,num3,num4,num5,num6)")
+    
+      assert_prog " ;\n" +
+      " ;\n" +
+      " ;\n" +
+      " ;\n" +
+      "! inline ns1_func1 ;\n" +
+      " ;\n" +
+      "! inline ns1_normalize ;\n" +
+      " ;\n" +
+      "R[52:dvar8]=(R[1:num1]*R[1:num1]+R[2:num2]*R[2:num2]+R[3:num3]*R[3:num3]) ;\n" +
+      "CALL MTH_SQRT(R[52:dvar8],51) ;\n" +
+      "R[51]=R[1:num1]/R[51:nrm] ;\n" +
+      "R[52]=R[2:num2]/R[51:nrm] ;\n" +
+      "R[53]=R[3:num3]/R[51:nrm] ;\n" +
+      "! end ns1_normalize ;\n" +
+      " ;\n" +
+      " ;\n" +
+      "! inline ns1_dot ;\n" +
+      "R[50:dd]=(R[1:num1]*R[4:num4]+R[2:num2]*R[5:num5]+R[3:num3]*R[6:num6]) ;\n" +
+      "! end ns1_dot ;\n" +
+      " ;\n" +
+      "! end ns1_func1 ;\n" +
       " ;\n"
   end
 
