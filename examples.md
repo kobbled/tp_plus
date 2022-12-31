@@ -16,6 +16,7 @@
   - [Inline Statments](#inline-statments)
   - [Namespaces](#namespaces)
     - [Namespace scoping](#namespace-scoping)
+    - [Self Referencing](#self-referencing)
     - [structs](#structs)
     - [states](#states)
   - [Functions](#functions)
@@ -656,6 +657,41 @@ def test()
   foo = ns3::test2()
 end
 ```
+
+### Self Referencing
+
+> [!IMPORTANT]
+> 
+> When self referencing internal namespace functions, do not include the namespace prefix to the function call:
+
+TP+
+```ruby
+local := R[10..15]
+
+namespace ns1
+  VAL1 := 1
+  VAL2 := 2
+
+  inline def func2() : numreg
+    return(VAL1 + VAL2)
+  end
+
+  inline def func1(num) : numreg
+    add := LR[]
+    add = func2()
+    return(add + num)
+  end
+end
+
+foo := R[1]
+bar := R[2]
+
+foo = 10
+
+bar = ns1::func1(foo)
+```
+
+
 
 ### structs
 
