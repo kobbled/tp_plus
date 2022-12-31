@@ -242,10 +242,7 @@ module TPPlus
             #loop statements
             if n.is_a?(Nodes::RecursiveNode)
               traverse_nodes(n.block, lambda, options)
-            end
-
-            #recursive/condition nodes
-            if n.is_a?(Nodes::RecursiveNode)
+              #recursive/condition nodes
               traverse_nodes(n.condition, lambda, options)
             end
     
