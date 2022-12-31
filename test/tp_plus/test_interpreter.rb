@@ -1535,6 +1535,28 @@ LBL[104:endcase] ;\n)
     assert_prog "R[1:foo]=(1+2+3) ;\n"
   end
 
+  def test_math_brackets
+    parse("x := R[290..292]\ny := R[293..295]\na := R[296]\na = (x1 * (y2 - y3)) - (y1 * (x2 - x3)) + (x2 * y3) - (x3 * y2)")
+    assert_prog "R[296:a]=((R[290:x1]*(R[294:y2]-R[295:y3]))-(R[293:y1]*(R[291:x2]-R[292:x3]))+(R[291:x2]*R[295:y3])-(R[292:x3]*R[294:y2])) ;\n"
+  end
+
+  def test_math_brackets_with_constants
+    parse("a := R[295]
+
+      X1 := -0.00000252127529
+      Y1 := 0.0716490895
+      X2 := 0.0719940
+      Y2 := -0.04156384
+      X3 := -0.06479058
+      Y3 := -0.03740988
+      
+      a = (X1 * (Y2 - Y3)) - (Y1 * (X2 - X3)) + (X2 * Y3) - (X3 * Y2)")
+    assert_prog " ;\n" +
+    " ;\n" +
+    "R[295:a]=(((-2.52127529e-06)*((-0.04156384)-(-0.03740988)))-(0.0716490895*(0.071994-(-0.06479058)))+(0.071994*(-0.03740988))-((-0.06479058)*(-0.04156384))) ;\n"
+  end
+
+
   def test_operator_precedence
     parse "foo := R[1]\nfoo=1+2*3"
     assert_prog "R[1:foo]=(1+2*3) ;\n"
@@ -2325,11 +2347,6 @@ end)
       gripper_depth := R[2]
       pr1.x = -1*(part_length-gripper_depth))
     assert_prog "PR[1,1:pr1]=((-1)*(R[1:part_length]-R[2:gripper_depth])) ;\n"
-  end
-
-  def test_over_parenthesized
-    parse %(calc1 := R[5]\nk := R[6]\nseperation := R[7]\nl := R[8]\noverlap := R[9]\nccw := R[10]\ncalc1 = ((((k*seperation)+(l*overlap))*ccw)) )
-    assert_prog "R[5:calc1]=((R[6:k]*R[7:seperation])+(R[8:l]*R[9:overlap])*R[10:ccw]) ;\n"
   end
 
   def test_if_over_parenthesized

@@ -25,12 +25,7 @@ module TPPlus
       end
 
       def eval(context, options={})
-        s = @x.eval(context, options)
-        if !check_balance(s)
-          "(#{s})"
-        else
-          s
-        end
+        "(#{@x.eval(context, options)})"
       end
     end
   end
