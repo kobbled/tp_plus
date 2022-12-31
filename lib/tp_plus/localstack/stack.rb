@@ -51,6 +51,8 @@ module TPPlus
 
       def add(name)
         raise "Stack overflow in #{self}" if @length >= @registers.length
+        #if stack is empty
+        @stack[0] = {} if @stack[0] == nil
         unless @stack[0].key?(name)
           @stack[0][name.to_sym] = @stack_pointer
           @stack_pointer += 1
