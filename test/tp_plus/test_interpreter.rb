@@ -3714,6 +3714,52 @@ LINE_TRACK ;
       "CALL MTH_TEST(R[70:dvar1],R[71:dvar2],R[72:dvar3],10) ;\n"
   end
 
+  def test_expressions_in_conditions
+    $stacks = TPPlus::Stacks.new
+    $dvar_counter = 0
+    parse("local := R[50..70]
+
+      EPSILON := 0.001
+      x := LR[]
+      
+      if (Mth::abs(x) > EPSILON)
+        #do stuff in here
+        x = Mth::abs(x)
+      end
+      
+      if (Mth::abs(x) > EPSILON) then
+        #do stuff in here
+        x = Mth::abs(x)
+      end
+      
+      while (Mth::abs(x) > EPSILON)
+        #do stuff in here
+        x = Mth::abs(x)
+      end")
+
+      assert_prog " ;\n" +
+      " ;\n" +
+      "CALL MTH_ABS(R[50:x],51);\n" +
+      "IF (R[51:dvar1]<=0.001),JMP LBL[100] ;\n" +
+      "! do stuff in here ;\n" +
+      "CALL MTH_ABS(R[50:x],50) ;\n" +
+      "LBL[100] ;\n" +
+      " ;\n" +
+      "CALL MTH_ABS(R[50:x],52);\n" +
+      "IF ((R[52:dvar2]>0.001)) THEN ;\n" +
+      "! do stuff in here ;\n" +
+      "CALL MTH_ABS(R[50:x],50) ;\n" +
+      "ENDIF ;\n" +
+      " ;\n" +
+      "LBL[101] ;\n" +
+      "CALL MTH_ABS(R[50:x],53);\n" +
+      "IF (R[53:dvar3]<=0.001),JMP LBL[102] ;\n" +
+      "! do stuff in here ;\n" +
+      "CALL MTH_ABS(R[50:x],50) ;\n" +
+      "JMP LBL[101] ;\n" +
+      "LBL[102] ;\n"
+  end
+
   def test_expression_and_function_in_arguments
     $stacks = TPPlus::Stacks.new
     $dvar_counter = 0
