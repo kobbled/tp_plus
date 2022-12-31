@@ -243,6 +243,11 @@ module TPPlus
             if n.is_a?(Nodes::RecursiveNode)
               traverse_nodes(n.block, lambda, options)
             end
+
+            #recursive/condition nodes
+            if n.is_a?(Nodes::RecursiveNode)
+              traverse_nodes(n.condition, lambda, options)
+            end
     
             #if statements
             if n.is_a?(Nodes::ConditionalNode)

@@ -1,10 +1,9 @@
 module TPPlus
   module Nodes
     class WhileNode < RecursiveNode
-      def initialize(condition_node, block)
-        super()
+      def initialize(condition, block)
+        super(condition)
         
-        @condition_node = condition_node
         @block = block.flatten.reject {|n| n.is_a?(TerminatorNode) }
       end
 
@@ -17,17 +16,17 @@ module TPPlus
       end
 
       def parens(s, context)
-        return s unless @condition_node.requires_mixed_logic?(context)
+        return s unless @condition[0].requires_mixed_logic?(context)
 
         "(#{s})"
       end
 
       def if_statement(context)
-        "IF #{parens(condition(context), context)},JMP LBL[#{bottom_label(context)}] ;\n"
+        "IF #{parens(eval_condition(context), context)},JMP LBL[#{bottom_label(context)}] ;\n"
       end
 
-      def condition(context)
-        @condition_node.eval(context, opposite: true)
+      def eval_condition(context)
+        @condition[0].eval(context, opposite: true)
       end
 
       def block_each_eval(context)
@@ -42,7 +41,6 @@ module TPPlus
         @top_label = nil
         @bottom_label = nil
         
-        "LBL[#{top_label(context)}] ;\n#{if_statement(context)}#{block_each_eval(context)}JMP LBL[#{top_label(context)}] ;\nLBL[#{bottom_label(context)}]"
       end
     end
   end

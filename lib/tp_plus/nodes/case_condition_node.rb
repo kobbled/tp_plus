@@ -1,12 +1,9 @@
 module TPPlus
   module Nodes
     class CaseConditionNode < RecursiveNode
-      attr_accessor :block
-
       def initialize(condition, block)
-        super()
+        super(condition)
         
-        @condition  = condition
         @label      = {}
         @block      = block.flatten.reject {|n| n.is_a?(TerminatorNode) }
       end
@@ -43,8 +40,8 @@ module TPPlus
         context.increment_case_labels()
         @label = LabelDefinitionNode.new(context.get_case_label())
 
-        if @condition
-          s += "=#{@condition.eval(context)},#{is_jump_label(context)}"
+        if @condition[0]
+          s += "=#{@condition[0].eval(context)},#{is_jump_label(context)}"
         else
           s += "ELSE,#{is_jump_label(context)}"
         end

@@ -3,7 +3,8 @@ module TPPlus
     class ConditionalBlockNode < ConditionalNode
       attr_accessor :condition
       def initialize(condition,true_block,elsif_block,false_block)
-        @condition   = condition
+        super(nil, condition, true_block, elsif_block, false_block)
+        
         @true_block  = true_block.flatten.reject  {|n| n.is_a? TerminatorNode }
         @elsif_block = elsif_block
         @false_block = false_block.flatten.reject {|n| n.is_a? TerminatorNode }
@@ -63,7 +64,7 @@ module TPPlus
 
       def eval(context, options={})
 
-        s = "IF #{parens(@condition.eval(context), context)} THEN ;\n#{true_block(context)}"
+        s += "IF #{parens(@condition[0].eval(context), context)} THEN ;\n#{true_block(context)}"
         
         return s if options[:recursive]
 

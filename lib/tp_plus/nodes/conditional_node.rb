@@ -1,10 +1,10 @@
 module TPPlus
   module Nodes
-    class ConditionalNode < BaseNode
-      attr_accessor :condition
+    class ConditionalNode < RecursiveNode
       def initialize(type,condition,true_block,elsif_block,false_block)
+        super(condition)
+
         @type        = type
-        @condition   = condition
         @true_block  = true_block.flatten.reject  {|n| n.is_a? TerminatorNode }
         @elsif_block = elsif_block
         @false_block = false_block.flatten.reject {|n| n.is_a? TerminatorNode }
@@ -68,19 +68,20 @@ module TPPlus
         @type == "if"
       end
 
-      def parens(s, context)
-        return s unless @condition.requires_mixed_logic?(context) || !@condition.is_a?(ExpressionNode)
+      def parens(s, context, options)
+        str = s.eval(context,opposite: opposite?)
+        return str unless s.requires_mixed_logic?(context) || !s.is_a?(ExpressionNode)
 
-        "(#{s})"
+        "(#{str})"
       end
 
       def eval(context, options={inlined: can_be_inlined?})
         @true_label = nil
         @end_label = nil
 
-        return InlineConditionalNode.new(@type,@condition,@true_block.first).eval(context) if options[:inlined]
+        return InlineConditionalNode.new(@type,@condition[0],@true_block.first).eval(context) if options[:inlined]
 
-        s = "IF #{parens(@condition.eval(context,opposite: opposite?), context)},JMP LBL[#{true_label(context)}] ;\n#{true_block(context)}"
+        s += "IF #{parens(@condition[0], context, options)},JMP LBL[#{true_label(context)}] ;\n#{true_block(context)}"
         
         return s if options[:recursive]
 

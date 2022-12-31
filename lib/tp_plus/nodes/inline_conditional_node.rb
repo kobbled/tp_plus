@@ -1,35 +1,34 @@
 module TPPlus
   module Nodes
-    class InlineConditionalNode < BaseNode
-      attr_reader :condition_node
+    class InlineConditionalNode < RecursiveNode
       def initialize(type, condition, block)
+        super(condition)
+
         @type           = type
-        @condition_node = condition
         @block          = block
       end
 
       def condition_requires_mixed_logic?(context)
-        @condition_node.is_a?(VarNode) ||
-          @condition_node.is_a?(NamespacedVarNode) ||
-          @condition_node.requires_mixed_logic?(context)
+        @condition[0].is_a?(VarNode) ||
+          @condition[0].is_a?(NamespacedVarNode) ||
+          @condition[0].requires_mixed_logic?(context)
       end
 
       def block_requires_mixed_logic?(context)
         @block.requires_mixed_logic?(context)
       end
 
-      def condition(context,options={})
+      def eval_condition(context,options={})
         options[:opposite] ||= @type == "unless"
 
         if condition_requires_mixed_logic?(context) || block_requires_mixed_logic?(context)
-          "(#{@condition_node.eval(context, options)})"
+          "(#{@condition[0].eval(context, options)})"
         else
-          @condition_node.eval(context, options)
+          @condition[0].eval(context, options)
         end
       end
 
       def eval(context)
-        "IF #{condition(context)},#{@block.eval(context,mixed_logic:true)}"
       end
     end
   end
