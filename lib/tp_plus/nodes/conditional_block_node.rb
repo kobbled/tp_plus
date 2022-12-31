@@ -64,6 +64,11 @@ module TPPlus
 
       def eval(context, options={})
 
+        s = ""
+
+        #evaluate expression expansions
+        s += eval_expression_expansions(context)
+
         s += "IF #{parens(@condition[0].eval(context), context)} THEN ;\n#{true_block(context)}"
         
         return s if options[:recursive]

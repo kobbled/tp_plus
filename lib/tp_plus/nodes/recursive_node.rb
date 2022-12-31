@@ -26,6 +26,26 @@ module TPPlus
         end
       end
 
+      def add_expression_expansions
+        if self.contains_call
+          ass_funcs = []
+          TPPlus::Util.retrieve_calls(self.condition[0], ass_funcs)
+
+          ass_funcs.each do |f|
+            @expansions.append(f)
+          end
+
+          @expansions = @expansions.flatten!
+        end
+      end
+
+      def eval_expression_expansions(context)
+        s = ""
+        @expansions.each do |f|
+          s += f.eval(context) + ";\n"
+        end
+
+        s
       end
 
       def get_block

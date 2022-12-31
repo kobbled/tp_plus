@@ -80,6 +80,11 @@ module TPPlus
         @end_label = nil
 
         return InlineConditionalNode.new(@type,@condition[0],@true_block.first).eval(context) if options[:inlined]
+        
+        s = ""
+
+        #evaluate expression expansions
+        s += eval_expression_expansions(context)
 
         s += "IF #{parens(@condition[0], context, options)},JMP LBL[#{true_label(context)}] ;\n#{true_block(context)}"
         

@@ -29,6 +29,10 @@ module TPPlus
       end
 
       def eval(context)
+        #evaluate expression expansions
+        exp_str = eval_expression_expansions(context)
+
+        "#{exp_str}IF #{eval_condition(context)},#{@block.eval(context,mixed_logic:true)}"
       end
     end
   end

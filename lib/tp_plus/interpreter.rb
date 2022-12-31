@@ -289,6 +289,11 @@ module TPPlus
         end
       end
 
+      #check if expression expansion is needed for condition nodes
+      if node.is_a?(TPPlus::Nodes::RecursiveNode)
+        node.add_expression_expansions
+      end
+
       if node.is_a?(TPPlus::Nodes::FunctionReturnNode)
         ret_exp = []
         TPPlus::Util.retrieve_calls(node.expression, ret_exp)
