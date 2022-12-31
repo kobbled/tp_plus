@@ -120,7 +120,7 @@ module TPPlus
           end
         end
 
-        @expansions = @expansions.flatten
+        @expansions = @expansions.flatten.uniq
       end
 
       def identifier_string(context)
