@@ -2824,6 +2824,32 @@ foo = &a::foo")
     end
   end
 
+  def test_operations_in_inlines
+    $stacks = TPPlus::Stacks.new
+    $dvar_counter = 0
+
+    parse("local := R[50..80]
+
+            namespace ns1
+              inline def func1(val) : numreg
+                return(SIN[val])
+              end
+            end
+
+            degree := LR[]
+            out := LR[]
+
+            out = ns1::func1(degree)")
+    
+    assert_prog " ;\n" +
+    " ;\n" +
+    " ;\n" +
+    "! inline ns1_func1 ;\n" +
+    "R[51:out]=SIN[R[50:degree]] ;\n" +
+    "! end ns1_func1 ;\n" +
+    " ;\n"
+  end
+
   def test_conditional_block
     parse("Dummy1 := R[225]
       Dummy2 := R[226]
