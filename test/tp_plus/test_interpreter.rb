@@ -3336,7 +3336,7 @@ LINE_TRACK ;
           return(nx*vx + ny*vy + nz*vz)
         end
       
-        inline def func1(nx,ny,nz,vx,vy,vz)
+        inline def func1(nx,ny,nz,vx,vy,vz) : numreg
           dd := LR[]
           ux := LR[]
           uy := LR[]
@@ -3345,6 +3345,8 @@ LINE_TRACK ;
           normalize(nx,ny,nz,&ux,&uy,&uz)
       
           dd = dot(nx,ny,nz,vx,vy,vz)
+
+          return(dd)
         end
       end
       
@@ -3352,7 +3354,7 @@ LINE_TRACK ;
       
       num := R[1..6]
       
-      ns1::func1(num1,num2,num3,num4,num5,num6)")
+      out = ns1::func1(num1,num2,num3,num4,num5,num6)")
     
       assert_prog " ;\n" +
       " ;\n" +
@@ -3364,16 +3366,18 @@ LINE_TRACK ;
       " ;\n" +
       "R[52:dvar8]=(R[1:num1]*R[1:num1]+R[2:num2]*R[2:num2]+R[3:num3]*R[3:num3]) ;\n" +
       "CALL MTH_SQRT(R[52:dvar8],51) ;\n" +
-      "R[51]=R[1:num1]/R[51:nrm] ;\n" +
-      "R[52]=R[2:num2]/R[51:nrm] ;\n" +
-      "R[53]=R[3:num3]/R[51:nrm] ;\n" +
+      "R[54]=R[1:num1]/R[51:nrm] ;\n" +
+      "R[55]=R[2:num2]/R[51:nrm] ;\n" +
+      "R[56]=R[3:num3]/R[51:nrm] ;\n" +
       "! end ns1_normalize ;\n" +
       " ;\n" +
       " ;\n" +
       "! inline ns1_dot ;\n" +
-      "R[50:dd]=(R[1:num1]*R[4:num4]+R[2:num2]*R[5:num5]+R[3:num3]*R[6:num6]) ;\n" +
+      "R[53:dd]=(R[1:num1]*R[4:num4]+R[2:num2]*R[5:num5]+R[3:num3]*R[6:num6]) ;\n" +
       "! end ns1_dot ;\n" +
       " ;\n" +
+      " ;\n" +
+      "R[50:out]=R[53:dd] ;\n" +
       "! end ns1_func1 ;\n" +
       " ;\n"
   end
