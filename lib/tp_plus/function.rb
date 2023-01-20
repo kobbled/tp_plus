@@ -68,7 +68,7 @@ module TPPlus
 
       @ret_register = TPPlus::Nodes::FunctionVarNode.new(RETURN_NAME)
       #add to total arguements to be pushed to the interpreter variables
-      if @args.select {|a|  a.name == RETURN_NAME}.empty?
+      if !@args.include?(@ret_register)
         @args.append(@ret_register)
       end
 
