@@ -18,11 +18,6 @@ module TPPlus
       @number_of_inlines = 0
       
       @namespace_functions = []
-      # add call stack graph
-      @graph = Graph::Graph.new()
-      # add root
-      @graph.addNode(@name)
-      @graph.setRoot(@graph.graph[@name])
     end
 
     def next_label
@@ -154,6 +149,13 @@ module TPPlus
       return s
     end
 
+    def set_as_main()
+      @name = "main"
+      #add as root to global graph
+      $graph.addNode(@name)
+      $graph.setRoot($graph.graph[@name])
+    end
+
     # Call stack functions
     # ----------------
 
@@ -172,36 +174,34 @@ module TPPlus
       return nil
     end
 
-    def create_call_stack(parent, nodes)
+    def create_call_stack(n, index, nodes, options)
 
-      #find each call recursively
-      nodes.each do |n|
-        if n.is_a?(TPPlus::Nodes::CallNode) || n.is_a?(TPPlus::Nodes::AssignmentNode)
-          next if n.is_a?(TPPlus::Nodes::CallNode) && n.program_name.nil?
-          next if n.is_a?(TPPlus::Nodes::AssignmentNode) && !(n.assignable.is_a?(TPPlus::Nodes::CallNode))
-          n = n.assignable if n.is_a?(TPPlus::Nodes::AssignmentNode) && n.assignable.is_a?(TPPlus::Nodes::CallNode)
+      if n.is_a?(TPPlus::Nodes::CallNode)
+        return if n.is_a?(TPPlus::Nodes::CallNode) && n.program_name.nil?
+        
+        prog_name = n.program_name
 
-          @graph.addNode(n.program_name)
-          @graph.addEdge(parent, @graph.graph[n.program_name])
-          if @functions.key?(n.program_name.to_sym)
-            create_call_stack(n.program_name, @functions[n.program_name.to_sym].nodes)
-          end
+        $graph.addNode(prog_name)
+        $graph.addEdge(options[:parent], $graph.graph[prog_name])
+        if @functions.key?(prog_name.to_sym)
+          traverse_nodes(@functions[prog_name.to_sym].nodes, :create_call_stack, options.merge({parent: prog_name}))
         end
       end
+
     end
 
     def set_call_stack_levels
       #bfs to set the level of the function call
-      @graph.setBredthLevels
+      $graph.setBredthLevels
       @functions.each do |k, f|
-        if @graph.graph.key?(k.to_s)
-          f.level = @graph.graph[k.to_s].level
+        if $graph.graph.key?(k.to_s)
+          f.level = $graph.graph[k.to_s].level
         end
       end
     end
 
     def traverse_call_stack
-      call_stack_dfs(@graph.root)
+      call_stack_dfs($graph.root)
     end
 
     def call_stack_dfs(node)
@@ -375,8 +375,14 @@ module TPPlus
 
       #create call stack graph
        #only perform on main entry. Not on namespace or function level.
-      if !@functions.empty? && !defined?(@env_flg)
-        create_call_stack(@name, @nodes)
+      if !@functions.empty? && !defined?(@env_flg) && @name == "main"
+        #set parent to connect nodes in graph
+        parent = {}
+        parent[:parent] = self.name
+        #traverse through syntax tree and create call stack
+        #enter into calls function if it exists and evaluate the nodes
+        # of that function
+        traverse_nodes(@nodes, :create_call_stack, parent)
         set_call_stack_levels()
         traverse_call_stack()
       end

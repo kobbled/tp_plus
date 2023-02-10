@@ -10,6 +10,9 @@ $global_options = options
 
 #global var stack
 $stacks = TPPlus::Stacks.new
+#add global graph
+$graph = Graph::Graph.new()
+
 #dummy variable counter
 $dvar_counter = 0
 
@@ -125,6 +128,7 @@ end
 scanner = TPPlus::Scanner.new
 parser = TPPlus::Parser.new(scanner)
 interpreter = parser.interpreter
+interpreter.set_as_main()
 
 #initialize preprocessor and pass into interpreter before loading environment
 ppr = Ppr::Preprocessor.new(options[:macros], includes: $global_options[:include])

@@ -126,7 +126,7 @@ module TPPlus
         pass_nodes = get_parent_imports(block)
 
         if @namespaces[identifier.to_sym].nil? && !@imports.include?(identifier.to_s)
-          name = @name.empty? ? "#{identifier}" : "#{@name}_#{identifier}"
+          name = (@name.empty? || @name == 'main') ? "#{identifier}" : "#{@name}_#{identifier}"
           @namespaces[identifier.to_sym] = TPPlus::Namespace.new(name, block, vars=pass_nodes[:vars], funcs=pass_nodes[:funcs], nspaces=pass_nodes[:namespaces], environment = @environment, imports = @imports)
         else
           @namespaces[identifier.to_sym].environment = @environment
@@ -310,6 +310,8 @@ module TPPlus
             #run lambda function
             case lambda
             when :mask_var_nodes
+              method(lambda).call(n, index, nodes, options)
+            when :create_call_stack
               method(lambda).call(n, index, nodes, options)
             else
               method(lambda).call(n, index, nodes)
