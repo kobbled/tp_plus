@@ -44,8 +44,10 @@ module TPPlus
         parser = TPPlus::Parser.new(scanner)
 
         #preprocess main file
+        ppr_inter1 = ""
         ppr_file = ""
-        @ppr.preprocess(file,ppr_file)
+        @ppr.preprocess(file,ppr_inter1)
+        @ppr.preprocess(ppr_inter1,ppr_file)
         # ***** end preproccessor *******
 
         scanner.scan_setup(ppr_file)
@@ -81,8 +83,10 @@ module TPPlus
         interpreter = parser.interpreter
         
         #preprocess main file
+        ppr_inter1 = ""
         ppr_file = ""
-        @ppr.preprocess(file,ppr_file)
+        @ppr.preprocess(file,ppr_inter1)
+        @ppr.preprocess(ppr_inter1,ppr_file)
         # ***** end preproccessor *******
 
         #pass preprocessor into interpeter
