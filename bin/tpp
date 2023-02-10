@@ -161,7 +161,9 @@ src = contents(ARGV[0])
 
 #preprocess main file
 ppr_src = ""
-ppr.preprocess(src,ppr_src)
+ppr_inter1 = ""
+ppr.preprocess(src,ppr_inter1)
+ppr.preprocess(ppr_inter1,ppr_src)
 # ***** end preproccessor *******
 
 scanner.scan_setup(ppr_src)
