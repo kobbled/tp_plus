@@ -62,7 +62,7 @@ module TPPlus
 
         group_string = GROUPS["gp" + options[:group].eval(context).to_s] + ":" if options[:group]
 
-        raise "Invalid component" unless component_valid?(options[:method]) || component_groups?(options[:group])
+        raise "Invalid component::: Method: #{options[:method]} ;; group: #{options[:group]}" unless component_valid?(options[:method]) || component_groups?(options[:group])
 
         "PR[#{group_string}#{@id}#{component(options[:method])}#{comment_string}]"
       end
