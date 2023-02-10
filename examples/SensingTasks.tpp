@@ -278,4 +278,76 @@ namespace SensingTasks
 
         return(touchPose::found)
     end
+
+    def correctFrame(curr_pose, farCenter, closeCenter) : posreg
+    
+        # correct tcp frame using two circles centers and the orginal tcp pose
+        # The two circle ceneter should be wrt to tcp, and tcp pose should be wrt to user_frame
+        # input: current_tcp, farCenter closeCenter (centers are wrt to user frame)
+        # output: new_tcp
+
+        TP_GROUPMASK = "1,*,*,*,*"
+
+        #var
+        axis_angle      := LPR[]
+        axis            := LPR[]
+        angle           := LR[]
+        correction_axis := LR[]
+        
+        normal          := LPR[]
+        p_point         := LPR[]
+        p_normal        := LPR[]
+        sect_point      := LPR[]
+        
+        farC            := LPR[]
+        closeC          := LPR[]
+        
+        #temp
+        temp            := LPR[]
+        new_pose        := LPR[]
+
+        # init
+        correction_axis = 3
+        new_pose = Pos::setxyz(0,0,0,0,0,0)
+        new_pose = Pos::setcfg('N U T, 0, 0, 0')
+
+        # transform centers to user frame
+        farC = Pos::mult(&curr_pose, &farCenter)
+        closeC = Pos::mult(&curr_pose, &closeCenter)
+
+        #compute normals of the (far-close) line and tcp z vector wrt UF
+        temp = Pos::sub(&farC, &closeC)
+        normal = Gbr::norm(&temp)
+
+        # get axis and angle of rotation
+        axis_angle = Gbr::gtRtAx(curr_pose, correction_axis, &normal)   # 3 = > z axis
+        
+        axis.x  = axis_angle.x
+        axis.y  = axis_angle.y
+        axis.z  = axis_angle.z
+        angle   = axis_angle.w
+
+        # rotate tcp frame
+        new_pose = Gbr::rtArAx(curr_pose, &axis, angle)
+        
+        # get vector of axis from pose
+        p_normal = Gbr::gtUtAx(&new_pose, correction_axis)
+
+        # update plane information
+        p_point.x = new_pose.x
+        p_point.y = new_pose.y
+        p_point.z = new_pose.z
+
+        # compute plane and line intersection
+        sect_point = Gbr::lpIntr(farCenter, closeCenter, &p_point, &p_normal)
+
+        # update tcp frame
+        new_pose.x = sect_point.x
+        new_pose.y = sect_point.y
+        new_pose.z = sect_point.z
+
+        # return new tcp frame
+        return(new_pose)
+    end
+
 end

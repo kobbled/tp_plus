@@ -46,8 +46,13 @@ module TPPlus
   end
 
   def on_error(t, val, vstack)
-    raise ParseError, sprintf("Parse error on line #{@scanner.tok_line} column #{@scanner.tok_col}: %s (%s)",
-                                val.inspect, token_to_str(t) || '?')
+    #parse textblock into array on lines
+    textblock = @scanner.src.split("\n")
+    s = sprintf("Parse error on line #{@scanner.tok_line} column #{@scanner.tok_col}: %s (%s) \n",
+    val.inspect, token_to_str(t) || '?')
+    s = s + "Near: #{textblock[@scanner.tok_line-1]}\n"
+
+    raise ParseError, s
   end
 
   class ParseError < StandardError ; end

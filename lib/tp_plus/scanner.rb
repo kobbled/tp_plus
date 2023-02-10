@@ -3,7 +3,7 @@ module TPPlus
     def initialize
     end
 
-    attr_reader :lineno, :col
+    attr_reader :lineno, :col, :src
     attr_reader :tok_line, :tok_col
     def scan_setup(src)
       @src = src
