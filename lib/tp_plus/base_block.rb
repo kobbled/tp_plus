@@ -47,7 +47,17 @@ module TPPlus
         ppr_inter1 = ""
         ppr_file = ""
         @ppr.preprocess(file,ppr_inter1)
+
+        if $global_options[:print_ppr]
+          #save ppr_inter1 to a file
+          File.open(File.join($global_options[:output_folder], $global_options[:environment].gsub(/.tpp/,"").split('/')[-1] + "_inter1.tpp"), "w") { |file| file.write(ppr_inter1.gsub!("\r","")) }
+        end
+
         @ppr.preprocess(ppr_inter1,ppr_file)
+
+        if $global_options[:print_ppr]
+          File.open(File.join($global_options[:output_folder], $global_options[:environment].gsub(/.tpp/,"").split('/')[-1] + "_inter2.tpp"), "w") { |file| file.write(ppr_file) }
+        end
         # ***** end preproccessor *******
 
         scanner.scan_setup(ppr_file)
@@ -86,7 +96,17 @@ module TPPlus
         ppr_inter1 = ""
         ppr_file = ""
         @ppr.preprocess(file,ppr_inter1)
+
+        if $global_options[:print_ppr]
+          #save ppr_inter1 to a file
+          File.open(File.join($global_options[:output_folder], filepath.gsub(/.tpp/,"").split('/')[-1] + "_inter1.tpp"), "w") { |file| file.write(ppr_inter1.gsub!("\r","")) }
+        end
+
         @ppr.preprocess(ppr_inter1,ppr_file)
+
+        if $global_options[:print_ppr]
+          File.open(File.join($global_options[:output_folder], filepath.gsub(/.tpp/,"").split('/')[-1] + "_inter2.tpp"), "w") { |file| file.write(ppr_file) }
+        end
         # ***** end preproccessor *******
 
         #pass preprocessor into interpeter
