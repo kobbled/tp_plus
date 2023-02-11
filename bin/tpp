@@ -85,6 +85,10 @@ OptionParser.new do |opts|
     options[:output_folder] = File.dirname(o)
   end
 
+  opts.on("-p", "--print-ppr", "Print ppr intermediates") do
+    options[:print_ppr] = true
+  end
+
   opts.on_tail("-h", "--help", "Show this message") do
     puts opts
     exit
@@ -163,7 +167,19 @@ src = contents(ARGV[0])
 ppr_src = ""
 ppr_inter1 = ""
 ppr.preprocess(src,ppr_inter1)
+
+if options[:print_ppr]
+  #save ppr_inter1 to a file
+  File.open(File.join(options[:output_folder], tpp_filename + "_inter1.tpp"), "w") { |file| file.write(ppr_inter1.gsub!("\r","")) }
+end
+
 ppr.preprocess(ppr_inter1,ppr_src)
+
+if options[:print_ppr]
+  #save ppr_inter2 to a file
+  File.open(File.join(options[:output_folder], tpp_filename + "_inter2.tpp"), "w") { |file| file.write(ppr_src) }
+end
+
 # ***** end preproccessor *******
 
 scanner.scan_setup(ppr_src)

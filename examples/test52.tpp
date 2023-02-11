@@ -1,16 +1,16 @@
 p1 := P[1]
 pr1 := PR[1]
 
-.assign TOF_TYPE :< "static"
+.assign TOF_TYPE :< "dynamic"
 
 .doR
   if (@TOF_TYPE == "static")
-      # rtcp type motion when workpiece approaching tof
-      puts "I am in the static if statement of the TOF_APPR_TYPE definition"
-      :< '.def TOF_APPR_TYPE :< "tool_offset"'
-      puts "I passed the previous line"
-  else
-      puts "I am in else statement of the TOF_APPR_TYPE definition"
+    # rtcp type motion when workpiece approaching tof
+    puts "Using tool offset"
+    :< '.def TOF_APPR_TYPE :< "tool_offset"'
+  elsif (@TOF_TYPE == "dynamic")
+    puts "Using frame offset"
+    :< '.def TOF_APPR_TYPE :< "offset"'
   end
 .end
 
