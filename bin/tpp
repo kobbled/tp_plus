@@ -95,6 +95,9 @@ OptionParser.new do |opts|
   end
 end.parse!
 
+#put into global options space
+$global_options = options
+
 if ARGV.length != 1
   puts "Must provide filename argument. See tpp --help for details"
   exit
