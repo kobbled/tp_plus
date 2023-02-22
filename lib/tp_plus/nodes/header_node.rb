@@ -10,6 +10,8 @@ module TPPlus
         case @type
         when "TP_IGNORE_PAUSE"
           context.header_data[:ignore_pause] = @value
+        when "TP_STACK_SIZE"
+          context.header_data[:stack_size] = @value
         when "TP_COMMENT"
           context.header_data[:comment] = @value
         when "TP_GROUPMASK"
