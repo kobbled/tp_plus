@@ -6,7 +6,7 @@ local := PR[10..30]
 namespace ns1
   def func1(ppc, fdist, cdist) : posreg
     TP_GROUPMASK = "1,*,*,*,*"
-
+    TP_STACK_SIZE = "600"
     var1  := LR[] 
     var2  := LR[]
 

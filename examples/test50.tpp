@@ -2,6 +2,7 @@ import test_import2
 
 TP_GROUPMASK = "1,*,*,*,*"
 TP_COMMENT = ""
+TP_STACK_SIZE = "700"
 
 FARCIR      := 10
 CLOSECIR    := 10
