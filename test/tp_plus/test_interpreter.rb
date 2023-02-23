@@ -2300,6 +2300,12 @@ end)
     assert_prog ""
     assert_equal "*,*,*,*,*", @interpreter.header_data[:group_mask]
   end
+  
+  def test_tp_stack_size
+    parse %(TP_STACK_SIZE = "845")
+    assert_prog ""
+    assert_equal "845", @interpreter.header_data[:stack_size]
+  end
 
   def test_mixed_logic_or
     parse %(foo := DI[1]\nbar := DI[2]\nif foo || bar\n# do something\nend)

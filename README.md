@@ -701,6 +701,7 @@ use_utool 3
 use_uframe 2
 
 TP_GROUPMASK = "1,1,*,*,*"
+TP_STACK_SIZE = "600"
 
 default.group(1).pose -> [0,0,0,90,180,0]
 default.group(1).config -> ['F','U','T', 0, 0, 0]
@@ -737,7 +738,7 @@ default.group(2).joints -> [0]
 /PROG TEST41
 /ATTR
 COMMENT = "TEST41";
-TCD:  STACK_SIZE	= 0,
+TCD:  STACK_SIZE	= 600,
       TASK_PRIORITY	= 50,
       TIME_SLICE	= 0,
       BUSY_LAMP_OFF	= 0,

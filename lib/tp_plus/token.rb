@@ -98,6 +98,7 @@ module TPPlus
 
         "TP_IGNORE_PAUSE" => :TP_HEADER,
         "TP_COMMENT" => :TP_HEADER,
+        "TP_STACK_SIZE" => :TP_HEADER,
         "TP_GROUPMASK" => :TP_HEADER,
         "TP_SUBTYPE" => :TP_HEADER,
 

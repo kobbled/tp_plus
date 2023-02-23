@@ -509,6 +509,11 @@ class TestScanner < Test::Unit::TestCase
      assert_token :TP_HEADER, "TP_GROUPMASK"
    end
 
+   def test_tp_stack_size
+    @scanner.scan_setup "TP_STACK_SIZE"
+    assert_token :TP_HEADER, "TP_STACK_SIZE"
+  end
+
    def test_tp_subtype
      @scanner.scan_setup "TP_SUBTYPE"
      assert_token :TP_HEADER, "TP_SUBTYPE"
