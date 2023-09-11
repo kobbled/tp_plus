@@ -13,11 +13,32 @@ module TPPlus
       @header_appl_data   = []
       @labels        = {}
       @current_label = 99
+      @previous_set_label = [@current_label]
+      @previous_set_label_index = 0
       @case_identifiers = 0
       @warning_identifiers = 0
       @number_of_inlines = 0
       
       @namespace_functions = []
+    end
+
+    def set_label_number(label)
+      @previous_set_label[@previous_set_label_index] = @current_label
+      @previous_set_label_index += 1
+
+      @previous_set_label.append(label)
+      @current_label = label - 1
+
+      nil
+    end
+
+    def return_label_number
+      @previous_set_label[@previous_set_label_index] = @current_label
+      @previous_set_label_index -= 1
+
+      @current_label = @previous_set_label[@previous_set_label_index]
+
+      nil
     end
 
     def next_label
@@ -88,7 +109,14 @@ module TPPlus
     def define_labels
       label_nodes = []
       label_recur(@nodes, label_nodes).each do |n|
-        add_label(n.identifier)
+        case n.type
+        when 1
+          add_label(n.identifier)
+        when 2
+          set_label_number(n.number.eval(self).to_i)
+        when 3
+          return_label_number
+        end
       end
     end
 

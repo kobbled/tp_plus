@@ -107,13 +107,14 @@ module TPPlus
           name = @program_name.split('_', 2)
           
           #search for functions in interpreter space
-          func = context.functions[@program_name.to_sym]
+          # Note:: Make a deep copy to not overwrite the original function
+          func = Marshal.load(Marshal.dump(context.functions[@program_name.to_sym]))
           
           if name.length > 1
             ns = context.namespaces.select { |k, _| k == name[0].to_sym }
             unless ns.nil?
               #search for functions in namespaces
-              ns.each { |key,value| func = value.functions[name[1].to_sym] if value.functions[name[1].to_sym] }
+              ns.each { |key,value| func = Marshal.load(Marshal.dump(value.functions[name[1].to_sym])) if value.functions[name[1].to_sym] }
             end
           end
 

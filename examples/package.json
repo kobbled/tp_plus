@@ -5,7 +5,7 @@
     "version" : "1.0.0",
     "author" : "kobbled",
     "environment" : "test_env.tpp",
-    "includes" : ["./fldr1", "./fldr2"],
+    "includes" : ["./fldr1"],
     "macros" : ["DEBUG=true"],
     "ftp"  : "127.0.0.1"
 }

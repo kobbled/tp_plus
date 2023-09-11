@@ -177,6 +177,29 @@ class TestInterpreter < Test::Unit::TestCase
     "ENDFOR ;\n"
 
   end
+
+  def test_label_renumber
+    parse("@lbl1
+      @lbl2
+      
+      CONST1 := 400
+      
+      set_label(CONST1)
+      @lbl3
+      @lbl4
+      pop_label
+      
+      @lbl5")
+    
+    assert_prog "LBL[100:lbl1] ;\n" +
+    "LBL[101:lbl2] ;\n" +
+    " ;\n" +
+    " ;\n" +
+    "LBL[400:lbl3] ;\n" +
+    "LBL[401:lbl4] ;\n" +
+    " ;\n" +
+    "LBL[102:lbl5] ;\n"
+  end
   # ------
 
   def test_jump_to_label
@@ -4260,6 +4283,38 @@ LINE_TRACK ;
 : ! end of Lam_set_params ;
 : ! ------- ;
 ), @interpreter.output_functions(options)
+  end
+
+  def test__multiple_call_inlines
+    parse("local := R[10..15]
+
+      namespace ns1
+        inline def add(ar1, ar2) : numreg
+          return(ar1 + ar2)
+        end
+      end
+      
+      sum := LR[]
+      
+      sum = ns1::add(5, 4)
+      sum = ns1::add(10, 2)
+      sum = ns1::add(6, 10)")
+
+      assert_prog " ;\n" +
+      " ;\n" +
+      " ;\n" +
+      "! inline ns1_add ;\n" +
+      "R[10:sum]=5+4 ;\n" +
+      "! end ns1_add ;\n" +
+      " ;\n" +
+      "! inline ns1_add ;\n" +
+      "R[10:sum]=10+2 ;\n" +
+      "! end ns1_add ;\n" +
+      " ;\n" +
+      "! inline ns1_add ;\n" +
+      "R[10:sum]=6+10 ;\n" +
+      "! end ns1_add ;\n" +
+      " ;\n"
   end
   
 

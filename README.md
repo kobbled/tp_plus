@@ -22,11 +22,11 @@ TP+ is a higher-level language abstraction that translates into FANUC TP. It fea
 
 > This branch was forked from the archived repo [TP+](https://github.com/onerobotics/tp_plus)
 
-> [!**NEW**]
+> [!new]
 > * A Preprocessor [ppr](https://github.com/civol/ppr) was added! See [examples.md](examples.md#preprocessor) for details.
 > * Local variables can be declared! See [examples.md](examples.md#local-variables) for details.
 
-> [!**INFO**]
+> [!info]
 > * see [Features](#features) for a quick look at the features
 > * see [examples.md](examples.md) for an indepth introduction to TP+
 > * Test example .tpp files can be found in [./examples](https://github.com/kobbled/tp_plus/tree/master/examples) directory of this repository
@@ -56,7 +56,7 @@ TP+ is a higher-level language abstraction that translates into FANUC TP. It fea
 Install
 -----------
 
-> [!**NOTE**]
+> [!note]
 > A Standalone `.exe` can be found in https://github.com/kobbled/tp_plus/releases, where you do not have to install anything. Simply add the location where the `tpp.exe` file resides onto your environment `Path`. However, with this method you will not recieve up to date changes to TP+.
 
 1. Install Ruby
@@ -73,7 +73,7 @@ Install
 set PATH=%PATH%;\path\to\tp_plus\bin
 ```
 
-> [!**INFO**]
+> [!info]
 > Alternatively there is a docker image located in the [docker-container](https://github.com/kobbled/tp_plus/tree/docker-container) branch. However due to Roboguide and Fanuc tools being windows only, the workflow is too awkward for the standard user and is not recommended. Furthermore, the build tools [vscode-tpp-extension](https://github.com/kobbled/vscode-tpp-extension), and [Rossum](https://github.com/kobbled/rossum) currently do not have docker interoperability support. 
 
 Updating
@@ -113,7 +113,7 @@ tpp filename.tpp -i ../folder1 -i ../folder2
 
 build karel hash table from environment file. The first argument is to specify the filename (without the extension) that the hash will be written to. The second argument specifies if you also want to clear the register values on execution of the karel program.
 
-> [!**WARNING**]
+> [!warning]
 > Setting to `true` will wipe the registers, position registers, and string registers from the controller
 
 ```shell
@@ -122,10 +122,10 @@ tpp filename.tpp -k 'karelFilename',false
 
 See `tpp --help` for options.
 
-> [!**INFO**]
+> [!info]
 > All of these options can be accessed through vscode using the [Fanuc TP-Plus Language Extension](https://marketplace.visualstudio.com/items?itemName=kobbled.fanuc-tp-plus)
 
-> [!**INFO**]
+> [!info]
 > All of these options can be specified in the [Rossum](https://github.com/kobbled/rossum) package manager through the `package.json` file
 
 Features
