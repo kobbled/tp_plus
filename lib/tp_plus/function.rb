@@ -168,8 +168,12 @@ module TPPlus
           if v
             if v.is_a?(TPPlus::Nodes::AddressNode)
               map[v.id.identifier] = map[k]
-            else
+            elsif v.is_a?(TPPlus::Nodes::VarNode)
               map[v.identifier] = map[k]
+            elsif v.is_a?(TPPlus::Nodes::DigitNode)
+              map[v.name] = map[k]
+            else
+              raise NotImplementedError, "argument #{k} type #{v.class} is not implemented yet."
             end
           end
         end

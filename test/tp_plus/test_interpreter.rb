@@ -4284,6 +4284,38 @@ LINE_TRACK ;
 : ! ------- ;
 ), @interpreter.output_functions(options)
   end
+
+  def test__multiple_call_inlines
+    parse("local := R[10..15]
+
+      namespace ns1
+        inline def add(ar1, ar2) : numreg
+          return(ar1 + ar2)
+        end
+      end
+      
+      sum := LR[]
+      
+      sum = ns1::add(5, 4)
+      sum = ns1::add(10, 2)
+      sum = ns1::add(6, 10)")
+
+      assert_prog " ;\n" +
+      " ;\n" +
+      " ;\n" +
+      "! inline ns1_add ;\n" +
+      "R[10:sum]=5+4 ;\n" +
+      "! end ns1_add ;\n" +
+      " ;\n" +
+      "! inline ns1_add ;\n" +
+      "R[10:sum]=10+2 ;\n" +
+      "! end ns1_add ;\n" +
+      " ;\n" +
+      "! inline ns1_add ;\n" +
+      "R[10:sum]=6+10 ;\n" +
+      "! end ns1_add ;\n" +
+      " ;\n"
+  end
   
 
 end
