@@ -177,6 +177,29 @@ class TestInterpreter < Test::Unit::TestCase
     "ENDFOR ;\n"
 
   end
+
+  def test_label_renumber
+    parse("@lbl1
+      @lbl2
+      
+      CONST1 := 400
+      
+      set_label(CONST1)
+      @lbl3
+      @lbl4
+      pop_label
+      
+      @lbl5")
+    
+    assert_prog "LBL[100:lbl1] ;\n" +
+    "LBL[101:lbl2] ;\n" +
+    " ;\n" +
+    " ;\n" +
+    "LBL[400:lbl3] ;\n" +
+    "LBL[401:lbl4] ;\n" +
+    " ;\n" +
+    "LBL[102:lbl5] ;\n"
+  end
   # ------
 
   def test_jump_to_label

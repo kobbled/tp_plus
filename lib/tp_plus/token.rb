@@ -135,7 +135,10 @@ module TPPlus
         "fix" => :FIX,
         "extunits" => :POSEATTR,
 
-        "local" => :LOCALSTACK
+        "local" => :LOCALSTACK,
+
+        "set_label" => :LABEL_SET,
+        "pop_label" => :LABEL_POP
       }
 
 
