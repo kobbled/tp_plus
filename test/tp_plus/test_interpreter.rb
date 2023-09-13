@@ -839,6 +839,77 @@ LBL[106] ;
    "LBL[101] ;\n"
   end
 
+  def test_nested_inlined_conditionals2
+    parse("f := F[1..10]
+      local := R[1..20]
+      
+      namespace ns1
+        inline def func2(amt) : numreg
+          roti := LR[]
+          i := LR[]
+          d1 := LR[]
+          d2 := LR[]
+      
+          roti = Mth::abs(amt)
+          if (roti < 180)
+              d1 = 1
+          else
+              d1 = 2
+          end
+      
+          # rotation motion
+          for i in (1 to d1)
+              # motion part
+              roti = amt / d1
+          end
+      
+          return(roti)
+        end
+      
+        inline def func1(rot)
+          i := LR[]
+          rot = func2(rot)
+        end
+      
+      end
+      
+      if f5
+        rotDeg := LR[]
+        rotDeg = 30.5
+        # check motion
+        ns1::func1(rotDeg)
+      end")
+   assert_prog " ;\n" +
+   " ;\n" +
+   "IF (!F[5:f5]),JMP LBL[100] ;\n" +
+   " ;\n" +
+   "R[1:rotDeg]=30.5 ;\n" +
+   "! check motion ;\n" +
+   "! inline ns1_func1 ;\n" +
+   "! inline ns1_func2 ;\n" +
+   " ;\n" +
+   "CALL MTH_ABS(R[1:rotDeg],2) ;\n" +
+   "IF (R[2:roti]>=180),JMP LBL[101] ;\n" +
+   "R[4:d1]=1 ;\n" +
+   "JMP LBL[102] ;\n" +
+   "LBL[101] ;\n" +
+   "R[4:d1]=2 ;\n" +
+   "LBL[102] ;\n" +
+   " ;\n" +
+   "! rotation motion ;\n" +
+   "FOR R[3:i]=1 TO R[4:d1] ;\n" +
+   "! motion part ;\n" +
+   "R[2:roti]=R[1:rotDeg]/R[4:d1] ;\n" +
+   "ENDFOR ;\n" +
+   " ;\n" +
+   "R[1:rotDeg]=R[2:roti] ;\n" +
+   "! end ns1_func2 ;\n" +
+   " ;\n" +
+   "! end ns1_func1 ;\n" +
+   " ;\n" +
+   "LBL[100] ;\n"
+  end
+
   def test_boolean_constant
     parse("CONST1 := true
 

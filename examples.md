@@ -14,6 +14,7 @@
     - [Using Constants](#using-constants)
   - [Select](#select)
   - [Inline Statments](#inline-statments)
+    - [Nested Inlines](#nested-inlines)
   - [Namespaces](#namespaces)
     - [Namespace scoping](#namespace-scoping)
     - [Self Referencing](#self-referencing)
@@ -611,6 +612,104 @@ DEFAULT_GROUP = 1,*,*,*,*;
  : IF (!R[1:foo]),CALL PROG ;
  :  ;
  : IF (R[1:foo]>=(R[2:bar]-1) AND R[1:foo]<=(R[2:bar]+1)),R[2:bar]=(2) ;
+/END
+```
+
+### Nested Inlines
+
+>[!warning]
+> For nested inline statements of functions in the same namespace, note the order they are listed in the namespace. Functions with dependencies must come after those dependencies in the namespace.
+
+>[!warning]
+> For nested inlines, make note of the argument names. If there are multiple arguments from different functions with the same name, or a register with the same name as an argument, the inline may not be properly resolved. The best practice is to just name variables, and arguments differently.
+
+TP+
+```ruby
+f := F[1..10]
+local := R[1..20]
+
+namespace ns1
+  inline def func2(amt) : numreg
+    roti := LR[]
+    i := LR[]
+    d1 := LR[]
+    d2 := LR[]
+
+    roti = Mth::abs(amt)
+    if (roti < 180)
+        d1 = 1
+    else
+        d1 = 2
+    end
+
+    # rotation motion
+    for i in (1 to d1)
+        # motion part
+        roti = amt / d1
+    end
+
+    return(roti)
+  end
+
+  inline def func1(rot)
+    i := LR[]
+    rot = func2(rot)
+  end
+
+end
+
+if f5
+  rotDeg := LR[]
+  rotDeg = 30.5
+  # check motion
+  ns1::func1(rotDeg)
+end
+```
+
+LS
+```fanuc
+/PROG TEST
+/ATTR
+COMMENT = "TEST";
+TCD:  STACK_SIZE	= 0,
+      TASK_PRIORITY	= 50,
+      TIME_SLICE	= 0,
+      BUSY_LAMP_OFF	= 0,
+      ABORT_REQUEST	= 0,
+      PAUSE_REQUEST	= 0;
+DEFAULT_GROUP = 1,*,*,*,*;
+/APPL
+/MN
+ :  ;
+ :  ;
+ : IF (!F[5:f5]),JMP LBL[100] ;
+ :  ;
+ : R[1:rotDeg]=30.5 ;
+ : ! check motion ;
+ : ! inline ns1_func1 ;
+ : ! inline ns1_func2 ;
+ :  ;
+ : CALL MTH_ABS(R[1:rotDeg],2) ;
+ : IF (R[2:roti]>=180),JMP LBL[101] ;
+ : R[4:d1]=1 ;
+ : JMP LBL[102] ;
+ : LBL[101] ;
+ : R[4:d1]=2 ;
+ : LBL[102] ;
+ :  ;
+ : ! rotation motion ;
+ : FOR R[3:i]=1 TO R[4:d1] ;
+ : ! motion part ;
+ : R[2:roti]=R[1:rotDeg]/R[4:d1] ;
+ : ENDFOR ;
+ :  ;
+ : R[1:rotDeg]=R[2:roti] ;
+ : ! end ns1_func2 ;
+ :  ;
+ : ! end ns1_func1 ;
+ :  ;
+ : LBL[100] ;
+/POS
 /END
 ```
 
