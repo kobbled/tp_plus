@@ -7,15 +7,6 @@
       - [Print a pyramid](#print-a-pyramid)
       - [Nested Select Statement in For Loop](#nested-select-statement-in-for-loop)
     - [while loop](#while-loop)
-<!-- TOC -->
-
-- [TP+ Examples](#tp-examples)
-  - [IO](#io)
-  - [Loops](#loops)
-    - [for loop](#for-loop)
-      - [Print a pyramid](#print-a-pyramid)
-      - [Nested Select Statement in For Loop](#nested-select-statement-in-for-loop)
-    - [while loop](#while-loop)
     - [looping with a jump label](#looping-with-a-jump-label)
   - [Conditionals](#conditionals)
     - [If-Then Block](#if-then-block)
@@ -38,7 +29,7 @@
   - [Imports](#imports)
   - [Local variables](#local-variables)
   - [Shared Variables](#shared-variables)
-    - [Expressions in Arguements](#expressions-in-arguements)
+  - [Expressions in Arguements](#expressions-in-arguements)
   - [Frames](#frames)
   - [Motion](#motion)
     - [basic options](#basic-options)
@@ -67,7 +58,7 @@
     - [collision guard](#collision-guard)
     - [tool application headers](#tool-application-headers)
 
-<!-- /TOC -->    - [looping with a jump label](#looping-with-a-jump-label)
+<!-- /TOC -->
   - [Conditionals](#conditionals)
     - [If-Then Block](#if-then-block)
     - [Evaluating IO](#evaluating-io)
@@ -1471,7 +1462,7 @@ shr_pr1 = Pos::setxyz(0, 0, 100, 90, 0, 0)
 > Shared variables must be declared before any namespace, function, or import, and they must be evaluated in scope before the namespace or function is evaluated, or else the namespace or function will say that variable is not defined.
 
 
-### Expressions in Arguements
+## Expressions in Arguements
 
 Currently the Fanuc TP language does not allow you to put expressions in function arguments. With the use of local variables this is now possible in TP+.
 
