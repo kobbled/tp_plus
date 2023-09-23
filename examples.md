@@ -1255,9 +1255,6 @@ end
 
 ## Local variables
 
-> [!DANGER]
-> This feature is experimental, it may provide unpredictable results. Use at your own discretion.
-
 > [!TODO]
 > Make a karel program to handle a local register stack dynamically during runtime.
 
@@ -1374,6 +1371,45 @@ DEFAULT_GROUP = *,*,*,*,*;
 
 > [!WARNING]
 > The local variable system is done completely at compile time, each function/subroutine should be re-exported to the robot everytime! In the case a where the same subroutine is used in different programs, at different points in the program, different register number may be assigned and conflict with the program scope.
+
+## Shared Variables
+
+> [!danger]
+> This feature is experimental, it may provide unpredictable results. Use at your own discretion.
+
+Shared variables are declared much the same way as local variables, using the `shared` keyword:
+
+```
+shared := R[1..10]
+```
+
+however shared types are defined as:
+
+```
+numreg := SHR[]
+posreg := SPR[]
+flag   := SF[] 
+```
+
+The purpose of shared variables are to persist throughout the entire runtime of the program, and can be called in namespaces, and functions without importing or passing the variables into scope. In a sense they are environment variables without a static register number assigned to them.
+
+```ruby
+shared := R[40..50]
+shared := PR[30..40]
+shared := F[1..10]
+
+shr_f1 := SF[]
+shr_r1 := SHR[]
+shr_pr1 := SPR[]
+
+shr_f1 = 10
+shr_r1 = on
+shr_pr1 = Pos::setxyz(0, 0, 100, 90, 0, 0)
+```
+
+> [!warning]
+> Shared variables must be declared before any namespace, function, or import, and they must be evaluated in scope before the namespace or function is evaluated, or else the namespace or function will say that variable is not defined.
+
 
 ### Expressions in Arguements
 

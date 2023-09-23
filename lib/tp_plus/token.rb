@@ -136,6 +136,7 @@ module TPPlus
         "extunits" => :POSEATTR,
 
         "local" => :LOCALSTACK,
+        "shared" => :SHAREDSTACK,
 
         "set_label" => :LABEL_SET,
         "pop_label" => :LABEL_POP
@@ -157,6 +158,9 @@ module TPPlus
         "LR" => :LOCALREG,
         "LPR" => :LOCALPOSE,
         "LF" => :LOCALFLAG,
+        "SHR" => :SHAREDREG,
+        "SPR" => :SHAREDPOSE,
+        "SF" => :SHAREDFLAG,
 
         "SIN" => :OPERATION,
         "COS" => :OPERATION,

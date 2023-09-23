@@ -110,6 +110,7 @@ require_relative 'tp_plus/nodes/reg_range_node'
 require_relative 'tp_plus/nodes/pose_assign_node'
 require_relative 'tp_plus/nodes/stack_node'
 require_relative 'tp_plus/nodes/local_node'
+require_relative 'tp_plus/nodes/shared_node'
 
 require_relative 'tp_plus/base_block'
 require_relative 'tp_plus/interpreter'

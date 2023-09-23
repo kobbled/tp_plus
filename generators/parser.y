@@ -23,6 +23,7 @@ token FUNCTION OPERATION USING IMPORT COMPILE INLINE
 token ARROW DEFAULTPOS POSEATTR POSEREVERSE
 token SPHERE POLAR ORIGIN FIX
 token LOCALSTACK LOCALREG LOCALPOSE LOCALFLAG
+token SHAREDSTACK SHAREDREG SHAREDPOSE SHAREDFLAG
 
 prechigh
   right BANG
@@ -521,8 +522,13 @@ rule
     : label                            { result = LabelDefinitionNode.new(val[0]) }#@interpreter.add_label(val[1]) }
     ;
 
+  memory_types
+    : LOCALSTACK { result = 1 }
+    | SHAREDSTACK { result = 2 }
+    ;
+
   definition
-    : LOCALSTACK ASSIGN definable      {result = StackDefinitionNode.new(val[2])}
+    : memory_types ASSIGN definable      {result = StackDefinitionNode.new(val[0], val[2])}
     | WORD ASSIGN definable            { result = RegDefinitionNode.new(val[0], val[2]) }
     ;
 
@@ -738,6 +744,7 @@ rule
     | framereg
     | booleans
     | localvars
+    | sharedvars
     ;
 
   definable_range
@@ -778,6 +785,16 @@ rule
 
   localvars
     : local_types LBRACK RBRACK    {result = LocalDefinitionNode.new(val[0]) }
+    ;
+
+  shared_types
+    : SHAREDREG {result = val[0]}
+    | SHAREDPOSE {result = val[0]}
+    | SHAREDFLAG {result = val[0]}
+    ;
+
+  sharedvars
+    : shared_types LBRACK RBRACK    {result = SharedDefinitionNode.new(val[0]) }
     ;
   
 

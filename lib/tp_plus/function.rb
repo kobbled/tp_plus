@@ -34,6 +34,8 @@ module TPPlus
       # copy variables & constants to interpreter
       add_parent_nodes(interpreter, @variables)
       add_parent_nodes(interpreter, @constants)
+      # copy shared variables in @variables scope
+      add_shared_vars(interpreter)
       #copy namespaces to interpreter
       add_namespaces(interpreter, @namespaces)
       #copy namespaces to interpreter

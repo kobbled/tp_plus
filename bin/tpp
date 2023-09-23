@@ -10,6 +10,8 @@ $global_options = options
 
 #global var stack
 $stacks = TPPlus::Stacks.new
+#global var shared
+$shared = TPPlus::Stacks.new
 #add global graph
 $graph = Graph::Graph.new()
 
