@@ -15,6 +15,8 @@ module TPPlus
     def define!(vars, funcs, namespaces)
       # copy variables & constants to interpreter
       add_parent_nodes(self, vars)
+      # copy shared variables in @variables scope
+      add_shared_vars(self)
       #copy namespaces to interpreter
       add_namespaces(self, namespaces)
       #copy functions to interpreter
@@ -69,6 +71,31 @@ module TPPlus
       end
 
       parent
+    end
+
+    def add_shared_vars(parent)
+
+      if defined?($shared)
+        $shared.pack.each do |_,s|
+          if s.stack[0].any?
+            s.stack[0].each do |k, v|
+              case s.type
+                when "R"
+                  parent.add_var(k, TPPlus::Nodes::NumregNode.new(v))
+                when "PR"
+                  parent.add_var(k, TPPlus::Nodes::PosregNode.new(v))
+                when "VR"
+                  parent.add_var(k, TPPlus::Nodes::VisionRegisterNode.new(v))
+                when "SR"
+                  parent.add_var(k, TPPlus::Nodes::StringRegisterNode.new(v))
+                else
+                  parent.add_var(k, TPPlus::Nodes::IONode.new(s.type, v))
+              end
+            end
+          end
+        end
+      end
+
     end
 
     def add_namespaces(parent, nspaces)

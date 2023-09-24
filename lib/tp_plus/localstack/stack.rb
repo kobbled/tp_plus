@@ -21,7 +21,7 @@ module TPPlus
     end
 
     class Stack
-      attr_reader :type, :length
+      attr_reader :type, :length, :stack
 
       def initialize(registerArray, type)
         @stack = []
