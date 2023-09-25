@@ -96,13 +96,13 @@ class TestInterpreter < Test::Unit::TestCase
     
     assert_prog "R[1:i]=0 ;\n" +
     "R[2:inc]=10 ;\n" +
-    "LBL[101] ;\n" +
-    "IF R[1:i]>=R[2:inc],JMP LBL[102] ;\n" +
-    "LBL[100:finlbl1] ;\n" +
+    "LBL[100] ;\n" +
+    "IF R[1:i]>=R[2:inc],JMP LBL[101] ;\n" +
+    "LBL[102:finlbl1] ;\n" +
     "R[1:i]=R[1:i]+1 ;\n" +
-    "JMP LBL[101] ;\n" +
-    "LBL[102] ;\n" +
-    "JMP LBL[100] ;\n"
+    "JMP LBL[100] ;\n" +
+    "LBL[101] ;\n" +
+    "JMP LBL[102] ;\n"
 
   end
 
@@ -130,20 +130,20 @@ class TestInterpreter < Test::Unit::TestCase
     "R[3:j]=0 ;\n" +
     "R[2:inc]=10 ;\n" +
     "R[4:inc2]=20 ;\n" +
-    "LBL[102] ;\n" +
-    "IF R[1:i]>=R[2:inc],JMP LBL[103] ;\n" +
-    "LBL[100:finlbl1] ;\n" +
-    "LBL[104] ;\n" +
-    "IF R[3:j]>=R[4:inc2],JMP LBL[105] ;\n" +
-    "LBL[101:finlbl2] ;\n" +
-    "R[3:j]=R[3:j]+1 ;\n" +
-    "JMP LBL[104] ;\n" +
-    "LBL[105] ;\n" +
-    "R[1:i]=R[1:i]+1 ;\n" +
-    "JMP LBL[102] ;\n" +
+    "LBL[100] ;\n" +
+    "IF R[1:i]>=R[2:inc],JMP LBL[101] ;\n" +
+    "LBL[102:finlbl1] ;\n" +
     "LBL[103] ;\n" +
+    "IF R[3:j]>=R[4:inc2],JMP LBL[104] ;\n" +
+    "LBL[105:finlbl2] ;\n" +
+    "R[3:j]=R[3:j]+1 ;\n" +
+    "JMP LBL[103] ;\n" +
+    "LBL[104] ;\n" +
+    "R[1:i]=R[1:i]+1 ;\n" +
     "JMP LBL[100] ;\n" +
-    "JMP LBL[101] ;\n"
+    "LBL[101] ;\n" +
+    "JMP LBL[102] ;\n" +
+    "JMP LBL[105] ;\n"
 
   end
 
@@ -202,16 +202,73 @@ class TestInterpreter < Test::Unit::TestCase
   end
   # ------
 
+  def test_label_hardcode_number
+    parse("@lbl1:206\njump_to @lbl1")
+    assert_prog "LBL[206:lbl1] ;\nJMP LBL[206] ;\n"
+  end
+
+  def test_label_mixing
+    parse("tsk_label := R[1]
+      reg4       := R[4]
+      
+      set_label(50)
+      
+      if (tsk_label == 101) || (tsk_label == 1101) || (tsk_label == 1103) || (tsk_label == 1201)
+          jump_to indirect('r', &reg4)
+      else
+          jump_to @end
+      end
+      
+      pop_label
+      
+      @flat_pad1
+        jump_to @end
+      
+      @flat_pad2
+        jump_to @end
+      
+        @layer1:1101
+          jump_to @end
+      
+        @layer3:1103
+          jump_to @end
+      
+        @pocket1:1201
+          jump_to @end
+      
+      @end")
+    
+    assert_prog " ;\n" +
+    " ;\n" +
+    "IF ((R[1:tsk_label]<>101) AND (R[1:tsk_label]<>1101) AND (R[1:tsk_label]<>1103) AND (R[1:tsk_label]<>1201)),JMP LBL[50] ;\n"+
+    "JMP LBL[R[4]] ;\n"+
+    "JMP LBL[51] ;\n"+
+    "LBL[50] ;\n"+
+    "JMP LBL[52] ;\n"+
+    "LBL[51] ;\n"+
+    " ;\n"+
+    " ;\n"+
+    "LBL[100:flat_pad1] ;\n"+
+    "JMP LBL[52] ;\n"+
+    " ;\n"+
+    "LBL[101:flat_pad2] ;\n"+
+    "JMP LBL[52] ;\n"+
+    " ;\n"+
+    "LBL[1101:layer1] ;\n"+
+    "JMP LBL[52] ;\n"+
+    " ;\n"+
+    "LBL[1103:layer3] ;\n"+
+    "JMP LBL[52] ;\n"+
+    " ;\n"+
+    "LBL[1201:pocket1] ;\n"+
+    "JMP LBL[52] ;\n"+
+    " ;\n"+
+    "LBL[52:end] ;\n"
+  end
+
   def test_jump_to_label
     parse("@foo\njump_to @foo")
     assert_prog "LBL[100:foo] ;\nJMP LBL[100] ;\n"
-  end
-
-  def test_nonexistent_label_error
-    parse("jump_to @foo")
-    assert_raise RuntimeError do
-      assert_prog ""
-    end
   end
 
   def test_turn_on
@@ -300,15 +357,15 @@ class TestInterpreter < Test::Unit::TestCase
     )
 
     assert_prog " ;\n" +
-    "IF R[1:foo]<>1,JMP LBL[101] ;\n" +
+    "IF R[1:foo]<>1,JMP LBL[100] ;\n" +
     "MESSAGE[foo == 1] ;\n" +
-    "JMP LBL[102] ;\n" +
-    "JMP LBL[104] ;\n" +
-    "LBL[101] ;\n" +
+    "JMP LBL[101] ;\n" +
+    "JMP LBL[103] ;\n" +
+    "LBL[100] ;\n" +
     "MESSAGE[foo != 1] ;\n" +
-    "LBL[104] ;\n" +
+    "LBL[103] ;\n" +
     " ;\n" +
-    "LBL[100:alarm] ;\n" +
+    "LBL[104:alarm] ;\n" +
     " ;\n" +
     "JMP LBL[105] ;\n"
 
@@ -317,13 +374,13 @@ class TestInterpreter < Test::Unit::TestCase
 ! WARNINGS ;
 ! ******** ;
  ;
-JMP LBL[103] ;
-LBL[102:warning1] ;
+JMP LBL[102] ;
+LBL[101:warning1] ;
 CALL USERCLR ;
 MESSAGE[This is a warning] ;
 WAIT UI[5]=ON ;
 WAIT UI[5]=OFF ;
-LBL[103] ;
+LBL[102] ;
  ;
 JMP LBL[106] ;
 LBL[105:warning2] ;
@@ -401,18 +458,18 @@ LBL[106] ;
  :  ;
  : ! force override to 100% in auto ;
  : ! mode ;
- : IF (!DO[111:Auto_Mode_Sel]),JMP LBL[101] ;
+ : IF (!DO[111:Auto_Mode_Sel]),JMP LBL[100] ;
  : OVERRIDE=100% ;
- : LBL[101] ;
+ : LBL[100] ;
  :  ;
  : ! enable conditions ;
  : $WAITTMOUT=(1000) ;
- : WAIT (DO[19:enableio]) TIMEOUT,LBL[100] ;
+ : WAIT (DO[19:enableio]) TIMEOUT,LBL[101] ;
  : $WAITTMOUT=(1000) ;
- : WAIT (!DO[21:start_]) TIMEOUT,LBL[100] ;
+ : WAIT (!DO[21:start_]) TIMEOUT,LBL[101] ;
  :  ;
  : END ;
- : LBL[100:alarm] ;
+ : LBL[101:alarm] ;
  : JMP LBL[102] ;
  : ;
  : ! ******** ;
@@ -1762,6 +1819,11 @@ LBL[104:endcase] ;\n)
   def test_indirect_posreg_assignment
     parse "foo := PR[1]\nfoo = indirect('pr',5)"
     assert_prog "PR[1:foo]=PR[5] ;\n"
+  end
+
+  def test_indirect_jump_label
+    parse "rg1 := R[8]\njump_to indirect('r', &rg1)"
+    assert_prog "JMP LBL[R[8]] ;\n"
   end
 
   def test_add_posregs
@@ -3658,23 +3720,23 @@ LINE_TRACK ;
 : ! ------- ;
  :  ;
  :  ;
- : IF (DO[10:sensor_signal]),JMP LBL[102] ;
+ : IF (DO[10:sensor_signal]),JMP LBL[100] ;
  : MESSAGE[Sensor is out of range.] ;
  : MESSAGE[Manually move in and] ;
  : MESSAGE[continue.] ;
  : PAUSE ;
- : LBL[102] ;
+ : LBL[100] ;
  :  ;
- : LBL[100:zero] ;
+ : LBL[101:zero] ;
  : SKIP CONDITION DO[11:sensor_zero]=ON ;
- : L PR[PR[8:start_pose]] 3mm/sec FINE Skip,LBL[101] ;
+ : L PR[PR[8:start_pose]] 3mm/sec FINE Skip,LBL[102] ;
  : END ;
- : LBL[101:failed] ;
+ : LBL[102:failed] ;
  : MESSAGE[Sensor zeroing failed.] ;
  : MESSAGE[Manually move in range,] ;
  : MESSAGE[and retry.] ;
  : PAUSE ;
- : JMP LBL[100] ;
+ : JMP LBL[101] ;
 : ! end of Sense_zero ;
 : ! ------- ;
 : ! ------- ;
@@ -3682,23 +3744,23 @@ LINE_TRACK ;
 : ! ------- ;
  :  ;
  :  ;
- : IF (DO[10:sensor_signal]),JMP LBL[102] ;
+ : IF (DO[10:sensor_signal]),JMP LBL[100] ;
  : MESSAGE[Sensor is out of range.] ;
  : MESSAGE[Manually move in and] ;
  : MESSAGE[continue.]] ;
  : PAUSE ;
- : LBL[102] ;
+ : LBL[100] ;
  :  ;
- : LBL[100:zero] ;
+ : LBL[101:zero] ;
  : SKIP CONDITION DO[10:sensor_signal]=OFF ;
- : L PR[PR[8:start_pose]] 3mm/sec FINE Skip,LBL[101] ;
+ : L PR[PR[8:start_pose]] 3mm/sec FINE Skip,LBL[102] ;
  : END ;
- : LBL[101:failed] ;
+ : LBL[102:failed] ;
  : MESSAGE[Sensor zeroing failed.] ;
  : MESSAGE[Manually move in range,] ;
  : MESSAGE[and retry.]] ;
  : PAUSE ;
- : JMP LBL[100] ;
+ : JMP LBL[101] ;
 : ! end of Sense_none ;
 : ! ------- ;
 ), @interpreter.output_functions(options)

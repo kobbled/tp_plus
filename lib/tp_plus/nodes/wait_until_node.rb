@@ -8,7 +8,8 @@ module TPPlus
 
       def timeout(context)
         return "" if @timeout_options[:label].nil?
-
+        
+        context.add_label(@timeout_options[:label].to_sym)
         " TIMEOUT,LBL[#{context.labels[@timeout_options[:label].to_sym]}]"
       end
 
