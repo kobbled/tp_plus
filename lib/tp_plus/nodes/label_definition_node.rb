@@ -4,23 +4,18 @@ module TPPlus
       attr_reader :identifier, :type, :number
       def initialize(identifier)
         if identifier.kind_of?(Array)
-          number = identifier[1]
-          identifier = identifier[0]
+          @number = identifier[1]
+          @identifier = identifier[0]
 
           #set global for later pop method
-          $last_label_number = number
+          $last_label_number = identifier[1]
+        else
+          @identifier = identifier
         end
 
         @type = Types::ID
-        @type = Types::SET if identifier == 'set_label'
-        @type = Types::POP if identifier == 'pop_label'
-        
-        if @type == Types::ID
-          @identifier = identifier
-        else
-          @identifier = identifier
-          @number = $last_label_number
-        end
+        @type = Types::SET if @identifier == 'set_label'
+        @type = Types::POP if @identifier == 'pop_label'
       end
 
       module Types
@@ -35,10 +30,39 @@ module TPPlus
         " ;\n! #{@identifier}"
       end
 
+      def set_label_number(context)
+        context.previous_set_label[context.previous_set_label_index] = context.current_label
+        context.previous_set_label_index += 1
+  
+        context.previous_set_label.append(number.eval(context).to_i)
+        context.current_label = (number.eval(context).to_i - 1)
+  
+        nil
+      end
+
+      def return_label_number(context)
+        context.previous_set_label[context.previous_set_label_index] = context.current_label
+        context.previous_set_label_index -= 1
+  
+        context.current_label = context.previous_set_label[context.previous_set_label_index]
+  
+        nil
+      end
+
       def eval(context)
         #context.add_label(@identifier)
-        if @type == Types::ID
+        case @type
+        when Types::ID
+          if defined?(@number)
+            context.add_label(identifier, @number.eval(context))
+          else
+            context.add_label(identifier)
+          end
           "LBL[#{context.labels[@identifier.to_sym]}:#{@identifier[0,16]}]#{long_identifier_comment(context)}"
+        when Types::SET
+          set_label_number(context)
+        when Types::POP
+          return_label_number(context)
         end
       end
     end

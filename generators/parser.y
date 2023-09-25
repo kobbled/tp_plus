@@ -183,7 +183,8 @@ rule
     ;
 
   label
-    : LABEL { result = val[0] }
+    : LABEL COLON integer {result = val[0], val[2]}
+    | LABEL { result = val[0] }
     | LABEL_SET LPAREN case_allowed_condition RPAREN {result = val[0], val[2]}
     | LABEL_POP {result = val[0]}
     ;
@@ -269,6 +270,7 @@ rule
 
   jump
     : JUMP label                       { result = JumpNode.new(val[1]) }
+    | JUMP indirect_thing              { result = JumpIndirectNode.new(val[1]) }
     ;
 
   conditional
@@ -489,6 +491,7 @@ rule
   indirectable
     : number
     | var
+    | address
     ;
 
   optional_arg
@@ -519,7 +522,7 @@ rule
     ;
 
   label_definition
-    : label                            { result = LabelDefinitionNode.new(val[0]) }#@interpreter.add_label(val[1]) }
+    : label                            { result = LabelDefinitionNode.new(val[0]) }
     ;
 
   memory_types

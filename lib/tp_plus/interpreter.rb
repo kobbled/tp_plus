@@ -2,7 +2,7 @@ require_relative 'parser'
 
 module TPPlus
   class Interpreter < BaseBlock
-    attr_accessor :line_count, :header_data, :header_appl_data, :number_of_inlines, :current_label
+    attr_accessor :line_count, :header_data, :header_appl_data, :number_of_inlines, :current_label, :previous_set_label, :previous_set_label_index
     attr_reader :labels, :source_line_count, :variables
     def initialize
       super
@@ -22,25 +22,6 @@ module TPPlus
       @namespace_functions = []
     end
 
-    def set_label_number(label)
-      @previous_set_label[@previous_set_label_index] = @current_label
-      @previous_set_label_index += 1
-
-      @previous_set_label.append(label)
-      @current_label = label - 1
-
-      nil
-    end
-
-    def return_label_number
-      @previous_set_label[@previous_set_label_index] = @current_label
-      @previous_set_label_index -= 1
-
-      @current_label = @previous_set_label[@previous_set_label_index]
-
-      nil
-    end
-
     def next_label
       @current_label += 1
     end
@@ -49,7 +30,7 @@ module TPPlus
       @ret_type = context.ret_type
     end
 
-    def add_label(identifier)
+    def add_label(identifier, number=nil)
       if @labels[identifier.to_sym]
         # [!ISSUE]
         # @current_label in namespace functions does not get
@@ -59,7 +40,11 @@ module TPPlus
           @current_label = @labels[identifier.to_sym]
         end
       else
-        @labels[identifier.to_sym] = next_label
+        if number
+          @labels[identifier.to_sym] = number
+        else
+          @labels[identifier.to_sym] = next_label
+        end
       end
     end
 
@@ -104,20 +89,6 @@ module TPPlus
 
     def get_warning_label
       TPPlus::Nodes::LabelDefinitionNode.new("warning#{@warning_identifiers}")
-    end
-
-    def define_labels
-      label_nodes = []
-      label_recur(@nodes, label_nodes).each do |n|
-        case n.type
-        when 1
-          add_label(n.identifier)
-        when 2
-          set_label_number(n.number.eval(self).to_i)
-        when 3
-          return_label_number
-        end
-      end
     end
 
     def find_warnings(nodes, warnings)
@@ -416,8 +387,6 @@ module TPPlus
       end
 
       @nodes = @nodes.flatten.compact
-
-      define_labels
 
       @source_line_count = 0
 
