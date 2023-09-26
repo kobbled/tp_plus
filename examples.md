@@ -15,6 +15,7 @@
   - [Select](#select)
   - [Inline Statments](#inline-statments)
     - [Nested Inlines](#nested-inlines)
+  - [Labels](#labels)
   - [Namespaces](#namespaces)
     - [Namespace scoping](#namespace-scoping)
     - [Self Referencing](#self-referencing)
@@ -41,57 +42,7 @@
     - [Assigning posregs](#assigning-posregs)
   - [Function parameters](#function-parameters)
   - [Math](#math)
-    - [Functions](#functions)
-    - [Matrix Math](#matrix-math)
-  - [Arguments](#arguments)
-  - [String Manipulation](#string-manipulation)
-  - [Timers](#timers)
-  - [wait statments](#wait-statments)
-  - [Preprocessor](#preprocessor)
-    - [Define Macros](#define-macros)
-    - [Conditional Inclusion](#conditional-inclusion)
-    - [File inclusion](#file-inclusion)
-    - [Code Execution](#code-execution)
-  - [Environment Files](#environment-files)
-  - [Misc Statments](#misc-statments)
-    - [MNU Access](#mnu-access)
-    - [collision guard](#collision-guard)
-    - [tool application headers](#tool-application-headers)
-
-<!-- /TOC -->
-  - [Conditionals](#conditionals)
-    - [If-Then Block](#if-then-block)
-    - [Evaluating IO](#evaluating-io)
-    - [Using Constants](#using-constants)
-  - [Select](#select)
-  - [Inline Statments](#inline-statments)
-    - [Nested Inlines](#nested-inlines)
-  - [Namespaces](#namespaces)
-    - [Namespace scoping](#namespace-scoping)
-    - [Self Referencing](#self-referencing)
-    - [structs](#structs)
-    - [states](#states)
-  - [Functions](#functions)
-    - [Call A Function with Return](#call-a-function-with-return)
-    - [Multiple Functions with multiple return statements](#multiple-functions-with-multiple-return-statements)
-    - [namespace collections](#namespace-collections)
-    - [functions with positions](#functions-with-positions)
-    - [functions with posreg returns](#functions-with-posreg-returns)
-  - [Imports](#imports)
-  - [Local variables](#local-variables)
-    - [Expressions in Arguements](#expressions-in-arguements)
-  - [Frames](#frames)
-  - [Motion](#motion)
-    - [basic options](#basic-options)
-    - [Touch sensing with robot](#touch-sensing-with-robot)
-  - [Positions](#positions)
-    - [Setting positions](#setting-positions)
-    - [Position Assignment](#position-assignment)
-    - [Coordinate Systems](#coordinate-systems)
-    - [Assigning posregs](#assigning-posregs)
-  - [Function parameters](#function-parameters)
-  - [Math](#math)
-    - [Functions](#functions)
+    - [Functions](#functions-1)
     - [Matrix Math](#matrix-math)
   - [Arguments](#arguments)
   - [String Manipulation](#string-manipulation)
@@ -763,6 +714,92 @@ DEFAULT_GROUP = 1,*,*,*,*;
 /POS
 /END
 ```
+
+## Labels
+
+Labels for the most part will be handled internally, however there are cases where you may like to have more control over the label numbers.
+
+Internally labels start at `100` and increment sequentially. You can specify a label number directly by putting the number after the label name:
+
+```ruby
+@label1:400
+```
+
+If you would like the labels to increment from a specific number, you can define the starting label number:
+
+```ruby
+set_label(200)
+```
+
+To return to the previous label sequence use:
+
+```ruby
+pop_label
+```
+
+Here is an example utilizing the label functionality included in TP+:
+
+TP+
+```ruby
+tsk_label := R[1]
+reg4      := R[4]
+
+set_label(50)
+
+if (tsk_label == 101) || (tsk_label == 1101) || (tsk_label == 1103) || (tsk_label == 1201)
+    jump_to indirect('r', &reg4)
+else
+    jump_to @end
+end
+
+pop_label
+
+@flat_pad1
+  jump_to @end
+
+@flat_pad2
+  jump_to @end
+
+  @layer1:1101
+    jump_to @end
+
+  @layer3:1103
+    jump_to @end
+
+  @pocket1:1201
+    jump_to @end
+
+@end
+```
+
+LS
+```fortran
+ : IF ((R[1:tsk_label]<>101) AND (R[1:tsk_label]<>1101) AND (R[1:tsk_label]<>1103) AND (R[1:tsk_label]<>1201)),JMP LBL[50] ;
+ : JMP LBL[R[4]] ;
+ : JMP LBL[51] ;
+ : LBL[50] ;
+ : JMP LBL[52] ;
+ : LBL[51] ;
+ :  ;
+ :  ;
+ : LBL[100:flat_pad1] ;
+ : JMP LBL[52] ;
+ :  ;
+ : LBL[101:flat_pad2] ;
+ : JMP LBL[52] ;
+ :  ;
+ : LBL[1101:layer1] ;
+ : JMP LBL[52] ;
+ :  ;
+ : LBL[1103:layer3] ;
+ : JMP LBL[52] ;
+ :  ;
+ : LBL[1201:pocket1] ;
+ : JMP LBL[52] ;
+ :  ;
+ : LBL[52:end] ;
+```
+
 
 ## Namespaces
 

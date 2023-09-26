@@ -1,5 +1,5 @@
 tsk_label := R[1]
-reg4       := R[4]
+reg4      := R[4]
 
 set_label(50)
 
