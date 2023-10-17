@@ -2858,6 +2858,22 @@ foo = &a::foo")
     assert_prog "PR[GP1:AR[1],2]=5 ;\n"
   end
 
+  def test_pr_indirect_reg
+    parse("arg := R[5]\ni := R[10]\nindirect('pr', arg, i)=5\n")
+    assert_prog "PR[R[5:arg],R[10:i]]=5 ;\n"
+  end
+
+  def test_pr_components_indirect_reg
+    parse("pos := PR[5]\ni := R[10]\nindirect('pr', &pos, i)=5\n")
+    assert_prog "PR[5,R[10:i]]=5 ;\n"
+  end
+
+  def test_pr_components_indirect_reg_w_group
+    parse("pos := PR[5]\ni := R[10]\nindirect('pr', &pos, i).group(1)=5\n")
+    assert_prog "PR[GP1:5,R[10:i]]=5 ;\n"
+  end
+
+
   def test_motion_circular
     parse("foo := PR[1]\nfoo2 := PR[2]\nTERM := 100\ncircular_move.mid(foo).to(foo2).at(2000, 'mm/s').term(TERM).coord")
     assert_prog "C PR[1:foo] \n" + "  PR[2:foo2] 2000mm/sec CNT100 COORD ;\n"

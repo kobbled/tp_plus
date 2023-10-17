@@ -2582,9 +2582,14 @@ TP+
 ar1 := AR[1]
 ar2 := AR[2]
 poo1 := PR[1]
+foo := R[5]
 
 #if AR[1] is a posreg number set y = 5
 indirect('pr', ar1).group(1).y=5
+
+#indirect with variable component
+foo = 2
+indirect('pr', ar1, foo).group(1)=5
 
 #if Ar[1], AR[2] are numreg addresses
 indirect('r', ar2) = SIN[indirect('r', ar1)]
