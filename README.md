@@ -23,12 +23,12 @@ TP+ is a higher-level language abstraction that translates into FANUC TP. It fea
 > This branch was forked from the archived repo [TP+](https://github.com/onerobotics/tp_plus)
 
 > [!NEW]
-> * A Preprocessor [ppr](https://github.com/civol/ppr) was added! See [examples.md](examples.md#preprocessor) for details.
-> * Local variables can be declared! See [examples.md](examples.md#local-variables) for details.
+> * A Preprocessor [ppr](https://github.com/civol/ppr) was added! See [examples.md](https://github.com/kobbled/tp_plus/blob/master/examples.md#preprocessor) for details.
+> * Local variables can be declared! See [examples.md](https://github.com/kobbled/tp_plus/blob/master/examples.md#local-variables) for details.
 
 > [!INFO]
 > * see [Features](#features) for a quick look at the features
-> * see [examples.md](examples.md) for an indepth introduction to TP+
+> * see [examples.md](https://github.com/kobbled/tp_plus/blob/master/examples.md) for an indepth introduction to TP+
 > * Test example .tpp files can be found in [./examples](https://github.com/kobbled/tp_plus/tree/master/examples) directory of this repository
 
 

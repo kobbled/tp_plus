@@ -3,10 +3,11 @@ module TPPlus
     class IndirectNode < BaseNode
       attr_accessor :target
       
-      def initialize(type, target, method)
+      def initialize(type, target, method, comp = nil)
         @type   = type
         @target = target
         @method = method || {}
+        @comp   = comp
       end
 
       def requires_mixed_logic?(context)
@@ -74,15 +75,21 @@ module TPPlus
 
       def eval(context,options={})
 
-        @method[:method] ||= ""
-
         if @method[:group].is_a? DigitNode
           group_string = GROUPS["gp" + @method[:group].eval(context).to_s] + ":" if @method[:group]
         else
           group_string = GROUPS[@method[:group]] + ":" if @method[:group]
         end
+
+        if @method[:method]
+          comp = component(@method[:method])
+        end
+
+        if @comp
+          comp = ",#{@comp.eval(context)}"
+        end
         
-        s = "#{set_type(@type).upcase}[#{group_string}#{@target.eval(context)}#{component(@method[:method])}]"
+        s = "#{set_type(@type).upcase}[#{group_string}#{@target.eval(context)}#{comp}]"
         if options[:opposite]
           s = "!#{s}"
         end
