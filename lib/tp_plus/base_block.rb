@@ -50,13 +50,39 @@ module TPPlus
 
         if $global_options[:print_ppr]
           #save ppr_inter1 to a file
-          File.open(File.join($global_options[:output_folder], $global_options[:environment].gsub(/.tpp/,"").split('/')[-1] + "_inter1.tpp"), "w") { |file| file.write(ppr_inter1.gsub!("\r","")) }
+          #save ppr_inter1 to a file
+          input_file_path = File.join($global_options[:output_folder], $global_options[:environment].gsub(/.tpp/, ""))
+          file_parts = input_file_path.split(/[\\\/]/)  # Split based on either backslashes or forward slashes
+
+          # Extract the filename (the last part of the split)
+          filename = file_parts.last
+
+          # Create the new output file path
+          output_file_path = File.join($global_options[:output_folder], "#{filename}_inter1.tpp")
+
+          # Read and write the file
+          File.open(output_file_path, "w") do |file|
+            file.write(ppr_inter1.gsub!("\r", ""))
+          end
         end
 
         @ppr.preprocess(ppr_inter1,ppr_file)
 
         if $global_options[:print_ppr]
-          File.open(File.join($global_options[:output_folder], $global_options[:environment].gsub(/.tpp/,"").split('/')[-1] + "_inter2.tpp"), "w") { |file| file.write(ppr_file) }
+          # Assuming you have a file path in the 'input_file_path' variable
+          input_file_path = File.join($global_options[:output_folder], $global_options[:environment].gsub(/.tpp/, ""))
+          file_parts = input_file_path.split(/[\\\/]/)  # Split based on either backslashes or forward slashes
+
+          # Extract the filename (the last part of the split)
+          filename = file_parts.last
+
+          # Create the new output file path
+          output_file_path = File.join($global_options[:output_folder], "#{filename}_inter2.tpp")
+
+          # Read and write the file
+          File.open(output_file_path, "w") do |file|
+            file.write(ppr_file)
+          end
         end
         # ***** end preproccessor *******
 
