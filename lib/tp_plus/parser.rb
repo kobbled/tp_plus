@@ -50,7 +50,9 @@ module TPPlus
     textblock = @scanner.src.split("\n")
     s = sprintf("Parse error on line #{@scanner.tok_line} column #{@scanner.tok_col}: %s (%s) \n",
     val.inspect, token_to_str(t) || '?')
-    s = s + "Near: #{textblock[@scanner.tok_line-1]}\n"
+    s = s + "==: #{textblock[@scanner.tok_line-2]}\n"
+    s = s + "=>: #{textblock[@scanner.tok_line-1]}\n"
+    s = s + "==: #{textblock[@scanner.tok_line]}\n"
 
     raise ParseError, s
   end
