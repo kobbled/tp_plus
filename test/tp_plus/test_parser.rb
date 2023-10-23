@@ -503,6 +503,9 @@ end)
     e = assert_raise(TPPlus::Parser::ParseError) do
       parse("foo bar")
     end
-    assert_equal "Parse error on line 1 column 5: \"bar\" (WORD) \n" + "Near: foo bar\n", e.message
+    assert_equal "Parse error on line 1 column 5: \"bar\" (WORD) \n" +
+    "==: foo bar\n" +
+    "=>: foo bar\n" +
+    "==: \n", e.message
   end
 end
