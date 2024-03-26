@@ -13,7 +13,13 @@ module TPPlus
       "AO" => "io_anout",
       "AI" => "io_anin",
       "UO" => "io_uopout",
-      "UI" => "io_uopin"
+      "UI" => "io_uopin",
+      "SO" => "io_sopout",
+      "SI" => "io_sopin",
+      "GO" => "io_gpout",
+      "GI" => "io_gpin",
+      "RO" => "io_rdo",
+      "RI" => "io_rdi",
     }
 
     T_Register = Struct.new(:name, :type, :id)
