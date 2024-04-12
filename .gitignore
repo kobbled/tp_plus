@@ -18,5 +18,6 @@ SyncToy*.dat
 doc/
 debug/
 examples/ls
+desktop.ini
 
 multiple_returns_help.txt
