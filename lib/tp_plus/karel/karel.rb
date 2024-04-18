@@ -13,8 +13,16 @@ module TPPlus
       "AO" => "io_anout",
       "AI" => "io_anin",
       "UO" => "io_uopout",
-      "UI" => "io_uopin"
+      "UI" => "io_uopin",
+      "SO" => "io_sopout",
+      "SI" => "io_sopin",
+      "GO" => "io_gpout",
+      "GI" => "io_gpin",
+      "RO" => "io_rdo",
+      "RI" => "io_rdi",
     }
+
+    MAX_PROGRAM_SIZE = 300
 
     T_Register = Struct.new(:name, :type, :id)
 
@@ -29,7 +37,7 @@ module TPPlus
         @variables = []
         @constants = []
         @nodes = []
-        @hashfilename = hashfilename
+        @hashbasename = hashfilename
         @rossumfilename = rossumfilename
         @hashprog = hashfilename
         @hashtable = hashtable
@@ -68,21 +76,28 @@ module TPPlus
               next
           end
         end
+      end
 
-        def makefile
-          erb = ERB.new(File.read(TEMPLATE_FILE), trim_mode: '-')
-          File.open(@hashfilename + '.kl', 'w') do |f|
-            f.write erb.result(binding)
-          end
-        end
-
-        def makeconfig
-          erb = ERB.new(File.read(ROSSUM_FILE), trim_mode: '-')
-          File.open(@rossumfilename + '.klt', 'w') do |f|
+      def makefile
+        erb = ERB.new(File.read(TEMPLATE_FILE), trim_mode: '-')
+        
+        @variables.each_slice(MAX_PROGRAM_SIZE).with_index do |subarray, index|
+          @sArray = subarray
+          @index  = index + 1
+          @hashfilename = "#{@hashbasename}#{@index}"
+          File.open("#{@hashfilename}.kl", 'w') do |f|
             f.write erb.result(binding)
           end
         end
       end
+
+      def makeconfig
+        erb = ERB.new(File.read(ROSSUM_FILE), trim_mode: '-')
+        File.open(@rossumfilename + '.klt', 'w') do |f|
+          f.write erb.result(binding)
+        end
+      end
+    
     end
 
   end
