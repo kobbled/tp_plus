@@ -3,9 +3,9 @@ PROGRAM <%= @hashfilename %>
 
 -------macros
 --change depending on size of environment file
-%define HASH_SIZE <%= @variables.length.to_s %>
+%define HASH_SIZE <%= @sArray.length.to_s %>
 
-%define HASH_PROGRAM '<%= @hashprog %>'
+%define HASH_PROGRAM '<%= @hashfilename %>'
 %define HASHTABLE '<%= @hashtable %>'
 ---------------
 
@@ -39,7 +39,7 @@ BEGIN
   hashr__set_hash_table(tblProg, tblName)
   
   --clear registers
-  <% if @clear_registers -%>
+  <% if @clear_registers && @index == 1 -%>
   hashr__clear_registers(DATA_REG, TRUE)
   hashr__clear_registers(DATA_POSREG, TRUE)
   hashr__clear_registers(DATA_STRING, TRUE)
@@ -52,7 +52,7 @@ BEGIN
 
   --**insert environment variables into hash**
   -----------
-  <% @variables.each do |val| -%>
+  <% @sArray.each do |val| -%>
   reg.typ = <%= val.type %> ; reg.id = <%= val.id %>
   b = hashenv__put('<%= val.name %>', reg, tblProg, tblName)
   <% end -%>
