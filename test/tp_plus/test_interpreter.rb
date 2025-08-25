@@ -1,5 +1,5 @@
 require_relative '../test_helper'
-require 'deep_clone'
+require 'deep_cloneable'
 
 class TestInterpreter < Test::Unit::TestCase
   include TPPlus::Nodes

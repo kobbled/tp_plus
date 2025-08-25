@@ -3,14 +3,14 @@ require File.expand_path('../lib/tp_plus/version', __FILE__)
 
 Gem::Specification.new do |spec|
   spec.add_development_dependency 'benchmark-ips', '~> 2.1'
-  spec.add_development_dependency 'psych', '~>3.0'
+  spec.add_development_dependency 'psych', '~>4.0'
   spec.add_development_dependency 'rexical', '~> 1.0'
-  spec.add_development_dependency 'racc', '~> 1.6.1'
+  spec.add_development_dependency 'racc', '~> 1.7'
   spec.add_development_dependency 'test-unit', '~> 3.0'
   spec.add_development_dependency 'rake', '~> 12.3.3'
-  spec.add_development_dependency 'ruby-prof', '~> 0.15'
+  spec.add_development_dependency 'ruby-prof', '~> 1.7'
   spec.add_development_dependency 'rdoc'
-  spec.add_development_dependency 'ruby_deep_clone'
+  spec.add_development_dependency 'deep_cloneable'
   spec.add_development_dependency 'matrix', '~> 0.4.2'
   spec.add_development_dependency 'ppr'
 
