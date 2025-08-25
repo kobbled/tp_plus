@@ -2,7 +2,7 @@
 require_relative '../lib/tp_plus'
 require 'ppr'
 require 'optparse'
-require 'deep_clone'
+require 'deep_cloneable'
 
 options = {}
 #make options global ** PATCH ** for options access in nodes
