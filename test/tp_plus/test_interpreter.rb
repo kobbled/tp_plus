@@ -2463,6 +2463,18 @@ end)
     assert_equal "845", @interpreter.header_data[:stack_size]
   end
 
+  def test_tp_file_name
+    parse %(TP_FILE_NAME = "test_program")
+    assert_prog ""
+    assert_equal "test_program", @interpreter.header_data[:file_name]
+  end
+
+  def test_tp_version
+    parse %(TP_VERSION = "100")
+    assert_prog ""
+    assert_equal "100", @interpreter.header_data[:version]
+  end
+
   def test_mixed_logic_or
     parse %(foo := DI[1]\nbar := DI[2]\nif foo || bar\n# do something\nend)
     assert_prog "IF (!DI[1:foo] AND !DI[2:bar]),JMP LBL[100] ;\n! do something ;\nLBL[100] ;\n"

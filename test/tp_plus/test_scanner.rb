@@ -514,6 +514,16 @@ class TestScanner < Test::Unit::TestCase
     assert_token :TP_HEADER, "TP_STACK_SIZE"
   end
 
+   def test_tp_file_name
+     @scanner.scan_setup "TP_FILE_NAME"
+     assert_token :TP_HEADER, "TP_FILE_NAME"
+   end
+
+   def test_tp_version
+     @scanner.scan_setup "TP_VERSION"
+     assert_token :TP_HEADER, "TP_VERSION"
+   end
+
    def test_tp_subtype
      @scanner.scan_setup "TP_SUBTYPE"
      assert_token :TP_HEADER, "TP_SUBTYPE"
