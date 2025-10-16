@@ -199,6 +199,8 @@ lines += interpreter.list_warnings
 output = %(/PROG #{tpp_filename.upcase}
 /ATTR
 COMMENT = "#{interpreter.header_data[:comment] || tpp_filename.upcase}";
+FILE_NAME = #{interpreter.header_data[:file_name]};
+VERSION		= #{interpreter.header_data[:version]};
 TCD:  STACK_SIZE	= #{interpreter.header_data[:stack_size] || "0"},
       TASK_PRIORITY	= 50,
       TIME_SLICE	= 0,

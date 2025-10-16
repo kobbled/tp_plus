@@ -253,6 +253,8 @@ module TPPlus
         output = %(/PROG #{@name.upcase}
 /ATTR
 COMMENT = "#{interpreter.header_data[:comment] || @name.upcase}";
+FILE_NAME = #{interpreter.header_data[:file_name]};
+VERSION		= #{interpreter.header_data[:version]};
 TCD:  STACK_SIZE	= #{interpreter.header_data[:stack_size] || "0"},
       TASK_PRIORITY	= 50,
       TIME_SLICE	= 0,
