@@ -2468,11 +2468,23 @@ end)
     assert_prog ""
     assert_equal "test_program", @interpreter.header_data[:file_name]
   end
+  
+  def test_tp_file_name_none
+    parse %(TP_FILE_NAME = "")
+    assert_prog ""
+    assert_equal "", @interpreter.header_data[:file_name]
+  end
 
   def test_tp_version
     parse %(TP_VERSION = "100")
     assert_prog ""
     assert_equal "100", @interpreter.header_data[:version]
+  end
+
+  def test_tp_version_empty
+    parse %(TP_VERSION = "")
+    assert_prog ""
+    assert_equal "", @interpreter.header_data[:version]
   end
 
   def test_mixed_logic_or
