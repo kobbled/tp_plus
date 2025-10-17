@@ -140,6 +140,14 @@ interpreter = parser.interpreter
 interpreter.set_as_main()
 
 #initialize preprocessor and pass into interpreter before loading environment
+# Add TODAYS_DATE as a Ppr macro
+require 'date'
+today_date = Date.today.strftime("%y%m%d")
+options[:macros]['TODAYS_DATE'] = today_date
+
+# Also define it as a Ruby constant for Ppr to access
+TODAYS_DATE = today_date
+
 ppr = Ppr::Preprocessor.new(options[:macros], includes: $global_options[:include])
 interpreter.load_preprocessor(ppr)
 
