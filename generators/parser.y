@@ -626,6 +626,7 @@ rule
   var_system
     : SYSTEM WORD var_system_modifers    { result = SystemDefinitionNode.new(val[1], nil, val[2]) }
     | SYSTEM WORD LBRACK integer RBRACK var_system_modifers { result = SystemDefinitionNode.new(val[1], val[3], val[5])  }
+    | SYSTEM LBRACK WORD RBRACK WORD var_system_modifers { result = SystemDefinitionNode.new("[#{val[2]}]#{val[4]}", nil, val[5]) }
     ;
 
   var_system_modifers
