@@ -88,6 +88,9 @@ module TPPlus
         "when" => :WHEN,
         "while" => :WHILE,
 
+        "strlen" => :STRLEN,
+        "substr" => :SUBSTR,
+
         "DIV" => :DIV,
         "system" => :SYSTEM,
 

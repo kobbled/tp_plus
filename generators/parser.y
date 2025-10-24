@@ -20,6 +20,7 @@ token LABEL LABEL_SET LABEL_POP SYSTEM ADDRESS
 token LPOS JPOS
 token false
 token FUNCTION OPERATION USING IMPORT COMPILE INLINE
+token STRLEN SUBSTR
 token ARROW DEFAULTPOS POSEATTR POSEREVERSE
 token SPHERE POLAR ORIGIN FIX
 token LOCALSTACK LOCALREG LOCALPOSE LOCALFLAG
@@ -688,6 +689,8 @@ rule
     : number
     | signed_number
     | operation
+    | strlen_expr
+    | substr_expr
     | var
     | signed_var
     | var_system
@@ -813,6 +816,18 @@ rule
     | OPERATION LBRACK var_or_indirect COMMA var_or_indirect RBRACK   { result = OperationNode.new(val[0], val[2], val[4]) }
     | OPERATION LBRACK signed_number RBRACK       {  result = OperationNode.new(val[0], val[2], nil) }
     | OPERATION LBRACK number RBRACK       {  result = OperationNode.new(val[0], val[2], nil) }
+    ;
+
+  strlen_expr
+    : STRLEN LPAREN var_or_indirect RPAREN    { result = StrlenNode.new(val[2]) }
+    | STRLEN var_or_indirect                  { result = StrlenNode.new(val[1]) }
+    ;
+
+  substr_expr
+    : SUBSTR LPAREN var_or_indirect COMMA indirectable COMMA indirectable RPAREN  
+                                              { result = SubstrNode.new(val[2], val[4], val[6]) }
+    | SUBSTR var_or_indirect COMMA indirectable COMMA indirectable
+                                              { result = SubstrNode.new(val[1], val[3], val[5]) }
     ;
 
   address
@@ -942,7 +957,9 @@ end
     textblock = @scanner.src.split("\n")
     s = sprintf("Parse error on line #{@scanner.tok_line} column #{@scanner.tok_col}: %s (%s) \n",
     val.inspect, token_to_str(t) || '?')
-    s = s + "Near: #{textblock[@scanner.tok_line-1]}\n"
+    s = s + "==: #{textblock[@scanner.tok_line-2]}\n"
+    s = s + "=>: #{textblock[@scanner.tok_line-1]}\n"
+    s = s + "==: #{textblock[@scanner.tok_line]}\n"
 
     raise ParseError, s
   end
