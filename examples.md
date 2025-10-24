@@ -46,6 +46,7 @@
     - [Matrix Math](#matrix-math)
   - [Arguments](#arguments)
   - [String Manipulation](#string-manipulation)
+  - [String Functions (strlen and substr)](#string-functions-strlen-and-substr)
   - [Timers](#timers)
   - [wait statments](#wait-statments)
   - [Preprocessor](#preprocessor)
@@ -2652,6 +2653,71 @@ LS
 /MN
   : CALL STR_SET('PROGRAM',1) ;
   : CALL SR[1:name](AR[1],AR[2]) ;
+/END
+```
+
+## String Functions (strlen and substr)
+
+TP+ supports FANUC's built-in `strlen` and `substr` functions. Both functions can be called with or without parentheses in TP+, but will always generate the correct FANUC LS syntax (without parentheses).
+
+TP+
+```ruby
+# String and numeric register definitions
+pause_location := SR[10]
+dummy_str1 := SR[23]
+dummy_str2 := SR[24]
+dummy_r1 := R[173]
+remaining_len := R[270]
+
+# Example 1: Get string length (with or without parentheses)
+dummy_r1 = strlen(pause_location)
+# or
+dummy_r1 = strlen pause_location
+
+# Example 2: Extract substring
+dummy_str1 = substr(pause_location, 1, 10)
+# or
+dummy_str1 = substr pause_location, 1, 10
+
+# Example 3: Calculate and use dynamic length
+remaining_len = dummy_r1 - 10
+dummy_str2 = substr(pause_location, 11, remaining_len)
+
+# Example 4: Using in conditionals
+text_len := R[100]
+short_text := F[50]
+
+text_len = strlen(pause_location)
+if text_len < 20
+  turn_on short_text
+end
+```
+
+LS
+```fanuc
+/PROG TEST
+/MN
+ :  ;
+ : ! Example 1: Get string length (with or without parentheses) ;
+ : R[173:dummy_r1]=STRLEN SR[10:pause_location] ;
+ : ! or ;
+ : R[173:dummy_r1]=STRLEN SR[10:pause_location] ;
+ :  ;
+ : ! Example 2: Extract substring ;
+ : SR[23:dummy_str1]=SUBSTR SR[10:pause_location],1,10 ;
+ : ! or ;
+ : SR[23:dummy_str1]=SUBSTR SR[10:pause_location],1,10 ;
+ :  ;
+ : ! Example 3: Calculate and use dynamic length ;
+ : R[270:remaining_len]=R[173:dummy_r1]-10 ;
+ : SR[24:dummy_str2]=SUBSTR SR[10:pause_location],11,R[270:remaining_len] ;
+ :  ;
+ : ! Example 4: Using in conditionals ;
+ :  ;
+ : R[100:text_len]=STRLEN SR[10:pause_location] ;
+ : IF (R[100:text_len]>=20),JMP LBL[100] ;
+ : F[50:short_text]=(ON) ;
+ : LBL[100] ;
 /END
 ```
 
