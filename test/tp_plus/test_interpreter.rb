@@ -4489,6 +4489,52 @@ LINE_TRACK ;
       "! end ns1_add ;\n" +
       " ;\n"
   end
+
+  def test_strlen_basic
+    parse("foo := SR[1]\nbar := R[1]\nbar = strlen(foo)")
+    assert_prog "R[1:bar]=STRLEN SR[1:foo] ;\n"
+  end
+
+  def test_strlen_with_string_register
+    parse("my_string := SR[10]\nmy_length := R[20]\nmy_length = strlen(my_string)")
+    assert_prog "R[20:my_length]=STRLEN SR[10:my_string] ;\n"
+  end
+
+  def test_substr_basic
+    parse("foo := SR[1]\nbar := SR[2]\nbar = substr(foo, 1, 5)")
+    assert_prog "SR[2:bar]=SUBSTR SR[1:foo],1,5 ;\n"
+  end
+
+  def test_substr_with_registers
+    parse("source := SR[1]\nresult := SR[2]\nstart_pos := R[3]\nstr_length := R[4]\nresult = substr(source, start_pos, str_length)")
+    assert_prog "SR[2:result]=SUBSTR SR[1:source],R[3:start_pos],R[4:str_length] ;\n"
+  end
+
+  def test_substr_with_constants
+    parse("text := SR[5]\npart := SR[6]\npart = substr(text, 10, 20)")
+    assert_prog "SR[6:part]=SUBSTR SR[5:text],10,20 ;\n"
+  end
+
+  def test_strlen_substr_combined
+    parse("source := SR[1]\nresult := SR[2]\nlen := R[3]\nlen = strlen(source)\nresult = substr(source, 1, len)")
+    assert_prog "R[3:len]=STRLEN SR[1:source] ;\nSR[2:result]=SUBSTR SR[1:source],1,R[3:len] ;\n"
+  end
+
+  def test_strlen_no_parens
+    parse("foo := SR[1]\nbar := R[1]\nbar = strlen foo")
+    assert_prog "R[1:bar]=STRLEN SR[1:foo] ;\n"
+  end
+
+  def test_substr_no_parens
+    parse("foo := SR[1]\nbar := SR[2]\nbar = substr foo, 1, 5")
+    assert_prog "SR[2:bar]=SUBSTR SR[1:foo],1,5 ;\n"
+  end
+
+  def test_strlen_substr_no_parens_combined
+    parse("source := SR[1]\nresult := SR[2]\nlen := R[3]\nlen = strlen source\nresult = substr source, 1, len")
+    assert_prog "R[3:len]=STRLEN SR[1:source] ;\nSR[2:result]=SUBSTR SR[1:source],1,R[3:len] ;\n"
+  end
   
 
 end
+
