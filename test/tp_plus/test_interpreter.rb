@@ -2206,6 +2206,92 @@ P[2:"test2"]{
 };\n), @interpreter.pos_section
   end
 
+  def test_outputs_position_data_with_extended_axis_e1
+    parse %(position_data
+  {
+    'positions': [
+      {
+        'id': 1,
+        'comment': "test_e1",
+        'mask': [{
+          'group': 1,
+          'uframe': 0,
+          'utool': 1,
+          'config': {
+            'flip': true,
+            'up': true,
+            'top': true,
+            'turn_counts': [0,0,1]
+          },
+          'components': {
+            'x': 100.0,
+            'y': 200.0,
+            'z': 300.0,
+            'w': 90.0,
+            'p': 0.0,
+            'r': 180.0,
+            'e1': 50.0
+          }
+        }]
+      }
+    ]
+  }
+end)
+
+    assert_prog ""
+    assert_equal %(P[1:"test_e1"]{
+   GP1:
+  UF : 0, UT : 1,  CONFIG : 'F U T, 0, 0, 1',
+  X = 100.0 mm, Y = 200.0 mm, Z = 300.0 mm,
+  W = 90.0 deg, P = 0.0 deg, R = 180.0 deg,
+  E1 = 50.0 mm
+};\n), @interpreter.pos_section
+  end
+
+  def test_outputs_position_data_with_multiple_extended_axes
+    parse %(position_data
+  {
+    'positions': [
+      {
+        'id': 1,
+        'comment': "test_e1_e2",
+        'mask': [{
+          'group': 1,
+          'uframe': 0,
+          'utool': 1,
+          'config': {
+            'flip': false,
+            'up': false,
+            'top': false,
+            'turn_counts': [0,0,0]
+          },
+          'components': {
+            'x': 150.5,
+            'y': 250.5,
+            'z': 350.5,
+            'w': 45.0,
+            'p': 30.0,
+            'r': 60.0,
+            'e1': 75.0,
+            'e2': 100.0
+          }
+        }]
+      }
+    ]
+  }
+end)
+
+    assert_prog ""
+    assert_equal %(P[1:"test_e1_e2"]{
+   GP1:
+  UF : 0, UT : 1,  CONFIG : 'N D B, 0, 0, 0',
+  X = 150.5 mm, Y = 250.5 mm, Z = 350.5 mm,
+  W = 45.0 deg, P = 30.0 deg, R = 60.0 deg,
+  E1 = 75.0 mm,
+  E2 = 100.0 mm
+};\n), @interpreter.pos_section
+  end
+
   def test_joint_position_outputs
     parse %(position_data
   {

@@ -39,6 +39,7 @@
     - [Setting positions](#setting-positions)
     - [Position Assignment](#position-assignment)
     - [Coordinate Systems](#coordinate-systems)
+    - [Extended Axes](#extended-axes)
     - [Assigning posregs](#assigning-posregs)
   - [Function parameters](#function-parameters)
   - [Math](#math)
@@ -2389,6 +2390,97 @@ p1.group(2).joints -> [0]
 (p2..p5).group(2).joints.offset -> [-45]
 ```
 
+### Extended Axes
+
+Extended axes (E1, E2, E3, etc.) can be specified in the position data for robots with additional axes beyond the standard 6 axes.
+
+TP+
+```ruby
+p := P[1..2]
+
+use_uframe 0
+use_utool 1
+
+# Position with single extended axis
+p1.group(1).pose -> [100.0, 200.0, 300.0, 90.0, 0.0, 180.0]
+p1.group(1).e1 -> 50.0
+
+# Position with multiple extended axes
+p2.group(1).pose -> [150.5, 250.5, 350.5, 45.0, 30.0, 60.0]
+p2.group(1).config -> ['N', 'D', 'B', 0, 0, 0]
+p2.group(1).e1 -> 75.0
+p2.group(1).e2 -> 100.0
+```
+
+LS
+```fanuc
+/POS
+P[1:"p1"]{
+   GP1:
+  UF : 0, UT : 1,  CONFIG : 'N B D, 0, 0, 0',
+  X = 100.0 mm, Y = 200.0 mm, Z = 300.0 mm,
+  W = 90.0 deg, P = 0.0 deg, R = 180.0 deg,
+  E1 = 50.0 mm
+};
+P[2:"p2"]{
+   GP1:
+  UF : 0, UT : 1,  CONFIG : 'N D B, 0, 0, 0',
+  X = 150.5 mm, Y = 250.5 mm, Z = 350.5 mm,
+  W = 45.0 deg, P = 30.0 deg, R = 60.0 deg,
+  E1 = 75.0 mm,
+  E2 = 100.0 mm
+};
+/END
+```
+
+Alternatively, extended axes can be specified directly in `position_data` blocks:
+
+TP+
+```ruby
+position_data
+{
+  'positions' : [
+    {
+      'id' : 1,
+      'comment' : 'with_e1',
+      'mask' :  [{
+        'group' : 1,
+        'uframe' : 0,
+        'utool' : 1,
+        'config' : {
+            'flip' : true,
+            'up'   : true,
+            'top'  : true,
+            'turn_counts' : [0,0,1]
+            },
+        'components' : {
+            'x' : 100.0,
+            'y' : 200.0,
+            'z' : 300.0,
+            'w' : 90.0,
+            'p' : 0.0,
+            'r' : 180.0,
+            'e1' : 50.0
+            }
+        }]
+    }
+  ]
+}
+end
+```
+
+LS
+```fanuc
+/POS
+P[1:"with_e1"]{
+   GP1:
+  UF : 0, UT : 1,  CONFIG : 'F U T, 0, 0, 1',
+  X = 100.0 mm, Y = 200.0 mm, Z = 300.0 mm,
+  W = 90.0 deg, P = 0.0 deg, R = 180.0 deg,
+  E1 = 50.0 mm
+};
+/END
+```
 
 ### Assigning posregs
 

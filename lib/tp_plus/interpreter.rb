@@ -328,6 +328,13 @@ module TPPlus
   UF : #{position_hash[:uframe]}, UT : #{position_hash[:utool]},  CONFIG : '#{position_hash[:config][:flip] ? 'F' : 'N'} #{position_hash[:config][:up] ? 'U' : 'D'} #{position_hash[:config][:top] ? 'T' : 'B'}, #{position_hash[:config][:turn_counts].join(', ')}',
   X = #{position_hash[:components][:x]} mm, Y = #{position_hash[:components][:y]} mm, Z = #{position_hash[:components][:z]} mm,
   W = #{position_hash[:components][:w]} deg, P = #{position_hash[:components][:p]} deg, R = #{position_hash[:components][:r]} deg)
+        
+        # Add extended axes if present (e1, e2, e3, etc.)
+        [:e1, :e2, :e3, :e4, :e5, :e6].each do |ext_axis|
+          if position_hash[:components].has_key?(ext_axis)
+            s << %(,\n  #{ext_axis.to_s.upcase} = #{position_hash[:components][ext_axis]} mm)
+          end
+        end
       else
         s << %(   GP#{position_hash[:group]}:
   UF : #{position_hash[:uframe]}, UT : #{position_hash[:utool]})

@@ -41,6 +41,12 @@ module TPPlus
           [:x,:y,:z,:w,:p,:r].each do |component|
             return false unless position_hash[:components][component].is_a?(Float)
           end
+          # Allow extended axes (e1, e2, e3, etc.) - optional
+          [:e1, :e2, :e3, :e4, :e5, :e6].each do |ext_axis|
+            if position_hash[:components].has_key?(ext_axis)
+              return false unless position_hash[:components][ext_axis].is_a?(Float)
+            end
+          end
         else
           # must be joint representation
           return false unless position_hash[:components].is_a?(Hash)
