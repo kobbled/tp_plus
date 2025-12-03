@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module TPPlus
   module Nodes
     class WhileNode < RecursiveNode
@@ -30,7 +31,7 @@ module TPPlus
       end
 
       def block_each_eval(context)
-        @block.inject("") {|s,n| s << "#{n.eval(context)} ;\n" }
+        @block.inject(String.new) {|s,n| s << "#{n.eval(context)} ;\n" }
       end
 
       def get_block

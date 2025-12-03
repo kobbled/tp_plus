@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require_relative 'parser'
 
 module TPPlus
@@ -124,7 +125,7 @@ module TPPlus
 
     def list_warnings
       
-      s = ""
+      s = String.new
 
       warning_nodes = []
       find_warnings(@nodes, warning_nodes).each do |n|
@@ -140,7 +141,7 @@ module TPPlus
 
     def output_functions(options)
 
-      s = ""
+      s = String.new
       @functions.each do |k, v|
         s += v.output_program(options)
       end
@@ -309,7 +310,7 @@ module TPPlus
       return "" if @position_data.empty?
       return "" if @position_data[:positions].empty?
 
-      @position_data[:positions].inject("") do |s,p|
+      @position_data[:positions].inject(String.new) do |s,p|
         s << %(P[#{p[:id]}:"#{p[:comment]}"]{\n)
 
         p[:mask].each do |q|
@@ -322,7 +323,7 @@ module TPPlus
     end
 
     def pos_return(position_hash)
-      s = ""
+      s = String.new
       if position_hash[:config].is_a?(Hash)
         s << %(   GP#{position_hash[:group]}:
   UF : #{position_hash[:uframe]}, UT : #{position_hash[:utool]},  CONFIG : '#{position_hash[:config][:flip] ? 'F' : 'N'} #{position_hash[:config][:up] ? 'U' : 'D'} #{position_hash[:config][:top] ? 'T' : 'B'}, #{position_hash[:config][:turn_counts].join(', ')}',
@@ -390,7 +391,7 @@ module TPPlus
 
       @source_line_count = 0
 
-      s = ""
+      s = String.new
       last_node = nil
 
       @nodes.each do |n|

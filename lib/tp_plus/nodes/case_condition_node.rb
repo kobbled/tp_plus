@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module TPPlus
   module Nodes
     class CaseConditionNode < RecursiveNode
@@ -9,7 +10,7 @@ module TPPlus
       end
 
       def block_each_eval(context)
-        @s = @block.inject("") {|s,n| s << "#{n.eval(context)} ;\n" }
+        @s = @block.inject(String.new) {|s,n| s << "#{n.eval(context)} ;\n" }
       end
 
       def block_eval(context, end_label)
@@ -31,9 +32,9 @@ module TPPlus
       def eval(context, options={})
         options[:no_indent] ||= false
 
-        s = ""
-        if !options[:no_indent]
-          s += "       "
+        s = String.new
+        unless options[:no_indent]
+          s << "       "
         end
 
         #set label
@@ -41,9 +42,9 @@ module TPPlus
         @label = LabelDefinitionNode.new(context.get_case_label())
 
         if @condition[0]
-          s += "=#{@condition[0].eval(context)},#{is_jump_label(context)}"
+          s << "=#{@condition[0].eval(context)},#{is_jump_label(context)}"
         else
-          s += "ELSE,#{is_jump_label(context)}"
+          s << "ELSE,#{is_jump_label(context)}"
         end
 
         s

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module TPPlus
   module Nodes
     class ConditionalNode < RecursiveNode
@@ -39,13 +40,12 @@ module TPPlus
       end
 
       def elsif_block(context)
-        s = ""
+        s = String.new
 
         @elsif_block.reject {|c| c.nil? }.each do |c, i|
-          s += c.eval(context, inlined: false, recursive: true)
-          s += "JMP LBL[#{end_label(context)}] ;\n"
-          s += "LBL[#{c.true_label(context)}] ;\n"
-
+          s << c.eval(context, inlined: false, recursive: true)
+          s << "JMP LBL[#{end_label(context)}] ;\n"
+          s << "LBL[#{c.true_label(context)}] ;\n"
         end
 
         s
@@ -53,7 +53,7 @@ module TPPlus
 
       def string_for(block,context)
         block = block.flatten
-        block.inject("") {|s,n| s << "#{n.eval(context)} ;\n" }
+        block.inject(String.new) {|s,n| s << "#{n.eval(context)} ;\n" }
       end
 
       def can_be_inlined?
@@ -81,29 +81,40 @@ module TPPlus
 
         return InlineConditionalNode.new(@type,@condition[0],@true_block.first).eval(context) if options[:inlined]
         
-        s = ""
+        s = String.new
 
         #evaluate expression expansions
-        s += eval_expression_expansions(context)
+        s << eval_expression_expansions(context)
 
-        s += "IF #{parens(@condition[0], context, options)},JMP LBL[#{true_label(context)}] ;\n#{true_block(context)}"
+        s << "IF #{parens(@condition[0], context, options)},JMP LBL[#{true_label(context)}] ;\n"
+        s << true_block(context)
         
         return s if options[:recursive]
 
         if @elsif_block.empty?
           if @false_block.empty?
-            s += "LBL[#{true_label(context)}]"
+            s << "LBL[#{true_label(context)}]"
           else
             # could be if-else or unless-else
-            s += "JMP LBL[#{end_label(context)}] ;\nLBL[#{true_label(context)}] ;\n#{false_block(context)}LBL[#{end_label(context)}]"
+            s << "JMP LBL[#{end_label(context)}] ;\nLBL[#{true_label(context)}] ;\n"
+            s << false_block(context)
+            s << "LBL[#{end_label(context)}]"
           end
         else
           if @false_block.empty?
-            s += "LBL[#{true_label(context)}] ;\n#{elsif_block(context)}LBL[#{end_label(context)}]"
+            s << "LBL[#{true_label(context)}] ;\n"
+            s << elsif_block(context)
+            s << "LBL[#{end_label(context)}]"
           else
-            s += "JMP LBL[#{end_label(context)}] ;\nLBL[#{true_label(context)}] ;\n#{elsif_block(context)} ;\n#{false_block(context)}LBL[#{end_label(context)}]"
+            s << "JMP LBL[#{end_label(context)}] ;\nLBL[#{true_label(context)}] ;\n"
+            s << elsif_block(context)
+            s << " ;\n"
+            s << false_block(context)
+            s << "LBL[#{end_label(context)}]"
           end
         end
+
+        s
       end
     end
   end
