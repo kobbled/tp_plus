@@ -512,7 +512,7 @@ class TestScanner < Test::Unit::TestCase
    def test_tp_stack_size
     @scanner.scan_setup "TP_STACK_SIZE"
     assert_token :TP_HEADER, "TP_STACK_SIZE"
-  end
+   end
 
    def test_tp_file_name
      @scanner.scan_setup "TP_FILE_NAME"

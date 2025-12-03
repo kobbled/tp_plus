@@ -8,9 +8,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'racc', '~> 1.7'
   spec.add_development_dependency 'test-unit', '~> 3.0'
   spec.add_development_dependency 'rake', '~> 12.3.3'
-  spec.add_development_dependency 'ruby-prof', '~> 1.7'
   spec.add_development_dependency 'rdoc'
-  spec.add_development_dependency 'deep_cloneable'
   spec.add_development_dependency 'matrix', '~> 0.4.2'
   spec.add_development_dependency 'ppr'
 

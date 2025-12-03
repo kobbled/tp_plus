@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module TPPlus
   module Nodes
     class ForNode < RecursiveNode
@@ -12,7 +13,7 @@ module TPPlus
       end
 
       def block_eval(context)
-        @s = @block.inject("") {|s,n| s << "#{n.eval(context)} ;\n" }
+        @s = @block.inject(String.new) {|s,n| s << "#{n.eval(context)} ;\n" }
       end
 
       def get_block

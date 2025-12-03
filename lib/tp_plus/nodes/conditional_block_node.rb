@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module TPPlus
   module Nodes
     class ConditionalBlockNode < ConditionalNode
@@ -31,22 +32,22 @@ module TPPlus
       end
 
       def elsif_block(context)
-        s = ""
+        s = String.new
         
         len = @elsif_block.reject {|c| c.nil? }.length
         @elsif_block.reject {|c| c.nil? }.each_with_index do |c, index|
-          s += c.eval(context, recursive: true)
+          s << c.eval(context, recursive: true)
           if (index < len-1)
-            s += "ELSE ;\n"
+            s << "ELSE ;\n"
           end
-          @endif += "ENDIF ;\n"
+          @endif << "ENDIF ;\n"
         end
 
         s
       end
 
       def string_for(block,context)
-        block.inject("") {|s,n| s << "#{n.eval(context)} ;\n" }
+        block.inject(String.new) {|s,n| s << "#{n.eval(context)} ;\n" }
       end
 
       def requires_mixed_logic?(context)
@@ -64,28 +65,38 @@ module TPPlus
 
       def eval(context, options={})
 
-        s = ""
+        s = String.new
 
         #evaluate expression expansions
-        s += eval_expression_expansions(context)
+        s << eval_expression_expansions(context)
 
-        s += "IF #{parens(@condition[0].eval(context), context)} THEN ;\n#{true_block(context)}"
+        s << "IF #{parens(@condition[0].eval(context), context)} THEN ;\n"
+        s << true_block(context)
         
         return s if options[:recursive]
 
         if @elsif_block.empty?
           if @false_block.empty?
-            s += "ENDIF"
+            s << "ENDIF"
           else
             # could be if-else or unless-else
-            s += "ELSE ;\n#{false_block(context)}ENDIF"
+            s << "ELSE ;\n"
+            s << false_block(context)
+            s << "ENDIF"
           end
         else
-          @endif = "ENDIF ;\n"
+          @endif = String.new
+          @endif << "ENDIF ;\n"
           if @false_block.empty?
-            s += "ELSE ;\n#{elsif_block(context)}#{@endif}"
+            s << "ELSE ;\n"
+            s << elsif_block(context)
+            s << @endif
           else
-            s += "ELSE ;\n#{elsif_block(context)}ELSE ;\n#{false_block(context)}#{@endif}"
+            s << "ELSE ;\n"
+            s << elsif_block(context)
+            s << "ELSE ;\n"
+            s << false_block(context)
+            s << @endif
           end
         end
       end
