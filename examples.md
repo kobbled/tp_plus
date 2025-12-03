@@ -39,6 +39,7 @@
     - [Setting positions](#setting-positions)
     - [Position Assignment](#position-assignment)
     - [Coordinate Systems](#coordinate-systems)
+    - [Extended Axes](#extended-axes)
     - [Assigning posregs](#assigning-posregs)
   - [Function parameters](#function-parameters)
   - [Math](#math)
@@ -46,6 +47,7 @@
     - [Matrix Math](#matrix-math)
   - [Arguments](#arguments)
   - [String Manipulation](#string-manipulation)
+  - [String Functions (strlen and substr)](#string-functions-strlen-and-substr)
   - [Timers](#timers)
   - [wait statments](#wait-statments)
   - [Preprocessor](#preprocessor)
@@ -2388,6 +2390,97 @@ p1.group(2).joints -> [0]
 (p2..p5).group(2).joints.offset -> [-45]
 ```
 
+### Extended Axes
+
+Extended axes (E1, E2, E3, etc.) can be specified in the position data for robots with additional axes beyond the standard 6 axes.
+
+TP+
+```ruby
+p := P[1..2]
+
+use_uframe 0
+use_utool 1
+
+# Position with single extended axis
+p1.group(1).pose -> [100.0, 200.0, 300.0, 90.0, 0.0, 180.0]
+p1.group(1).e1 -> 50.0
+
+# Position with multiple extended axes
+p2.group(1).pose -> [150.5, 250.5, 350.5, 45.0, 30.0, 60.0]
+p2.group(1).config -> ['N', 'D', 'B', 0, 0, 0]
+p2.group(1).e1 -> 75.0
+p2.group(1).e2 -> 100.0
+```
+
+LS
+```fanuc
+/POS
+P[1:"p1"]{
+   GP1:
+  UF : 0, UT : 1,  CONFIG : 'N B D, 0, 0, 0',
+  X = 100.0 mm, Y = 200.0 mm, Z = 300.0 mm,
+  W = 90.0 deg, P = 0.0 deg, R = 180.0 deg,
+  E1 = 50.0 mm
+};
+P[2:"p2"]{
+   GP1:
+  UF : 0, UT : 1,  CONFIG : 'N D B, 0, 0, 0',
+  X = 150.5 mm, Y = 250.5 mm, Z = 350.5 mm,
+  W = 45.0 deg, P = 30.0 deg, R = 60.0 deg,
+  E1 = 75.0 mm,
+  E2 = 100.0 mm
+};
+/END
+```
+
+Alternatively, extended axes can be specified directly in `position_data` blocks:
+
+TP+
+```ruby
+position_data
+{
+  'positions' : [
+    {
+      'id' : 1,
+      'comment' : 'with_e1',
+      'mask' :  [{
+        'group' : 1,
+        'uframe' : 0,
+        'utool' : 1,
+        'config' : {
+            'flip' : true,
+            'up'   : true,
+            'top'  : true,
+            'turn_counts' : [0,0,1]
+            },
+        'components' : {
+            'x' : 100.0,
+            'y' : 200.0,
+            'z' : 300.0,
+            'w' : 90.0,
+            'p' : 0.0,
+            'r' : 180.0,
+            'e1' : 50.0
+            }
+        }]
+    }
+  ]
+}
+end
+```
+
+LS
+```fanuc
+/POS
+P[1:"with_e1"]{
+   GP1:
+  UF : 0, UT : 1,  CONFIG : 'F U T, 0, 0, 1',
+  X = 100.0 mm, Y = 200.0 mm, Z = 300.0 mm,
+  W = 90.0 deg, P = 0.0 deg, R = 180.0 deg,
+  E1 = 50.0 mm
+};
+/END
+```
 
 ### Assigning posregs
 
@@ -2652,6 +2745,71 @@ LS
 /MN
   : CALL STR_SET('PROGRAM',1) ;
   : CALL SR[1:name](AR[1],AR[2]) ;
+/END
+```
+
+## String Functions (strlen and substr)
+
+TP+ supports FANUC's built-in `strlen` and `substr` functions. Both functions can be called with or without parentheses in TP+, but will always generate the correct FANUC LS syntax (without parentheses).
+
+TP+
+```ruby
+# String and numeric register definitions
+pause_location := SR[10]
+dummy_str1 := SR[23]
+dummy_str2 := SR[24]
+dummy_r1 := R[173]
+remaining_len := R[270]
+
+# Example 1: Get string length (with or without parentheses)
+dummy_r1 = strlen(pause_location)
+# or
+dummy_r1 = strlen pause_location
+
+# Example 2: Extract substring
+dummy_str1 = substr(pause_location, 1, 10)
+# or
+dummy_str1 = substr pause_location, 1, 10
+
+# Example 3: Calculate and use dynamic length
+remaining_len = dummy_r1 - 10
+dummy_str2 = substr(pause_location, 11, remaining_len)
+
+# Example 4: Using in conditionals
+text_len := R[100]
+short_text := F[50]
+
+text_len = strlen(pause_location)
+if text_len < 20
+  turn_on short_text
+end
+```
+
+LS
+```fanuc
+/PROG TEST
+/MN
+ :  ;
+ : ! Example 1: Get string length (with or without parentheses) ;
+ : R[173:dummy_r1]=STRLEN SR[10:pause_location] ;
+ : ! or ;
+ : R[173:dummy_r1]=STRLEN SR[10:pause_location] ;
+ :  ;
+ : ! Example 2: Extract substring ;
+ : SR[23:dummy_str1]=SUBSTR SR[10:pause_location],1,10 ;
+ : ! or ;
+ : SR[23:dummy_str1]=SUBSTR SR[10:pause_location],1,10 ;
+ :  ;
+ : ! Example 3: Calculate and use dynamic length ;
+ : R[270:remaining_len]=R[173:dummy_r1]-10 ;
+ : SR[24:dummy_str2]=SUBSTR SR[10:pause_location],11,R[270:remaining_len] ;
+ :  ;
+ : ! Example 4: Using in conditionals ;
+ :  ;
+ : R[100:text_len]=STRLEN SR[10:pause_location] ;
+ : IF (R[100:text_len]>=20),JMP LBL[100] ;
+ : F[50:short_text]=(ON) ;
+ : LBL[100] ;
 /END
 ```
 

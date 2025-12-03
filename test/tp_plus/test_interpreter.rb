@@ -2206,6 +2206,92 @@ P[2:"test2"]{
 };\n), @interpreter.pos_section
   end
 
+  def test_outputs_position_data_with_extended_axis_e1
+    parse %(position_data
+  {
+    'positions': [
+      {
+        'id': 1,
+        'comment': "test_e1",
+        'mask': [{
+          'group': 1,
+          'uframe': 0,
+          'utool': 1,
+          'config': {
+            'flip': true,
+            'up': true,
+            'top': true,
+            'turn_counts': [0,0,1]
+          },
+          'components': {
+            'x': 100.0,
+            'y': 200.0,
+            'z': 300.0,
+            'w': 90.0,
+            'p': 0.0,
+            'r': 180.0,
+            'e1': 50.0
+          }
+        }]
+      }
+    ]
+  }
+end)
+
+    assert_prog ""
+    assert_equal %(P[1:"test_e1"]{
+   GP1:
+  UF : 0, UT : 1,  CONFIG : 'F U T, 0, 0, 1',
+  X = 100.0 mm, Y = 200.0 mm, Z = 300.0 mm,
+  W = 90.0 deg, P = 0.0 deg, R = 180.0 deg,
+  E1 = 50.0 mm
+};\n), @interpreter.pos_section
+  end
+
+  def test_outputs_position_data_with_multiple_extended_axes
+    parse %(position_data
+  {
+    'positions': [
+      {
+        'id': 1,
+        'comment': "test_e1_e2",
+        'mask': [{
+          'group': 1,
+          'uframe': 0,
+          'utool': 1,
+          'config': {
+            'flip': false,
+            'up': false,
+            'top': false,
+            'turn_counts': [0,0,0]
+          },
+          'components': {
+            'x': 150.5,
+            'y': 250.5,
+            'z': 350.5,
+            'w': 45.0,
+            'p': 30.0,
+            'r': 60.0,
+            'e1': 75.0,
+            'e2': 100.0
+          }
+        }]
+      }
+    ]
+  }
+end)
+
+    assert_prog ""
+    assert_equal %(P[1:"test_e1_e2"]{
+   GP1:
+  UF : 0, UT : 1,  CONFIG : 'N D B, 0, 0, 0',
+  X = 150.5 mm, Y = 250.5 mm, Z = 350.5 mm,
+  W = 45.0 deg, P = 30.0 deg, R = 60.0 deg,
+  E1 = 75.0 mm,
+  E2 = 100.0 mm
+};\n), @interpreter.pos_section
+  end
+
   def test_joint_position_outputs
     parse %(position_data
   {
@@ -2461,6 +2547,30 @@ end)
     parse %(TP_STACK_SIZE = "845")
     assert_prog ""
     assert_equal "845", @interpreter.header_data[:stack_size]
+  end
+
+  def test_tp_file_name
+    parse %(TP_FILE_NAME = "test_program")
+    assert_prog ""
+    assert_equal "test_program", @interpreter.header_data[:file_name]
+  end
+  
+  def test_tp_file_name_none
+    parse %(TP_FILE_NAME = "")
+    assert_prog ""
+    assert_equal "", @interpreter.header_data[:file_name]
+  end
+
+  def test_tp_version
+    parse %(TP_VERSION = "100")
+    assert_prog ""
+    assert_equal "100", @interpreter.header_data[:version]
+  end
+
+  def test_tp_version_empty
+    parse %(TP_VERSION = "")
+    assert_prog ""
+    assert_equal "", @interpreter.header_data[:version]
   end
 
   def test_mixed_logic_or
@@ -4465,6 +4575,52 @@ LINE_TRACK ;
       "! end ns1_add ;\n" +
       " ;\n"
   end
+
+  def test_strlen_basic
+    parse("foo := SR[1]\nbar := R[1]\nbar = strlen(foo)")
+    assert_prog "R[1:bar]=STRLEN SR[1:foo] ;\n"
+  end
+
+  def test_strlen_with_string_register
+    parse("my_string := SR[10]\nmy_length := R[20]\nmy_length = strlen(my_string)")
+    assert_prog "R[20:my_length]=STRLEN SR[10:my_string] ;\n"
+  end
+
+  def test_substr_basic
+    parse("foo := SR[1]\nbar := SR[2]\nbar = substr(foo, 1, 5)")
+    assert_prog "SR[2:bar]=SUBSTR SR[1:foo],1,5 ;\n"
+  end
+
+  def test_substr_with_registers
+    parse("source := SR[1]\nresult := SR[2]\nstart_pos := R[3]\nstr_length := R[4]\nresult = substr(source, start_pos, str_length)")
+    assert_prog "SR[2:result]=SUBSTR SR[1:source],R[3:start_pos],R[4:str_length] ;\n"
+  end
+
+  def test_substr_with_constants
+    parse("text := SR[5]\npart := SR[6]\npart = substr(text, 10, 20)")
+    assert_prog "SR[6:part]=SUBSTR SR[5:text],10,20 ;\n"
+  end
+
+  def test_strlen_substr_combined
+    parse("source := SR[1]\nresult := SR[2]\nlen := R[3]\nlen = strlen(source)\nresult = substr(source, 1, len)")
+    assert_prog "R[3:len]=STRLEN SR[1:source] ;\nSR[2:result]=SUBSTR SR[1:source],1,R[3:len] ;\n"
+  end
+
+  def test_strlen_no_parens
+    parse("foo := SR[1]\nbar := R[1]\nbar = strlen foo")
+    assert_prog "R[1:bar]=STRLEN SR[1:foo] ;\n"
+  end
+
+  def test_substr_no_parens
+    parse("foo := SR[1]\nbar := SR[2]\nbar = substr foo, 1, 5")
+    assert_prog "SR[2:bar]=SUBSTR SR[1:foo],1,5 ;\n"
+  end
+
+  def test_strlen_substr_no_parens_combined
+    parse("source := SR[1]\nresult := SR[2]\nlen := R[3]\nlen = strlen source\nresult = substr source, 1, len")
+    assert_prog "R[3:len]=STRLEN SR[1:source] ;\nSR[2:result]=SUBSTR SR[1:source],1,R[3:len] ;\n"
+  end
   
 
 end
+

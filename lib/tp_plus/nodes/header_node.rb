@@ -12,6 +12,10 @@ module TPPlus
           context.header_data[:ignore_pause] = @value
         when "TP_STACK_SIZE"
           context.header_data[:stack_size] = @value
+        when "TP_FILE_NAME"
+          context.header_data[:file_name] = @value
+        when "TP_VERSION"
+          context.header_data[:version] = @value
         when "TP_COMMENT"
           context.header_data[:comment] = @value
         when "TP_GROUPMASK"

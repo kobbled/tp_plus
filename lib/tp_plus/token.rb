@@ -88,6 +88,9 @@ module TPPlus
         "when" => :WHEN,
         "while" => :WHILE,
 
+        "strlen" => :STRLEN,
+        "substr" => :SUBSTR,
+
         "DIV" => :DIV,
         "system" => :SYSTEM,
 
@@ -99,6 +102,8 @@ module TPPlus
         "TP_IGNORE_PAUSE" => :TP_HEADER,
         "TP_COMMENT" => :TP_HEADER,
         "TP_STACK_SIZE" => :TP_HEADER,
+        "TP_FILE_NAME" => :TP_HEADER,
+        "TP_VERSION" => :TP_HEADER,
         "TP_GROUPMASK" => :TP_HEADER,
         "TP_SUBTYPE" => :TP_HEADER,
 
