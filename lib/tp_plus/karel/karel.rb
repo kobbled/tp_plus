@@ -62,7 +62,6 @@ module TPPlus
 
       def build_list
         @nodes.each do |val|
-          type = val.class
           case
             when val.is_a?(TPPlus::Nodes::IONode)
               @variables << T_Register.new(val.comment, CONVERT_TYPE[val.type], val.id)

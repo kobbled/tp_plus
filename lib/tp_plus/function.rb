@@ -284,7 +284,7 @@ DEFAULT_GROUP = #{interpreter.header_data[:group_mask] || "*,*,*,*,*"};
       end
 
       if prog_options[:output]
-        filname = prog_options[:output_folder] +'/' + @name + '.ls'
+        filname = "#{prog_options[:output_folder]}/#{@name}.ls"
         File.write(filname, output)
         return ""
       else

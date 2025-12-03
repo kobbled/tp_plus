@@ -36,14 +36,14 @@ module TPPlus
 
     def retrieve_calls(node, func_list)
       #drill into parens
-      b = retrieve_calls(node.x, func_list) if node.instance_of?(TPPlus::Nodes::ParenExpressionNode)
+      retrieve_calls(node.x, func_list) if node.instance_of?(TPPlus::Nodes::ParenExpressionNode)
 
       if node.is_a?(TPPlus::Nodes::ExpressionNode)
         node.left_op.is_a?(Nodes::ParenExpressionNode) ? left = node.left_op.x : left = node.left_op
         node.right_op.is_a?(Nodes::ParenExpressionNode) ? right = node.right_op.x : right = node.right_op
         
         [left, right].map.each do |op|
-          b = retrieve_calls(op, func_list) if op.is_a?(TPPlus::Nodes::ExpressionNode)
+          retrieve_calls(op, func_list) if op.is_a?(TPPlus::Nodes::ExpressionNode)
         end
       
         func_list.unshift(node.func_exp) if node.func_exp
@@ -91,7 +91,7 @@ module TPPlus
         end
 
         [left, right].map.each do |op|
-          b = retrieve_calls(op, func_list) if op.is_a?(TPPlus::Nodes::ExpressionNode)
+          retrieve_calls(op, func_list) if op.is_a?(TPPlus::Nodes::ExpressionNode)
         end
       end
       

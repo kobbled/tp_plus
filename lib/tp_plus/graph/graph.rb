@@ -48,7 +48,6 @@ module Graph
     def bfs(node)
       stack = []
       queue = []
-      level = 0
 
       queue.push(node)
 
