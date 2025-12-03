@@ -64,13 +64,13 @@ module TPPlus
         @nodes.each do |val|
           case
             when val.is_a?(TPPlus::Nodes::IONode)
-              @variables << T_Register.new(val.comment, CONVERT_TYPE[val.type], val.id)
+              @variables << T_Register.new(val.comment[0, 16], CONVERT_TYPE[val.type], val.id)
             when val.is_a?(TPPlus::Nodes::NumregNode)
-              @variables << T_Register.new(val.comment, CONVERT_TYPE["R"], val.id)
+              @variables << T_Register.new(val.comment[0, 16], CONVERT_TYPE["R"], val.id)
             when val.is_a?(TPPlus::Nodes::PosregNode)
-              @variables << T_Register.new(val.comment, CONVERT_TYPE["PR"], val.id)
+              @variables << T_Register.new(val.comment[0, 16], CONVERT_TYPE["PR"], val.id)
             when val.is_a?(TPPlus::Nodes::StringRegisterNode)
-              @variables << T_Register.new(val.comment, CONVERT_TYPE["SR"], val.id)
+              @variables << T_Register.new(val.comment[0, 16], CONVERT_TYPE["SR"], val.id)
             else
               next
           end
