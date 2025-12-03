@@ -64,14 +64,18 @@ Install
 3. Install bundler `gem install bundler`
 4. Clone the repo `git clone https://github.com/kobbled/tp_plus.git`
 5. move into tp_plus folder; `cd tp_plus` 
-5. Install dependencies with `bundle`
-6. Build the parser and run the tests with `bundle exec rake`
-7. Make sure all tests pass
-8. Add full path of **./tp_plus/bin** to your environment path
-
+6. Install dependencies with `bundle`
+7. Build the parser and run the tests with `bundle exec rake`
+8. Make sure all tests pass
+9. Add full path of **./tp_plus/bin** to your environment path
 ```shell
 set PATH=%PATH%;\path\to\tp_plus\bin
 ```
+10. You will have to manually update ppr to kobbled fork, as gem is not updated. clone:
+```shell
+git clone https://github.com/kobbled/ppr
+```
+11.  Go to ppr gem location (i.e. `C:\Ruby34-x64\lib\ruby\gems\3.4.0\gems\ppr-0.0.8`) copy `bin` and `lib` folder over from `kobbled/ppr`, and replace all files.
 
 > [!INFO]
 > Alternatively there is a docker image located in the [docker-container](https://github.com/kobbled/tp_plus/tree/docker-container) branch. However due to Roboguide and Fanuc tools being windows only, the workflow is too awkward for the standard user and is not recommended. Furthermore, the build tools [vscode-tpp-extension](https://github.com/kobbled/vscode-tpp-extension), and [Rossum](https://github.com/kobbled/rossum) currently do not have docker interoperability support. 
