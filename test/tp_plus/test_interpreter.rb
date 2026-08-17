@@ -1172,6 +1172,39 @@ LBL[106] ;
     assert_prog "JMP LBL[100] ;\nLBL[100:foo] ;\n"
   end
 
+  def test_preserves_label_names_from_inline_scopes_for_validation
+    $stacks = TPPlus::Stacks.new
+
+    parse("namespace Helpers
+      inline def rerun()
+        jump_to @non_coord_motion
+      end
+    end
+
+    @non_coord_motion
+    Helpers::rerun()
+    Helpers::rerun()")
+
+    output = @interpreter.eval
+
+    assert_equal({
+      100 => ["non_coord_motion"],
+      101 => ["non_coord_motion"],
+      102 => ["non_coord_motion"]
+    }, @interpreter.label_names_by_number)
+
+    error = assert_raise(TPPlus::LabelValidationError) do
+      TPPlus::LabelValidator.validate!(
+        output,
+        program_name: "INLINE_LABEL",
+        label_names: @interpreter.label_names_by_number
+      )
+    end
+
+    assert_include error.message, "LBL[101] (@non_coord_motion)"
+    assert_include error.message, "LBL[102] (@non_coord_motion)"
+  end
+
   def test_multiple_motion_modifiers
     parse("p := P[1]\no := PR[1]\nlinear_move.to(p).at('max_speed').term(0).offset(o).time_before(0.5,foo())")
     assert_prog "L P[1:p] max_speed CNT0 Offset,PR[1:o] TB .50sec,CALL FOO ;\n"
