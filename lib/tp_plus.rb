@@ -11,6 +11,7 @@ require_relative 'tp_plus/nodes/const_node'
 
 #utility functions
 require_relative 'tp_plus/utility_functions'
+require_relative 'tp_plus/label_validator'
 
 #karel evnironment
 require_relative 'tp_plus/karel/karel'

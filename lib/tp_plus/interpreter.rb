@@ -13,6 +13,7 @@ module TPPlus
       @header_data   = {}
       @header_appl_data   = []
       @labels        = {}
+      @inlined_label_names = {}
       @current_label = 99
       @previous_set_label = [@current_label]
       @previous_set_label_index = 0
@@ -53,6 +54,34 @@ module TPPlus
       @labels.each do |k, _|
         @labels[k] = next_label
       end
+    end
+
+    def reset_inlined_label_names
+      @inlined_label_names = {}
+    end
+
+    def merge_label_names(context)
+      context.label_names_by_number.each do |number, names|
+        @inlined_label_names[number] ||= []
+        @inlined_label_names[number].concat(names)
+        @inlined_label_names[number].uniq!
+      end
+    end
+
+    def label_names_by_number
+      names_by_number = {}
+
+      @inlined_label_names.each do |number, names|
+        names_by_number[number] = names.dup
+      end
+
+      @labels.each do |name, number|
+        names_by_number[number] ||= []
+        names_by_number[number] << name.to_s
+        names_by_number[number].uniq!
+      end
+
+      names_by_number
     end
 
     def label_recur(nodes, labels)

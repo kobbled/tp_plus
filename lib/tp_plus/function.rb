@@ -192,6 +192,9 @@ module TPPlus
     def inline(parent)
       #local variable
       interpreter = @parser.interpreter.clone
+      # Label metadata is collected independently for every inline expansion.
+      # This prevents names from an earlier call from leaking into a later one.
+      interpreter.reset_inlined_label_names
       # ..IMPORTANT:: needed as interpreter.nodes may be different
       #               from function member @nodes, at this point. Reason
       #               unknown, although def interpret does copy the interpretter
@@ -221,6 +224,10 @@ module TPPlus
 
       #list warning messages
       lines += interpreter.list_warnings
+
+      # Preserve source label names after the inline interpreter is discarded.
+      # The final LS validator uses this to report @name alongside LBL[number].
+      parent.merge_label_names(interpreter)
 
       #pass back to parent interpreter what label number we left off on
       parent.current_label = interpreter.current_label
@@ -284,6 +291,12 @@ DEFAULT_GROUP = #{interpreter.header_data[:group_mask] || "*,*,*,*,*"};
         output += ": ! end of " + @name + " ;\n"
         output += ": ! ------- ;\n"
       end
+
+      LabelValidator.validate!(
+        output,
+        program_name: @name.upcase,
+        label_names: interpreter.label_names_by_number
+      )
 
       if prog_options[:output]
         filname = "#{prog_options[:output_folder]}/#{@name}.ls"
