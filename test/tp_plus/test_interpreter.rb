@@ -3296,6 +3296,28 @@ LINE_TRACK ;
 ), output
   end
 
+  def test_palletizing_mode_header
+    parse("PLTZ_MODE_HEADER = {
+      PLTZ_MODE_ENABLE : true,
+      J4TURN           : ZERORAD,
+      ORIENT           : DOWNWARDS
+    }")
+
+    assert_prog ""
+
+    output = "/APPL\n"
+    @interpreter.header_appl_data.each do |n|
+      output += n.write(@interpreter)
+    end
+
+    assert_equal %(/APPL
+PLTZ_MODE_HEADER ;
+  PLTZ_MODE_ENABLE : TRUE ;
+  J4TURN : ZERORAD ;
+  ORIENT : DOWNWARDS ;
+), output
+  end
+
   def test_function_with_return
     $global_options[:function_print] = true
     $stacks = TPPlus::Stacks.new

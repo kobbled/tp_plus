@@ -29,7 +29,13 @@ module TPPlus
       end
 
       def eval(context, options={})
-        "#{@type} : #{@value}"
+        value = case @value
+                when true then "TRUE"
+                when false then "FALSE"
+                else @value
+                end
+
+        "#{@type} : #{value}"
       end
     end
 
